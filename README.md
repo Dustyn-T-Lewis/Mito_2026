@@ -32,7 +32,8 @@ Open R in any folder and paste:
 ```r
 install.packages(c(
   "BiocManager", "remotes", "here",
-  # tidyverse + I/O
+  # tidyverse (meta-package + individual members used directly)
+  "tidyverse",
   "dplyr", "tidyr", "tibble", "purrr", "readr", "readxl", "openxlsx",
   "stringr", "scales",
   # plotting
@@ -53,6 +54,8 @@ BiocManager::install(c(
   "limma",
   # set scoring + pathway enrichment
   "GSVA", "singscore", "fgsea",
+  # F06 subunit-pair stoichiometry test (Buljan 2023)
+  "AlteredPQR",
   # heatmaps + annotation
   "ComplexHeatmap", "circlize",
   "AnnotationDbi", "GO.db", "org.Rn.eg.db"

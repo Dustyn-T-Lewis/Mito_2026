@@ -55,6 +55,21 @@ remotes::install_github("ByrumLab/proteoDA")
 remotes::install_github("RischanLab/RRHO2")
 ```
 
+A note on the stats packages, since it isn't obvious why a few of them are
+here when proteoDA is doing the heavy lifting:
+
+- **proteoDA** runs the main DEP workflow — filtering, cycloess normalization,
+  the `lmFit` → `eBayes` → contrasts pipeline, and the QC reports.
+- **limma** comes in as a proteoDA dependency, but the robustness refits in
+  `03_run_robustness.R` call it directly (`duplicateCorrelation`, `lmFit`,
+  `eBayes`, `camera`) because they need explicit control over the design
+  matrix that proteoDA's wrapper doesn't expose. F06 also uses
+  `limma::camera` for the correlation-aware pathway test.
+- **lme4 + lmerTest + emmeans** are for the figure-level mixed models — F05
+  set scores and F06 mitonuclear / content / stoichiometry — which fit
+  `lmer(y ~ PHE * Mito + (1|Replicate))` on per-sample summaries, not on
+  protein-by-protein rows. Those LMMs live outside proteoDA's territory.
+
 ---
 
 ## Get the code

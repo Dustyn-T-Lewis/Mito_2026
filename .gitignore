@@ -20,10 +20,13 @@ renv/local/
 renv/staging/
 
 # Rendered pipeline outputs — regenerate by running the R scripts
-**/b_reports/
+# (keep the directory placeholders so the layout is visible on clone)
+**/b_reports/*
+!**/b_reports/.gitkeep
 
 # Frozen pipeline data artifacts — regenerate by running stages 01-05
-**/c_data/
+**/c_data/*
+!**/c_data/.gitkeep
 
 # Root-level duplicates of 00_input/ files (canonical copies live in 00_input/)
 /DAP_lists.xlsx

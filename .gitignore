@@ -1,0 +1,32 @@
+# macOS
+.DS_Store
+
+# R session state / IDE
+.Rhistory
+.RData
+.Rdata
+.Rproj.user/
+.Renviron
+.httr-oauth
+
+# R package build artifacts
+*.tar.gz
+*.Rcheck/
+
+# renv (if added later)
+renv/library/
+renv/local/
+renv/staging/
+
+# Rendered pipeline outputs — regenerate by running the R scripts
+**/b_reports/
+
+# Frozen pipeline data artifacts — regenerate by running stages 01-05
+**/c_data/
+
+# Root-level duplicates of 00_input/ files (canonical copies live in 00_input/)
+/DAP_lists.xlsx
+/Proteomics of PE with mito transfer*.xlsx
+
+# Operational working notes (not project documentation)
+/PRE_PUSH_VALIDATION_PROMPT.md

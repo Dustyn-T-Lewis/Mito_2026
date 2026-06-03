@@ -215,7 +215,8 @@ make_composite <- function(cfg) {
                  fontface = "bold.italic", colour = "grey40", hjust = 0, vjust = 1)
   }
   composite <- composite +
-    draw_label(cfg$lens, x = 0.5, y = 0.012, size = SUB_SZ, fontface = "italic",
+    draw_label(paste0(cfg$lens, " | N=24 (n=6/group); Interaction underpowered"),
+               x = 0.5, y = 0.012, size = SUB_SZ, fontface = "italic",
                colour = "grey45", hjust = 0.5, vjust = 0) +
     draw_plot(nes_legend, x = 0.35, y = 0.030, width = 0.30, height = 0.028)
 

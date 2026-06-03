@@ -173,7 +173,7 @@ if (file.exists(IMP_DALIST)) {
 
 # 4b. Reinjection + robust-eBayes sensitivity
 # Reinjection (r-suffixed re-runs) is imbalanced across groups (Ctl 1, Mito 0,
-# PHE 2, PHE_Mito 4) and is NOT in the primary `~ 0 + group` model. Refit with
+# PHE 2, PHE_Mito 3) and is NOT in the primary block model. Refit with
 # reinjected as an additive covariate and correlate t-stats against the primary
 # fit — high concordance means the imbalance does not drive the calls. Separately
 # refit the primary design with robust eBayes: CTLvMITO and PHEvPHE_MITO call
@@ -183,19 +183,24 @@ prim_mat <- as.matrix(dal$data)
 grp      <- factor(meta$group, levels = H9C2_GROUP_LEVELS)
 cv       <- h9c2_parse_contrasts()
 
+norm_meta <- as.data.frame(readRDS(NORM_DALIST)$metadata)
+block_vec <- factor(norm_meta$Replicate[match(meta$sample_id, norm_meta$Col_ID)])
+reinj_vec <- as.logical(norm_meta$Reinjected[match(meta$sample_id, norm_meta$Col_ID)])
+
+# Keep the sensitivity refits comparable to the primary fit: same Replicate
+# block, picked up via duplicateCorrelation (Smyth, Michaud & Scott 2005).
 fit_contrasts <- function(design, robust = FALSE) {
   colnames(design) <- gsub("^grp", "", colnames(design))
   cm <- limma::makeContrasts(contrasts = cv, levels = design)
   colnames(cm) <- names(cv)
-  limma::eBayes(limma::contrasts.fit(limma::lmFit(prim_mat, design), cm),
-                robust = robust)
+  dc <- limma::duplicateCorrelation(prim_mat, design, block = block_vec)
+  fit <- limma::lmFit(prim_mat, design,
+                      block = block_vec, correlation = dc$consensus.correlation)
+  limma::eBayes(limma::contrasts.fit(fit, cm), robust = robust)
 }
 
 comb_t <- readr::read_csv(file.path(DAT, "03_combined_results.csv"),
                           show_col_types = FALSE)
-
-norm_meta <- as.data.frame(readRDS(NORM_DALIST)$metadata)
-reinj_vec <- as.logical(norm_meta$Reinjected[match(meta$sample_id, norm_meta$Col_ID)])
 
 reinjection_sensitivity <- tibble(contrast = character(), spearman_rho = numeric(),
                                   p_value = numeric(), n_proteins = integer())

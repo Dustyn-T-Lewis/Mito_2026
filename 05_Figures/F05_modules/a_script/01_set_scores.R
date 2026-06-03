@@ -21,6 +21,8 @@ set.seed(42)
 OUT <- here::here("05_Figures", "F05_modules", "c_data")
 dir.create(OUT, recursive = TRUE, showWarnings = FALSE)
 
+source(here::here("04_Figures", "shared", "pathway_utils.R"))
+
 da <- readRDS(here::here("02_Imputation", "c_data", "01_DAList_imputed.rds"))
 gs <- readRDS(here::here("04_Figures", "shared", "rat_gene_sets.rds"))
 corum <- readRDS(here::here("04_Figures", "shared", "corum_rat_gene_sets.rds"))
@@ -80,6 +82,15 @@ sets_use <- sets_measured[keep_set]
 sig <- vapply(sets_use, function(g) paste(sort(g), collapse = ""), character(1))
 sets_use <- sets_use[!duplicated(sig)]
 
+# Jaccard collapse: sets sharing >50% gene content are redundant for testing
+# (Reimand 2019 Nat Protocols). First-in wins given raw_sets order
+# (MitoCarta -> Reactome -> CORUM), so mito-focused sets are preserved.
+.jac_in   <- tibble(pathway = names(sets_use), padj = seq_along(sets_use))
+.jac_keep <- deduplicate_enrichment_flat(.jac_in, sets_use, jaccard_cutoff = 0.5)
+sets_use  <- sets_use[.jac_keep$pathway]
+message(sprintf("  Jaccard collapse (0.5): %d -> %d sets",
+                length(sig), length(sets_use)))
+
 set_meta <- tibble(set_id = names(sets_use),
                    source = source_of(names(sets_use)),
                    display = vapply(names(sets_use), display_of, character(1)),
@@ -99,6 +110,8 @@ gsva_mat <- gsva_mat[intersect(names(sets_use), rownames(gsva_mat)), , drop = FA
 # default) so its TotalScore is a per-sample set-abundance score directly comparable
 # to GSVA. knownDirection = FALSE would instead score bidirectional rank dispersion,
 # a different quantity that does not track GSVA's directional contrasts.
+# simpleScore() defaults centerScore = TRUE; we rely on that since the LMM tests
+# relative shifts in score, not absolute values.
 rank_data <- rankGenes(mat)
 ss_mat <- t(vapply(rownames(gsva_mat), function(id)
   simpleScore(rank_data, upSet = sets_use[[id]])$TotalScore,

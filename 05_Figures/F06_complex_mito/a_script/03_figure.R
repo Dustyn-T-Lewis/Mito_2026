@@ -76,8 +76,9 @@ box_panel <- function(df, yv, lmm, ylab, title, sub) {
   r <- range(df[[yv]]); s <- diff(r)
   ggplot(df, aes(Group, .data[[yv]])) +
     geom_boxplot(aes(fill = Group), width = 0.6, outlier.shape = NA, alpha = 0.55, linewidth = 0.3, colour = "grey25") +
-    geom_jitter(aes(fill = Group), width = 0.14, size = 1.1, shape = 21, stroke = 0.25, colour = "grey25", alpha = 0.9) +
+    geom_jitter(aes(fill = Group, shape = Group), width = 0.14, size = 1.2, stroke = 0.25, colour = "grey25", alpha = 0.9) +
     scale_fill_manual(values = H9C2_PAL_GROUP, guide = "none") +
+    scale_shape_manual(values = c(Ctl = 21, Mito = 22, PHE = 23, PHE_Mito = 24), guide = "none") +
     lmm_brackets(lmm, r[2] + s * 0.06, s * 0.11, s * 0.02) + lmm_corner(lmm, 4.6, r[1] - s * 0.02) +
     scale_y_continuous(expand = expansion(mult = c(0.10, 0.42))) +
     labs(title = title, subtitle = sub, x = NULL, y = ylab) +
@@ -164,7 +165,10 @@ composite <- ggdraw() +
   draw_label("A", x = 0.005, y = 0.995, size = 11, fontface = "bold", hjust = 0, vjust = 1) +
   draw_label("B", x = 0.480, y = 0.995, size = 11, fontface = "bold", hjust = 0, vjust = 1) +
   draw_label("C", x = 0.480, y = 0.705, size = 11, fontface = "bold", hjust = 0, vjust = 1) +
-  draw_label("D", x = 0.480, y = 0.415, size = 11, fontface = "bold", hjust = 0, vjust = 1)
+  draw_label("D", x = 0.480, y = 0.415, size = 11, fontface = "bold", hjust = 0, vjust = 1) +
+  draw_label("N=24 (n=6/group); Interaction underpowered",
+             x = 0.99, y = 0.004, size = 7, fontface = "italic",
+             colour = "grey45", hjust = 1, vjust = 0)
 
 ggsave(file.path(RPT_PDF, "MAIN_F06_complex_mito.pdf"), composite,
        width = COMP_W, height = COMP_H, units = "mm", device = pdf_device, limitsize = FALSE)

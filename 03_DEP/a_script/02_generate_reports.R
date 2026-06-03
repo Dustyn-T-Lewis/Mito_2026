@@ -150,13 +150,12 @@ run_limma_sens <- function(mat, meta) {
   cv  <- h9c2_parse_contrasts()
   cm  <- makeContrasts(contrasts = cv, levels = design)
   colnames(cm) <- names(cv)
-  eBayes(contrasts.fit(fit, cm), robust = TRUE)
+  eBayes(contrasts.fit(fit, cm))
 }
 
 if (length(outlier_ids) > 0) {
-  full_mat <- normalizeBetweenArrays(log2(int$data_pre_outlier + 1),
-                                     method = "cyclicloess")
-  full_fit <- run_limma_sens(full_mat, int$meta_pre_outlier)
+  # Pre-outlier matrix is already cycloess-normalized in Stage 01 (m12).
+  full_fit <- run_limma_sens(int$data_pre_outlier_norm, int$meta_pre_outlier)
 
   red_mat <- as.matrix(readRDS(NORM_DALIST)$data)
   red_fit <- run_limma_sens(red_mat, readRDS(NORM_DALIST)$metadata)
@@ -176,10 +175,9 @@ if (length(outlier_ids) > 0) {
                               use = "complete.obs", method = "spearman"))
   }))
 } else {
-  message("No outliers removed in Stage 01 — outlier-sensitivity analysis N/A.")
-  sens_compare <- tibble(
-    Contrast = "(no outliers removed)",
-    note = "Stage 01 flagged 0 consensus outliers; full == reduced dataset.")
+  message(sprintf("Stage 01 flagged %d consensus outliers — sensitivity refit N/A.",
+                  length(outlier_ids)))
+  sens_compare <- tibble(note = "no consensus outliers; full = reduced dataset")
 }
 
 # Add sensitivity sheet to xlsx

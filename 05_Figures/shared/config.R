@@ -54,8 +54,9 @@ BRIEF_CORE_OLD <- c("CTLvMITO", "CTLvPHE", "PHEvPHE_MITO", "Interaction")
 # Interaction_Phe = (PHE_Mito - Mito) - (Mito - Ctl) = PHE_Mito - 2*Mito + Ctl
 #                 = logFC_MITOvPHE_MITO - logFC_CTLvMITO   (both already in CSV)
 # EXPLORATORY ONLY: logFC magnitude/direction is meaningful, but it double-counts
-# the Mito group (coeffs 1, 0, -2, 1) and is NON-ORTHOGONAL, so no SE/p/pi/FDR is
-# produced. Never use as the formal interaction test (that is Interaction_Mito).
+# the Mito group (coeffs 1, -2, 0, 1 for Ctl, Mito, PHE, PHE_Mito) and is
+# NON-ORTHOGONAL, so no SE/p/pi/FDR is produced. Never use as the formal
+# interaction test (that is Interaction_Mito).
 derive_interaction_phe <- function(comb) {
   needed <- c("logFC_MITOvPHE_MITO", "logFC_CTLvMITO")
   miss <- setdiff(needed, names(comb))

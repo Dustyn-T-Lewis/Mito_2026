@@ -8,6 +8,7 @@
 .Rproj.user/
 .Renviron
 .httr-oauth
+Rplots.pdf
 
 # R package build artifacts
 *.tar.gz

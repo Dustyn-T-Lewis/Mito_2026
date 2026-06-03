@@ -2,12 +2,12 @@
 # F01 MAIN composite — QC + proteome-wide picture. Reads existing pipeline
 # outputs only; never re-runs 01-03.
 # Order: A PCA + B leading-edge lollipop (top); contrast-definition row;
-#        C merged DEPs|effect-size + D UpSet; E enrichment + F rank location.
+#        C merged DEPs|effect-size + D enrichment; E UpSet + F rank location.
 #   A  Sample PCA (standard group palette, matches other figures) + PERMANOVA
 #   B  leading-edge proteins, faceted/stacked by contrast, GO-CC coloured  [companion]
 #   C  DEPs per contrast (nested p/FDR/Π) with effect-size violins to the right
-#   D  contrast overlap (UpSet; dodged Up/Down, singles first — YvO logic)
-#   E  pathway enrichment (total + mito, Up/Down, √-scaled)                [companion]
+#   D  pathway enrichment (total + mito, Up/Down, √-scaled)                [companion]
+#   E  contrast overlap (UpSet; dodged Up/Down, singles first — YvO logic)
 #   F  DEP rank location, with mito-protein counts                        [companion]
 
 suppressPackageStartupMessages({
@@ -331,7 +331,7 @@ composite <- (row1 / wrap_elements(full = pDEF) / row2) +
   plot_layout(heights = c(1.05, 0.10, 1.15)) +
   plot_annotation(
     title = "H9c2 mito-transplant proteome — QC & overview",
-    subtitle = sprintf("%s proteins × %d wells (imputed) | 2×2 PHE×Mito | PERMANOVA Group R²=%.3f, %s | Π = P.Value^|logFC| < %.2f",
+    subtitle = sprintf("%s proteins × %d wells (imputed) | 2×2 PHE×Mito (n=6/group; Interaction underpowered) | PERMANOVA Group R²=%.3f, %s | Π = P.Value^|logFC| < %.2f",
                        format(nrow(imp_mat), big.mark = ","), nrow(imp_meta), perm_R2, fmt_p(perm_p), H9C2_PI_THRESH),
     theme = theme(plot.title = element_text(face = "bold", size = composite_text_sizes(COMP_H)$title),
                   plot.subtitle = element_text(face = "italic", size = composite_text_sizes(COMP_H)$subtitle, color = "grey30"))) &

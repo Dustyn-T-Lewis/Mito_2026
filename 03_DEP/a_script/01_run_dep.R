@@ -23,11 +23,12 @@ rownames(mat) <- df$uniprot_id    # stable unique key (cf. Stage 02)
 dal_norm <- readRDS(NORM_DALIST)
 ann  <- as.data.frame(dal_norm$annotation)
 
-# Independent 4-group design: metadata is just sample_id + group. No age,
+# 4-group design blocked by Replicate (paired passage/plate/day). No age,
 # timepoint, or subject columns (YvO had all three).
 meta <- tibble(
   sample_id = dal_norm$metadata$Col_ID,
-  group     = factor(dal_norm$metadata$Group, levels = H9C2_GROUP_LEVELS))
+  group     = factor(dal_norm$metadata$Group, levels = H9C2_GROUP_LEVELS),
+  Replicate = factor(dal_norm$metadata$Replicate))
 
 stopifnot(setequal(colnames(mat), meta$sample_id))
 mat <- mat[, meta$sample_id]
@@ -43,8 +44,9 @@ dal <- DAList(data = mat, annotation = ann, metadata = meta_df,
               tags = list(norm_method = "cycloess"))
 
 # 3. Design + contrasts + fit
-# `~ 0 + group` — no random effect. proteoDA runs plain limma (no
-# duplicateCorrelation) because there is no `(1|block)` term.
+# Replicate is a real block (paired passage/plate/day). proteoDA picks up
+# the `(1|Replicate)` term and routes through duplicateCorrelation
+# (Smyth, Michaud & Scott 2005).
 
 dal <- add_design(dal, H9C2_DESIGN_FORMULA)
 colnames(dal$design$design_matrix) <- gsub("^group", "",
@@ -132,7 +134,7 @@ da_summary <- list_rbind(lapply(contrast_names, \(cname) {
            sig.PVal = sum(res$P.Value >= H9C2_PVAL_THRESH, na.rm = TRUE),
            sig.FDR  = sum(res$adj.P.Val >= H9C2_FDR_EXPLOR, na.rm = TRUE),
            sig.Pi   = sum(res$sig_pi == 0, na.rm = TRUE),
-           sig.FDR.05 = sum(!res$adj.P.Val < 0.05, na.rm = TRUE)))
+           sig.FDR.05 = sum(!(res$adj.P.Val < 0.05), na.rm = TRUE)))
 }))
 
 # 8. Build xlsx

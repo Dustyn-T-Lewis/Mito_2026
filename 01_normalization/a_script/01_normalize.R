@@ -179,6 +179,10 @@ message(sprintf("Outliers: %d flagged (>=%d/4)", n_outliers, H9C2_OUTLIER_K))
 
 data_pre_outlier <- dal$data
 meta_pre_outlier <- dal$metadata
+# Pre-outlier cycloess matrix saved here so Stage 03's outlier-sensitivity
+# refit can read it directly without a second normalizeBetweenArrays() pass.
+data_pre_outlier_norm <- limma::normalizeBetweenArrays(
+  log2(data_pre_outlier + 1), method = "cyclicloess")
 
 if (n_outliers > 0) {
   dal <- filter_samples(dal, !(Col_ID %in% outlier_ids))
@@ -290,8 +294,9 @@ saveRDS(list(
   samp_var          = samp_var,
   eta2_vals         = eta2_vals,
   filtered_proteins = filtered_proteins,
-  data_pre_outlier  = data_pre_outlier,
-  meta_pre_outlier  = meta_pre_outlier,
+  data_pre_outlier      = data_pre_outlier,
+  data_pre_outlier_norm = data_pre_outlier_norm,
+  meta_pre_outlier      = meta_pre_outlier,
   dal_nrow          = nrow(dal$data),
   dal_ncol          = ncol(dal$data),
   mahal_p           = H9C2_MAHAL_P,

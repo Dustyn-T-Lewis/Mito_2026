@@ -292,7 +292,10 @@ composite_final <- ggdraw(fig) +
   draw_label("D",   x = X_D,         y = Y_BOT - TAG_DY,     size = TAG_SZ, fontface = "bold",        hjust = 0, vjust = 1) +
   draw_label(ttl_D, x = X_D + X_TTL, y = Y_BOT,              size = TTL_SZ, fontface = "bold",        hjust = 0, vjust = 1) +
   draw_label(sub_D, x = X_D + X_TTL, y = Y_BOT - SUB_OFFSET, size = SUB_SZ, fontface = "bold.italic", hjust = 0, vjust = 1, colour = "grey40") +
-  draw_plot(quad_legend, x = 0.03, y = 0.004, width = 0.34, height = 0.032)
+  draw_plot(quad_legend, x = 0.03, y = 0.004, width = 0.34, height = 0.032) +
+  draw_label("N=24 (n=6/group); Interaction underpowered",
+             x = 0.99, y = 0.004, size = SUB_SZ, fontface = "italic",
+             colour = "grey45", hjust = 1, vjust = 0)
 
 ggsave(file.path(RPT_PDF, "MAIN_F03_composite.pdf"), composite_final,
        width = COMP_W, height = COMP_H, units = "mm", device = pdf_device)

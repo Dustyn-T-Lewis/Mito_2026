@@ -273,9 +273,9 @@ build_volcano_layers <- function(de_df,
     filter(!is.na(logFC), !is.na(pvalue), is.finite(neg_log10p)) |>
     mutate(
       direction = case_when(
-        pi_score < 0.05 & logFC > 0 ~ "Up",
-        pi_score < 0.05 & logFC < 0 ~ "Down",
-        TRUE                         ~ "NS"
+        pi_score < H9C2_PI_THRESH & abs(logFC) > fc_thresh & logFC > 0 ~ "Up",
+        pi_score < H9C2_PI_THRESH & abs(logFC) > fc_thresh & logFC < 0 ~ "Down",
+        TRUE                                                            ~ "NS"
       )
     )
 

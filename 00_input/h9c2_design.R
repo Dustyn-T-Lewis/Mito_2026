@@ -1,9 +1,9 @@
 # H9c2 mito-transplantation proteomics: design constants, contrasts, palettes,
 # thresholds, and metadata helpers. Sourced by each stage's _setup.R.
 #
-# Design: 4 groups (Ctl, Mito, PHE, PHE_Mito), n = 6 per group, independent
-# wells. PHE = phenylephrine (right-HF stress model); Mito = mitochondrial
-# transplantation.
+# Design: 4 groups (Ctl, Mito, PHE, PHE_Mito), n = 6 per group, paired by
+# passage / plating day / plate (block: Replicate). PHE = phenylephrine
+# (right-HF stress model); Mito = mitochondrial transplantation.
 
 # Factor order — every script must use these levels.
 H9C2_GROUP_LEVELS <- c("Ctl", "Mito", "PHE", "PHE_Mito")
@@ -16,7 +16,7 @@ H9C2_RAW_GROUP_MAP <- c(
   "PE-Mito"  = "PHE_Mito"
 )
 
-H9C2_DESIGN_FORMULA <- "~ 0 + group"
+H9C2_DESIGN_FORMULA <- "~ 0 + group + (1|Replicate)"
 
 # Contrasts
 
@@ -59,7 +59,7 @@ H9C2_CONTRAST_DESC <- c(
 
 H9C2_PAL_GROUP <- c(
   Ctl      = "#4393C3",  # blue   — control
-  Mito     = "#4DAF4A",  # green  — intervention
+  Mito     = "#009E73",  # green  — intervention (Okabe-Ito, colourblind-safe)
   PHE      = "#D6604D",  # red    — disease
   PHE_Mito = "#984EA3"   # purple — disease + intervention
 )

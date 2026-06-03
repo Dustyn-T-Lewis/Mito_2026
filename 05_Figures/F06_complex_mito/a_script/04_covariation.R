@@ -6,12 +6,11 @@
 # complex are candidates for independent (stoichiometric) behaviour. Exploratory at
 # this n — descriptive correlations only, no inference.
 
-setwd(rprojroot::find_rstudio_root_file())
 suppressPackageStartupMessages({
   library(dplyr); library(tibble); library(tidyr); library(readr)
   library(limma); library(ggplot2); library(patchwork); library(cowplot)
 })
-source("04_Figures/shared/style.R")
+source(here::here("04_Figures", "shared", "style.R"))
 set.seed(42)
 
 DAT      <- "05_Figures/F06_complex_mito/c_data"

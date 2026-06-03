@@ -28,14 +28,6 @@ run_pca <- function(mat, metadata, log_transform = TRUE) {
        var_exp = ve)
 }
 
-write_sheet <- function(wb, name, data) {
-  addWorksheet(wb, name)
-  writeData(wb, name, data,
-    headerStyle = createStyle(textDecoration = "bold", fgFill = "#DCE6F1"))
-  freezePane(wb, name, firstRow = TRUE)
-  setColWidths(wb, name, cols = seq_len(ncol(data)), widths = "auto")
-}
-
 # 1. Load DIA-NN protein summary
 
 raw <- read_excel(RAW_XLSX)
@@ -229,13 +221,13 @@ samp_miss <- tibble(
             by = join_by(Col_ID))
 
 wb <- createWorkbook()
-write_sheet(wb, "sample_metadata",     meta_out)
-write_sheet(wb, "normalized_matrix",   norm_df)
-write_sheet(wb, "filter_log",          filter_log)
-write_sheet(wb, "outlier_diagnostics", outlier_diag)
-write_sheet(wb, "filtered_proteins",   filtered_proteins)
-write_sheet(wb, "protein_missingness", prot_miss)
-write_sheet(wb, "sample_missingness",  samp_miss)
+write_h9c2_sheet(wb, "sample_metadata",     meta_out)
+write_h9c2_sheet(wb, "normalized_matrix",   norm_df)
+write_h9c2_sheet(wb, "filter_log",          filter_log)
+write_h9c2_sheet(wb, "outlier_diagnostics", outlier_diag)
+write_h9c2_sheet(wb, "filtered_proteins",   filtered_proteins)
+write_h9c2_sheet(wb, "protein_missingness", prot_miss)
+write_h9c2_sheet(wb, "sample_missingness",  samp_miss)
 saveWorkbook(wb, file.path(DAT, "01_normalization.xlsx"), overwrite = TRUE)
 
 # CSV handoff for stages 02-03. Cols 1-4 must stay

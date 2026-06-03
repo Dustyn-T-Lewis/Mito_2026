@@ -4,7 +4,6 @@
 # (~ 0 + group), 5 contrasts, Pi-score.
 
 library(dplyr)
-library(tidyr)
 library(tibble)
 library(purrr)
 library(proteoDA)
@@ -139,20 +138,12 @@ da_summary <- list_rbind(lapply(contrast_names, \(cname) {
 
 # 8. Build xlsx
 
-write_sheet <- function(wb, name, data) {
-  addWorksheet(wb, name)
-  writeData(wb, name, data,
-    headerStyle = createStyle(textDecoration = "bold", fgFill = "#DCE6F1"))
-  freezePane(wb, name, firstRow = TRUE)
-  setColWidths(wb, name, cols = seq_len(ncol(data)), widths = "auto")
-}
-
 wb <- createWorkbook()
-write_sheet(wb, "combined_results", base_df)
-write_sheet(wb, "DA_summary", da_summary)
+write_h9c2_sheet(wb, "combined_results", base_df)
+write_h9c2_sheet(wb, "DA_summary", da_summary)
 for (cname in contrast_names) {
   res <- results_list[[cname]] |> arrange(pi_score)
-  write_sheet(wb, cname, res)
+  write_h9c2_sheet(wb, cname, res)
 }
 saveWorkbook(wb, XLSX, overwrite = TRUE)
 

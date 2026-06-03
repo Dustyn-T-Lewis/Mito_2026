@@ -145,3 +145,12 @@ assert_h9c2_group_sizes <- function(meta, min_n = 3L) {
          paste(sprintf("%s=%d", names(tab), tab), collapse = ", "))
   invisible(tab)
 }
+
+# Stage workbook writer — openxlsx must already be attached by the caller.
+write_h9c2_sheet <- function(wb, name, data) {
+  openxlsx::addWorksheet(wb, name)
+  openxlsx::writeData(wb, name, data,
+    headerStyle = openxlsx::createStyle(textDecoration = "bold", fgFill = "#DCE6F1"))
+  openxlsx::freezePane(wb, name, firstRow = TRUE)
+  openxlsx::setColWidths(wb, name, cols = seq_len(ncol(data)), widths = "auto")
+}

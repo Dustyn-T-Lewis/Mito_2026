@@ -1,9 +1,7 @@
 #!/usr/bin/env Rscript
 # Stage 02: 3-method MAR/MNAR consensus + missForest imputation.
 
-library(missForest)
 library(dplyr)
-library(tidyr)
 library(tibble)
 library(openxlsx)
 
@@ -156,14 +154,6 @@ mnar_audit <- tibble(
 
 # 6. Build xlsx
 
-write_sheet <- function(wb, name, data) {
-  addWorksheet(wb, name)
-  writeData(wb, name, data,
-    headerStyle = createStyle(textDecoration = "bold", fgFill = "#DCE6F1"))
-  freezePane(wb, name, firstRow = TRUE)
-  setColWidths(wb, name, cols = seq_len(ncol(data)), widths = "auto")
-}
-
 imp_df  <- bind_cols(ann, as_tibble(mat_imp))
 mask_df <- bind_cols(tibble(uniprot_id = rownames(was_na)),
                      as_tibble(was_na + 0L))
@@ -175,15 +165,15 @@ summary_df <- tibble(
             mar_vals, mnar_vals, "missForest", round(oob, 4)))
 
 wb <- createWorkbook()
-write_sheet(wb, "imputed_matrix",          imp_df)
-write_sheet(wb, "mar_mnar_classification", as.data.frame(miss_class))
-write_sheet(wb, "imputation_mask",         mask_df)
-write_sheet(wb, "mnar_audit",              as.data.frame(mnar_audit))
-write_sheet(wb, "imputation_summary",      summary_df)
+write_h9c2_sheet(wb, "imputed_matrix",          imp_df)
+write_h9c2_sheet(wb, "mar_mnar_classification", as.data.frame(miss_class))
+write_h9c2_sheet(wb, "imputation_mask",         mask_df)
+write_h9c2_sheet(wb, "mnar_audit",              as.data.frame(mnar_audit))
+write_h9c2_sheet(wb, "imputation_summary",      summary_df)
 
 if (file.exists(BENCH_RANKING)) {
   bm <- readr::read_csv(BENCH_RANKING, show_col_types = FALSE)
-  write_sheet(wb, "benchmark_ranking", as.data.frame(bm))
+  write_h9c2_sheet(wb, "benchmark_ranking", as.data.frame(bm))
 }
 
 saveWorkbook(wb, file.path(DAT, "02_imputation.xlsx"), overwrite = TRUE)

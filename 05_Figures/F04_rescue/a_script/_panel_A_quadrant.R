@@ -5,8 +5,8 @@
 # Reversal diagonal y = -x; off-diagonal (blue) = reversed, diagonal (red) = exacerbated.
 # Exports: pA (composite), n_total_A, n_sig_A, r_spear_A, rho_lo_A, rho_hi_A, pct_rev_A.
 
-source("04_Figures/shared/print_scale_apply_380mm.R")
-source("04_Figures/shared/pathway_utils.R")
+source(here::here("04_Figures", "shared", "print_scale_apply_380mm.R"))
+source(here::here("04_Figures", "shared", "pathway_utils.R"))
 library(fgsea)
 library(ggrepel)
 library(patchwork)

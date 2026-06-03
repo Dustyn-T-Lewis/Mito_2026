@@ -9,7 +9,6 @@
 # CTLvMITO vs PHEvPHE_MITO); the ORA composite panel A is replaced by the
 # top-5-per-quadrant protein scatter, and the fry panel C is dropped.
 
-setwd(rprojroot::find_rstudio_root_file())
 
 library(dplyr)
 library(tidyr)
@@ -20,7 +19,7 @@ library(ggplot2)
 library(patchwork)
 library(cowplot)
 
-source("04_Figures/shared/style.R")
+source(here::here("04_Figures", "shared", "style.R"))
 
 BASE    <- "05_Figures/F03_concordance"
 RPT_PDF <- file.path(BASE, "b_reports", "main", "pdf")
@@ -36,7 +35,7 @@ pdf_device <- get_pdf_device()
 message("=== F03 Composite: sourcing panels ===")
 
 # Panel A: top-5-per-quadrant protein concordance scatter (NEW)
-source("05_Figures/F03_concordance/a_script/_panel_A_quadrant.R")
+source(here::here("05_Figures", "F03_concordance", "a_script", "_panel_A_quadrant.R"))
 
 # Panel D: fGSEA NES scatter (config wrapper -> shared engine)
 cfg <- list(
@@ -95,7 +94,7 @@ cfg <- list(
     "Cytoplasmic Translation"               = "Cytoplasmic Transl."
   )
 )
-source("04_Figures/shared/comparison_panels/panel_D_nes_scatter.R")
+source(here::here("04_Figures", "shared", "comparison_panels", "panel_D_nes_scatter.R"))
 n_pw_D     <- nrow(fgsea_wide)
 n_sig_pw_D <- n_total_sig
 rho_D      <- as.numeric(nes_cor_all$estimate)
@@ -135,7 +134,7 @@ cfg <- list(
   rpt_png = PNL_PNG, rpt_pdf = PNL_PDF, dat = DAT,
   supp = NULL
 )
-source("04_Figures/shared/comparison_panels/panel_E_rrho2.R")
+source(here::here("04_Figures", "shared", "comparison_panels", "panel_E_rrho2.R"))
 n_shared_E <- n_shared
 n_UU_E     <- n_UU
 
@@ -202,7 +201,7 @@ cfg <- list(
   sig_cat_labels = c("Sig Tr.", "Sig Re.", "Sig Both", "Interaction"),
   inset_legend   = FALSE
 )
-source("04_Figures/shared/comparison_panels/panel_B_pattern_heatmap.R")
+source(here::here("04_Figures", "shared", "comparison_panels", "panel_B_pattern_heatmap.R"))
 
 # Restore RPT paths (shared engines clobber RPT_PDF/RPT_PNG to panels subdir)
 RPT_PDF <- file.path(BASE, "b_reports", "main", "pdf")

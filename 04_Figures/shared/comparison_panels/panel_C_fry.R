@@ -1,9 +1,9 @@
 # Shared Panel C — fry barcode + flanking ORA; used by F04 (concordance) and F05 (reversal)
 # fry is an exact rotation-based gene-set test (Wu & Smyth 2010, Bioinformatics)
 
-source("04_Figures/shared/style.R")
-source("04_Figures/shared/print_scale_apply_380mm.R")
-source("04_Figures/shared/pathway_utils.R")
+source(here::here("04_Figures", "shared", "style.R"))
+source(here::here("04_Figures", "shared", "print_scale_apply_380mm.R"))
+source(here::here("04_Figures", "shared", "pathway_utils.R"))
 
 library(tidyverse)
 library(limma)

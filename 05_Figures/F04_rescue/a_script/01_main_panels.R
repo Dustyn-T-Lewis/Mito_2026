@@ -8,10 +8,9 @@
 # composite panel A is replaced by the top-5-per-quadrant protein scatter, fry C dropped.
 # Mirrors YvO F05 (Aging Reversal) visual/format. Cite: Doulamis 2024 (PMID 39732955).
 
-setwd(rprojroot::find_rstudio_root_file())
 library(dplyr); library(tidyr); library(tibble); library(stringr); library(readr)
 library(ggplot2); library(patchwork); library(cowplot)
-source("04_Figures/shared/style.R")
+source(here::here("04_Figures", "shared", "style.R"))
 
 BASE    <- "05_Figures/F04_rescue"
 RPT_PDF <- file.path(BASE, "b_reports", "main", "pdf")
@@ -23,7 +22,7 @@ for (d in c(RPT_PDF, RPT_PNG, PNL_PNG, PNL_PDF, DAT)) dir.create(d, recursive = 
 pdf_device <- get_pdf_device()
 message("=== F04 Composite (reversal): sourcing panels ===")
 
-source("05_Figures/F04_rescue/a_script/_panel_A_quadrant.R")
+source(here::here("05_Figures", "F04_rescue", "a_script", "_panel_A_quadrant.R"))
 
 # Panel D: fGSEA NES scatter (reversal; ref_slope = -1)
 cfg <- list(
@@ -55,7 +54,7 @@ cfg <- list(
     "Mitochondrial Organization" = "Mito Org.", "Mitochondrial Transport" = "Mito Transport",
     "Mitochondrial Protein Import" = "Mito Protein Import", "Extracellular Matrix Organization" = "ECM Org.",
     "Protein Folding" = "Protein Folding", "Cytoplasmic Translation" = "Cytoplasmic Transl."))
-source("04_Figures/shared/comparison_panels/panel_D_nes_scatter.R")
+source(here::here("04_Figures", "shared", "comparison_panels", "panel_D_nes_scatter.R"))
 n_pw_D <- nrow(fgsea_wide); rho_D <- as.numeric(nes_cor_all$estimate); pw_rev_D <- pw_rev_frac
 
 # Panel E: RRHO2 (reversal; warm off-diagonal)
@@ -75,7 +74,7 @@ cfg <- list(
   summary_quadrant_names = list(UU = "Exacerbated_Up", UU_slug = "exacerbated_up", DD = "Exacerbated_Down", DD_slug = "exacerbated_down",
                                 UD = "Reversed_DisUp_ResDown", UD_slug = "reversed_dis_up", DU = "Reversed_DisDown_ResUp", DU_slug = "reversed_dis_down"),
   rpt_png = PNL_PNG, rpt_pdf = PNL_PDF, dat = DAT, supp = NULL)
-source("04_Figures/shared/comparison_panels/panel_E_rrho2.R")
+source(here::here("04_Figures", "shared", "comparison_panels", "panel_E_rrho2.R"))
 n_shared_E <- n_shared; max_rev_E <- max(max_UD, max_DU); n_rev_E <- if (max_UD >= max_DU) n_UD else n_DU
 
 # Panel B: pattern heatmap (LAST)
@@ -113,7 +112,7 @@ cfg <- list(
 # Override panel B keys to F04 convention (Dis./Re./Both); SIG_COLORS at line 104
 # already uses these keys, so no recolouring needed.
 cfg$sig_cats <- c("Dis.", "Re.", "Both"); cfg$sig_cat_labels <- c("Sig Dis.", "Sig Re.", "Sig Both")
-source("04_Figures/shared/comparison_panels/panel_B_pattern_heatmap.R")
+source(here::here("04_Figures", "shared", "comparison_panels", "panel_B_pattern_heatmap.R"))
 
 RPT_PDF <- file.path(BASE, "b_reports", "main", "pdf")
 RPT_PNG <- file.path(BASE, "b_reports", "main", "png")

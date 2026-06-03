@@ -16,12 +16,11 @@
 # skeletal-muscle (admixture confound). Houtkooper 2013 (PMID 23698443); MitoCarta 3.0
 # Rath 2021 (PMID 33174596).
 
-setwd(rprojroot::find_rstudio_root_file())
 suppressPackageStartupMessages({
   library(dplyr); library(tidyr); library(readr); library(stringr)
   library(ggplot2); library(patchwork); library(cowplot)
 })
-source("04_Figures/shared/style.R")
+source(here::here("04_Figures", "shared", "style.R"))
 set.seed(42)
 
 DAT     <- "05_Figures/F06_complex_mito/c_data"

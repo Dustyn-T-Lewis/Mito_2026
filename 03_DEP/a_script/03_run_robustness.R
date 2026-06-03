@@ -239,29 +239,21 @@ message("Robust-eBayes sensitivity computed for ", length(contrast_names), " con
 
 # 5. Add robustness sheets to xlsx
 
-write_sheet <- function(wb, name, data) {
-  addWorksheet(wb, name)
-  writeData(wb, name, data,
-    headerStyle = createStyle(textDecoration = "bold", fgFill = "#DCE6F1"))
-  freezePane(wb, name, firstRow = TRUE)
-  setColWidths(wb, name, cols = seq_len(ncol(data)), widths = "auto")
-}
-
 wb <- loadWorkbook(XLSX)
 robustness_sheets <- c("mito_effect_magnitude", "bootstrap_ci",
                        "power_analysis", "imputation_sensitivity",
                        "reinjection_sensitivity", "ebayes_robust_sensitivity")
 for (s in intersect(robustness_sheets, names(wb))) removeWorksheet(wb, s)
-write_sheet(wb, "mito_effect_magnitude", mito_magnitude)
-write_sheet(wb, "bootstrap_ci",          boot_df)
-write_sheet(wb, "power_analysis",        power_df)
+write_h9c2_sheet(wb, "mito_effect_magnitude", mito_magnitude)
+write_h9c2_sheet(wb, "bootstrap_ci",          boot_df)
+write_h9c2_sheet(wb, "power_analysis",        power_df)
 if (nrow(sens_df) > 0) {
-  write_sheet(wb, "imputation_sensitivity", sens_df)
+  write_h9c2_sheet(wb, "imputation_sensitivity", sens_df)
 }
 if (nrow(reinjection_sensitivity) > 0) {
-  write_sheet(wb, "reinjection_sensitivity", reinjection_sensitivity)
+  write_h9c2_sheet(wb, "reinjection_sensitivity", reinjection_sensitivity)
 }
-write_sheet(wb, "ebayes_robust_sensitivity", ebayes_robust_sensitivity)
+write_h9c2_sheet(wb, "ebayes_robust_sensitivity", ebayes_robust_sensitivity)
 saveWorkbook(wb, XLSX, overwrite = TRUE)
 
 # Optional Box delivery

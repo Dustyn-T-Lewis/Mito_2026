@@ -16,7 +16,6 @@
 #   Other          = multi-localised (nucleus+cytosol) or unannotated
 # i.e. only confidently single-compartment proteins get a nuclear/cytosolic ring.
 
-setwd(rprojroot::find_rstudio_root_file())
 suppressPackageStartupMessages({
   library(org.Rn.eg.db)
   library(AnnotationDbi)

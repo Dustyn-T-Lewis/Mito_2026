@@ -38,37 +38,31 @@ install.packages(c(
   # plotting
   "ggplot2", "ggrepel", "ggforce", "ggtext", "ggnewscale",
   "patchwork", "cowplot", "gridExtra", "png",
-  # stats / modelling
-  "missForest", "boot", "pwr", "lme4", "lmerTest", "emmeans",
+  # imputation + robustness statistics
+  "missForest", "boot", "pwr",
+  # figure-level LMMs (F05 set scores, F06 mitonuclear) — separate from proteoDA
+  "lme4", "lmerTest", "emmeans",
+  # PERMANOVA (F01) + WGCNA modules (F05 supp)
   "vegan", "WGCNA",
-  # gene sets / annotation
+  # gene sets / orthologs
   "msigdbr", "babelgene"
 ))
 
 BiocManager::install(c(
-  "limma", "GSVA", "singscore", "fgsea",
+  # limma: pulled by proteoDA; also called directly for robustness refits and F06 camera
+  "limma",
+  # set scoring + pathway enrichment
+  "GSVA", "singscore", "fgsea",
+  # heatmaps + annotation
   "ComplexHeatmap", "circlize",
   "AnnotationDbi", "GO.db", "org.Rn.eg.db"
 ))
 
+# proteoDA: DEP workflow (filtering, cycloess norm, lmFit → eBayes → contrasts)
 remotes::install_github("ByrumLab/proteoDA")
+# RRHO2: rank-rank hypergeometric overlap heatmap (F03/F04 panel E)
 remotes::install_github("RischanLab/RRHO2")
 ```
-
-A note on the stats packages, since it isn't obvious why a few of them are
-here when proteoDA is doing the heavy lifting:
-
-- **proteoDA** runs the main DEP workflow — filtering, cycloess normalization,
-  the `lmFit` → `eBayes` → contrasts pipeline, and the QC reports.
-- **limma** comes in as a proteoDA dependency, but the robustness refits in
-  `03_run_robustness.R` call it directly (`duplicateCorrelation`, `lmFit`,
-  `eBayes`, `camera`) because they need explicit control over the design
-  matrix that proteoDA's wrapper doesn't expose. F06 also uses
-  `limma::camera` for the correlation-aware pathway test.
-- **lme4 + lmerTest + emmeans** are for the figure-level mixed models — F05
-  set scores and F06 mitonuclear / content / stoichiometry — which fit
-  `lmer(y ~ PHE * Mito + (1|Replicate))` on per-sample summaries, not on
-  protein-by-protein rows. Those LMMs live outside proteoDA's territory.
 
 ---
 

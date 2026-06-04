@@ -32,9 +32,7 @@ comb <- read_csv(P05$comb, show_col_types = FALSE); dep_df <- comb
 fgsea_all <- read_csv(here::here("04_Figures", "shared", "fgsea_tstat_all_h9c2.csv"), show_col_types = FALSE)
 dep_results <- setNames(lapply(CORE, \(c) as.data.frame(read_excel(P05$dep_xlsx, sheet = c))), CORE)
 
-# ════════════════════════════════════════════════════════════════════════════
 # Panel A — Sample PCA (standard group palette) + PERMANOVA in top headroom
-# ════════════════════════════════════════════════════════════════════════════
 dal_imp  <- readRDS(P05$imp_rds)
 imp_mat  <- as.matrix(dal_imp$data)
 imp_meta <- as_tibble(dal_imp$metadata); imp_meta$Group <- factor(imp_meta$Group, levels = H9C2_GROUP_LEVELS)
@@ -94,14 +92,10 @@ pA <- ggplot(pca_df, aes(PC1, PC2, color = Group, shape = Group)) +
         axis.text.y = element_text(margin = margin(r = 0)),
         plot.margin = margin(5, 2, 1, 1))
 
-# ════════════════════════════════════════════════════════════════════════════
 # Panel B — leading-edge lollipop (companion)
-# ════════════════════════════════════════════════════════════════════════════
 source(here::here("05_Figures", "F01_QC_overview", "a_script", "_panel_lollipop.R"))  # -> pLOL (tag B)
 
-# ════════════════════════════════════════════════════════════════════════════
 # Panel C — DEPs per contrast (nested p/FDR/Π) + effect-size violins to the right
-# ════════════════════════════════════════════════════════════════════════════
 all_genes <- unique(comb$gene[!is.na(comb$gene)]); n_total <- length(all_genes)
 count_sig <- function(r) { pv <- if ("pi_score" %in% names(r)) r$pi_score else NA
   c(p = sum(!is.na(r$P.Value) & r$P.Value < 0.05), fdr = sum(!is.na(r$adj.P.Val) & r$adj.P.Val < H9C2_FDR_EXPLOR),
@@ -172,9 +166,7 @@ pHIST <- ggplot(lfc_long, aes(logFC)) +
         plot.margin = margin(5, 2, 1, 0))
 pC <- pDEP + pHIST + plot_layout(widths = c(1, 0.62))
 
-# ════════════════════════════════════════════════════════════════════════════
 # Panel D — UpSet (dodged Up/Down, singles first; discordant computed, not barred)
-# ════════════════════════════════════════════════════════════════════════════
 sig_long <- bind_rows(lapply(CORE, function(c) { r <- dep_results[[c]]
   sig <- if ("pi_score" %in% names(r)) !is.na(r$pi_score) & r$pi_score < H9C2_PI_THRESH else rep(FALSE, nrow(r))
   tibble(uniprot_id = r$uniprot_id[sig], contrast = c, dir = ifelse(r$logFC[sig] > 0, "Up", "Down")) }))
@@ -280,9 +272,7 @@ source(here::here("05_Figures", "F01_QC_overview", "a_script", "_panel_F_enrichm
 source(here::here("05_Figures", "F01_QC_overview", "a_script", "_panel_G_rank.R"))         # -> pG (tag F)
 p_enrich <- pF; p_rank <- pG
 
-# ════════════════════════════════════════════════════════════════════════════
 # Composite (178 x 230 mm)
-# ════════════════════════════════════════════════════════════════════════════
 COMP_W <- 178; COMP_H <- 178
 # Combined A panel = PCA + leading-edge lollipop, aligned, sharing a key strip
 # (contrast key left of the GO Slim annotation key). Lollipop facet shading maps

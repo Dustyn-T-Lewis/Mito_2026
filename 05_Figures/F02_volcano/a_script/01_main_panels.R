@@ -6,12 +6,14 @@
 # enrichment arcs (Up right / Down left, symmetric). Reads existing pipeline
 # outputs + frozen rat fGSEA cache + additive rat caches; never re-runs 01-03.
 #
-# THREE composites are emitted, one per enrichment lens (specialized DB alone):
-#   _goslim : Hallmark + GO Slim   (coarse functional themes; rat org.Rn.eg.db)
-#   _corum  : CORUM complexes      (protein complexes; Human+Mouse→rat babelgene)
-#   _mito   : MitoCarta            (mitochondrial pathways; Mouse→rat babelgene)
-# All gene sets are RAT-specific (msigdbr rat orthologs / org.Rn.eg.db / babelgene).
-# Additive caches built by: build_fgsea_goslim_h9c2.R, build_fgsea_corum_h9c2.R.
+# TWO composites are emitted, both multi-DB pooled (per Reimand 2019 PMID 30664679):
+#   _pooled   : Hallmark + Reactome + KEGG + MitoCarta            [canonical, MAIN]
+#   _expanded : pooled + GO:BP                                    [depth, supp]
+# All gene sets are RAT-specific (msigdbr rat orthologs / babelgene).
+# Per-DB cap of 2 terms per ring controls visual dominance by any single DB.
+# Redundancy collapse uses combined Jaccard + Overlap Coefficient
+# (Merico 2010 PMID 21085593; EnrichmentMap default) via pathway_utils.R.
+# Per-DB results (mito-only, GO Slim, CORUM) live in the master fgsea cache.
 #
 # Biological framing verified against literature (see c_data/F02_citations.csv):
 #   PHE -> H9c2 hypertrophy: Hahn 2014 (PMID 24794531); Jeong 2009 (PMID 19299911)
@@ -31,9 +33,10 @@ source(here::here("04_Figures", "shared", "pathway_utils.R"))
 source(here::here("04_Figures", "shared", "figure_supplement_helpers.R"))
 source(here::here("04_Figures", "shared", "mitocarta_utils.R"))
 
-# MitoCarta is the canonical Figure-2 lens (OXPHOS/mitoribosome is the headline
-# of a mito-transplant rescue study); GO-Slim and CORUM go to the supplement.
-CANONICAL_LENS <- "mito"
+# Canonical Figure-2 lens is the curated 4-DB pool (Hallmark + Reactome + KEGG +
+# MitoCarta), which surfaces non-mito disease biology that the mito-only lens
+# hides while keeping MitoCarta resolution in the rescue/transplant panels.
+CANONICAL_LENS <- "pooled"
 
 BASE    <- fig05_base("F02_volcano")
 RPT_PDF <- file.path(BASE, "b_reports", "main", "pdf")
@@ -83,17 +86,20 @@ EMPTY_RING <- {
 MITO_COMPARTMENT_SETS <- c("MITOCARTA_IMM", "MITOCARTA_IMS",
                            "MITOCARTA_MATRIX", "MITOCARTA_OMM")
 
-# Three enrichment-lens composites (specialized DB alone). set_pool feeds dedup.
+# Two multi-DB pooled composites. set_pool feeds dedup; per_db_cap controls
+# how many terms each DB may contribute per ring (prevents single-DB monopoly).
 COMPOSITE_CONFIGS <- list(
-  goslim = list(suffix = "goslim", dbs = c("Hallmark", "GO Slim"), min_size = 15,
-                set_pool = c(rat_gene_sets$Hallmark, goslim_sets),
-                lens = "Hallmark + GO Slim (rat)"),
-  corum  = list(suffix = "corum", dbs = c("CORUM"), min_size = 3,
-                set_pool = corum_sets,
-                lens = "CORUM protein complexes (rat)"),
-  mito   = list(suffix = "mito", dbs = c("MitoCarta"), min_size = 10,
-                set_pool = rat_gene_sets$MitoCarta,
-                lens = "MitoCarta mitochondrial pathways (rat)"))
+  pooled   = list(suffix = "pooled", dbs = c("Hallmark", "Reactome", "KEGG", "MitoCarta"),
+                  min_size = 10, per_db_cap = 2,
+                  set_pool = c(rat_gene_sets$Hallmark, rat_gene_sets$Reactome,
+                               rat_gene_sets$KEGG, rat_gene_sets$MitoCarta),
+                  lens = "Hallmark + Reactome + KEGG + MitoCarta (curated 4-DB, rat)"),
+  expanded = list(suffix = "expanded", dbs = c("Hallmark", "Reactome", "KEGG", "GO:BP", "MitoCarta"),
+                  min_size = 10, per_db_cap = 2,
+                  set_pool = c(rat_gene_sets$Hallmark, rat_gene_sets$Reactome,
+                               rat_gene_sets$KEGG, rat_gene_sets$`GO:BP`,
+                               rat_gene_sets$MitoCarta),
+                  lens = "Hallmark + Reactome + KEGG + GO:BP + MitoCarta (expanded, rat)"))
 
 # Tidy a few over-long Reactome/CORUM/GO labels (keys = engine-cleaned text).
 LABEL_SHORTEN <- c(
@@ -111,11 +117,18 @@ shorten_label <- function(x) {
   ifelse(is.na(out), x, out)
 }
 
-pick_symmetric <- function(pool, n_each) {
+pick_symmetric <- function(pool, n_each, per_db_cap = NULL) {
   if (nrow(pool) == 0) return(pool[FALSE, ])
   pool <- arrange(pool, padj)
-  bind_rows(filter(pool, NES > 0) |> slice_head(n = n_each),
-            filter(pool, NES < 0) |> slice_head(n = n_each))
+  pick_side <- function(p) {
+    if (is.null(per_db_cap) || !"database" %in% names(p)) {
+      return(slice_head(p, n = n_each))
+    }
+    capped <- p |> group_by(database) |> slice_head(n = per_db_cap) |> ungroup() |> arrange(padj)
+    slice_head(capped, n = n_each)
+  }
+  bind_rows(pick_side(filter(pool, NES > 0)),
+            pick_side(filter(pool, NES < 0)))
 }
 
 contrast_stats <- function(ctr, dbs) {
@@ -140,7 +153,7 @@ build_ring_panel <- function(ctr, tag, cfg) {
       as.data.frame(sig_pool), pathways = cfg$set_pool,
       jaccard_cutoff = RING_JACCARD, cross_db = TRUE) |> as_tibble()
   }
-  top_terms <- pick_symmetric(sig_pool, RING_N_EACH)
+  top_terms <- pick_symmetric(sig_pool, RING_N_EACH, per_db_cap = cfg$per_db_cap)
   n_path <- nrow(top_terms); n_up <- sum(top_terms$NES > 0); n_dn <- sum(top_terms$NES < 0)
 
   ring_data <- if (n_path == 0) EMPTY_RING else
@@ -260,4 +273,4 @@ build_workbook(
       df = sheets[[i]])),
     ring_sheets))
 
-message("F02: mito lens -> b_reports/main; goslim + corum -> b_reports/supp")
+message("F02: pooled (4-DB curated) -> b_reports/main; expanded (+GO:BP) -> b_reports/supp")

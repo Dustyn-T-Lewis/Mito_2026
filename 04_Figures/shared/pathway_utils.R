@@ -1,7 +1,15 @@
 # Unified pathway enrichment utilities
-# MSigDB Hallmark (H), Canonical Pathways (C2:CP), GO:BP (C5:GO:BP); Jaccard dedup per Reimand et al. 2019
+# MSigDB Hallmark (H), Canonical Pathways (C2:CP), GO:BP (C5:GO:BP).
+# Redundancy collapse uses combined Jaccard + Overlap (Szymkiewicz-Simpson)
+# coefficient per the EnrichmentMap default (Merico 2010 PMID 21085593;
+# Reimand 2019 PMID 30664679 Box 1): two sets are redundant if either
+# Jaccard >= jaccard_cutoff OR Overlap >= overlap_cutoff. Jaccard handles
+# symmetric overlap; Overlap catches asymmetric containment (small set
+# entirely inside a large set) that Jaccard misses.
 
-deduplicate_enrichment_flat <- function(results, pathways, jaccard_cutoff = 0.5) {
+deduplicate_enrichment_flat <- function(results, pathways,
+                                        jaccard_cutoff = 0.5,
+                                        overlap_cutoff = 0.5) {
   if (nrow(results) == 0) return(results)
 
   results <- results[order(results$padj), ]
@@ -17,7 +25,10 @@ deduplicate_enrichment_flat <- function(results, pathways, jaccard_cutoff = 0.5)
     for (j in seq_along(kept_sets)) {
       inter <- length(intersect(pw_genes, kept_sets[[j]]))
       union <- length(union(pw_genes, kept_sets[[j]]))
-      if (union > 0 && (inter / union) > jaccard_cutoff) {
+      min_n <- min(length(pw_genes), length(kept_sets[[j]]))
+      jaccard <- if (union > 0) inter / union else 0
+      overlap <- if (min_n > 0) inter / min_n else 0
+      if (jaccard >= jaccard_cutoff || overlap >= overlap_cutoff) {
         is_redundant <- TRUE
         break
       }
@@ -36,12 +47,15 @@ deduplicate_enrichment_flat <- function(results, pathways, jaccard_cutoff = 0.5)
 # so the same biology appearing as both REACTOME_TCA_CYCLE and KEGG_CITRATE_CYCLE
 # collapses to a single canonical entry (lowest padj wins).
 # Falls back to flat dedup if no 'database' column.
-deduplicate_enrichment <- function(results, pathways, jaccard_cutoff = 0.5,
+deduplicate_enrichment <- function(results, pathways,
+                                   jaccard_cutoff = 0.5,
+                                   overlap_cutoff = 0.5,
                                    cross_db = TRUE) {
   if (nrow(results) == 0) return(results)
 
   if (!"database" %in% names(results)) {
-    return(deduplicate_enrichment_flat(results, pathways, jaccard_cutoff))
+    return(deduplicate_enrichment_flat(results, pathways,
+                                       jaccard_cutoff, overlap_cutoff))
   }
 
   dbs <- unique(results$database)
@@ -49,14 +63,16 @@ deduplicate_enrichment <- function(results, pathways, jaccard_cutoff = 0.5,
   for (db in dbs) {
     db_rows <- results[results$database == db, ]
     within_dedup[[db]] <- deduplicate_enrichment_flat(db_rows, pathways,
-                                                      jaccard_cutoff)
+                                                      jaccard_cutoff,
+                                                      overlap_cutoff)
   }
 
   survivors <- do.call(rbind, within_dedup)
   survivors <- survivors[order(survivors$padj), ]
 
   if (cross_db && nrow(survivors) > 1) {
-    survivors <- deduplicate_enrichment_flat(survivors, pathways, jaccard_cutoff)
+    survivors <- deduplicate_enrichment_flat(survivors, pathways,
+                                             jaccard_cutoff, overlap_cutoff)
   }
   survivors
 }

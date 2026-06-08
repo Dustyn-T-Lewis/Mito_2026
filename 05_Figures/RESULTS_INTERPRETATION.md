@@ -25,6 +25,14 @@ Stage 03 differential abundance used limma with `~ 0 + group + (1 | Replicate)`,
 routed through proteoDA's duplicateCorrelation interface. The capital-pi
 significance score (Π = P-value^|logFC|; Xiao et al. 2014, Bioinformatics
 30:801) was applied at Π < 0.05 alongside Benjamini-Hochberg FDR < 0.10.
+Pathway enrichment (fgsea) was harmonized across the curated four-database
+pool Hallmark + Reactome + KEGG + MitoCarta (rat-mapped). Redundancy
+across databases was collapsed using the combined Jaccard / Overlap-
+Coefficient criterion at threshold 0.5 (Merico et al. 2010, PLoS ONE
+PMID 21085593; Reimand et al. 2019, Nat Protoc PMID 30664679, Box 1) —
+the Jaccard pass handles symmetric overlap, and the Overlap-Coefficient
+pass catches asymmetric containment where a small specialized set is
+entirely inside a larger general set.
 
 # Method robustness
 
@@ -45,10 +53,12 @@ called proteins.
 Principal-component analysis separates the four groups along PC1
 (group main effect: PERMANOVA pseudo-F p = 4 × 10⁻⁴). Per-protein
 significance shows the expected ordering of effect sizes:
-PHEvPHE_MITO > CTLvMITO > CTLvPHE > Interaction. After harmonizing
-Hallmark, Reactome, and MitoCarta annotations and Jaccard-collapsing
-redundant gene sets, 167 unique Π-significant DEPs survive, with 41
-flagged as MitoCarta members. The mito-protein rank panel confirms
+PHEvPHE_MITO > CTLvMITO > CTLvPHE > Interaction. 167 unique
+Π-significant DEPs survive across the four core contrasts; 41 are
+MitoCarta members. After harmonizing the Hallmark + Reactome + MitoCarta
+pathway annotations and collapsing redundancy with the combined
+Jaccard / Overlap-Coefficient criterion (Methods), 82 unique pathways
+appear in the enrichment panel. The mito-protein rank panel confirms
 that the mito-transplanted contrasts pull mitochondrial proteins to
 the upper tail of the effect-size distribution.
 
@@ -57,21 +67,24 @@ The pipeline supplement (F01_QC_supplementary.xlsx) shows that normalization
 imputation (single missForest applied to all proteins) recover sample
 clustering consistent with the design.
 
-## F02 — Contrast-resolved volcano landscape (mito lens canonical, GO-Slim and CORUM as supplements)
+## F02 — Contrast-resolved volcano landscape (curated 4-DB pooled canonical, +GO:BP supplement)
 
-The 2 × 2 volcano-in-ring composite stratifies each contrast by MitoCarta
-pathway (main figure) and additionally by CORUM protein complexes and GO-Slim
-biological process (supplementary). The mito lens — chosen as canonical
-because the experimental intervention is mitochondrial — shows:
+The 2 × 2 volcano-in-ring composite pools four curated databases
+(Hallmark + Reactome + KEGG + MitoCarta, rat-mapped) for the canonical
+main figure, with an expanded supplement adding GO:BP for depth. Each
+ring caps individual database contribution at two terms to prevent any
+single database from dominating visual real-estate (Methods). Post-dedup
+counts shown in the rings:
 
-- **Transplant (CTLvMITO)**: 5 MitoCarta NES-significant pathways UP, 0 DOWN. OXPHOS subunits and mitoribosomal protein sets dominate.
-- **Rescue (PHEvPHE_MITO)**: 6 MitoCarta pathways UP after Jaccard collapse (13 pre-collapse), 0 DOWN. Mito delivery continues under PHE stress.
-- **Disease (CTLvPHE)**: 0 MitoCarta pathways pass NES significance with the harmonized collection — α1-adrenergic stress is not predominantly mitochondrial at the pathway level.
-- **Interaction**: 2 MitoCarta pathways with positive NES, descriptive only.
+- **Transplant (CTLvMITO)**: 9 pathways (6 up / 3 down). HALLMARK_OXIDATIVE_PHOSPHORYLATION is the strongest single signal (padj 1.3 × 10⁻⁶), with REACTOME_AEROBIC_RESPIRATION, MITOCARTA_MITORIBOSOME, MITOCARTA_TCA_CYCLE, and KEGG_GLYCOLYSIS triangulating the mitochondrial-delivery signature from four independent annotation perspectives.
+- **Rescue (PHEvPHE_MITO)**: 11 pathways (6 up / 5 down). HALLMARK_OXPHOS dominates UP (padj 1.5 × 10⁻¹⁶, the strongest single signal in the dataset), with HALLMARK_FATTY_ACID_METABOLISM and REACTOME_MITOCHONDRIAL_PROTEIN_DEGRADATION also UP. HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION, REACTOME_COLLAGEN_TRIMERIZATION, and FIBRONECTIN_MATRIX are DOWN — the reverse-image of the PHE-induced fibrotic signature (rescue of disease).
+- **Disease (CTLvPHE)**: 8 pathways (5 up / 3 down) — populated for the first time under the pooled lens. KEGG_ECM_RECEPTOR_INTERACTION (padj 0.002), REACTOME_STRIATED_MUSCLE_CONTRACTION (padj 0.007), REACTOME_FORMATION_OF_DYSTROPHIN_GLYCOPROTEIN_COMPLEX, HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION, and KEGG_DILATED_CARDIOMYOPATHY are UP, recovering the Hahn 2014 (PMID 24794531) PHE-driven fibrotic / sarcomeric / ECM-remodeling axis at pathway resolution. HALLMARK_MYC_TARGETS_V1, REACTOME_DNA_REPLICATION, and HALLMARK_E2F_TARGETS are DOWN — proliferation arrest paired with hypertrophy, classic for terminally-differentiating cardiomyoblasts under α1-adrenergic stress.
+- **Interaction**: 11 pathways (descriptive only at N = 24).
 
-The CORUM and GO-Slim variants in the supplement provide complementary
-biological-process and macromolecular-complex framing without changing the
-contrast-level conclusion.
+The expanded supplement (Figure S2, adds GO:BP) provides depth for
+readers interested in finer-resolution biological-process terms;
+GO:BP-tagged actin / sarcomere / muscle-organ-development terms
+triangulate the curated-DB findings for the Disease panel.
 
 ## F03 — Transplant vs Rescue concordance
 
@@ -101,10 +114,12 @@ PHE-perturbed proteome toward control.
 ## F05 — Pathway-set scores and module structure
 
 Set-level scoring with both GSVA and singscore (per-contrast Spearman ρ
-0.78–0.83) shows that 49 sets pass FDR < 0.05 under PHE+Mito Rescue,
-21 under Transplant, 0 under Disease and Interaction. The two stronger
-contrasts clear the methodological-agreement floor (ρ > 0.80); the two
-weaker contrasts sit just below (0.79 and 0.78), consistent with noisier
+0.77–0.82) shows that 12 sets pass FDR < 0.05 under PHE+Mito Rescue,
+9 under Transplant, 0 under Disease and Interaction (after stricter
+combined Jaccard / Overlap-Coefficient dedup of the harmonized
+collection, 1,625 → 416 sets). The two stronger contrasts clear or
+sit at the methodological-agreement floor (ρ ≥ 0.80); the two weaker
+contrasts sit just below (0.78 and 0.77), consistent with noisier
 method agreement when underlying effects are null.
 
 The WGCNA supplement is exploratory only (the module-eigengene LMMs use
@@ -254,3 +269,20 @@ representation.
    Nucleic Acids Res. 2021;49(D1):D1541-D1547. PMID 33174596.
 7. Xiao Y, Hsiao TH, Suresh U, et al. A novel significance score for gene
    selection and ranking. Bioinformatics. 2014;30(6):801-7. PMID 22321699.
+8. Subramanian A, Tamayo P, Mootha VK, et al. Gene set enrichment analysis:
+   a knowledge-based approach for interpreting genome-wide expression
+   profiles. Proc Natl Acad Sci U S A. 2005;102(43):15545-50. PMID 16199517.
+9. Liberzon A, Birger C, Thorvaldsdóttir H, et al. The Molecular Signatures
+   Database (MSigDB) hallmark gene set collection. Cell Syst.
+   2015;1(6):417-425. PMID 26771021.
+10. Gillespie M, Jassal B, Stephan R, et al. The Reactome pathway
+    knowledgebase 2022. Nucleic Acids Res. 2022;50(D1):D687-D692.
+    PMID 34788843.
+11. Kanehisa M. Toward understanding the origin and evolution of cellular
+    organisms. Protein Sci. 2019;28(11):1947-1951. PMID 31441146.
+12. Merico D, Isserlin R, Stueker O, Emili A, Bader GD. Enrichment map:
+    a network-based method for gene-set enrichment visualization and
+    interpretation. PLoS ONE. 2010;5(11):e13984. PMID 21085593.
+13. Reimand J, Isserlin R, Voisin V, et al. Pathway enrichment analysis
+    and visualization of omics data using g:Profiler, GSEA, Cytoscape
+    and EnrichmentMap. Nat Protoc. 2019;14(2):482-517. PMID 30664679.

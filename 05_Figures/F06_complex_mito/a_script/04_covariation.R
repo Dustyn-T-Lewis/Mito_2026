@@ -100,3 +100,26 @@ ggsave(file.path(SUPP_PNG, "SUPP_F06_covariation.png"), comp, width = COMP_W, he
 message(sprintf("F06 covariation supplement done | %d subunits across %d complexes; cohesion range %.2f–%.2f (weak ⇒ covariation underpowered at n=%d)",
                 nrow(subunit_cov), nrow(complex_cov),
                 min(complex_cov$mean_pairwise_r), max(complex_cov$mean_pairwise_r), ncol(mat)))
+
+# F06 supplementary workbook: bundle the analytics CSVs into one xlsx.
+source(here::here("04_Figures", "shared", "figure_supplement_helpers.R"))
+read_f06_csv <- function(fn) as.data.frame(read_csv(file.path(DAT, fn), show_col_types = FALSE))
+build_workbook(
+  file.path(DAT, "F06_supplementary.xlsx"),
+  sheet_specs = list(
+    list(name = "complex_camera",       df = read_f06_csv("complex_camera.csv")),
+    list(name = "complex_subunit_logfc",df = read_f06_csv("complex_subunit_logfc.csv")),
+    list(name = "mitonuclear_balance",  df = read_f06_csv("mitonuclear_balance.csv")),
+    list(name = "mitonuclear_lmm",      df = read_f06_csv("mitonuclear_lmm.csv")),
+    list(name = "mito_content",         df = read_f06_csv("mito_content.csv")),
+    list(name = "mito_content_lmm",     df = read_f06_csv("mito_content_lmm.csv")),
+    list(name = "mito_pathway_camera",  df = read_f06_csv("mito_pathway_camera.csv")),
+    list(name = "dynamics_scores",      df = read_f06_csv("dynamics_scores.csv")),
+    list(name = "dynamics_lmm",         df = read_f06_csv("dynamics_lmm.csv")),
+    list(name = "dynamics_camera",      df = read_f06_csv("dynamics_camera.csv")),
+    list(name = "pair_stoich_lmm",      df = read_f06_csv("pair_stoich_lmm.csv")),
+    list(name = "pair_stoich_counts",   df = read_f06_csv("pair_stoich_counts.csv")),
+    list(name = "alteredpqr_results",   df = read_f06_csv("alteredpqr_results.csv")),
+    list(name = "alteredpqr_counts",    df = read_f06_csv("alteredpqr_counts.csv")),
+    list(name = "covariation_subunit",  df = as.data.frame(subunit_cov)),
+    list(name = "covariation_complex",  df = as.data.frame(complex_cov))))

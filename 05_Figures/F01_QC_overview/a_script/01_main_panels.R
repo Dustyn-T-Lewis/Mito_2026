@@ -109,6 +109,8 @@ frac_df <- bind_rows(lapply(CORE, \(ctr) { cc <- sig_counts[, ctr]
   mutate(contrast = factor(contrast, levels = rev(ctr_levels)),
          threshold = factor(threshold, levels = c("p < 0.05", paste0("q < ", H9C2_FDR_EXPLOR), "Π < 0.05")),
          pct = 100 * n / n_total, fill_key = paste(contrast, threshold, sep = "___")) |> filter(n > 0)
+write_csv(frac_df, file.path(DAT, "panel_C_dep_counts.csv"))
+write_csv(as.data.frame(fig05_contrast_table()), file.path(DAT, "panel_contrast_map.csv"))
 SET_COLS <- setNames(unname(CONTRAST_COLORS[CORE]), unname(CTR_LAB))
 FRAC_FILL <- c(); for (cn in names(SET_COLS)) { col <- unname(SET_COLS[cn])
   FRAC_FILL[paste(cn, "p < 0.05", sep = "___")] <- adjustcolor(col, alpha.f = 0.18)
@@ -329,17 +331,5 @@ composite <- (row1 / wrap_elements(full = pDEF) / row2) +
 
 ggsave(file.path(RPT_PDF, "MAIN_F01_composite.pdf"), composite, width = COMP_W, height = COMP_H, units = "mm", device = pdf_dev, limitsize = FALSE)
 ggsave(file.path(RPT_PNG, "MAIN_F01_composite.png"), composite, width = COMP_W, height = COMP_H, units = "mm", dpi = 300, limitsize = FALSE)
-
-build_workbook(
-  file.path(DAT, "F01_supplementary.xlsx"),
-  sheet_specs = list(
-    list(name = "contrast_map",       df = fig05_contrast_table()),
-    list(name = "panel_A_pca",        df = as.data.frame(pca_df)),
-    list(name = "panel_A_permanova",  df = as.data.frame(pair_res)),
-    list(name = "panel_C_dep_counts", df = as.data.frame(frac_df)),
-    list(name = "panel_D_upset",      df = as.data.frame(inter_df)),
-    list(name = "panel_E_enrichment", df = as.data.frame(read_csv(file.path(DAT, "panel_F_enrichment_sig.csv"), show_col_types = FALSE))),
-    list(name = "panel_F_rank_counts",df = as.data.frame(read_csv(file.path(DAT, "panel_G_rank_counts.csv"), show_col_types = FALSE))),
-    list(name = "panel_B_lollipop",   df = as.data.frame(read_csv(file.path(DAT, "panel_lollipop_leadingedge.csv"), show_col_types = FALSE)))))
 
 message(sprintf("F01 MAIN composite (%dx%d mm) | PERMANOVA p=%.4f | %d unique Π DEPs", COMP_W, COMP_H, perm_p, length(all_sig)))

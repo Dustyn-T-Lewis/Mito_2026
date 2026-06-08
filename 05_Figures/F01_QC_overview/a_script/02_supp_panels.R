@@ -294,22 +294,34 @@ dens_summary <- dens_df |>
   summarise(n = n(), mean = mean(value), median = median(value), sd = sd(value), .by = type) |>
   mutate(oob_error = ifelse(type == "Imputed", int_imp$oob_error, NA_real_))
 
+read_panel_csv <- function(fn) as.data.frame(read_csv(file.path(DAT, fn), show_col_types = FALSE))
+
 build_workbook(
-  file.path(DAT, "F01_QC_supplementary.xlsx"),
+  file.path(DAT, "F01_supplementary.xlsx"),
   sheet_specs = list(
-    list(name = "panel_A_filter",   df = as.data.frame(fcasc)),
-    list(name = "panel_B_prot_miss",df = as.data.frame(miss_hist_df)),
-    list(name = "panel_C_pca_pre",  df = as.data.frame(pca_pre_df)),
-    list(name = "panel_D_pca_post", df = as.data.frame(pca_post_df)),
-    list(name = "panel_E_eta2",     df = as.data.frame(eta_df)),
-    list(name = "panel_F_outlier",  df = as.data.frame(od)),
-    list(name = "panel_G_samp_miss",df = as.data.frame(miss_bar)),
-    list(name = "panel_H_miss_class",df = as.data.frame(mc)),
-    list(name = "panel_I_class_cnt",df = as.data.frame(class_counts)),
-    list(name = "panel_J_benchmark",df = bench_sheet),
-    list(name = "panel_K_density",  df = as.data.frame(dens_summary)),
-    list(name = "panel_L_mnar_shift",df = as.data.frame(audit)),
-    list(name = "panel_M_integrity",df = as.data.frame(samp_integrity)),
-    list(name = "panel_N_da_counts",df = as.data.frame(dep_counts))))
+    # MAIN composite panel source data (from 01_main_panels.R per-panel CSVs)
+    list(name = "main_contrast_map",        df = read_panel_csv("panel_contrast_map.csv")),
+    list(name = "main_panel_A_pca",         df = read_panel_csv("panel_A_pca.csv")),
+    list(name = "main_panel_A_permanova",   df = read_panel_csv("panel_A_pairwise_permanova.csv")),
+    list(name = "main_panel_B_lollipop",    df = read_panel_csv("panel_lollipop_leadingedge.csv")),
+    list(name = "main_panel_C_dep_counts",  df = read_panel_csv("panel_C_dep_counts.csv")),
+    list(name = "main_panel_D_enrichment",  df = read_panel_csv("panel_F_enrichment_sig.csv")),
+    list(name = "main_panel_E_upset",       df = read_panel_csv("panel_D_upset_membership.csv")),
+    list(name = "main_panel_F_rank_counts", df = read_panel_csv("panel_G_rank_counts.csv")),
+    # SUPP QC panel source data (this script)
+    list(name = "supp_panel_A_filter",      df = as.data.frame(fcasc)),
+    list(name = "supp_panel_B_prot_miss",   df = as.data.frame(miss_hist_df)),
+    list(name = "supp_panel_C_pca_pre",     df = as.data.frame(pca_pre_df)),
+    list(name = "supp_panel_D_pca_post",    df = as.data.frame(pca_post_df)),
+    list(name = "supp_panel_E_eta2",        df = as.data.frame(eta_df)),
+    list(name = "supp_panel_F_outlier",     df = as.data.frame(od)),
+    list(name = "supp_panel_G_samp_miss",   df = as.data.frame(miss_bar)),
+    list(name = "supp_panel_H_miss_class",  df = as.data.frame(mc)),
+    list(name = "supp_panel_I_class_cnt",   df = as.data.frame(class_counts)),
+    list(name = "supp_panel_J_benchmark",   df = bench_sheet),
+    list(name = "supp_panel_K_density",     df = as.data.frame(dens_summary)),
+    list(name = "supp_panel_L_mnar_shift",  df = as.data.frame(audit)),
+    list(name = "supp_panel_M_integrity",   df = as.data.frame(samp_integrity)),
+    list(name = "supp_panel_N_da_counts",   df = as.data.frame(dep_counts))))
 
 message("F01 SUPP QC pages done (normalization + imputation)")

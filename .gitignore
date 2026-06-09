@@ -34,3 +34,13 @@ renv/staging/
 
 # Operational working notes (not project documentation)
 /*_PROMPT.md
+
+# Writeup / documentation deliverables (live locally; README.md is the only
+# tracked doc for repo orientation)
+**/*.docx
+**/*.pdf
+**/RESULTS_INTERPRETATION.*
+**/METHODS*.md
+**/MANUSCRIPT*.md
+**/AUDIT*.md
+**/NOTES*.md

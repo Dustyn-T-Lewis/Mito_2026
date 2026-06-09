@@ -5,7 +5,9 @@
 # (consistent with fetch_rat_gene_sets.R: Human→rat direct; Mouse→human→rat).
 # Rat-native CORUM complexes are skipped to avoid symbol-case ambiguity; Human
 # (n≈5638) + Mouse (n≈2245) dominate coverage anyway.
-#   Inputs : /Users/dtl0018/Documents/corum_allComplexes.txt
+#   Inputs : corum_allComplexes.txt — download from https://mips.helmholtz-muenchen.de/corum/
+#            Default location: 00_input/corum_allComplexes.txt
+#            Override via env var H9C2_CORUM_TXT.
 #            03_DEP/c_data/03_combined_results.csv (moderated t per contrast)
 #   Outputs: 04_Figures/shared/fgsea_corum_h9c2.csv  (cache-schema rows)
 #            04_Figures/shared/corum_rat_gene_sets.rds (sets, for ring dedup)
@@ -17,7 +19,12 @@ suppressPackageStartupMessages({
 source(here::here("00_input", "h9c2_design.R"))
 set.seed(42)
 
-CORUM_TXT <- "/Users/dtl0018/Documents/corum_allComplexes.txt"
+CORUM_TXT <- Sys.getenv("H9C2_CORUM_TXT",
+                        unset = here::here("00_input", "corum_allComplexes.txt"))
+if (!file.exists(CORUM_TXT))
+  stop("CORUM file not found at ", CORUM_TXT,
+       "\nDownload corum_allComplexes.txt from https://mips.helmholtz-muenchen.de/corum/",
+       "\nPlace at 00_input/corum_allComplexes.txt or set H9C2_CORUM_TXT.")
 OUT_CSV   <- here::here("04_Figures", "shared", "fgsea_corum_h9c2.csv")
 OUT_RDS   <- here::here("04_Figures", "shared", "corum_rat_gene_sets.rds")
 DEP <- read_csv(here::here("03_DEP", "c_data", "03_combined_results.csv"), show_col_types = FALSE)

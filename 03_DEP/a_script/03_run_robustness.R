@@ -11,6 +11,7 @@ library(openxlsx)
 library(boot)
 library(pwr)
 library(proteoDA)
+library(proDA)
 
 set.seed(42)
 source(here::here("03_DEP", "a_script", "_setup.R"))
@@ -171,6 +172,62 @@ if (file.exists(IMP_DALIST)) {
   message("Imputed DAList not found — skipping sensitivity")
 }
 
+# 4c. proDA sensitivity (Ahlmann-Eltze 2020, doi:10.1101/661496)
+# Refit canonical contrasts with proDA's probabilistic dropout model on the
+# cycloess matrix with NAs preserved. Replicate is a fixed effect because proDA
+# does not support random effects; the primary block model remains limma +
+# duplicateCorrelation. Reports Spearman rho of proDA logFC vs canonical limma.
+
+proda_sensitivity <- tibble(contrast = character(), spearman_rho = numeric(),
+                            p_value = numeric(), n_proteins = integer())
+
+dal_norm <- readRDS(NORM_DALIST)
+prot_mat <- as.matrix(dal_norm$data)
+proda_meta <- as.data.frame(dal_norm$metadata)
+design_proda <- model.matrix(~ 0 + Group + Replicate, data = proda_meta)
+colnames(design_proda) <- gsub("^Group", "", colnames(design_proda))
+
+fit_proda <- proDA::proDA(prot_mat, design = design_proda,
+                          data_is_log_transformed = TRUE)
+
+proda_contrast_strings <- c(
+  CTLvPHE       = "PHE - Ctl",
+  CTLvMITO      = "Mito - Ctl",
+  PHEvPHE_MITO  = "PHE_Mito - PHE",
+  Interaction   = "(PHE_Mito - PHE) - (Mito - Ctl)",
+  MITOvPHE_MITO = "PHE_Mito - Mito")
+
+comb_lfc <- readr::read_csv(file.path(DAT, "03_combined_results.csv"),
+                            show_col_types = FALSE)
+
+# Discriminating subset: proteins with any NAs (where limma drops samples and
+# proDA models dropout) -- the cases where the two methods can actually differ.
+missing_ids <- rownames(prot_mat)[rowSums(is.na(prot_mat)) > 0]
+
+proda_sensitivity <- list_rbind(lapply(contrast_names, \(cn) {
+  if (!(cn %in% names(proda_contrast_strings))) return(NULL)
+  td <- proDA::test_diff(fit_proda, contrast = proda_contrast_strings[[cn]])
+  m  <- inner_join(
+    comb_lfc |> select(uniprot_id, lfc_prim = all_of(paste0("logFC_", cn))),
+    tibble(uniprot_id = td$name, lfc_proda = td$diff),
+    by = join_by(uniprot_id)) |>
+    filter(!is.na(lfc_prim) & !is.na(lfc_proda))
+  sp_all <- suppressWarnings(cor.test(m$lfc_prim, m$lfc_proda, method = "spearman"))
+  m_sub  <- m[m$uniprot_id %in% missing_ids, ]
+  sp_sub <- suppressWarnings(cor.test(m_sub$lfc_prim, m_sub$lfc_proda, method = "spearman"))
+  tibble(contrast = cn,
+         spearman_rho = round(sp_all$estimate, 4),
+         p_value = sp_all$p.value,
+         n_proteins = nrow(m),
+         spearman_rho_missing = round(sp_sub$estimate, 4),
+         n_proteins_missing = nrow(m_sub))
+}))
+message("proDA sensitivity (all | missing-subset): ",
+        paste(sprintf("%s %.3f | %.3f", proda_sensitivity$contrast,
+                      proda_sensitivity$spearman_rho,
+                      proda_sensitivity$spearman_rho_missing),
+              collapse = " ; "))
+
 # 4b. Reinjection + robust-eBayes sensitivity
 # Reinjection (r-suffixed re-runs) is imbalanced across groups (Ctl 1, Mito 0,
 # PHE 2, PHE_Mito 3) and is NOT in the primary block model. Refit with
@@ -242,6 +299,7 @@ message("Robust-eBayes sensitivity computed for ", length(contrast_names), " con
 wb <- loadWorkbook(XLSX)
 robustness_sheets <- c("mito_effect_magnitude", "bootstrap_ci",
                        "power_analysis", "imputation_sensitivity",
+                       "proda_sensitivity",
                        "reinjection_sensitivity", "ebayes_robust_sensitivity")
 for (s in intersect(robustness_sheets, names(wb))) removeWorksheet(wb, s)
 write_h9c2_sheet(wb, "mito_effect_magnitude", mito_magnitude)
@@ -249,6 +307,9 @@ write_h9c2_sheet(wb, "bootstrap_ci",          boot_df)
 write_h9c2_sheet(wb, "power_analysis",        power_df)
 if (nrow(sens_df) > 0) {
   write_h9c2_sheet(wb, "imputation_sensitivity", sens_df)
+}
+if (nrow(proda_sensitivity) > 0) {
+  write_h9c2_sheet(wb, "proda_sensitivity", proda_sensitivity)
 }
 if (nrow(reinjection_sensitivity) > 0) {
   write_h9c2_sheet(wb, "reinjection_sensitivity", reinjection_sensitivity)

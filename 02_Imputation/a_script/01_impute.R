@@ -40,7 +40,10 @@ miss_by_group <- sapply(levels(meta$Group), \(g) {
   rowSums(is.na(mat[, cols, drop = FALSE])) / length(cols) * 100
 })
 
-# 3. MAR/MNAR classification (3-method consensus, >=2/3)
+# 3. MAR/MNAR classification (3-method consensus, >=2/3).
+# Protein-level Lazar (2016) adapter (PMID 26906401) -- kmeans (intensity x
+# missingness), global logistic, left-tail proximity. msImpute (PMID 37105364)
+# is peptide-level by design and not valid on this DIA-NN protein matrix.
 
 has_na   <- which(prot_miss > 0 & prot_miss < ncol(mat))
 inc_mean <- obs_means[has_na]
@@ -157,12 +160,21 @@ mnar_audit <- tibble(
 imp_df  <- bind_cols(ann, as_tibble(mat_imp))
 mask_df <- bind_cols(tibble(uniprot_id = rownames(was_na)),
                      as_tibble(was_na + 0L))
+# Per-condition MNAR cell-rate (Lazar 2016, PMID 26906401): concentrated MNAR
+# in one group suggests biological dropout vs LOQ across the board.
+group_mnar_rate <- sapply(levels(meta$Group), \(g) {
+  cols <- meta$Col_ID[meta$Group == g]
+  round(mean(is.na(mat[mnar_ids, cols, drop = FALSE])), 4)
+})
+
 summary_df <- tibble(
   metric = c("n_proteins", "n_samples", "pct_missing", "n_complete",
              "n_mar_proteins", "n_mnar_proteins", "n_mar_values",
-             "n_mnar_values", "method", "oob_error"),
+             "n_mnar_values", "method", "oob_error",
+             paste0("mnar_rate_", names(group_mnar_rate))),
   value = c(nrow(mat), ncol(mat), pct_miss, n_comp, n_mar, n_mnar,
-            mar_vals, mnar_vals, "missForest", round(oob, 4)))
+            mar_vals, mnar_vals, "missForest", round(oob, 4),
+            unname(group_mnar_rate)))
 
 wb <- createWorkbook()
 write_h9c2_sheet(wb, "imputed_matrix",          imp_df)

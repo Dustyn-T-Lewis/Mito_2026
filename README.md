@@ -52,6 +52,8 @@ install.packages(c(
 BiocManager::install(c(
   # limma: pulled by proteoDA; also called directly for robustness refits and F06 camera
   "limma",
+  # proDA: protein-level probabilistic dropout DE (Stage 03 proDA sensitivity sheet)
+  "proDA",
   # set scoring + pathway enrichment
   "GSVA", "singscore", "fgsea",
   # F06 subunit-pair stoichiometry test (Buljan 2023)

@@ -11,7 +11,9 @@ source(here("00_input", "h9c2_design.R"))
 source(here("R", "dep_model.R"))
 
 nd <- here("02_Normalization", "c_data")
-methods <- c(mscoreutils = "04_DAList_imputed_mscoreutils.rds", imp4p = "05_DAList_imputed_imp4p.rds")
+methods <- c(imp4p       = "DAList_imputed_imp4p.rds",
+             mscoreutils = "DAList_imputed_mscoreutils.rds",
+             our         = "DAList_imputed_our.rds")
 
 runs <- imap(methods, function(rds, m) {
   dal <- readRDS(file.path(nd, rds))

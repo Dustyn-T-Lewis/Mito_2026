@@ -44,3 +44,7 @@ renv/staging/
 **/MANUSCRIPT*.md
 **/AUDIT*.md
 **/NOTES*.md
+
+# regenerated stage artifacts
+0*/c_data/
+0*/b_reports/

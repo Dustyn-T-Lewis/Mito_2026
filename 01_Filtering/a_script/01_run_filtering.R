@@ -14,7 +14,7 @@
 
 suppressPackageStartupMessages({
   library(proteoDA); library(here); library(readxl); library(readr)
-  library(dplyr); library(tidyr); library(stringr)
+  library(dplyr); library(tidyr); library(stringr); library(openxlsx); library(ggplot2)
 })
 set.seed(42)
 source(here("00_input", "h9c2_design.R"))      # h9c2_strip_raw, load_h9c2_metadata, H9C2_* constants
@@ -26,10 +26,12 @@ cfg <- list(
   raw = here("00_input", "H9c2_raw.xlsx"), meta = here("00_input", "H9c2_meta.csv"),
   hao = here("00_input", "hao_cellculture_contaminants.fasta"),
   hpa_secreted = here("00_input", "hpa_secreted_to_blood.txt"),
-  data_dir = here("01_Filtering", "c_data"),
+  data_dir = here("01_Filtering", "c_data"), report_dir = here("01_Filtering", "b_reports"),
   min_reps = H9C2_MIN_REPS, outlier_k = H9C2_OUTLIER_K, mad_k = H9C2_MAD_K, mahal_p = H9C2_MAHAL_P
 )
-dir.create(cfg$data_dir, recursive = TRUE, showWarnings = FALSE)
+clear_dir <- function(d) { dir.create(d, recursive = TRUE, showWarnings = FALSE)
+  unlink(setdiff(list.files(d, full.names = TRUE), file.path(d, ".gitkeep")), recursive = TRUE) }
+clear_dir(cfg$data_dir); clear_dir(cfg$report_dir)
 
 # --- 1. Load + metadata ------------------------------------------------------
 raw <- read_excel(cfg$raw)
@@ -50,9 +52,8 @@ flag  <- flag_contaminants(annotation$gene, annotation$description, serum)
 flog  <- tibble(step = "Raw input", n_after = n_raw, n_removed = NA_integer_)
 flog  <- bind_rows(flog, tibble(step = "Contaminant removal (keratin + FBS serum)",
                                 n_after = sum(!flag$is_contaminant), n_removed = sum(flag$is_contaminant)))
-write_csv(annotation[flag$is_contaminant, c("uniprot_id", "gene", "description")] |>
-            mutate(reason = flag$reason[flag$is_contaminant]),
-          file.path(cfg$data_dir, "04_contaminants_removed.csv"))
+removed_contam <- annotation[flag$is_contaminant, c("uniprot_id", "gene", "description")] |>
+  mutate(reason = flag$reason[flag$is_contaminant])
 annotation <- annotation[!flag$is_contaminant, ]; intensity <- intensity[!flag$is_contaminant, ]
 cat(sprintf("Contaminants removed: %d keratin + %d FBS serum\n",
             sum(flag$reason == "keratin", na.rm = TRUE), sum(grepl("serum", flag$reason), na.rm = TRUE)))
@@ -90,13 +91,22 @@ outlier_ids <- outlier_diag$Col_ID[outlier_diag$consensus_outlier]
 cat(sprintf("Outliers (>=%d/4): %s\n", cfg$outlier_k, if (length(outlier_ids)) paste(outlier_ids, collapse = ", ") else "none"))
 if (length(outlier_ids)) dal <- filter_samples(dal, !(Col_ID %in% outlier_ids))
 
-# --- 5. Export ---------------------------------------------------------------
-saveRDS(dal, file.path(cfg$data_dir, "01_DAList_filtered.rds"))
-write_csv(bind_cols(as_tibble(dal$annotation) |> select(uniprot_id, protein, gene, description),
-                    as_tibble(dal$data)), file.path(cfg$data_dir, "02_filtered_matrix.csv"))
-write_csv(flog, file.path(cfg$data_dir, "03_filter_log.csv"))
-saveRDS(list(filter_log = flog, outlier_diag = outlier_diag, serum_panel = serum, n_raw = n_raw),
-        file.path(cfg$data_dir, "00_filter_intermediates.rds"))
+# --- 5. Export: RDS handoff + ONE multi-sheet workbook + contaminant report ---
+saveRDS(dal, file.path(cfg$data_dir, "DAList_filtered.rds"))    # clean handoff to Stage 02
+write.xlsx(
+  list(filter_log          = flog,
+       contaminants_removed = removed_contam,
+       outlier_diagnostics  = outlier_diag,
+       serum_panel          = tibble(gene = serum)),
+  file.path(cfg$data_dir, "filtering_report.xlsx"), overwrite = TRUE)
+
+ggsave(file.path(cfg$report_dir, "contaminants.pdf"),
+       count(removed_contam, reason) |> ggplot(aes(reorder(reason, n), n, fill = reason)) +
+         geom_col(show.legend = FALSE) + geom_text(aes(label = n), hjust = -0.2, size = 4) +
+         scale_fill_manual(values = c("keratin" = "#4393C3", "FBS serum (bovine plasma)" = "#D6604D")) +
+         coord_flip(clip = "off") + labs(title = "Contaminants filtered out", x = NULL, y = "proteins") +
+         theme_minimal(base_size = 11),
+       width = 7, height = 3.2)
 if (file.exists("Rplots.pdf")) file.remove("Rplots.pdf")
 cat(sprintf("Done: %d proteins x %d samples -> %s/\n", nrow(dal$data), ncol(dal$data), cfg$data_dir))
 print(as.data.frame(flog))

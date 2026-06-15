@@ -23,9 +23,12 @@ run_dep_model <- function(dal, formula, contrasts_vec, out_dir, grouping_column,
   dal <- fit_limma_model(dal)
   dal <- extract_DA_results(dal, pval_thresh = pval_thresh, lfc_thresh = 0, adj_method = "BH")
 
-  # proteoDA native result tables (summary + per-contrast + combined + xlsx)
+  # proteoDA native result tables -> keep the consolidated multi-sheet results.xlsx
+  # and drop the loose CSVs it also emits (redundant with the workbook).
   write_limma_tables(dal, output_dir = out_dir, overwrite = TRUE,
                      annot_cols = c("uniprot_id", "gene", "protein", "description"))
+  unlink(c(file.path(out_dir, "combined_results.csv"), file.path(out_dir, "DA_summary.csv"),
+           file.path(out_dir, "per_contrast_results")), recursive = TRUE)
 
   # proteoDA native diagnostic plots (volcano / MD / p-value histogram)
   if (!is.null(report_dir)) {

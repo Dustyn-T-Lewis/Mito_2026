@@ -9,7 +9,11 @@ suppressPackageStartupMessages({ library(here) })
 source(here("00_input", "h9c2_design.R"))   # H9C2_DESIGN_FORMULA, H9C2_CONTRASTS, H9C2_*_THRESH
 source(here("R", "dep_model.R"))
 
-dal <- readRDS(here("02_Normalization", "c_data", "03_DAList_normalized.rds"))
+clear_dir <- function(d) { dir.create(d, recursive = TRUE, showWarnings = FALSE)
+  unlink(setdiff(list.files(d, full.names = TRUE), file.path(d, ".gitkeep")), recursive = TRUE) }
+clear_dir(here("03_DEP", "a_non_imputed", "c_data")); clear_dir(here("03_DEP", "a_non_imputed", "b_reports"))
+
+dal <- readRDS(here("02_Normalization", "c_data", "DAList_normalized.rds"))
 cat(sprintf("NON-imputed DEP: %d proteins x %d samples\n", nrow(dal$data), ncol(dal$data)))
 
 out <- run_dep_model(dal, H9C2_DESIGN_FORMULA, H9C2_CONTRASTS,

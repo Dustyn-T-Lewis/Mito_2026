@@ -11,15 +11,17 @@ suppressPackageStartupMessages({
   library(dplyr); library(readr); library(fgsea)
 })
 
-source(here::here("00_input", "h9c2_design.R"))
+H9C2_CORE_CONTRASTS <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO", "Interaction")
 source(here::here("04_Figures", "shared", "pathway_utils.R"))
 
 set.seed(42)
 
 OUT_CSV <- here::here("04_Figures", "shared", "fgsea_goslim_h9c2.csv")
 OUT_RDS <- here::here("04_Figures", "shared", "goslim_rat_gene_sets.rds")
-DEP <- read_csv(here::here("03_DEP", "c_data", "03_combined_results.csv"),
-                show_col_types = FALSE)
+DEP <- read_csv(here::here("03_DEP", "a_non_imputed", "c_data", "combined_results_pi.csv"),
+                show_col_types = FALSE) |>
+  tidyr::pivot_wider(id_cols = c(uniprot_id, gene), names_from = contrast,
+                     values_from = t, names_glue = "t_{contrast}")
 
 # Rat (org.Rn.eg.db) GO Slim Generic BP gene sets.
 goslim <- build_goslim_gene_sets(species = "Rattus norvegicus",

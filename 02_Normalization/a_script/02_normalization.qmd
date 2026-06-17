@@ -1,0 +1,153 @@
+---
+title: "Mito 02 — Normalization & Imputation"
+subtitle: "Cyclic-loess normalization, and when to fill missing values"
+author: "A_Mito_2026"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    theme: cosmo
+    embed-resources: true
+    df-print: paged
+execute:
+  eval: true
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(here)
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+This document reproduces stage 02 of the Mito pipeline and shows the result of
+each step. It runs the same logic as `02_Normalization/a_script/01_run_normalization.R`
+(plus the two imputation arms in `02_Normalization/imputation/a_script/`), in
+memory, writing no files.
+
+# Load the filtered `DAList` {#sec-load}
+
+Stage 01 hands off a filtered, un-normalized object that still carries its
+(small) missingness:
+
+```{r}
+#| label: load
+library(proteoDA)
+dal <- readRDS(here("01_Filtering", "c_data", "DAList_filtered.rds"))
+miss_before <- round(100 * mean(is.na(dal$data)), 1)
+dim(dal$data)
+miss_before                               # small but non-zero missingness, not yet imputed
+dal$tags
+```
+
+# Normalize with cyclic loess {#sec-normalize}
+
+Samples load onto the instrument slightly differently, so whole samples sit
+higher or lower for technical reasons. `normalize_data(norm_method = "cycloess")`
+evens out each sample's median log-intensity in one native call:
+
+```{r}
+#| label: normalize
+before <- apply(log2(as.matrix(dal$data)), 2, median, na.rm = TRUE)
+dal <- normalize_data(dal, norm_method = "cycloess")
+after  <- apply(log2(as.matrix(dal$data)), 2, median, na.rm = TRUE)
+
+rbind(before = summary(before), after = summary(after))   # spread collapses to a tight band
+dal$tags                                                  # new 'normalized' + 'norm_method' tags
+```
+
+Normalization **rescales** but does not fill anything in — the missingness is
+unchanged:
+
+```{r}
+#| label: missing-unchanged
+c(before_pct = miss_before,
+  after_pct  = round(100 * mean(is.na(dal$data)), 1))
+```
+
+The script also writes proteoDA's before/after audit PDFs to `b_reports/`:
+
+```{r}
+#| label: qc-reports
+#| eval: false
+write_norm_report(dal, grouping_column = "group", output_dir = report_dir,
+                  filename = "norm_comparison.pdf")
+write_qc_report(dal, color_column = "group", output_dir = report_dir,
+                filename = "qc_normalized.pdf")
+```
+
+This normalized, **non-imputed** object is the primary hand-off to stage 03 —
+`limma` handles missing values per protein.
+
+# Imputation for methods that need a complete matrix {#sec-impute}
+
+PCA, WGCNA, the MitoCarta set scores, and the rotation tests need a matrix with
+no gaps. Two independent methods are kept so the choice can be checked.
+
+## imp4p (canonical) {#sec-imp4p}
+
+`imp4p` is mechanism-aware: it estimates the per-protein mix of missing-at-random
+vs too-low-to-detect values and imputes each accordingly. It is stochastic, so
+the seed is fixed:
+
+```{r}
+#| label: imp4p
+#| cache: true
+library(imp4p)
+set.seed(42)
+mat  <- as.matrix(dal$data)
+cond <- factor(dal$metadata$group[match(colnames(mat), dal$metadata$Col_ID)])
+imp4p_mat <- as.matrix(impute.mi(tab = mat, conditions = cond,
+                                 methodMCAR = "mle", methodMNAR = "igcda", progress.bar = FALSE))
+dimnames(imp4p_mat) <- dimnames(mat)
+
+c(dim_proteins = nrow(imp4p_mat), dim_samples = ncol(imp4p_mat),
+  na_remaining = sum(is.na(imp4p_mat)))      # 0 remaining — complete matrix
+```
+
+## MsCoreUtils hybrid (second opinion) {#sec-mscoreutils}
+
+The second method classifies each protein MAR vs not via
+`imputeLCMD::model.Selector()`, then routes MAR features to kNN and MNAR features
+to a left-censored QRILC draw:
+
+```{r}
+#| label: mscoreutils
+library(MsCoreUtils); library(imputeLCMD)
+set.seed(42)
+randna <- as.logical(model.Selector(mat)[[1]])             # TRUE = MAR feature
+ms_mat <- impute_matrix(mat, method = "mixed", randna = randna, mar = "knn", mnar = "QRILC")
+
+c(MAR_features = sum(randna), MNAR_features = sum(!randna),
+  na_remaining = sum(is.na(ms_mat)))
+```
+
+Mito has little missingness to begin with, so the two methods end up very close
+(stage 03 quantifies it). They only differ where a value was actually missing:
+
+```{r}
+#| label: compare
+was_missing <- is.na(mat)
+c(entries_imputed = sum(was_missing),
+  pct_of_matrix   = round(100 * mean(was_missing), 1))
+```
+
+# Where stage 02 stands {#sec-recap}
+
+The normalized matrix is saved to `02_Normalization/c_data/`; the two imputation
+arms write to `02_Normalization/imputation/c_data/`:
+
+| File | Location | Missing values? | Used by |
+|---|---|---|---|
+| `DAList_normalized.rds` | `c_data/` | kept | the DE test (stage 03) — **primary** |
+| `DAList_imputed_imp4p.rds` | `imputation/c_data/` | filled | figures, WGCNA, rotation (canonical) |
+| `DAList_imputed_mscoreutils.rds` | `imputation/c_data/` | filled | the robustness comparison |
+
+Normalization levels the samples but never invents data; imputation is applied
+only for methods that cannot run on an incomplete matrix, and never before the DE
+test.

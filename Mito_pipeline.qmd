@@ -1,0 +1,259 @@
+---
+title: "H9c2 Mitochondrial-Transplantation Proteomics (Mito_2026)"
+subtitle: "A ground-up walkthrough of the proteoDA-native pipeline: filtering → normalization → differential expression → rescue analysis"
+author: "A_Mito_2026"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    theme: cosmo
+    fig-cap-location: bottom
+    embed-resources: true
+execute:
+  eval: false      # documentation build: code is shown, not re-run; outputs are frozen
+  echo: true
+  warning: false
+  message: false
+---
+
+> **How to read this document.** Every code block is the *actual* code from the
+> pipeline scripts, shown for provenance but **not re-executed** (`eval: false`).
+> Numbers are **frozen** from the committed `00_input → 03_DEP` run. Paths are
+> relative to the project root (`A_Mito_2026/`).
+
+# Overview {#sec-overview}
+
+H9c2 rat cardiomyoblasts are used here as a **proxy for right-ventricular heart
+failure**: phenylephrine (**PHE**) drives a hypertrophic / stress remodelling of
+the proteome, and **mitochondrial transplantation** (Mito) is tested as a rescue.
+The design is a clean **2 × 2 factorial** — PHE stress crossed with Mito
+transplant — with **6 replicates per group**:
+
+| `group` | PHE stress | Mito transplant | Role | n |
+|---|---|---|---|---|
+| `Ctl`      | – | – | Negative control (untreated) | 6 |
+| `Mito`     | – | + | Transplant-only control | 6 |
+| `PHE`      | + | – | Positive control (phenylephrine disease model) | 6 |
+| `PHE_Mito` | + | + | Disease + mitochondrial-transplant rescue | 6 |
+
+The factorial yields five contrasts, each answering one mechanistic question:
+
+| Contrast | Definition | Role |
+|---|---|---|
+| **`CTLvPHE`** | `PHE − Ctl` | **Disease** — PHE stress remodelling |
+| **`CTLvMITO`** | `Mito − Ctl` | **Intervention** — transplant alone |
+| **`PHEvPHE_MITO`** | `PHE_Mito − PHE` | **Rescue** — transplant under stress |
+| **`Interaction`** | `(PHE_Mito − PHE) − (Mito − Ctl)` | **Interaction** — PHE-dependence of transplant |
+| **`MITOvPHE_MITO`** | `PHE_Mito − Mito` | Secondary |
+
+We model **simple effects + the interaction** (not bare main effects), because
+the biological question is whether transplant *rescues the stressed proteome*.
+
+Architecture mirrors the shared house style: numbered self-cleaning stages, each
+with `a_script/` (code), `b_reports/` (proteoDA QC PDFs), `c_data/` (RDS
+hand-off + one consolidated `.xlsx`).
+
+```
+00_input/        raw matrix, metadata, contaminant references, R/ helpers
+01_Filtering/    keratin + FBS-serum + missingness + outlier filtering
+02_Normalization/ cycloess + (imp4p | mscoreutils) imputation
+03_DEP/
+  a_non_imputed/  PRIMARY limma DE (NA-tolerant)
+  b_imputed/      imputed DE (concordance check)
+04_Figures/       consolidated publication composites (F01–F06)
+```
+
+# Stage 00 — Inputs {#sec-inputs}
+
+| File | Contents |
+|---|---|
+| `00_input/H9c2_raw.xlsx` | DIA-NN protein matrix, **5,002 protein groups** × (6 annotation + 24 samples) |
+| `00_input/H9c2_meta.csv` | Metadata (`Col_ID`, `Group`, `Replicate`, …); `Replicate` is a **real block** |
+| `00_input/hao_cellculture_contaminants.fasta` | Frankenfield 2022 Hao cell-culture contaminant FASTA (bovine = FBS serum) |
+| `00_input/hpa_secreted_to_blood.txt` | HPA "Secreted to blood" gene list (419 genes) |
+
+Groups, the design formula, the five contrasts, thresholds, and the contaminant
+classifier are written **inline** in the 00–03 stage scripts (no shared config or
+helper modules) — each script reads top-to-bottom as the actual workflow.
+
+**`Replicate` is a genuine experimental block** (paired plate / day / passage
+across all four groups, user-confirmed). It is modelled as a random block in DE
+(§4) — not a nuisance to ignore.
+
+# Stage 01 — Filtering {#sec-filtering}
+
+## Contaminant removal: keratin + FBS serum {#sec-contaminants}
+
+Cell-culture proteomes carry two contaminant classes that are *not* H9c2
+biology:
+
+1. **Keratins** — skin/hair handling contamination, removed by regex
+   (`^Krt[0-9]|^Krtap` on gene symbol, `^Keratin` on description).
+2. **FBS serum** — fetal bovine serum proteins from the culture medium. Rather
+   than a hand-typed list, the serum panel is **reference-derived**: the
+   intersection of the **bovine** Hao cell-culture contaminant FASTA with HPA
+   **"Secreted to blood"** genes. Requiring *both* (bovine origin **and**
+   plasma-secreted) avoids deleting abundant *cellular* bovine proteins that map
+   to real H9c2 orthologues (actin, GAPDH, myoglobin) — the same keep-real-biology
+   logic the CvH blood filter uses.
+
+```{r}
+#| label: contaminant-filter
+# FBS serum panel = bovine Hao FASTA entries intersected with HPA "Secreted to blood"
+hao_hdr  <- grep("^>", readLines(here::here("00_input", "hao_cellculture_contaminants.fasta"), warn = FALSE), value = TRUE)
+bovine   <- toupper(na.omit(stringr::str_match(hao_hdr, "GN=([^ ]+)")[, 2][
+              grepl("Bos taurus", stringr::str_match(hao_hdr, "OS=(.*?) OX=")[, 2])]))
+secreted <- toupper(readLines(here::here("00_input", "hpa_secreted_to_blood.txt"), warn = FALSE))
+serum    <- sort(intersect(unique(bovine), secreted))
+
+is_keratin <- grepl("^Krt[0-9]|^Krtap", annotation$gene, ignore.case = TRUE) |
+              grepl("^Keratin", annotation$description, ignore.case = TRUE)
+is_serum   <- toupper(annotation$gene) %in% serum & !is_keratin
+annotation <- annotation[!(is_keratin | is_serum), ]   # keratin + FBS serum removed
+```
+
+## Missingness + outliers {#sec-missing-outliers}
+
+Native `filter_proteins_by_group` keeps proteins with ≥4 valid values in ≥1
+group; the same 4-method outlier consensus as CvH (missingness, median-MAD, PCA
+Mahalanobis, correlation; drop at ≥3/4) is applied.
+
+```{r}
+#| label: missingness
+dal <- filter_proteins_by_group(dal, min_reps = 4, min_groups = 1,
+                                grouping_column = "group")
+```
+
+**Frozen filtering log:**
+
+| Step | Proteins after | Removed | % of raw |
+|---|---|---|---|
+| Raw input | 5,002 | — | 100.0 |
+| Contaminant removal (keratin + FBS serum) | 4,972 | 30 | 99.4 |
+| Missingness (≥4 in ≥1 group) | **4,806** | 166 | 96.1 |
+
+**No samples were flagged as outliers** — the final matrix is **4,806 proteins ×
+24 samples** (balanced 6 per group), saved as
+`01_Filtering/c_data/DAList_filtered.rds` with a consolidated
+`filtering_report.xlsx`.
+
+# Stage 02 — Normalization & imputation {#sec-norm}
+
+Identical machinery to CvH: cyclic-loess via `normalize_data()`, bracketed by
+`write_norm_report` / `write_qc_report`, then two **independent** imputation
+options used only by complete-matrix methods (never the DE test):
+
+```{r}
+#| label: normalize
+dal <- normalize_data(dal, norm_method = "cycloess")
+saveRDS(dal, file.path(data_dir, "DAList_normalized.rds"))
+# imputation/a_script/a_imp4p.R       -> imputation/c_data/DAList_imputed_imp4p.rds      (canonical, MCAR=mle / MNAR=igcda)
+# imputation/a_script/b_mscoreutils.R -> imputation/c_data/DAList_imputed_mscoreutils.rds (mixed knn / QRILC)
+```
+
+# Stage 03 — Differential expression {#sec-dep}
+
+## Model & the Replicate block {#sec-dep-model}
+
+```{r}
+#| label: dep-model
+dal <- add_design(dal, "~ 0 + group + (1 | Replicate)")
+dal <- add_contrasts(dal, contrasts_vector = c(
+  "CTLvPHE       = PHE - Ctl",                        # Disease
+  "CTLvMITO      = Mito - Ctl",                        # Intervention
+  "PHEvPHE_MITO  = PHE_Mito - PHE",                    # Rescue
+  "Interaction   = (PHE_Mito - PHE) - (Mito - Ctl)",  # Interaction
+  "MITOvPHE_MITO = PHE_Mito - Mito"))                  # Secondary
+dal <- fit_limma_model(dal)
+dal <- extract_DA_results(dal, pval_thresh = 0.10, lfc_thresh = 0, adj_method = "BH")
+```
+
+`(1 | Replicate)` is routed through `limma::duplicateCorrelation`, giving one
+consensus correlation (ρ̂ ≈ 0.02 — replicates are well-balanced, so the block
+adds little here but is *correct* to include). The primary DE runs on the
+**non-imputed** matrix (limma handles NAs); `b_imputed/` repeats it on the imp4p
+and mscoreutils matrices as a concordance check. Significance via Π-score
+(Xiao 2014, `Π = P.Value^|logFC|` < 0.05) and BH-FDR < 0.10.
+
+## Frozen results {#sec-dep-results}
+
+| Contrast | Role | FDR < 0.10 | Π < 0.05 |
+|---|---|---|---|
+| `CTLvPHE` | Disease | 10 | 25 |
+| `CTLvMITO` | Intervention | 135 | 67 |
+| **`PHEvPHE_MITO`** | **Rescue** | **300** | 79 |
+| `Interaction` | Interaction | 0 | 39 |
+| `MITOvPHE_MITO` | Secondary | 0 | 28 |
+
+The headline: the **Rescue** contrast (`PHE_Mito − PHE`) is the strongest signal
+(300 FDR hits) — mitochondrial transplantation substantially remodels the
+proteome of PHE-stressed cells. Transplant-alone (`CTLvMITO`, 135 hits) also
+perturbs the proteome, while the formal `Interaction` has no FDR hits (the
+rescue and intervention effects are largely additive at the per-protein level).
+
+## Imputed concordance {#sec-dep-concordance}
+
+Mito has far less missingness than CvH, so both imputation methods track the
+non-imputed primary very closely (Spearman ρ on logFC):
+
+| Method | range across 5 contrasts |
+|---|---|
+| **imp4p** (canonical) | ρ = 0.95 – 0.97 |
+| mscoreutils | ρ = 0.95 – 0.96 |
+
+This high concordance (vs CvH, where the weak contrast diverged) confirms the
+Mito results are robust to imputation choice; the non-imputed primary remains
+the reported DE.
+
+# Figures (`04_Figures/`) {#sec-figures}
+
+A consolidated figure stage builds publication composites from the DEP outputs:
+
+| Figure | Content |
+|---|---|
+| `F01_QC_overview` | filtering, normalization, imputation QC |
+| `F02_volcano` | per-contrast volcano landscape |
+| `F03_concordance` | imputed vs non-imputed, method agreement |
+| **`F04_rescue`** | the rescue axis: does Mito move PHE back toward Ctl |
+| `F05_modules` | WGCNA co-expression modules (LMM with `(1\|Replicate)`) |
+| `F06_complex_mito` | mitochondrial complex / MitoCarta covariation |
+
+![Mito rescue composite — `04_Figures/F04_rescue/b_reports/main/png/MAIN_F04_composite.png`](04_Figures/F04_rescue/b_reports/main/png/MAIN_F04_composite.png)
+
+> **Provenance note.** The figure stage was consolidated into `04_Figures/` and its
+> composites rebuilt against the current `03_DEP/a_non_imputed/c_data/` outputs, so
+> the panels reflect the 4,806 × 24 filtered matrix and the current contrasts. The
+> fGSEA caches in `04_Figures/shared/` are regenerated from the current DEP t-statistics.
+
+# Reproducibility {#sec-repro}
+
+```bash
+Rscript 01_Filtering/a_script/01_run_filtering.R
+Rscript 02_Normalization/a_script/01_run_normalization.R
+Rscript 02_Normalization/imputation/a_script/a_imp4p.R          # canonical
+Rscript 02_Normalization/imputation/a_script/b_mscoreutils.R    # comparison
+Rscript 03_DEP/a_non_imputed/a_script/01_run_dep.R              # PRIMARY
+Rscript 03_DEP/b_imputed/a_script/01_run_dep_imputed.R          # concordance
+# then re-run the 04_Figures/ composites against 03_DEP outputs
+```
+
+**Key design decisions, in one place:**
+
+- 2 × 2 factorial (PHE × Mito), 6 replicates/group; report simple effects + interaction.
+- `Replicate` modelled as a real random block via duplicateCorrelation.
+- Contaminant removal = keratin regex + bovine-FBS ∩ HPA-secreted serum panel
+  (reference-derived, keeps real cellular biology).
+- DE test on the **non-imputed** matrix; imputation (imp4p canonical) only for
+  complete-matrix methods (figures, WGCNA).
+- Π-score (Xiao 2014) for significance + effect size; BH-FDR < 0.10.
+- Rescue contrast (`PHE_Mito − PHE`) is the primary biological readout.
+
+```{r}
+#| label: session-info
+sessionInfo()
+```

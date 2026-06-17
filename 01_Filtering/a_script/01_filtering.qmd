@@ -1,0 +1,208 @@
+---
+title: "Mito 01 — Filtering"
+subtitle: "The DAList object; contaminant, missingness, and outlier removal"
+author: "A_Mito_2026"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    theme: cosmo
+    embed-resources: true
+    df-print: paged
+execute:
+  eval: true
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(here)
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+This document reproduces stage 01 of the Mito pipeline and shows the result of
+each step. It runs the same logic as `01_Filtering/a_script/01_run_filtering.R`,
+in memory, writing no files. The final section confirms the live result matches
+the committed `DAList_filtered.rds`.
+
+# Load the raw matrix and sample sheet {#sec-load}
+
+Stage 01 begins with a DIA-NN spreadsheet (`00_input/H9c2_raw.xlsx`). The DIA-NN
+annotation columns are separated from the sample-intensity columns, sample names
+have their `.raw` suffix dropped, and any gene-less row falls back to its
+accession so no protein is label-less. The sample sheet `00_input/H9c2_meta.csv`
+supplies the four-level `Group` factor; `Replicate` is a fully-crossed block
+(each index 1–6 is a matched plate/day/passage set spanning all four groups):
+
+```{r}
+#| label: load
+library(proteoDA); library(readxl); library(readr); library(dplyr)
+library(tidyr); library(stringr)
+
+group_levels   <- c("Ctl", "Mito", "PHE", "PHE_Mito")
+annot_cols_raw <- c("Protein.Group", "Protein.Names", "Genes",
+                    "First.Protein.Description", "N.Sequences", "N.Proteotypic.Sequences")
+
+raw <- read_excel(here("00_input", "H9c2_raw.xlsx"))
+annotation <- raw[, annot_cols_raw] |>
+  rename(uniprot_id = `Protein.Group`, protein = `Protein.Names`, gene = `Genes`,
+         description = `First.Protein.Description`, n_seq = `N.Sequences`,
+         n_proteotypic = `N.Proteotypic.Sequences`)
+na_gene <- is.na(annotation$gene) | annotation$gene == ""
+annotation$gene[na_gene] <- annotation$uniprot_id[na_gene]
+intensity <- raw[, setdiff(names(raw), annot_cols_raw)]
+names(intensity) <- sub("\\.raw$", "", names(intensity))
+
+metadata <- as.data.frame(read_csv(here("00_input", "H9c2_meta.csv"), show_col_types = FALSE))
+stopifnot(setequal(unique(metadata$Group), group_levels), !anyDuplicated(metadata$Col_ID))
+metadata$Group <- factor(metadata$Group, levels = group_levels)
+metadata$group <- metadata$Group
+rownames(metadata) <- metadata$Col_ID
+intensity <- intensity[, metadata$Col_ID]
+n_raw <- nrow(annotation)
+
+c(proteins = n_raw, samples = ncol(intensity))
+table(metadata$group)                         # 2x2 design, six per group
+table(metadata$group, metadata$Replicate)     # every replicate appears once in every group
+```
+
+# Step 1: remove culture contaminants {#sec-contaminants}
+
+Cell-culture proteomes pick up keratins (handling) and fetal-bovine-serum
+proteins (growth medium). The serum panel is derived, not hand-typed: proteins
+that are both bovine (from the Hao cell-culture FASTA) **and** plasma-secreted
+(HPA "Secreted to blood"). Requiring both keeps abundant *cellular* bovine
+proteins that match real H9c2 orthologues (actin, GAPDH, tubulin):
+
+```{r}
+#| label: classifier
+hao_hdr  <- grep("^>", readLines(here("00_input", "hao_cellculture_contaminants.fasta"), warn = FALSE), value = TRUE)
+bovine   <- toupper(na.omit(str_match(hao_hdr, "GN=([^ ]+)")[, 2][
+              grepl("Bos taurus", str_match(hao_hdr, "OS=(.*?) OX=")[, 2])]))
+secreted <- toupper(readLines(here("00_input", "hpa_secreted_to_blood.txt"), warn = FALSE))
+serum    <- sort(intersect(unique(bovine), secreted))
+
+is_keratin <- grepl("^Krt[0-9]|^Krtap", annotation$gene, ignore.case = TRUE) |
+              grepl("^Keratin", annotation$description, ignore.case = TRUE)
+is_serum   <- toupper(annotation$gene) %in% serum & !is_keratin
+reason     <- ifelse(is_keratin, "keratin", ifelse(is_serum, "FBS serum (bovine plasma)", NA_character_))
+is_contaminant <- is_keratin | is_serum
+
+table(reason)                                 # keratin vs FBS serum flagged
+```
+
+Removal is plain subsetting, applied to `annotation` and `intensity` together so
+they stay aligned. Each step is logged:
+
+```{r}
+#| label: apply-contaminants
+flog <- tibble(step = "Raw input", n_after = n_raw, n_removed = NA_integer_)
+flog <- bind_rows(flog, tibble(step = "Contaminant removal (keratin + FBS serum)",
+                               n_after = sum(!is_contaminant), n_removed = sum(is_contaminant)))
+removed_contam <- annotation[is_contaminant, c("uniprot_id", "gene", "description")] |>
+  mutate(reason = reason[is_contaminant])
+annotation <- annotation[!is_contaminant, ]; intensity <- intensity[!is_contaminant, ]
+
+head(removed_contam, 8)
+```
+
+# Build the `DAList` {#sec-build}
+
+proteoDA operates on a `DAList` — a named list holding three name-aligned tables:
+`data` (intensity matrix), `annotation` (one row per protein), and `metadata`
+(one row per sample). `zero_to_missing()` turns DIA zeros into `NA`, since a
+reported zero means "not detected":
+
+```{r}
+#| label: build-dalist
+int_mat  <- as.data.frame(data.matrix(intensity)); rownames(int_mat) <- annotation$uniprot_id
+annot_df <- as.data.frame(annotation);             rownames(annot_df) <- annotation$uniprot_id
+meta_df  <- as.data.frame(metadata);               rownames(meta_df)  <- metadata$Col_ID
+
+dal <- zero_to_missing(DAList(data = int_mat, annotation = annot_df, metadata = meta_df))
+
+identical(rownames(dal$data), rownames(dal$annotation))   # proteins aligned
+identical(colnames(dal$data), rownames(dal$metadata))     # samples aligned
+round(100 * mean(is.na(dal$data)), 1)                      # percent missing after zero -> NA
+```
+
+# Step 2: drop barely-detected proteins {#sec-missingness}
+
+`filter_proteins_by_group()` with `min_reps = 4, min_groups = 1` keeps a protein
+detected in at least 4 of the 6 replicates in **at least one** group — reliably
+present somewhere, even if absent elsewhere:
+
+```{r}
+#| label: missingness
+n0 <- nrow(dal$data)
+dal <- filter_proteins_by_group(dal, min_reps = 4, min_groups = 1, grouping_column = "group")
+flog <- bind_rows(flog, tibble(step = "Missingness (>=4 in >=1 group)",
+                               n_after = nrow(dal$data), n_removed = n0 - nrow(dal$data)))
+flog <- flog |> mutate(pct_of_raw = round(n_after / n_raw * 100, 1))
+flog                                          # full cascade; Mito has far less missingness than a biopsy
+```
+
+# Step 3: detect outlier samples {#sec-outliers}
+
+The same four-method consensus as the CvH pipeline — missingness, intensity level
+(Hampel 3×MAD), PCA position, correlation — with a sample dropped only on ≥ 3/4
+agreement. With a balanced 6-per-group design, none are flagged:
+
+```{r}
+#| label: outliers
+pct_missing <- colMeans(is.na(dal$data)) * 100
+miss_flag <- pct_missing > quantile(pct_missing, 0.75) + 1.5 * IQR(pct_missing)   # Tukey upper fence
+sm <- apply(log2(dal$data), 2, median, na.rm = TRUE)
+mad_flag <- abs(sm - median(sm)) > 3 * mad(sm)                                    # Hampel 3xMAD
+pc3 <- prcomp(t(log2(dal$data[rowSums(is.na(dal$data)) == 0, ])), center = TRUE, scale. = TRUE)$x[, 1:3]
+pca_flag <- mahalanobis(pc3, colMeans(pc3), cov(pc3)) > qchisq(0.99, df = 3)      # chi-sq tail on PC1-3
+cmx <- cor(log2(dal$data), use = "pairwise.complete.obs")
+mc  <- apply(cmx, 2, function(x) median(x[x < 1], na.rm = TRUE))                  # x<1 drops self-correlation
+cor_flag <- mc < median(mc) - 3 * mad(mc)
+outlier_diag <- tibble(Col_ID = colnames(dal$data), miss_flag = miss_flag[Col_ID], mad_flag = mad_flag[Col_ID],
+                       pca_flag = pca_flag[Col_ID], cor_flag = cor_flag[Col_ID]) |>
+  mutate(n_flags = miss_flag + mad_flag + pca_flag + cor_flag, consensus_outlier = n_flags >= 3)
+outlier_ids <- outlier_diag$Col_ID[outlier_diag$consensus_outlier]
+
+head(outlier_diag[order(-outlier_diag$n_flags), ], 6)
+outlier_ids                                   # character(0) — none flagged
+```
+
+```{r}
+#| label: apply-outliers
+if (length(outlier_ids)) dal <- filter_samples(dal, !(Col_ID %in% outlier_ids))
+dim(dal$data)
+```
+
+# Result and verification {#sec-recap}
+
+Stage 01 turns a 5,002-protein raw file into a clean **4,806 × 24** `DAList`. The
+live result matches the committed `DAList_filtered.rds` exactly:
+
+```{r}
+#| label: verify
+names(dal$tags)
+dim(dal$data)
+
+committed <- readRDS(here("01_Filtering", "c_data", "DAList_filtered.rds"))
+c(same_dim      = identical(dim(dal$data), dim(committed$data)),
+  same_proteins = identical(sort(rownames(dal$data)), sort(rownames(committed$data))),
+  same_samples  = identical(sort(colnames(dal$data)), sort(colnames(committed$data))))
+```
+
+The side-effecting script additionally writes `filtering_report.xlsx` (filter
+cascade, contaminants, outlier diagnostics, serum panel) and a contaminant plot
+to `b_reports/`, then saves `DAList_filtered.rds` for stage 02. Key points:
+
+- A `DAList` is three name-aligned tables; the native filters preserve the
+  alignment, and hand-subsetting must move `data` and `annotation` together.
+- `zero_to_missing()` treats DIA zeros as missing.
+- Contaminant removal is a keratin regex plus a derived bovine-FBS panel.
+- `Replicate` is a real, fully-crossed block carried into the model (stage 03).
+
+Stage 02 picks up this file and normalizes it.

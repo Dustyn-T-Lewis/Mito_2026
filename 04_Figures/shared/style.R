@@ -1,17 +1,28 @@
 # style.R — palettes, themes, sizing helpers for figure scripts.
-# Single source of truth for palettes + thresholds: 00_input/h9c2_design.R.
+# Groups, contrasts, palettes, and thresholds are defined inline here (the figure
+# stage's source of truth); the 00-03 pipeline scripts carry their own copies.
 
 library(ggplot2)
 library(scales)
 library(grid)
 
-# Single source of truth for groups, contrasts, palettes, thresholds.
-source(here::here("00_input", "h9c2_design.R"))
+# --- groups / contrasts / palettes / thresholds (match the 00-03 scripts) ----
+H9C2_GROUP_LEVELS   <- c("Ctl", "Mito", "PHE", "PHE_Mito")
+H9C2_CORE_CONTRASTS <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO", "Interaction")
+H9C2_CONTRAST_ROLES <- c(CTLvPHE = "Disease", CTLvMITO = "Intervention",
+                         PHEvPHE_MITO = "Rescue", Interaction = "Interaction",
+                         MITOvPHE_MITO = "Secondary")
+H9C2_PAL_GROUP <- c(Ctl = "#4393C3", Mito = "#009E73", PHE = "#D6604D", PHE_Mito = "#984EA3")
+H9C2_PAL_DIR   <- c(Up = "#D6604D", Down = "#4393C3", NS = "grey70")
+H9C2_PAL_CONTRAST <- c(CTLvPHE = "#D6604D", CTLvMITO = "#4393C3", PHEvPHE_MITO = "#4DAF4A",
+                       Interaction = "#7B5EA7", MITOvPHE_MITO = "#FF8C00")
+H9C2_PI_THRESH  <- 0.05
+H9C2_FDR_EXPLOR <- 0.10
 
 # suppress stray Rplots.pdf from implicit device opens
 options(device = function(...) grDevices::pdf(file = nullfile(), ...))
 
-# Palettes (from 00_input/h9c2_design.R)
+# Palettes (aliases used by figure scripts)
 GROUP_COLORS    <- H9C2_PAL_GROUP            # Ctl / Mito / PHE / PHE_Mito
 GROUP_FILL      <- H9C2_PAL_GROUP
 PCA_COLORS      <- H9C2_PAL_GROUP

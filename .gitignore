@@ -48,3 +48,7 @@ renv/staging/
 # regenerated stage artifacts
 0*/c_data/
 0*/b_reports/
+
+# rendered quarto docs (source .qmd is tracked, .html is regenerated)
+Mito_pipeline.html
+tutorials/*.html

@@ -25,7 +25,8 @@ dir.create(file.path(DAT, "panel_B_heatmap"), recursive = TRUE, showWarnings = F
 pdf_device <- get_pdf_device()
 
 # 1. LOAD & CLASSIFY
-dep_df <- read_csv("03_DEP/c_data/03_combined_results.csv", show_col_types = FALSE)
+source(here::here("04_Figures", "shared", "config.R"))
+dep_df <- load_combined_wide()
 
 # cfg$classify_fn does the figure-specific filtering and classification
 sig_df <- cfg$classify_fn(dep_df)

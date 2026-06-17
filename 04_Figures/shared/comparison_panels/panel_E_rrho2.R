@@ -27,7 +27,8 @@ if (!is.null(cfg$supp)) {
 
 pdf_device <- get_pdf_device()
 
-dep_df <- read_csv("03_DEP/c_data/03_combined_results.csv", show_col_types = FALSE)
+source(here::here("04_Figures", "shared", "config.R"))
+dep_df <- load_combined_wide()
 
 rr_df <- dep_df |>
   transmute(gene,

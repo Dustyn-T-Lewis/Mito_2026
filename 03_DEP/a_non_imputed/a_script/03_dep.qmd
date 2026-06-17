@@ -1,0 +1,191 @@
+---
+title: "Mito 03 — Differential Expression"
+subtitle: "Design, contrasts, model fit, and the Π-score, on the non-imputed matrix"
+author: "A_Mito_2026"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    theme: cosmo
+    embed-resources: true
+    df-print: paged
+execute:
+  eval: true
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(here)
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+This document reproduces the primary DEP stage and shows the result of each step.
+It runs the same four-step proteoDA workflow as
+`03_DEP/a_non_imputed/a_script/01_run_dep.R` — describe the design, define the
+comparisons, fit the model, pull the results — live and in memory. The headline
+counts are computed from the live fit, then checked against the committed output.
+
+# Start from the non-imputed matrix {#sec-load}
+
+The test runs on the matrix that still has its missing values; `limma` handles
+NAs per protein:
+
+```{r}
+#| label: load
+library(proteoDA)
+dal <- readRDS(here("02_Normalization", "c_data", "DAList_normalized.rds"))
+dim(dal$data)
+table(dal$metadata$group)                 # four groups, six each
+```
+
+# Step 1 — describe the design {#sec-design}
+
+`add_design()` turns a formula into a model matrix. `~ 0 + group` gives each of
+the four groups its own column (its own mean); `(1 | Replicate)` tells the model
+that wells sharing a replicate index are paired:
+
+```{r}
+#| label: add-design
+dal <- add_design(dal, "~ 0 + group + (1 | Replicate)")
+colnames(dal$design)
+head(dal$design)
+```
+
+The `(1 | Replicate)` block is not a column; proteoDA passes it to
+`limma::duplicateCorrelation`, so the paired structure costs one correlation
+parameter instead of five degrees of freedom.
+
+# Step 2 — define the comparisons {#sec-contrasts}
+
+The 2×2 design gives five readable contrasts:
+
+```{r}
+#| label: add-contrasts
+contrasts <- c(
+  "CTLvPHE       = PHE - Ctl",                        # Disease
+  "CTLvMITO      = Mito - Ctl",                        # Intervention
+  "PHEvPHE_MITO  = PHE_Mito - PHE",                    # Rescue
+  "Interaction   = (PHE_Mito - PHE) - (Mito - Ctl)",  # Interaction
+  "MITOvPHE_MITO = PHE_Mito - Mito")                  # Secondary
+dal <- add_contrasts(dal, contrasts_vector = contrasts)
+dal$contrasts
+```
+
+Read each column downward to see which group means are differenced — `PHEvPHE_MITO`
+(the rescue) is `PHE_Mito` minus `PHE`.
+
+# Step 3 — fit the model {#sec-fit}
+
+One call estimates the within-replicate correlation, fits the model with it, and
+applies robust empirical-Bayes moderation:
+
+```{r}
+#| label: fit
+dal <- fit_limma_model(dal)
+dal$eBayes_fit$correlation     # consensus within-replicate correlation
+```
+
+The correlation is small here — the replicates are well balanced, so the block
+adds little, but it is still correct to include.
+
+# Step 4 — pull the results {#sec-extract}
+
+`extract_DA_results()` builds a tidy table per contrast into `$results`:
+
+```{r}
+#| label: extract
+dal <- extract_DA_results(dal, pval_thresh = 0.10, lfc_thresh = 0, adj_method = "BH")
+names(dal$results)
+head(dal$results$PHEvPHE_MITO[, c("logFC", "P.Value", "adj.P.Val")])   # the rescue contrast
+```
+
+# The Π-score {#sec-pi}
+
+The Π-score (Xiao 2014, $\Pi = \text{P.Value}^{|\text{logFC}|}$) folds effect
+size into significance, so it is only small when a protein is both significant and
+moves a lot. `sig_pi` tags each protein `+1` / `−1` / `0` at Π < 0.05:
+
+```{r}
+#| label: pi
+library(purrr); library(tibble); library(dplyr)
+res <- imap(dal$results, \(r, cn) as_tibble(r, rownames = "uniprot_id") |>
+  mutate(contrast = cn,
+         pi_score = P.Value ^ abs(logFC),
+         sig_pi = case_when(pi_score < 0.05 & logFC > 0 ~ 1L,
+                            pi_score < 0.05 & logFC < 0 ~ -1L, TRUE ~ 0L)))
+res$PHEvPHE_MITO |> dplyr::count(sig_pi)
+```
+
+# Headline numbers {#sec-results}
+
+Summary across the five contrasts, computed from the live fit:
+
+```{r}
+#| label: summary
+bind_rows(res) |>
+  group_by(contrast) |>
+  summarise(n = n(),
+            FDR_0.10 = sum(adj.P.Val < 0.10, na.rm = TRUE),
+            Pi_0.05  = sum(sig_pi != 0, na.rm = TRUE), .groups = "drop")
+```
+
+The rescue contrast (`PHEvPHE_MITO`) is the strongest by far — mitochondrial
+transplant substantially remodels the PHE-stressed proteome. That is the headline
+biological result (`Mito_pipeline.qmd §5`).
+
+The production script additionally runs proteoDA's native writers (shown here)
+and saves `results.xlsx` + `combined_results_pi.csv` to `c_data`, with plots to
+`b_reports`:
+
+```{r}
+#| label: writers
+#| eval: false
+write_limma_tables(dal, output_dir = here("03_DEP", "a_non_imputed", "c_data"),
+                   annot_cols = c("uniprot_id", "gene", "protein", "description"), overwrite = TRUE)
+write_limma_plots(dal, grouping_column = "group",
+                  output_dir = here("03_DEP", "a_non_imputed", "b_reports"), overwrite = TRUE)
+```
+
+The live summary matches the committed `combined_results_pi.csv`:
+
+```{r}
+#| label: verify
+library(readr)
+read_csv(here("03_DEP", "a_non_imputed", "c_data", "combined_results_pi.csv"),
+         show_col_types = FALSE) |>
+  group_by(contrast) |>
+  summarise(n = n(), FDR_0.10 = sum(adj.P.Val < 0.10, na.rm = TRUE),
+            Pi_0.05 = sum(sig_pi != 0, na.rm = TRUE), .groups = "drop")
+```
+
+# Did imputation matter? {#sec-concordance}
+
+`03_DEP/b_imputed/` re-runs the model on the two imputed matrices and correlates
+fold changes against this non-imputed answer:
+
+```{r}
+#| label: concordance
+read_csv(here("03_DEP", "b_imputed", "c_data", "logFC_vs_nonimputed.csv"),
+         show_col_types = FALSE) |> as.data.frame()
+```
+
+Both methods track the non-imputed result closely (ρ ≈ 0.95+) — Mito's low
+missingness means the imputation choice barely moves the answer, so the
+non-imputed result is the one reported.
+
+# Recap {#sec-recap}
+
+1. `add_design()` — a column per group, plus the Replicate block.
+2. `add_contrasts()` — name-equals-difference comparisons (the 2×2 questions).
+3. `fit_limma_model()` — one consensus correlation + robust eBayes.
+4. `extract_DA_results()` — tidy `$results`, one table per contrast.
+5. The Π-score for effect-size-aware calls, then proteoDA's native writers.
+
+The test runs on the non-imputed matrix; `b_imputed/` is a concordance check. The
+figures in `04_Figures/` build on these contrasts (`Mito_pipeline.qmd §6`).

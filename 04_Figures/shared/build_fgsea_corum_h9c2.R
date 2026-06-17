@@ -16,7 +16,7 @@ suppressPackageStartupMessages({
   library(dplyr); library(readr); library(stringr); library(fgsea); library(babelgene)
 })
 
-source(here::here("00_input", "h9c2_design.R"))
+H9C2_CORE_CONTRASTS <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO", "Interaction")
 set.seed(42)
 
 CORUM_TXT <- Sys.getenv("H9C2_CORUM_TXT",
@@ -27,7 +27,9 @@ if (!file.exists(CORUM_TXT))
        "\nPlace at 00_input/corum_allComplexes.txt or set H9C2_CORUM_TXT.")
 OUT_CSV   <- here::here("04_Figures", "shared", "fgsea_corum_h9c2.csv")
 OUT_RDS   <- here::here("04_Figures", "shared", "corum_rat_gene_sets.rds")
-DEP <- read_csv(here::here("03_DEP", "c_data", "03_combined_results.csv"), show_col_types = FALSE)
+DEP <- read_csv(here::here("03_DEP", "a_non_imputed", "c_data", "combined_results_pi.csv"), show_col_types = FALSE) |>
+  tidyr::pivot_wider(id_cols = c(uniprot_id, gene), names_from = contrast,
+                     values_from = t, names_glue = "t_{contrast}")
 
 corum <- read.delim(CORUM_TXT, sep = "\t", quote = "", stringsAsFactors = FALSE) |>
   filter(organism %in% c("Human", "Mouse"),

@@ -15,7 +15,9 @@ dal <- readRDS(here("02_Normalization", "c_data", "DAList_normalized.rds"))
 cat(sprintf("NON-imputed DEP: %d proteins x %d samples\n", nrow(dal$data), ncol(dal$data)))
 
 #### Fit limma model ####
-# (1 | Replicate) is a real block (paired plate/day/passage) -> duplicateCorrelation.
+# (1 | Replicate) is a paired block estimated via duplicateCorrelation. The consensus rho is
+# low (~0.017); proteoDA passes the block to lmFit regardless, so gls.series recomputes rho and
+# the fit stays blocked GLS + robust eBayes. rho echoed in the printout below.
 
 dal <- add_design(dal, "~ 0 + group + (1 | Replicate)")
 dal <- add_contrasts(dal, contrasts_vector = c(
@@ -38,7 +40,7 @@ write_limma_plots(dal, grouping_column = "group", table_columns = c("uniprot_id"
                   output_dir = report_dir, overwrite = TRUE)
 
 #### Pi-score ####
-# Xiao 2014: Pi = P.Value^|logFC|; sig_pi = +1 up / -1 down / 0 ns at Pi < 0.05.
+# Xiao 2014 pi on the p-scale: Pi = P.Value^|logFC| = 10^(-pi_Xiao); sig_pi = +1 up / -1 down / 0 ns at Pi < 0.05.
 
 ann <- as_tibble(dal$annotation) |> select(any_of(c("uniprot_id", "gene", "protein", "description")))
 res <- imap(dal$results, function(r, cname)

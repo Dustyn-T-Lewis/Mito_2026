@@ -116,7 +116,9 @@ head(removed_contam, 8)
 proteoDA operates on a `DAList` — a named list holding three name-aligned tables:
 `data` (intensity matrix), `annotation` (one row per protein), and `metadata`
 (one row per sample). `zero_to_missing()` turns DIA zeros into `NA`, since a
-reported zero means "not detected":
+reported zero means "not detected". The production script also keeps a dedup
+guard before this step that collapses any duplicate accessions — a no-op here,
+since DIA-NN protein groups are already unique:
 
 ```{r}
 #| label: build-dalist
@@ -181,8 +183,9 @@ dim(dal$data)
 
 # Result and verification {#sec-recap}
 
-Stage 01 turns a 5,002-protein raw file into a clean **4,806 × 24** `DAList`. The
-live result matches the committed `DAList_filtered.rds` exactly:
+Stage 01 reduces the raw DIA-NN matrix to a clean `DAList`; the dimensions
+printed below are the live result, which matches the committed
+`DAList_filtered.rds` exactly:
 
 ```{r}
 #| label: verify
@@ -196,8 +199,8 @@ c(same_dim      = identical(dim(dal$data), dim(committed$data)),
 ```
 
 The side-effecting script additionally writes `filtering_report.xlsx` (filter
-cascade, contaminants, outlier diagnostics, serum panel) and a contaminant plot
-to `b_reports/`, then saves `DAList_filtered.rds` for stage 02. Key points:
+cascade, contaminants, outlier diagnostics, serum panel) and `DAList_filtered.rds`
+to `c_data/`, plus a contaminant plot to `b_reports/`, for stage 02. Key points:
 
 - A `DAList` is three name-aligned tables; the native filters preserve the
   alignment, and hand-subsetting must move `data` and `annotation` together.

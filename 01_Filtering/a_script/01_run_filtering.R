@@ -1,7 +1,6 @@
 #!/usr/bin/env Rscript
 
 pacman::p_load(proteoDA, here, readxl, readr, dplyr, tidyr, stringr, openxlsx, ggplot2)
-set.seed(42)
 
 group_levels <- c("Ctl", "Mito", "PHE", "PHE_Mito")   # factor order used everywhere downstream
 annot_cols_raw <- c("Protein.Group", "Protein.Names", "Genes",

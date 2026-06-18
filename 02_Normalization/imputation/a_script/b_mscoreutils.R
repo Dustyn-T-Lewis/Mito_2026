@@ -12,13 +12,10 @@ norm_dir <- here("02_Normalization", "c_data")                  # read stage-02 
 data_dir <- here("02_Normalization", "imputation", "c_data")     # write imputed DAList here
 dir.create(data_dir, recursive = TRUE, showWarnings = FALSE)
 
-#### Load normalized DAList ####
-
 dal <- readRDS(file.path(norm_dir, "DAList_normalized.rds"))
 mat <- as.matrix(dal$data)
 cat(sprintf("[mscoreutils] %d x %d | %.1f%% missing\n", nrow(mat), ncol(mat), mean(is.na(mat)) * 100))
 
-#### Impute ####
 # model.Selector gives the MAR mask; impute_matrix routes MAR->knn, MNAR->QRILC.
 
 ms     <- model.Selector(mat)
@@ -27,8 +24,6 @@ cat(sprintf("[mscoreutils] model.Selector split: %d MAR / %d MNAR features\n", s
 
 imp <- impute_matrix(mat, method = "mixed", randna = randna, mar = "knn", mnar = "QRILC")
 stopifnot(sum(is.na(imp)) == 0, identical(dim(imp), dim(mat)))
-
-#### Export ####
 
 dal$data <- imp
 dal$imputation <- list(method = "MsCoreUtils mixed (imputeLCMD model.Selector)",

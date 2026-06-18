@@ -53,9 +53,9 @@ evens out each sample's median log-intensity in one native call:
 
 ```{r}
 #| label: normalize
-before <- apply(log2(as.matrix(dal$data)), 2, median, na.rm = TRUE)
+before <- apply(log2(as.matrix(dal$data)), 2, median, na.rm = TRUE)   # filtered data still linear
 dal <- normalize_data(dal, norm_method = "cycloess")
-after  <- apply(log2(as.matrix(dal$data)), 2, median, na.rm = TRUE)
+after  <- apply(as.matrix(dal$data), 2, median, na.rm = TRUE)         # cycloess already returns log2
 
 rbind(before = summary(before), after = summary(after))   # spread collapses to a tight band
 dal$tags                                                  # new 'normalized' + 'norm_method' tags
@@ -89,7 +89,7 @@ This normalized, **non-imputed** object is the primary hand-off to stage 03 —
 PCA, WGCNA, the MitoCarta set scores, and the rotation tests need a matrix with
 no gaps. Two independent methods are kept so the choice can be checked.
 
-## imp4p (canonical) {#sec-imp4p}
+## imp4p (canonical imputation arm) {#sec-imp4p}
 
 `imp4p` is mechanism-aware: it estimates the per-protein mix of missing-at-random
 vs too-low-to-detect values and imputes each accordingly. It is stochastic, so
@@ -145,7 +145,7 @@ arms write to `02_Normalization/imputation/c_data/`:
 | File | Location | Missing values? | Used by |
 |---|---|---|---|
 | `DAList_normalized.rds` | `c_data/` | kept | the DE test (stage 03) — **primary** |
-| `DAList_imputed_imp4p.rds` | `imputation/c_data/` | filled | figures, WGCNA, rotation (canonical) |
+| `DAList_imputed_imp4p.rds` | `imputation/c_data/` | filled | figures, WGCNA, rotation (canonical imputation arm) |
 | `DAList_imputed_mscoreutils.rds` | `imputation/c_data/` | filled | the robustness comparison |
 
 Normalization levels the samples but never invents data; imputation is applied

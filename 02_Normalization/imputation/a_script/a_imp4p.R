@@ -12,23 +12,18 @@ norm_dir <- here("02_Normalization", "c_data")                  # read stage-02 
 data_dir <- here("02_Normalization", "imputation", "c_data")     # write imputed DAList here
 dir.create(data_dir, recursive = TRUE, showWarnings = FALSE)
 
-#### Load normalized DAList ####
-
 dal  <- readRDS(file.path(norm_dir, "DAList_normalized.rds"))
 mat  <- as.matrix(dal$data)
 cond <- factor(dal$metadata$group[match(colnames(mat), dal$metadata$Col_ID)])
 cat(sprintf("[imp4p] %d x %d | %.1f%% missing | conditions: %s\n",
             nrow(mat), ncol(mat), mean(is.na(mat)) * 100, paste(levels(cond), collapse = "/")))
 
-#### Impute ####
 # mle for the MCAR part, igcda for the MNAR part; imp4p decides the per-protein mix.
 
 imp <- as.matrix(impute.mi(tab = mat, conditions = cond,
                            methodMCAR = "mle", methodMNAR = "igcda", progress.bar = FALSE))
 dimnames(imp) <- dimnames(mat)
 stopifnot(sum(is.na(imp)) == 0, identical(dim(imp), dim(mat)))
-
-#### Export ####
 
 dal$data <- imp
 dal$imputation <- list(method = "imp4p::impute.mi", methodMCAR = "mle", methodMNAR = "igcda")

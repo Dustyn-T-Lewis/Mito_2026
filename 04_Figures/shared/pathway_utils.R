@@ -133,14 +133,12 @@ build_pathway_collection <- function(species = "Rattus norvegicus",
 }
 
 
-# Harmonized cached collection: Hallmark + Reactome + MitoCarta (+ GO Slim).
-# Reads the FROZEN rat_gene_sets.rds / goslim_rat_gene_sets.rds caches (never
-# rebuilds them) so every comparison panel (A wings, C NES scatter, RRHO2 ORA)
-# enriches against the same backbone. KEGG and raw GO:BP are intentionally
-# excluded: KEGG duplicates Reactome, and GO:BP's giant umbrella terms (e.g.
-# "organic acid metabolic process", >200 genes) win ORA on size alone and bury
-# the specific mito/cardiac signal. GO Slim supplies curated breadth instead.
-# Matches the F01/F02 harmonization (Hallmark + Reactome + MitoCarta).
+# Harmonized cached collection: Hallmark + Reactome + MitoCarta + GO Slim.
+# Reads the unified rat_gene_sets.rds (built by fetch_rat_gene_sets.R) so every
+# comparison panel (A wings, C NES scatter, RRHO2 ORA) enriches against the same
+# backbone. KEGG is excluded here: it duplicates Reactome and the build-time
+# dedup is within-DB, so the cross-DB overlap is left to the runtime collapse;
+# GO Slim supplies curated breadth instead of raw GO:BP's giant umbrella terms.
 # Pathogen / disease gene sets are irrelevant to an in-vitro cardiomyoblast
 # mito-transplant study and otherwise leak in as high-NES noise (e.g. Reactome
 # "Dengue Virus Host Interactions", which overlaps the ribosome/translation
@@ -153,13 +151,11 @@ DISEASE_VIRAL_RE <- paste0(
 
 build_harmonized_collection <- function(
     cache        = here::here("04_Figures", "shared", "rat_gene_sets.rds"),
-    goslim_cache = here::here("04_Figures", "shared", "goslim_rat_gene_sets.rds"),
     include_goslim = TRUE,
     min_size = 10, max_size = 350) {
   gs <- readRDS(cache)
   pw <- c(gs$Hallmark, gs$Reactome, gs$MitoCarta)
-  if (include_goslim && file.exists(goslim_cache))
-    pw <- c(pw, readRDS(goslim_cache))
+  if (include_goslim) pw <- c(pw, gs[["GO Slim"]])
   # drop bare MitoCarta compartment / aggregate sets (localizations, not pathways)
   pw <- pw[!names(pw) %in% c("MITOCARTA_ALL", "MITOCARTA_IMM", "MITOCARTA_IMS",
                              "MITOCARTA_MATRIX", "MITOCARTA_OMM")]
@@ -173,6 +169,29 @@ build_harmonized_collection <- function(
   pw
 }
 
+
+# One fGSEA pass for a single database: rank each contrast by the limma moderated t,
+# run fgseaMultilevel, return cache-schema rows. Shared by the main + GO Slim builders
+# so there is one fgsea call path, not three copies.
+run_fgsea_cache <- function(dep_wide, gene_sets, db_name, contrasts,
+                            min_size = 10, max_size = 500) {
+  one <- function(contrast) {
+    stats <- dep_wide[[paste0("t_", contrast)]]
+    names(stats) <- dep_wide$gene
+    stats <- stats[!is.na(stats) & !is.na(names(stats)) & names(stats) != ""]
+    if (anyDuplicated(names(stats))) stats <- tapply(stats, names(stats), mean)
+    stats <- sort(stats)
+    set.seed(42)   # per-call so fgsea's multilevel p-values are independent of loop order
+    res <- fgsea::fgseaMultilevel(pathways = gene_sets, stats = stats,
+                                  minSize = min_size, maxSize = max_size, eps = 0)
+    if (nrow(res) == 0) return(NULL)
+    res |>
+      dplyr::mutate(database = db_name, contrast = contrast,
+                    leadingEdge = vapply(leadingEdge, paste, character(1), collapse = ";")) |>
+      dplyr::select(pathway, pval, padj, log2err, ES, NES, size, leadingEdge, database, contrast)
+  }
+  dplyr::bind_rows(lapply(contrasts, one))
+}
 
 build_goslim_gene_sets <- function(species = "Rattus norvegicus",
                                    orgdb = NULL,
@@ -260,10 +279,12 @@ build_goslim_gene_sets <- function(species = "Rattus norvegicus",
 
 
 run_fgsea_deduplicated <- function(ranks, pathways, jaccard_cutoff = 0.5,
+                                   overlap_cutoff = 0.5,
                                    nperm = 10000, min_size = 15,
                                    max_size = 500) {
   requireNamespace("fgsea", quietly = TRUE)
 
+  set.seed(42)   # fgsea multilevel p-values are stochastic
   res <- fgsea::fgseaMultilevel(
     pathways    = pathways,
     stats       = ranks,
@@ -285,7 +306,9 @@ run_fgsea_deduplicated <- function(ranks, pathways, jaccard_cutoff = 0.5,
   sig   <- res[!is.na(res$padj) & res$padj < 0.05, ]
   nonsig <- res[is.na(res$padj) | res$padj >= 0.05, ]
 
-  sig_dedup <- deduplicate_enrichment(sig, pathways, jaccard_cutoff)
+  sig_dedup <- deduplicate_enrichment(sig, pathways,
+                                      jaccard_cutoff = jaccard_cutoff,
+                                      overlap_cutoff = overlap_cutoff)
 
   n_removed <- nrow(sig) - nrow(sig_dedup)
   pct <- if (nrow(sig) > 0) round(100 * n_removed / nrow(sig), 1) else 0
@@ -298,6 +321,7 @@ run_fgsea_deduplicated <- function(ranks, pathways, jaccard_cutoff = 0.5,
 
 run_enrichment_pipeline <- function(stats_list, pw_list,
                                     jaccard_cutoff = 0.35,
+                                    overlap_cutoff = 0.5,
                                     nperm = 10000,
                                     min_size = 15, max_size = 500,
                                     padj_cutoff = 0.05) {
@@ -309,6 +333,7 @@ run_enrichment_pipeline <- function(stats_list, pw_list,
     message(sprintf("\n--- %s ---", ctr))
     ranks <- stats_list[[ctr]]
 
+    set.seed(42)   # fgsea multilevel p-values are stochastic
     res_dt <- fgsea::fgseaMultilevel(
       pathways    = pw_list,
       stats       = ranks,
@@ -341,7 +366,9 @@ run_enrichment_pipeline <- function(stats_list, pw_list,
 
     # Jaccard dedup on remaining sig
     sig_after <- res[!is.na(res$padj) & res$padj < padj_cutoff, ]
-    sig_dedup <- deduplicate_enrichment(sig_after, pw_list, jaccard_cutoff)
+    sig_dedup <- deduplicate_enrichment(sig_after, pw_list,
+                                        jaccard_cutoff = jaccard_cutoff,
+                                        overlap_cutoff = overlap_cutoff)
     n_removed <- nrow(sig_after) - nrow(sig_dedup)
     message(sprintf("Jaccard dedup (%.2f): %d -> %d (removed %d)",
                     jaccard_cutoff, nrow(sig_after), nrow(sig_dedup), n_removed))
@@ -380,9 +407,10 @@ run_enrichment_pipeline <- function(stats_list, pw_list,
 
 run_ora_deduplicated <- function(genes, universe, pathways,
                                  jaccard_cutoff = 0.5,
+                                 overlap_cutoff = 0.5,
                                  min_size = 10, max_size = 500,
                                  padj_cutoff = 0.05) {
-  requireNamespace("fgsea", quietly = TRUE)
+  requireNamespace("fgsea", quietly = TRUE)   # fora is exact (hypergeometric); no seed needed
 
   genes <- intersect(genes, universe)
 
@@ -418,7 +446,9 @@ run_ora_deduplicated <- function(genes, universe, pathways,
   res <- tibble::as_tibble(res)
 
   sig <- res[!is.na(res$padj) & res$padj < padj_cutoff, ]
-  sig_dedup <- deduplicate_enrichment(sig, pathways, jaccard_cutoff)
+  sig_dedup <- deduplicate_enrichment(sig, pathways,
+                                      jaccard_cutoff = jaccard_cutoff,
+                                      overlap_cutoff = overlap_cutoff)
 
   n_removed <- nrow(sig) - nrow(sig_dedup)
   pct <- if (nrow(sig) > 0) round(100 * n_removed / nrow(sig), 1) else 0

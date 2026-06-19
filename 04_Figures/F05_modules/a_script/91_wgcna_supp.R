@@ -55,7 +55,7 @@ colnames(design) <- gsub("^meta\\$Group", "", colnames(design))
 cv <- c(CTLvPHE       = "PHE - Ctl",
         CTLvMITO      = "Mito - Ctl",
         PHEvPHE_MITO  = "PHE_Mito - PHE",
-        Interaction   = "(PHE_Mito - PHE) - (Mito - Ctl)",
+        Interaction   = "(PHE_Mito - Mito) - (PHE - Ctl)",   # canonical form (config.R); equals (PHE_Mito-PHE)-(Mito-Ctl)
         MITOvPHE_MITO = "PHE_Mito - Mito")
 cm <- makeContrasts(contrasts = cv, levels = design)
 colnames(cm) <- names(cv)
@@ -100,7 +100,7 @@ contrast_col_labels <- c(
   CTLvPHE       = "Disease\n(PHE − Ctl)",
   CTLvMITO      = "Intervention\n(Mito − Ctl)",
   PHEvPHE_MITO  = "Rescue\n(PHE_Mito − PHE)",
-  Interaction   = "Interaction\n(Rescue − Intervention)",
+  Interaction   = "Interaction\n(PHE_Mito − Mito) − (PHE − Ctl)",
   MITOvPHE_MITO = "Secondary\n(PHE_Mito − Mito)")
 
 logfc_mat <- mod_results |>

@@ -13,9 +13,9 @@ suppressPackageStartupMessages({
 source(here::here("04_Figures", "shared", "style.R"))
 set.seed(42)
 
-DAT      <- "04_Figures/F06_complex_mito/c_data"
-SUPP_PDF <- "04_Figures/F06_complex_mito/b_reports/supp/pdf"
-SUPP_PNG <- "04_Figures/F06_complex_mito/b_reports/supp/png"
+DAT      <- here::here("04_Figures", "F06_complex_mito", "c_data")
+SUPP_PDF <- here::here("04_Figures", "F06_complex_mito", "b_reports", "supp", "pdf")
+SUPP_PNG <- here::here("04_Figures", "F06_complex_mito", "b_reports", "supp", "png")
 dir.create(SUPP_PDF, recursive = TRUE, showWarnings = FALSE)
 dir.create(SUPP_PNG, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
@@ -56,7 +56,7 @@ write_csv(complex_cov, file.path(DAT, "covariation_complex.csv"))
 # Cohesion CI (Fisher z, n = 24 samples) for the bar panel.
 complex_cov <- complex_cov |>
   rowwise() |>
-  mutate(ci = list(fisher_z_ci(mean_pairwise_r, n = ncol(mat)))) |>
+  mutate(ci = list(fisher_z_ci(mean_pairwise_r, n = ncol(mat), method = "spearman"))) |>
   mutate(lo = ci[1], hi = ci[2]) |> ungroup() |> select(-ci)
 
 # Empirically, within-complex co-regulation is weak in these 24 samples (cohesion near

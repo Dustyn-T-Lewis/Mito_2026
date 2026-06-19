@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 # F05 (1/2) — knowledge-driven per-sample set scores tested in the 2x2 LMM.
 # Replaces WGCNA's data-derived modules as the headline grouping: sets are defined
-# EXTERNALLY (CORUM complexes + MitoCarta hierarchy + Reactome), so there is no
+# EXTERNALLY (MitoCarta hierarchy + Reactome), so there is no
 # double-dipping (modules are not learned from the same 24 samples they are tested on).
 # GSVA (Hanzelmann 2013) is the primary score; singscore (Foroutan 2018) is a
 # rank-based cross-check. Each set score is tested with
@@ -25,7 +25,6 @@ source(here::here("04_Figures", "shared", "pathway_utils.R"))
 
 da <- readRDS(here::here("02_Normalization", "imputation", "c_data", "DAList_imputed_imp4p.rds"))
 gs <- readRDS(here::here("04_Figures", "shared", "rat_gene_sets.rds"))
-corum <- readRDS(here::here("04_Figures", "shared", "corum_rat_gene_sets.rds"))
 
 # Gene-level log2 matrix (average duplicate symbols), mirrors F06
 gene <- da$annotation$gene[match(rownames(da$data), da$annotation$uniprot_id)]
@@ -60,16 +59,14 @@ clean_reactome <- function(x) {
 
 raw_sets <- c(
   setNames(mito_sets, paste0("MITO::", names(mito_sets))),
-  setNames(gs$Reactome, paste0("REAC::", names(gs$Reactome))),
-  setNames(corum, paste0("CORUM::", names(corum))))
+  setNames(gs$Reactome, paste0("REAC::", names(gs$Reactome))))
 
 source_of  <- function(id) sub("::.*$", "", id)
 display_of <- function(id) {
   body <- sub("^[^:]+::", "", id)
   src  <- source_of(id)
   if (src == "MITO")  return(last_seg(body))
-  if (src == "REAC")  return(clean_reactome(body))
-  str_squish(body)                       # CORUM names are already readable
+  clean_reactome(body)
 }
 
 # Restrict every set to measured genes; keep sets in the size window
@@ -84,7 +81,7 @@ sets_use <- sets_use[!duplicated(sig)]
 
 # Jaccard collapse: sets sharing >50% gene content are redundant for testing
 # (Reimand 2019 Nat Protocols). First-in wins given raw_sets order
-# (MitoCarta -> Reactome -> CORUM), so mito-focused sets are preserved.
+# (MitoCarta -> Reactome), so mito-focused sets are preserved.
 .jac_in   <- tibble(pathway = names(sets_use), padj = seq_along(sets_use))
 .jac_keep <- deduplicate_enrichment_flat(.jac_in, sets_use, jaccard_cutoff = 0.5)
 sets_use  <- sets_use[.jac_keep$pathway]
@@ -95,8 +92,8 @@ set_meta <- tibble(set_id = names(sets_use),
                    source = source_of(names(sets_use)),
                    display = vapply(names(sets_use), display_of, character(1)),
                    n_members = lengths(sets_use))
-message(sprintf("  harmonized sets: %d (CORUM %d / MitoCarta %d / Reactome %d) | %d genes",
-                nrow(set_meta), sum(set_meta$source == "CORUM"),
+message(sprintf("  harmonized sets: %d (MitoCarta %d / Reactome %d) | %d genes",
+                nrow(set_meta),
                 sum(set_meta$source == "MITO"), sum(set_meta$source == "REAC"),
                 length(genes_in)))
 
@@ -136,9 +133,9 @@ CONTRAST_DEFS <- list(
 
 lmm_contrasts <- function(y) {
   d <- design |> mutate(y = y)
-  m <- suppressMessages(suppressWarnings(
+  m <- suppressMessages(
     lmerTest::lmer(y ~ PHE * Mito + (1 | Replicate), data = d,
-                   control = lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4)))))
+                   control = lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))))
   vc <- as.data.frame(lme4::VarCorr(m))
   icc <- vc$vcov[vc$grp == "Replicate"] / (vc$vcov[vc$grp == "Replicate"] + vc$vcov[vc$grp == "Residual"])
   emm <- emmeans(m, ~ Mito + PHE)

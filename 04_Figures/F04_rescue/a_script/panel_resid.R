@@ -4,14 +4,14 @@
 # as a volcano + fgsea. Pairs with the rescue trajectory (panel_traj, "what moved
 # back toward control").
 library(here)
-setwd(here::here())
-source("04_Figures/shared/config.R")
-source("04_Figures/shared/pathway_utils.R")
-suppressPackageStartupMessages({ library(proteoDA); library(tidyverse)
+source(here::here("04_Figures/shared/config.R"))
+source(here::here("04_Figures/shared/pathway_utils.R"))
+suppressPackageStartupMessages({ library(proteoDA)
+  library(dplyr); library(ggplot2); library(readr); library(tibble)
   library(fgsea); library(ggrepel); library(patchwork) })
 
-RPT_PNG <- "04_Figures/F04_rescue/b_reports/main/png/panels"
-DAT     <- "04_Figures/F04_rescue/c_data/panel_resid"
+RPT_PNG <- here::here("04_Figures/F04_rescue/b_reports/main/png/panels")
+DAT     <- here::here("04_Figures/F04_rescue/c_data/panel_resid")
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 set.seed(42)
@@ -52,8 +52,8 @@ p_volc <- ggplot(v, aes(logFC, neglogP)) +
 # ── fgsea on the residual t-statistic (rat) ──────────────────────────────────
 rr <- res |> select(gene, t) |> filter(is.finite(t)) |> distinct(gene, .keep_all = TRUE)
 ranks <- setNames(rr$t, rr$gene)
-pw <- build_pathway_collection(species = "Rattus norvegicus", min_size = 15,
-                               max_size = 500, include_goslim = FALSE, exclude_variants = TRUE)
+pw <- build_harmonized_collection(min_size = 15, max_size = 500)
+set.seed(42)
 gs <- fgsea(pathways = pw, stats = sort(ranks), eps = 0)
 top <- gs |> as_tibble() |> filter(padj < 0.10) |>
   mutate(pathway_label = clean_pathway_name(pathway)) |>

@@ -23,9 +23,9 @@ suppressPackageStartupMessages({
 source(here::here("04_Figures", "shared", "config.R"))
 set.seed(42)
 
-DAT     <- "04_Figures/F06_complex_mito/c_data"
-RPT_PDF <- "04_Figures/F06_complex_mito/b_reports/main/pdf"
-RPT_PNG <- "04_Figures/F06_complex_mito/b_reports/main/png"
+DAT     <- here::here("04_Figures", "F06_complex_mito", "c_data")
+RPT_PDF <- here::here("04_Figures", "F06_complex_mito", "b_reports", "main", "pdf")
+RPT_PNG <- here::here("04_Figures", "F06_complex_mito", "b_reports", "main", "png")
 for (d in c(RPT_PDF, RPT_PNG)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
 

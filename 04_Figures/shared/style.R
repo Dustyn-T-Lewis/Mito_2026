@@ -24,33 +24,15 @@ options(device = function(...) grDevices::pdf(file = nullfile(), ...))
 
 # Palettes (aliases used by figure scripts)
 GROUP_COLORS    <- H9C2_PAL_GROUP            # Ctl / Mito / PHE / PHE_Mito
-GROUP_FILL      <- H9C2_PAL_GROUP
-PCA_COLORS      <- H9C2_PAL_GROUP
 DIR_COLORS      <- H9C2_PAL_DIR              # Up / Down / NS
-CONTRAST_COLORS <- H9C2_PAL_CONTRAST          # clinical-intuition palette
+CONTRAST_COLORS <- H9C2_PAL_CONTRAST
 CONTRAST_ROLES  <- H9C2_CONTRAST_ROLES
-PAL_CLASS <- c(Complete = "#4DAF4A", MAR = "#377EB8", MNAR = "#E41A1C")
-
-DB_COLORS <- c(Hallmark = "#AA336A", KEGG = "#E65100", Reactome = "#1565C0",
-               "GO:BP" = "#00796B", "GO Slim" = "#8D6E63",
-               BioCarta = "#795548", PID = "#455A64")
 
 # Subcellular-compartment ring palette (Okabe-Ito; colourblind-safe). Used as the
 # point OUTLINE on the F03/F04 protein scatters (fill = significance class) and
 # the mitochondrial outline on the NES scatter. Lookup: protein_localization_rat.csv.
 LOC_COLORS <- c(Mitochondrial = "#D55E00", Nuclear = "#332288",
                 Cytosolic = "#117733", Other = "grey70")
-
-# Contrast ordering / short labels
-CONTRAST_ORDER <- c(H9C2_CORE_CONTRASTS, "MITOvPHE_MITO")
-CTR_SHORT <- c(
-  CTLvPHE       = "PHE",
-  CTLvMITO      = "Mito",
-  PHEvPHE_MITO  = "PHE+Mito",
-  Interaction   = "Inter.",
-  MITOvPHE_MITO = "PHE|Mito"
-)
-CTR_FACET <- CTR_SHORT
 
 # Sizing (J Physiol double-column spec — design-agnostic, kept from YvO)
 PANEL_MD      <- 178
@@ -202,24 +184,23 @@ fmt_p_plot <- function(p, threshold = 0.05) {
   if (p < threshold) paste0('bold("', label, '")') else paste0('"', label, '"')
 }
 
-# Bonett & Wright 2000 — Fisher z CI for r (k = number of covariates)
-fisher_z_ci <- function(r, n, k = 0, level = 0.95) {
+# Fisher z CI for a correlation (k = number of covariates). Spearman rho has an
+# inflated sampling variance vs Pearson: Var(z) = (1 + r^2/2)/(n-3) (Bonett &
+# Wright 2000), so callers reporting a Spearman rho must pass method="spearman".
+fisher_z_ci <- function(r, n, k = 0, level = 0.95,
+                        method = c("pearson", "spearman")) {
+  method <- match.arg(method)
   n_eff <- n - k
   if (n_eff < 4 || is.na(r)) return(c(lo = NA_real_, hi = NA_real_))
-  z <- atanh(r); se <- 1 / sqrt(n_eff - 3)
+  z <- atanh(r)
+  var_z <- if (method == "spearman") (1 + r^2 / 2) / (n_eff - 3) else 1 / (n_eff - 3)
   crit <- qnorm(1 - (1 - level) / 2)
-  c(lo = tanh(z - crit * se), hi = tanh(z + crit * se))
+  c(lo = tanh(z - crit * sqrt(var_z)), hi = tanh(z + crit * sqrt(var_z)))
 }
 
 sig_stars <- function(padj) {
   dplyr::case_when(
     padj < 0.001 ~ "***", padj < 0.01 ~ "**", padj < 0.05 ~ "*", TRUE ~ "")
-}
-
-boot_median_ci <- function(x, R = 2000, conf = 0.95) {
-  meds <- replicate(R, median(sample(x, replace = TRUE)))
-  qs   <- quantile(meds, c((1 - conf) / 2, (1 + conf) / 2))
-  c(lower = unname(qs[1]), upper = unname(qs[2]))
 }
 
 # Pathway-name cleaner (used by enrichment figures F02/F04/F05 when built).
@@ -253,70 +234,6 @@ make_sigmoid_ribbon <- function(x0, x1, y0_top, y0_bot, y1_top, y1_bot,
     y = c(y0_top + (y1_top - y0_top) * blend,
           rev(y0_bot + (y1_bot - y0_bot) * blend)),
     ribbon_id = ribbon_id)
-}
-
-# YvO-style composite finalisation
-# Match the polish of A_YvO_2026/04_Figures/F03/a_script/01_main_panels.R:
-# strip per-panel labels from each ggplot, combine via patchwork, wrap in
-# ggdraw, then draw_label each panel's tag/title/subtitle and a composite-
-# level header at explicit normalized coordinates.
-#
-# Usage:
-#   composite <- (sl(pA) | sl(pB)) / (sl(pC) | sl(pD))
-#   out <- finalize_composite_yvo(
-#     composite, comp_h_mm = 180,
-#     panels = list(
-#       list(tag = "A", title = "PHE vs Control",          x = 0.07, y = 0.92),
-#       list(tag = "B", title = "Mito vs Control",          x = 0.51, y = 0.92),
-#       ...),
-#     header_title    = "H9c2 volcano composites",
-#     header_subtitle = "Pi-score = P.Value^|logFC|")
-#
-# strip_for_composite() above strips tag/title/subtitle from a single panel.
-finalize_composite_yvo <- function(composite, comp_h_mm,
-                                    panels,
-                                    header_title = NULL,
-                                    header_subtitle = NULL,
-                                    header_y_title = 0.99,
-                                    header_y_sub   = 0.965) {
-  txt <- composite_text_sizes(comp_h_mm)
-  TAG_SZ <- txt$tag      + 4
-  TTL_SZ <- txt$title    + 2
-  SUB_SZ <- txt$subtitle + 2
-  X_OFF  <- 0.040
-  Y_SUB  <- 0.020
-
-  out <- cowplot::ggdraw(composite)
-  for (p in panels) {
-    if (!is.null(p$tag) && nzchar(p$tag)) {
-      out <- out + cowplot::draw_label(
-        p$tag, x = p$x, y = p$y + 0.002,
-        size = TAG_SZ, fontface = "bold", hjust = 0, vjust = 1)
-    }
-    if (!is.null(p$title) && nzchar(p$title)) {
-      out <- out + cowplot::draw_label(
-        p$title, x = p$x + X_OFF, y = p$y,
-        size = TTL_SZ, fontface = "bold", hjust = 0, vjust = 1)
-    }
-    if (!is.null(p$subtitle) && nzchar(p$subtitle)) {
-      out <- out + cowplot::draw_label(
-        p$subtitle, x = p$x + X_OFF, y = p$y - Y_SUB,
-        size = SUB_SZ, fontface = "bold.italic", colour = "grey40",
-        hjust = 0, vjust = 1)
-    }
-  }
-  if (!is.null(header_title) && nzchar(header_title)) {
-    out <- out + cowplot::draw_label(
-      header_title, x = 0.02, y = header_y_title,
-      size = txt$title + 4, fontface = "bold", hjust = 0, vjust = 1)
-  }
-  if (!is.null(header_subtitle) && nzchar(header_subtitle)) {
-    out <- out + cowplot::draw_label(
-      header_subtitle, x = 0.02, y = header_y_sub,
-      size = txt$subtitle + 1, fontface = "italic",
-      colour = "grey30", hjust = 0, vjust = 1)
-  }
-  out
 }
 
 get_pdf_device <- function() {

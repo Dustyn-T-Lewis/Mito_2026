@@ -5,7 +5,7 @@ source(here::here("04_Figures", "shared", "print_scale_apply_380mm.R"))
 source(here::here("04_Figures", "shared", "pathway_utils.R"))
 source(here::here("04_Figures", "shared", "mitocarta_utils.R"))  # MITO_PATHWAY_REGEX
 
-library(tidyverse)
+library(dplyr); library(tidyr); library(ggplot2); library(stringr); library(readr); library(tibble)
 library(ggrepel)
 
 PG_W <- cfg$panel_w %||% 146
@@ -23,12 +23,6 @@ stopifnot("fGSEA cache missing" = file.exists(fgsea_cache))
 fgsea_all <- read_csv(fgsea_cache, show_col_types = FALSE)
 
 databases_keep <- cfg$databases %||% c("Hallmark", "GO Slim")
-
-# GO Slim lives in an additive cache (not the main fGSEA cache). Bind it in when
-# requested so it is selectable like Hallmark/Reactome/MitoCarta.
-goslim_csv <- here::here("04_Figures", "shared", "fgsea_goslim_h9c2.csv")
-if ("GO Slim" %in% databases_keep && file.exists(goslim_csv))
-  fgsea_all <- bind_rows(fgsea_all, read_csv(goslim_csv, show_col_types = FALSE))
 
 cx <- cfg$contrast_x
 cy <- cfg$contrast_y
@@ -90,7 +84,7 @@ message(sprintf("  %d total pathways (%s) | %d significant",
                 nrow(fgsea_sig)))
 
 nes_cor_all <- cor.test(fgsea_wide[[nes_x]], fgsea_wide[[nes_y]], method = "spearman")
-nes_ci_all  <- fisher_z_ci(nes_cor_all$estimate, nrow(fgsea_wide))
+nes_ci_all  <- fisher_z_ci(nes_cor_all$estimate, nrow(fgsea_wide), method = "spearman")
 nes_cor_sig <- if (nrow(fgsea_sig) >= 3) {
   cor.test(fgsea_sig[[nes_x]], fgsea_sig[[nes_y]], method = "spearman")
 } else NULL
@@ -131,10 +125,8 @@ txt_quad <- scale_text(BASE_QUADRANT, PG_W) * 1.15
 # Selection is a deterministic function of the data + (jaccard, k); both reported.
 N_PER_QUAD <- cfg$n_label_per_quad %||% 4L
 .gs_main <- readRDS(here::here("04_Figures", "shared", "rat_gene_sets.rds"))
-.gs_goslim_path <- here::here("04_Figures", "shared", "goslim_rat_gene_sets.rds")
-.gs_goslim <- if (file.exists(.gs_goslim_path)) readRDS(.gs_goslim_path) else list()
 .pw_dedup <- c(.gs_main$Hallmark, .gs_main$Reactome, .gs_main$KEGG,
-               .gs_main[["GO:BP"]], .gs_main$MitoCarta, .gs_goslim)
+               .gs_main[["GO Slim"]], .gs_main$MitoCarta)
 
 label_pool <- fgsea_sig |>
   mutate(padj = pmin(.data[[padj_x]], .data[[padj_y]], na.rm = TRUE),

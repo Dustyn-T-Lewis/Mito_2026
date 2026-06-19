@@ -3,16 +3,15 @@
 # (what the transplant did NOT return to control). Reads the panel PNGs (rebuilds
 # them first so it's always current). Output: PNG only (cairo-less env).
 library(here)
-setwd(here::here())                          # Mito root via .git (no .Rproj)
-source("04_Figures/shared/config.R")         # sources style.R
+source(here::here("04_Figures/shared/config.R"))         # sources style.R
 suppressPackageStartupMessages({ library(patchwork); library(ggplot2); library(png); library(grid) })
 
-PANELS <- "04_Figures/F04_rescue/b_reports/main/png/panels"
-RPT    <- "04_Figures/F04_rescue/b_reports/main/png"
+PANELS <- here::here("04_Figures/F04_rescue/b_reports/main/png/panels")
+RPT    <- here::here("04_Figures/F04_rescue/b_reports/main/png")
 dir.create(RPT, recursive = TRUE, showWarnings = FALSE)
 
-source("04_Figures/F04_rescue/a_script/panel_traj.R")
-source("04_Figures/F04_rescue/a_script/panel_resid.R")
+source(here::here("04_Figures/F04_rescue/a_script/panel_traj.R"))
+source(here::here("04_Figures/F04_rescue/a_script/panel_resid.R"))
 
 read_panel <- function(f) {
   p <- file.path(PANELS, f)

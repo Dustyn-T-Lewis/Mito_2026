@@ -13,7 +13,7 @@
 # Per-DB cap of 2 terms per ring controls visual dominance by any single DB.
 # Redundancy collapse uses combined Jaccard + Overlap Coefficient
 # (Merico 2010 PMID 21085593; EnrichmentMap default) via pathway_utils.R.
-# Per-DB results (mito-only, GO Slim, CORUM) live in the master fgsea cache.
+# Per-DB results (mito-only, GO Slim) live in the master fgsea cache.
 #
 # Biological framing verified against literature (see c_data/F02_citations.csv):
 #   PHE -> H9c2 hypertrophy: Hahn 2014 (PMID 24794531); Jeong 2009 (PMID 19299911)
@@ -58,17 +58,6 @@ dep_df    <- load_combined_wide()
 fgsea_all <- read_csv(here::here("04_Figures", "shared", "fgsea_tstat_all_h9c2.csv"), show_col_types = FALSE)
 rat_gene_sets <- readRDS(here::here("04_Figures", "shared", "rat_gene_sets.rds"))
 
-# Additive rat caches (GO Slim, CORUM) — bound in so they're selectable as DBs.
-load_extra <- function(csv) if (file.exists(csv)) read_csv(csv, show_col_types = FALSE) else NULL
-goslim_rds <- here::here("04_Figures", "shared", "goslim_rat_gene_sets.rds")
-corum_rds  <- here::here("04_Figures", "shared", "corum_rat_gene_sets.rds")
-goslim_sets <- if (file.exists(goslim_rds)) readRDS(goslim_rds) else list()
-corum_sets  <- if (file.exists(corum_rds))  readRDS(corum_rds)  else list()
-fgsea_all <- bind_rows(
-  fgsea_all,
-  load_extra(here::here("04_Figures", "shared", "fgsea_goslim_h9c2.csv")),
-  load_extra(here::here("04_Figures", "shared", "fgsea_corum_h9c2.csv")))
-
 RING_N_EACH  <- 6           # ≤6 Up + ≤6 Down per panel → mirror-symmetric ring
 RING_JACCARD <- 0.5
 RING_PADJ    <- 0.05
@@ -101,7 +90,7 @@ COMPOSITE_CONFIGS <- list(
                                rat_gene_sets$MitoCarta),
                   lens = "Hallmark + Reactome + KEGG + GO:BP + MitoCarta (expanded, rat)"))
 
-# Tidy a few over-long Reactome/CORUM/GO labels (keys = engine-cleaned text).
+# Tidy a few over-long Reactome/GO labels (keys = engine-cleaned text).
 LABEL_SHORTEN <- c(
   "Cargo Recognition For Clathrin Mediated Endocytosis" = "Clathrin\nEndocytosis",
   "Assembly Of Collagen Fibrils & Other Multimeric Structures" = "Collagen Fibril\nAssembly",

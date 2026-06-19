@@ -8,7 +8,6 @@ source(here::here("04_Figures", "shared", "figure_supplement_helpers.R"))
 DAT <- here::here("04_Figures", "F04_rescue", "c_data")
 f04_specs <- list(
   list(name = "panel_A_quadrant_proteins", path = file.path(DAT, "panel_A", "quadrant_proteins.csv")),
-  list(name = "panel_A_labelled",          path = file.path(DAT, "panel_A", "labelled_proteins.csv")),
   list(name = "panel_B_pattern_class",     path = file.path(DAT, "panel_B_heatmap", "pattern_classification.csv")),
   list(name = "panel_B_sankey",            path = file.path(DAT, "panel_B_heatmap", "sankey_links.csv")),
   list(name = "panel_B_bar",               path = file.path(DAT, "panel_B_heatmap", "bar_data.csv")),

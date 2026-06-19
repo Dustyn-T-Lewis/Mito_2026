@@ -36,7 +36,7 @@ mito_go <- go_symbols(GO_IDS["Mitochondrial"])
 nuc     <- go_symbols(GO_IDS["Nuclear"])
 cyto    <- go_symbols(GO_IDS["Cytosolic"])
 
-mito_carta <- unique(unlist(readRDS("04_Figures/shared/rat_gene_sets.rds")$MitoCarta,
+mito_carta <- unique(unlist(readRDS(here::here("04_Figures", "shared", "rat_gene_sets.rds"))$MitoCarta,
                             use.names = FALSE))
 mito <- union(mito_go, mito_carta)
 
@@ -48,14 +48,14 @@ loc$localization <- dplyr::case_when(
   loc$gene %in% cyto & !loc$gene %in% nuc         ~ "Cytosolic",
   TRUE                                            ~ "Other")
 
-readr::write_csv(loc, "04_Figures/shared/protein_localization_rat.csv")
+readr::write_csv(loc, here::here("04_Figures", "shared", "protein_localization_rat.csv"))
 message(sprintf("\nWrote %d genes: %s",
                 nrow(loc),
                 paste(sprintf("%s=%d", names(table(loc$localization)),
                               as.integer(table(loc$localization))), collapse = " | ")))
 
 # Distribution within the actual DEP dataset (what the scatter will show).
-dep <- readr::read_csv("03_DEP/c_data/03_combined_results.csv", show_col_types = FALSE)
+dep <- readr::read_csv(here::here("03_DEP", "a_non_imputed", "c_data", "combined_results_pi.csv"), show_col_types = FALSE)
 dep_loc <- merge(data.frame(gene = unique(dep$gene)), loc, all.x = TRUE)
 dep_loc$localization[is.na(dep_loc$localization)] <- "Other"
 message(sprintf("Within DEP dataset (%d genes): %s", nrow(dep_loc),

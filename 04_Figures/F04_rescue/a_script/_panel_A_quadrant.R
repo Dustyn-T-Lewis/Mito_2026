@@ -12,7 +12,7 @@ library(fgsea)
 library(ggrepel)
 library(patchwork)
 
-BASE    <- "04_Figures/F04_rescue"
+BASE    <- here::here("04_Figures", "F04_rescue")
 RPT_PNG <- file.path(BASE, "b_reports", "main", "png", "panels")
 RPT_PDF <- file.path(BASE, "b_reports", "main", "pdf", "panels")
 DAT     <- file.path(BASE, "c_data")
@@ -28,18 +28,20 @@ N_SHOW    <- 5L
 # Subcellular-compartment lookup (frozen cache; built by build_localization_lookup.R).
 # Drives the point OUTLINE colour on the scatter (Mitochondrial / Nuclear /
 # Cytosolic / Other) so localization is read at a glance instead of gene names.
-LOC_LOOKUP <- readr::read_csv("04_Figures/shared/protein_localization_rat.csv",
+LOC_LOOKUP <- readr::read_csv(here::here("04_Figures", "shared", "protein_localization_rat.csv"),
                               show_col_types = FALSE)
 
 # Data
 dep_df <- load_combined_wide()
 
-imp_path <- "02_Imputation/c_data/02_mar_mnar_classification.csv"
-imputation_df <- if (file.exists(imp_path)) {
-  readr::read_csv(imp_path, show_col_types = FALSE) |>
-    dplyr::transmute(gene, imputed = classification != "Complete") |>
-    dplyr::distinct(gene, .keep_all = TRUE)
-} else tibble::tibble(gene = character(), imputed = logical())
+# "Imputed" overlay = protein carried >=1 missing value in the normalized matrix (the cells
+# the exploratory imp4p arm fills). Derived from the normalized DAList; the old MAR/MNAR
+# classification table no longer exists in the nested layout.
+norm_dal <- readRDS(here::here("02_Normalization", "c_data", "DAList_normalized.rds"))
+stopifnot(nrow(norm_dal$annotation) == nrow(norm_dal$data), "gene" %in% names(norm_dal$annotation))
+imputation_df <- tibble::tibble(gene = norm_dal$annotation$gene,
+                                imputed = apply(as.matrix(norm_dal$data), 1, anyNA)) |>
+  dplyr::summarise(imputed = any(imputed), .by = gene)
 
 scatter_df <- dep_df |>
   dplyr::transmute(
@@ -70,7 +72,7 @@ n_sig_A   <- sum(scatter_df$is_sig)
 
 ct        <- cor.test(scatter_df$logFC_x, scatter_df$logFC_y, method = "spearman")
 r_spear_A <- as.numeric(ct$estimate)
-ci        <- fisher_z_ci(r_spear_A, n_total_A)
+ci        <- fisher_z_ci(r_spear_A, n_total_A, method = "spearman")
 rho_lo_A  <- ci[1]; rho_hi_A <- ci[2]
 pct_rev_A <- 100 * sum(sign(scatter_df$logFC_x) != sign(scatter_df$logFC_y)) / n_total_A
 message(sprintf("  F04 panel A: %d proteins | %d DEPs | rho = %.3f [%.3f, %.3f] | %.0f%% reversed",

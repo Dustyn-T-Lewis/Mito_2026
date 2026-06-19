@@ -88,7 +88,7 @@ classify_mitocarta_tier <- function(set_names) {
 run_fgsea_mitocarta <- function(stats_list,
                                 jaccard_cutoff = 0.5,
                                 nperm = 10000,
-                                min_size = 5, max_size = 500,
+                                min_size = 10, max_size = 500,
                                 padj_cutoff = 0.05) {
   if (!exists("run_enrichment_pipeline", mode = "function")) {
     source(here::here("04_Figures", "shared", "pathway_utils.R"))
@@ -108,7 +108,7 @@ run_fgsea_mitocarta <- function(stats_list,
 # ORA restricted to MitoCarta sets (mirrors run_ora_deduplicated).
 run_ora_mitocarta <- function(genes, universe,
                               jaccard_cutoff = 0.5,
-                              min_size = 5, max_size = 500,
+                              min_size = 10, max_size = 500,
                               padj_cutoff = 0.05) {
   if (!exists("run_ora_deduplicated", mode = "function")) {
     source(here::here("04_Figures", "shared", "pathway_utils.R"))

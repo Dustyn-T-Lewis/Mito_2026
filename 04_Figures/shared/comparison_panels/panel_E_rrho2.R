@@ -3,10 +3,9 @@
 source(here::here("04_Figures", "shared", "style.R"))
 source(here::here("04_Figures", "shared", "print_scale_apply_380mm.R"))
 source(here::here("04_Figures", "shared", "pathway_utils.R"))
-library(tidyverse)
+library(dplyr); library(ggplot2); library(stringr); library(readr); library(tibble); library(forcats)
 library(ggrepel)
 library(patchwork)
-library(msigdbr)
 library(fgsea)
 library(RRHO2)
 
@@ -47,7 +46,7 @@ rrho_obj <- RRHO2_initialize(
   list1, list2,
   labels          = cfg$rrho_labels,
   log10.ind       = TRUE,
-  multipleTesting = "none",
+  multipleTesting = "BY",   # grid hypergeometric tests are positively dependent (Plaisier 2010)
   boundary        = 0.02,
   method          = "hyper",
   stepsize        = 20

@@ -12,7 +12,7 @@ source(here::here("04_Figures", "shared", "style.R"))
 source(here::here("04_Figures", "shared", "print_scale_apply_380mm.R"))
 source(here::here("04_Figures", "shared", "go_slim_categories.R"))
 
-library(tidyverse)
+library(dplyr); library(tidyr); library(ggplot2); library(stringr); library(readr); library(purrr); library(tibble)
 library(patchwork)
 
 RPT_PNG <- cfg$rpt_png

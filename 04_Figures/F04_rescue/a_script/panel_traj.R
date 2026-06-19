@@ -5,16 +5,15 @@
 #   Engine = e1071::cmeans (fuzzy c-means Mfuzz wraps; Futschik & Carlisle 2005).
 #   Descriptive only -- inference stays with the DEP contrasts / fry.
 library(here)
-setwd(here::here())                          # Mito root via .git (no .Rproj)
-source("04_Figures/shared/config.R")        # sources style.R (palettes, theme, helpers)
-source("04_Figures/shared/pathway_utils.R")
-library(tidyverse)
+source(here::here("04_Figures/shared/config.R"))        # sources style.R (palettes, theme, helpers)
+source(here::here("04_Figures/shared/pathway_utils.R"))
+library(dplyr); library(tidyr); library(ggplot2); library(readr); library(purrr); library(tibble)
 library(e1071)
 library(ggrepel)
 library(patchwork)
 
-RPT_PNG <- "04_Figures/F04_rescue/b_reports/main/png/panels"
-DAT     <- "04_Figures/F04_rescue/c_data/panel_traj"
+RPT_PNG <- here::here("04_Figures/F04_rescue/b_reports/main/png/panels")
+DAT     <- here::here("04_Figures/F04_rescue/c_data/panel_traj")
 dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 dir.create(DAT, recursive = TRUE, showWarnings = FALSE)
 pdf_device <- get_pdf_device()
@@ -82,8 +81,7 @@ rescue_dir <- mean(assign$rescue_class == "Toward control", na.rm = TRUE)
 
 # ── Per-cluster ORA (rat) ────────────────────────────────────────────────────
 universe <- unique(wide$gene)
-pw <- build_pathway_collection(species = "Rattus norvegicus", min_size = 15,
-                               max_size = 500, include_goslim = FALSE, exclude_variants = TRUE)
+pw <- build_harmonized_collection(min_size = 15, max_size = 500)
 top_path <- map_dfr(seq_len(K), function(k) {
   g <- assign$gene[assign$cluster == k]
   if (length(g) < 5) return(tibble(cluster = k, pathway_label = NA_character_, padj = NA_real_))

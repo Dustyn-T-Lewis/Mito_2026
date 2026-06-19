@@ -39,10 +39,8 @@ SHORTEN <- c("Cargo Recognition For Clathrin Mediated Endocytosis"        = "Cla
              "Branched Chain AA Metabolism"                               = "Branched-Chain\nAA Metab")
 shorten_label <- function(x) { k <- gsub("\n", " ", x); o <- unname(SHORTEN[k]); ifelse(is.na(o), x, o) }
 
-load1 <- function(f) if (file.exists(f)) read_csv(f, show_col_types = FALSE) else NULL
-fgsea_all <- bind_rows(
-    load1(here::here("04_Figures", "shared", "fgsea_tstat_all_h9c2.csv")),   # Hallmark/Reactome/MitoCarta
-    load1(here::here("04_Figures", "shared", "fgsea_goslim_h9c2.csv"))) |>   # GO Slim (separate cache)
+fgsea_all <- read_csv(here::here("04_Figures", "shared", "fgsea_tstat_all_h9c2.csv"),
+                      show_col_types = FALSE) |>
   filter(database %in% DBS, !pathway %in% DROP)
 dep_df <- load_combined_wide()
 

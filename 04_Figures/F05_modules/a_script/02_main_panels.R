@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 # F05 (2/2) — headline composite for the knowledge-driven set-score modules.
 # A: set x contrast heatmap — fill = GSVA emmeans contrast estimate, BH-FDR stars,
-#    left strip = source (CORUM / MitoCarta / Reactome) + measured-member count.
+#    left strip = source (MitoCarta / Reactome) + measured-member count.
 # B: method robustness — GSVA vs singscore contrast estimates for the shown sets,
 #    per-contrast Spearman (the headline does not depend on the scoring method).
 # No circularity: sets are external; scores tested in the 2x2 LMM (see 01_set_scores.R).
@@ -30,8 +30,8 @@ CONTRAST_PAL <- c(Transplant_Mito = unname(CONTRAST_COLORS["CTLvMITO"]),
                   Disease_Phe     = unname(CONTRAST_COLORS["CTLvPHE"]),
                   `Rescue_Mito+Phe` = unname(CONTRAST_COLORS["PHEvPHE_MITO"]),
                   Interaction     = unname(CONTRAST_COLORS["Interaction"]))
-SRC_LAB <- c(CORUM = "CORUM", MITO = "MitoCarta", REAC = "Reactome")
-SRC_PAL <- c(CORUM = "#8856A7", MITO = "#D55E00", REAC = "#1565C0")
+SRC_LAB <- c(MITO = "MitoCarta", REAC = "Reactome")
+SRC_PAL <- c(MITO = "#D55E00", REAC = "#1565C0")
 
 gsva_lmm <- read_csv(file.path(DAT, "set_lmm_gsva.csv"), show_col_types = FALSE) |>
   filter(contrast %in% CORE) |>
@@ -121,7 +121,7 @@ heat_row <- (src_strip | pA) + plot_layout(widths = c(0.06, 1))
 
 # Honesty + interpretation block for the right column (no over-claiming at N=24).
 CAPTION <- paste(
-  "Sets are defined externally (CORUM + MitoCarta + Reactome), scored per sample,",
+  "Sets are defined externally (MitoCarta + Reactome), scored per sample,",
   "then tested — modules are NOT learned from these 24 samples, so there is no",
   "double-dipping (contrast with the WGCNA supplement).",
   "",

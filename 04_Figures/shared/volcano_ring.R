@@ -2,7 +2,7 @@
 # volcano_ring.R — Circular volcano-in-ring composite plot utility
 # Standard Cartesian ggplot with ggforce::geom_arc_bar(); NO coord_polar().
 
-library(tidyverse)
+library(dplyr); library(ggplot2); library(stringr); library(purrr); library(tibble)
 library(ggforce)
 library(patchwork)
 library(scales)

@@ -3,6 +3,8 @@
 # supplementary xlsx, optional Box copy. Mirrors F03 stitch.
 
 source(here::here("04_Figures", "F04_rescue", "a_script", "01_main_panels.R"))
+# rescue trajectory + residual companion (runs panel_traj/panel_resid, builds its PNG)
+source(here::here("04_Figures", "F04_rescue", "a_script", "90_stitch_rescue_traj.R"))
 source(here::here("04_Figures", "shared", "figure_supplement_helpers.R"))
 
 DAT <- here::here("04_Figures", "F04_rescue", "c_data")

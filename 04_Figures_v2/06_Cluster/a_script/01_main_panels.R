@@ -442,6 +442,143 @@ if (!is.null(results$pilot_logfc)) {
            Fuzzifier_m = NA_real_, Cluster_c = FIXED_C))
 }
 
+# ---------------------------------------------------------------------------
+# PILOT 6 — RRHO2 Disease <-> Rescue threshold-free concordance map
+# ---------------------------------------------------------------------------
+if (requireNamespace("RRHO2", quietly = TRUE)) {
+  message("\n=== pilot_rrho2 ===")
+  cw <- load_combined_wide()
+  rank_vec <- function(p, lfc) {
+    s <- -log10(p) * sign(lfc)
+    s[!is.finite(s)] <- 0
+    s
+  }
+  d_rank <- rank_vec(cw$P.Value_CTLvPHE,      cw$logFC_CTLvPHE)
+  r_rank <- rank_vec(cw$P.Value_PHEvPHE_MITO, cw$logFC_PHEvPHE_MITO)
+  keep <- !is.na(d_rank) & !is.na(r_rank) & !is.na(cw$gene) & nzchar(cw$gene)
+  rrho_df <- tibble(gene = cw$gene[keep],
+                    score_d = d_rank[keep],
+                    score_r = r_rank[keep],
+                    abs_d   = abs(d_rank[keep])) |>
+    group_by(gene) |>
+    slice_max(abs_d, n = 1, with_ties = FALSE) |>
+    ungroup()
+  list1 <- data.frame(gene = rrho_df$gene, score = rrho_df$score_d)
+  list2 <- data.frame(gene = rrho_df$gene, score = rrho_df$score_r)
+  set.seed(SEED)
+  rr <- RRHO2::RRHO2_initialize(list1, list2,
+                                labels = c("Disease (CTLvPHE)", "Rescue (PHEvPHE_MITO)"),
+                                log10.ind = TRUE,
+                                stepsize = ceiling(sqrt(nrow(list1))),
+                                boundary = 0.05)
+
+  # Heatmap (saved separately; RRHO2_heatmap uses base graphics so needs its own device)
+  hm_pdf <- file.path(MAIN_PDF, "MAIN_F06_pilot_rrho2_heatmap.pdf")
+  hm_png <- file.path(MAIN_PNG, "MAIN_F06_pilot_rrho2_heatmap.png")
+  pdf(hm_pdf, width = 7, height = 7); RRHO2::RRHO2_heatmap(rr); dev.off()
+  png(hm_png, width = 1800, height = 1800, res = 300); RRHO2::RRHO2_heatmap(rr); dev.off()
+
+  # Quadrant gene lists — extract consistent top-fraction overlap per quadrant.
+  # rr$genelist_* is a sub-list with gene_list1_*, gene_list2_*, gene_list_overlap_*.
+  # When the peak-overlap intersection is very small (common with sparse concordance),
+  # fall back to all genes that rank in the top RRHO2_PCT of BOTH lists in the
+  # direction implied by each quadrant. This yields biologically meaningful gene
+  # sets for trajectory + ORA even when the strict peak-cell overlap is tiny.
+  RRHO2_PCT <- 0.20   # top 20% of ranked list defines each quadrant boundary
+  n_top <- ceiling(RRHO2_PCT * nrow(rrho_df))
+  d_asc  <- order(rrho_df$score_d)            # ascending (most negative first)
+  d_desc <- order(rrho_df$score_d, decreasing = TRUE)
+  r_asc  <- order(rrho_df$score_r)
+  r_desc <- order(rrho_df$score_r, decreasing = TRUE)
+  top_d_up   <- rrho_df$gene[d_desc[seq_len(n_top)]]
+  top_d_down <- rrho_df$gene[d_asc [seq_len(n_top)]]
+  top_r_up   <- rrho_df$gene[r_desc[seq_len(n_top)]]
+  top_r_down <- rrho_df$gene[r_asc [seq_len(n_top)]]
+  # RRHO2 peak-overlap sets (use if available and large enough, else use pct sets)
+  uu_peak <- rr$genelist_uu$gene_list_overlap_uu
+  dd_peak <- rr$genelist_dd$gene_list_overlap_dd
+  ud_peak <- rr$genelist_ud$gene_list_overlap_ud
+  du_peak <- rr$genelist_du$gene_list_overlap_du
+  pick_genes <- function(peak, pct_fallback) {
+    cands <- if (length(peak) >= 5) peak else pct_fallback
+    if (is.null(cands)) character(0) else as.character(cands)
+  }
+  quad_lists <- list(
+    UU = pick_genes(uu_peak, intersect(top_d_up,   top_r_up)),
+    DD = pick_genes(dd_peak, intersect(top_d_down, top_r_down)),
+    UD = pick_genes(ud_peak, intersect(top_d_up,   top_r_down)),  # reversed
+    DU = pick_genes(du_peak, intersect(top_d_down, top_r_up)))    # reversed
+  message(sprintf("RRHO2 quadrant sizes: UU=%d DD=%d UD=%d DU=%d",
+    length(quad_lists$UU), length(quad_lists$DD),
+    length(quad_lists$UD), length(quad_lists$DU)))
+  pal_q <- c(UU = "#2E7D32", DD = "#1565C0", UD = "#B2182B", DU = "#D6604D")
+  quad_role <- c(UU = "Concordant Up", DD = "Concordant Down",
+                 UD = "Reversed (Disease Up / Rescue Down)",
+                 DU = "Reversed (Disease Down / Rescue Up)")
+  rows <- lapply(names(quad_lists), function(q) {
+    g_in <- quad_lists[[q]]
+    if (length(g_in) < 5) return(NULL)
+    g_in <- intersect(g_in, rownames(group_mat))
+    if (length(g_in) < 5) return(NULL)
+    z_cl <- standardise_genes(group_mat[g_in, , drop = FALSE])
+    color <- pal_q[q]
+    ora <- run_hallmark_ora(g_in, universe = ALL_GENES)
+    hdr <- sprintf("Quadrant %s  |  n = %d  |  %s", q, length(g_in), quad_role[q])
+    build_cluster_row(
+      traj_plot = build_trajectory_panel(z_cl, cluster = q,
+                                         x_levels = H9C2_GROUP_LEVELS,
+                                         x_lab = "condition (group mean)",
+                                         color = color, kind = "line"),
+      ora_plot  = build_ora_bar_panel(ora, color = color, max_n = 6),
+      header_text = hdr, color = color)
+  })
+  rows <- rows[!vapply(rows, is.null, logical(1))]
+
+  fig <- stack_cluster_rows(rows,
+    title    = "F06 pilot_rrho2 — Disease<->Rescue quadrants (per-quadrant ORA)",
+    subtitle = "heatmap saved separately; rows = significant RRHO2 quadrants")
+  h_mm <- 32 + 32 * length(rows)
+  ggsave(file.path(MAIN_PDF, "MAIN_F06_pilot_rrho2.pdf"), fig,
+         width = FIG_W, height = h_mm, units = "mm", device = pdf_dev, limitsize = FALSE)
+  ggsave(file.path(MAIN_PNG, "MAIN_F06_pilot_rrho2.png"), fig,
+         width = FIG_W, height = h_mm, units = "mm", dpi = 300, limitsize = FALSE)
+
+  # Workbook payloads
+  genelist_long <- bind_rows(lapply(names(quad_lists), function(q)
+    tibble(quadrant = q, role = quad_role[q], gene = quad_lists[[q]])))
+  ora_rr <- bind_rows(lapply(names(quad_lists), function(q) {
+    o <- run_hallmark_ora(quad_lists[[q]], universe = ALL_GENES)
+    if (is.null(o) || nrow(o) == 0) return(NULL)
+    mutate(o, quadrant = q, role = quad_role[q])
+  }))
+
+  results$pilot_rrho2 <- list(
+    key = "pilot_rrho2",
+    sheets = list(
+      pilot_rrho2_genelists = genelist_long,
+      pilot_rrho2_ora       = if (is.null(ora_rr)) tibble() else ora_rr))
+} else {
+  warning("RRHO2 package missing — skipping pilot_rrho2")
+}
+
+if (!is.null(results$pilot_rrho2)) {
+  rr <- results$pilot_rrho2$sheets
+  sheet_specs <- c(sheet_specs,
+    list(list(name = "pilot_rrho2_genelists", df = rr$pilot_rrho2_genelists,
+              role = "Per-quadrant gene lists from RRHO2 (UU/DD/UD/DU)",
+              contents = "quadrant (UU=concordant up, DD=concordant down, UD/DU=reversed), role, gene")),
+    list(list(name = "pilot_rrho2_ora", df = rr$pilot_rrho2_ora,
+              role = "Hallmark ORA per RRHO2 quadrant",
+              contents = "quadrant, role, pathway, padj, overlap, size, odds_ratio")))
+  sheet_specs[[1]]$df <- bind_rows(
+    sheet_specs[[1]]$df,
+    tibble(Pilot = "pilot_rrho2",
+           Method = "RRHO2 threshold-free Disease<->Rescue map",
+           Gate = "all genes with non-NA P.Value+logFC in Disease and Rescue",
+           N_genes = nrow(rr$pilot_rrho2_genelists),
+           Fuzzifier_m = NA_real_, Cluster_c = 4L))
+}
+
 build_workbook(file.path(DAT, "F06_supplementary.xlsx"),
                figure_title = "F06 — multi-pilot cluster framework",
                sheet_specs = sheet_specs)

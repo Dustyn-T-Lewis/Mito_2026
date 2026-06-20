@@ -8,7 +8,7 @@
 
 suppressPackageStartupMessages({
   library(dplyr); library(tidyr); library(tibble); library(readr)
-  library(ggplot2); library(scales)
+  library(ggplot2)
 })
 
 source(here::here("04_Figures_v2", "functions", "02_data_paths_and_loaders.R"))
@@ -76,18 +76,20 @@ bar_df <- bar_df |>
 bg_df <- tibble(xmin = seq_along(CORE) - 0.5, xmax = seq_along(CORE) + 0.5,
                 fill = unname(CONTRAST_COLORS[CORE]))
 
+mito_df <- filter(bar_df, mito > 0)
+
 p <- ggplot() +
-  geom_rect(data = bg_df, aes(xmin = xmin, xmax = xmax, ymin = 0, ymax = Inf),
-            fill = bg_df$fill, alpha = 0.16, color = "grey75", linewidth = 0.2) +
+  geom_rect(data = bg_df, aes(xmin = xmin, xmax = xmax, ymin = 0, ymax = Inf,
+            fill = fill), alpha = 0.16, color = "grey75", linewidth = 0.2) +
   geom_rect(data = bar_df,
             aes(xmin = x_center - BAR_W/2, xmax = x_center + BAR_W/2,
-                ymin = 0, ymax = total),
-            fill = bar_df$fill_tot, color = "black", linewidth = 0.3) +
-  geom_rect(data = filter(bar_df, mito > 0),
-            aes(xmin = x_center - BAR_W/2, xmax = x_center + BAR_W/2,
-                ymin = 0, ymax = mito),
-            fill = filter(bar_df, mito > 0)$fill_mito,
+                ymin = 0, ymax = total, fill = fill_tot),
             color = "black", linewidth = 0.3) +
+  geom_rect(data = mito_df,
+            aes(xmin = x_center - BAR_W/2, xmax = x_center + BAR_W/2,
+                ymin = 0, ymax = mito, fill = fill_mito),
+            color = "black", linewidth = 0.3) +
+  scale_fill_identity() +
   geom_text(data = filter(bar_df, total > 0),
             aes(x = x_center, y = total, label = total),
             vjust = -0.4, size = 2.4, fontface = "bold") +
@@ -117,7 +119,7 @@ p_key <- ggplot(key_df) +
   scale_x_continuous(limits = c(-0.1, 2.6)) +
   scale_y_continuous(limits = c(0.5, 4.5)) +
   theme_void()
-p <- p + patchwork::inset_element(p_key, left = 0.02, right = 0.40,
+p <- p + patchwork::inset_element(p_key, left = 0.60, right = 0.99,
                                   top = 0.99, bottom = 0.62)
 
 FIG_W <- 120; FIG_H <- 70

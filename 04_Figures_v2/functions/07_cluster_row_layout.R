@@ -11,8 +11,8 @@
 #   * run_hallmark_ora            — Hallmark-only ORA (fora) with no dedup
 
 suppressPackageStartupMessages({
-  library(dplyr); library(tidyr); library(tibble); library(stringr)
-  library(ggplot2); library(patchwork); library(scales); library(viridis)
+  library(dplyr); library(tidyr); library(tibble)
+  library(ggplot2); library(patchwork); library(viridis)
 })
 
 # Per-gene z-score across conditions; drops rows that are all-NA or all-constant
@@ -92,6 +92,7 @@ load_wgcna_modules <- function(rds_path) {
 # the second level is the +1 group and the first is the -1 group.
 compute_me_contrast_correlations <- function(MEs, meta, contrasts) {
   stopifnot(nrow(MEs) == nrow(meta))
+  stopifnot("compute_me_contrast_correlations: meta$Group is all NA" = any(!is.na(meta$Group)))
   out <- list()
   for (cn in names(contrasts)) {
     pair <- contrasts[[cn]]
@@ -126,7 +127,7 @@ cluster_palette <- function(n) {
   setNames(pal, as.character(seq_len(n)))
 }
 
-build_trajectory_panel <- function(z_mat, cluster, x_levels, x_lab,
+build_trajectory_panel <- function(z_mat, x_levels, x_lab,
                                    color, kind = c("line", "barlogfc")) {
   kind <- match.arg(kind)
   z_df <- as.data.frame(z_mat) |>
@@ -177,9 +178,10 @@ build_ora_bar_panel <- function(ora_df, color, max_n = 6) {
 
 build_cluster_row <- function(traj_plot, ora_plot, header_text, color,
                               widths = c(1, 1.4)) {
+  header_color <- ifelse(is_light_color(color), "grey15", color)
   header <- ggplot() +
     annotate("text", x = 0, y = 0.5, label = header_text,
-             hjust = 0, vjust = 0.5, size = 2.3, color = color, fontface = "bold") +
+             hjust = 0, vjust = 0.5, size = 2.3, color = header_color, fontface = "bold") +
     scale_x_continuous(limits = c(0, 1)) +
     scale_y_continuous(limits = c(0, 1)) +
     theme_void()

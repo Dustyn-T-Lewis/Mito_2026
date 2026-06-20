@@ -6,8 +6,8 @@
 # Cluster-selection Dmin sweeps still emitted to b_reports/supp for record.
 
 suppressPackageStartupMessages({
-  library(dplyr); library(tidyr); library(tibble); library(stringr)
-  library(readr); library(ggplot2); library(patchwork); library(scales)
+  library(dplyr); library(tidyr); library(tibble)
+  library(readr); library(ggplot2); library(patchwork)
   library(e1071); library(limma)
 })
 
@@ -25,6 +25,19 @@ DAT      <- file.path(BASE, "c_data")
 for (d in c(MAIN_PDF, MAIN_PNG, SUPP_PDF, SUPP_PNG, DAT))
   dir.create(d, recursive = TRUE, showWarnings = FALSE)
 pdf_dev <- get_pdf_device()
+
+# Wipe stale per-pilot outputs from previous designs so the directory only
+# contains the current six pilots' figures.
+PILOT_KEYS <- c("pilot_p","pilot_pi","pilot_fdr","pilot_wgcna","pilot_logfc","pilot_rrho2","pilot_rrho2_heatmap")
+for (d in c(MAIN_PDF, MAIN_PNG, SUPP_PDF, SUPP_PNG)) {
+  existing <- list.files(d, pattern = "^MAIN_F06_.*\\.(pdf|png)$", full.names = TRUE)
+  valid_re <- paste0("MAIN_F06_(", paste(PILOT_KEYS, collapse = "|"), ")(_selection|_me_traits)?\\.(pdf|png)$")
+  stale <- existing[!grepl(valid_re, basename(existing))]
+  if (length(stale) > 0) {
+    message(sprintf("Removing %d stale F06 output(s) from %s", length(stale), d))
+    file.remove(stale)
+  }
+}
 
 FIG_W      <- PANEL_MD       # 178 mm
 FIXED_C    <- 6L
@@ -106,7 +119,7 @@ run_cmeans_pilot <- function(key, gene_set, gate_label) {
     hdr    <- sprintf("Cluster %d  |  n = %d (core %d)  |  Hallmark ORA",
                       cl, length(g_in_cl), sum(memb$cluster == cl & memb$core))
     build_cluster_row(
-      traj_plot = build_trajectory_panel(z_cl, cluster = cl,
+      traj_plot = build_trajectory_panel(z_cl,
                                          x_levels = H9C2_GROUP_LEVELS,
                                          x_lab = "condition (group mean)",
                                          color = color, kind = "line"),
@@ -149,7 +162,10 @@ run_cmeans_pilot <- function(key, gene_set, gate_label) {
   }))
 
   list(key = key, m = m, fixed_c = FIXED_C, n_genes = nrow(z),
-       memb = memb, ora = ora_all, dmin_tbl = dmin_tbl)
+       sheets = list(
+         membership = memb,
+         ora        = ora_all,
+         dmin_tbl   = dmin_tbl))
 }
 
 # ---------------------------------------------------------------------------
@@ -189,15 +205,17 @@ sheet_specs <- list(list(
   contents = "pilot key, method, gate, gene count, fuzzifier m, cluster count c"))
 
 for (r in results) {
+  if (is.null(r$sheets)) next   # skip pilots with different structure (4-6)
+  sh <- r$sheets
   sheet_specs <- c(sheet_specs, list(
-    list(name = paste0(r$key, "_membership"), df = r$memb,
+    list(name = paste0(r$key, "_membership"), df = sh$membership,
          role = sprintf("Soft-cluster assignment for %s", r$key),
          contents = "gene, hard cluster, max membership, core flag (>0.5)"),
     list(name = paste0(r$key, "_ora"),
-         df = if (is.null(r$ora)) tibble(cluster = integer(), pathway = character(),
-                                         padj = numeric(), overlap = integer(),
-                                         size = integer(), odds_ratio = numeric())
-              else r$ora,
+         df = if (is.null(sh$ora)) tibble(cluster = integer(), pathway = character(),
+                                          padj = numeric(), overlap = integer(),
+                                          size = integer(), odds_ratio = numeric())
+              else sh$ora,
          role = sprintf("Hallmark ORA per cluster for %s", r$key),
          contents = "cluster, pathway, padj, overlap, size, odds_ratio")))
 }
@@ -221,6 +239,23 @@ if (file.exists(WGCNA_RDS)) {
     Transplant = c("Ctl", "Mito"),
     Rescue     = c("PHE", "PHE_Mito"))
   me_corr <- compute_me_contrast_correlations(MEs, me_meta, contrast_pairs)
+
+  # Interaction contrast: (PHE_Mito - Mito) - (PHE - Ctl) = (-1, +1, +1, -1)
+  # aligned to (Ctl, Mito, PHE, PHE_Mito). Cannot use compute_me_contrast_correlations
+  # (binary indicator only), so compute per-module cor.test directly.
+  int_order <- H9C2_GROUP_LEVELS   # c("Ctl","Mito","PHE","PHE_Mito")
+  int_vec_map <- c(Ctl = -1, Mito = 1, PHE = 1, PHE_Mito = -1)
+  int_indic <- int_vec_map[me_meta$Group]
+  int_keep  <- !is.na(int_indic)
+  if (sum(int_keep) >= 4) {
+    int_rows <- lapply(colnames(MEs), function(mod) {
+      ct <- suppressWarnings(cor.test(MEs[int_keep, mod], int_indic[int_keep],
+                                      method = "pearson"))
+      tibble(module = mod, contrast = "Interaction",
+             r = unname(ct$estimate), p = ct$p.value)
+    })
+    me_corr <- bind_rows(me_corr, bind_rows(int_rows))
+  }
 
   # r_floor 0.30 (vs helper default 0.40): with n = 24 samples and 11 modules,
   # the strict 0.40 floor collapses every module into "Other"; 0.30 lets the
@@ -257,7 +292,7 @@ if (file.exists(WGCNA_RDS)) {
                     mod, length(g_in), sp, rD, rR, rT)
     ora  <- run_hallmark_ora(g_in, universe = ALL_GENES)
     build_cluster_row(
-      traj_plot = build_trajectory_panel(z_cl, cluster = mod,
+      traj_plot = build_trajectory_panel(z_cl,
                                          x_levels = H9C2_GROUP_LEVELS,
                                          x_lab = "condition (group mean)",
                                          color = color, kind = "line"),
@@ -317,7 +352,7 @@ if (!is.null(results$pilot_wgcna)) {
               contents = "gene, module (color label from F05 build)")),
     list(list(name = "pilot_wgcna_me_traits", df = wg$pilot_wgcna_me_traits,
               role = "Module eigengene Pearson r vs contrast indicator vectors",
-              contents = "module, r_Disease, r_Transplant, r_Rescue, sign_pattern")),
+              contents = "module, r_Disease, r_Transplant, r_Rescue, r_Interaction, sign_pattern")),
     list(list(name = "pilot_wgcna_ora", df = wg$pilot_wgcna_ora,
               role = "Hallmark ORA per module",
               contents = "module, pathway, padj, overlap, size, odds_ratio")))
@@ -344,6 +379,8 @@ lf <- comb_wide |>
          if_all(all_of(lf_cols), ~ !is.na(.x)))
 lf_mat <- as.matrix(lf[, lf_cols])
 rownames(lf_mat) <- lf$gene
+if (nrow(lf_mat) < FIXED_C * 2)
+  stop(sprintf("pilot_logfc: too few genes (%d) for c = %d", nrow(lf_mat), FIXED_C))
 set.seed(SEED)
 km <- kmeans(lf_mat, centers = FIXED_C, nstart = 50, iter.max = 100)
 
@@ -351,17 +388,17 @@ km <- kmeans(lf_mat, centers = FIXED_C, nstart = 50, iter.max = 100)
 disease_idx <- which(lf_cols == "logFC_CTLvPHE")
 rescue_idx  <- which(lf_cols == "logFC_PHEvPHE_MITO")
 quadrant_label <- function(dis, res) {
-  if (abs(dis) < 0.1 & abs(res) < 0.1) return("Neutral")
-  if (dis > 0 & res < 0) return("Reversed Down")     # disease up, rescue brings down
-  if (dis < 0 & res > 0) return("Reversed Up")
-  if (dis > 0 & res > 0) return("Concordant Up")
-  if (dis < 0 & res < 0) return("Concordant Down")
+  if (abs(dis) < 0.1 && abs(res) < 0.1) return("Neutral")
+  if (dis > 0 && res < 0) return("Reversed Down")     # disease up, rescue brings down
+  if (dis < 0 && res > 0) return("Reversed Up")
+  if (dis > 0 && res > 0) return("Concordant Up")
+  if (dis < 0 && res < 0) return("Concordant Down")
   "Other"
 }
 centroids <- as_tibble(km$centers, rownames = "cluster") |>
   mutate(label = mapply(quadrant_label, km$centers[, disease_idx],
                                          km$centers[, rescue_idx]),
-         n = unname(table(km$cluster))[as.integer(cluster)])
+         n = km$size)
 
 pal <- cluster_palette(FIXED_C)
 rows <- lapply(seq_len(FIXED_C), function(cl) {
@@ -375,7 +412,7 @@ rows <- lapply(seq_len(FIXED_C), function(cl) {
   hdr   <- sprintf("Cluster %d  |  n = %d  |  %s",
                    cl, cent$n, cent$label)
   build_cluster_row(
-    traj_plot = build_trajectory_panel(z_cl, cluster = cl,
+    traj_plot = build_trajectory_panel(z_cl,
                                        x_levels = colnames(z_cl),
                                        x_lab = "contrast (centroid logFC)",
                                        color = color, kind = "barlogfc"),
@@ -453,21 +490,28 @@ if (!is.null(results$pilot_logfc)) {
 if (requireNamespace("RRHO2", quietly = TRUE)) {
   message("\n=== pilot_rrho2 ===")
   cw <- load_combined_wide()
+  `%|0|%` <- function(a, b) if (length(a) == 0 || !is.finite(a)) b else a
   rank_vec <- function(p, lfc) {
     s <- -log10(p) * sign(lfc)
-    s[!is.finite(s)] <- 0
+    # P.Value == 0 -> -log10 = Inf; replace with the largest finite abs score in
+    # the corresponding direction so the gene stays at rank extreme rather than
+    # collapsing to the middle.
+    inf_pos <- is.infinite(s) & s > 0
+    inf_neg <- is.infinite(s) & s < 0
+    s[inf_pos] <- max(s[is.finite(s) & s > 0], na.rm = TRUE) %|0|% 1
+    s[inf_neg] <- min(s[is.finite(s) & s < 0], na.rm = TRUE) %|0|% -1
+    s[!is.finite(s)] <- 0   # remaining NaN/NA
     s
   }
   d_rank <- rank_vec(cw$P.Value_CTLvPHE,      cw$logFC_CTLvPHE)
   r_rank <- rank_vec(cw$P.Value_PHEvPHE_MITO, cw$logFC_PHEvPHE_MITO)
   keep <- !is.na(d_rank) & !is.na(r_rank) & !is.na(cw$gene) & nzchar(cw$gene)
-  rrho_df <- tibble(gene = cw$gene[keep],
-                    score_d = d_rank[keep],
-                    score_r = r_rank[keep],
-                    abs_d   = abs(d_rank[keep])) |>
-    group_by(gene) |>
-    slice_max(abs_d, n = 1, with_ties = FALSE) |>
-    ungroup()
+  rrho_df <- slice_max(
+    tibble(gene = cw$gene[keep],
+           score_d = d_rank[keep],
+           score_r = r_rank[keep],
+           abs_d   = abs(d_rank[keep])),
+    abs_d, n = 1, by = gene, with_ties = FALSE)
   list1 <- data.frame(gene = rrho_df$gene, score = rrho_df$score_d)
   list2 <- data.frame(gene = rrho_df$gene, score = rrho_df$score_r)
   set.seed(SEED)
@@ -478,10 +522,30 @@ if (requireNamespace("RRHO2", quietly = TRUE)) {
                                 boundary = 0.025)  # per spec; trims 2.5% from each tail
 
   # Heatmap (saved separately; RRHO2_heatmap uses base graphics so needs its own device)
+  # Axis convention: Disease (x) and Rescue (y) both run from low rank (most UP,
+  # top-left) to high rank (most DOWN, bottom-right).
+  # UU = top-left (both up), DD = bottom-right (both down),
+  # UD = top-right (Disease up / Rescue down), DU = bottom-left (Disease down / Rescue up).
+  .add_rrho2_quadrant_labels <- function() {
+    text(grconvertX(0.02, "npc"), grconvertY(0.97, "npc"), "UU",
+         adj = c(0, 1), font = 2, cex = 1.2)
+    text(grconvertX(0.98, "npc"), grconvertY(0.97, "npc"), "UD",
+         adj = c(1, 1), font = 2, cex = 1.2)
+    text(grconvertX(0.02, "npc"), grconvertY(0.03, "npc"), "DU",
+         adj = c(0, 0), font = 2, cex = 1.2)
+    text(grconvertX(0.98, "npc"), grconvertY(0.03, "npc"), "DD",
+         adj = c(1, 0), font = 2, cex = 1.2)
+  }
   hm_pdf <- file.path(MAIN_PDF, "MAIN_F06_pilot_rrho2_heatmap.pdf")
   hm_png <- file.path(MAIN_PNG, "MAIN_F06_pilot_rrho2_heatmap.png")
-  pdf(hm_pdf, width = 7, height = 7); RRHO2::RRHO2_heatmap(rr); dev.off()
-  png(hm_png, width = 1800, height = 1800, res = 300); RRHO2::RRHO2_heatmap(rr); dev.off()
+  pdf(hm_pdf, width = 7, height = 7)
+  RRHO2::RRHO2_heatmap(rr)
+  .add_rrho2_quadrant_labels()
+  dev.off()
+  png(hm_png, width = 1800, height = 1800, res = 300)
+  RRHO2::RRHO2_heatmap(rr)
+  .add_rrho2_quadrant_labels()
+  dev.off()
 
   # Quadrant gene lists — extract consistent top-fraction overlap per quadrant.
   # rr$genelist_* is a sub-list with gene_list1_*, gene_list2_*, gene_list_overlap_*.
@@ -539,7 +603,7 @@ if (requireNamespace("RRHO2", quietly = TRUE)) {
     ora <- run_hallmark_ora(g_in, universe = ALL_GENES)
     hdr <- sprintf("Quadrant %s  |  n = %d  |  %s", q, length(g_in), quad_role[q])
     build_cluster_row(
-      traj_plot = build_trajectory_panel(z_cl, cluster = q,
+      traj_plot = build_trajectory_panel(z_cl,
                                          x_levels = H9C2_GROUP_LEVELS,
                                          x_lab = "condition (group mean)",
                                          color = color, kind = "line"),

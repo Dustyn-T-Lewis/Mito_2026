@@ -152,32 +152,36 @@ build_trajectory_panel <- function(z_mat, x_levels, x_lab,
           axis.text.x = element_text(angle = 30, hjust = 1, size = FIG_AXIS_TEXT))
 }
 
-build_ora_bar_panel <- function(ora_df, color, max_n = 6) {
-  if (is.null(ora_df) || nrow(ora_df) == 0)
-    return(ggplot() + annotate("text", 0, 0, label = "no Hallmark hits",
-                               size = 2.4, color = "grey40") +
-             theme_void())
+build_ora_bar_panel <- function(ora_df, color, max_n = 6,
+                                 db_name = "Hallmark") {
+  empty <- function() ggplot() +
+    annotate("text", 0, 0, label = sprintf("no %s hits", db_name),
+             size = 2.4, color = "grey40") +
+    theme_void()
+  if (is.null(ora_df) || nrow(ora_df) == 0) return(empty())
   d <- ora_df |>
-    filter(.data$padj < 0.05) |>      # only significant hits; fall through below if none
+    filter(.data$padj < 0.05) |>
     arrange(.data$padj) |>
     head(max_n) |>
     mutate(label = clean_display_label(.data$pathway),
            neglog10 = -log10(.data$padj))
-  if (nrow(d) == 0)
-    return(ggplot() + annotate("text", 0, 0, label = "no Hallmark hits",
-                               size = 2.4, color = "grey40") +
-             theme_void())
+  if (nrow(d) == 0) return(empty())
   ggplot(d, aes(reorder(.data$label, .data$neglog10), .data$neglog10)) +
     geom_col(fill = color, color = "grey20", linewidth = 0.2, width = 0.78) +
     coord_flip() +
-    labs(x = NULL, y = "-log10 padj") +
+    labs(x = NULL, y = sprintf("%s | -log10 padj", db_name)) +
     FIG_THEME +
     theme(plot.margin = margin(2, 4, 2, 2),
-          axis.text.y = element_text(size = FIG_AXIS_TEXT - 0.5))
+          axis.text.y = element_text(size = FIG_AXIS_TEXT - 0.5),
+          axis.title.x = element_text(size = FIG_AXIS_TEXT - 0.5,
+                                      face = "bold", color = "grey25"))
 }
 
+# Hallmark + MitoCarta side-by-side (Reimand 2019 PMID 30664679: pair a
+# curated high-level collection with a focused domain-specific resource).
+# When ora_plot2 = NULL the row degrades to the original single-ORA layout.
 build_cluster_row <- function(traj_plot, ora_plot, header_text, color,
-                              widths = c(1, 1.4)) {
+                              ora_plot2 = NULL, widths = NULL) {
   header_color <- ifelse(is_light_color(color), "grey15", color)
   header <- ggplot() +
     annotate("text", x = 0, y = 0.5, label = header_text,
@@ -185,8 +189,42 @@ build_cluster_row <- function(traj_plot, ora_plot, header_text, color,
     scale_x_continuous(limits = c(0, 1)) +
     scale_y_continuous(limits = c(0, 1)) +
     theme_void()
-  body <- traj_plot + ora_plot + patchwork::plot_layout(widths = widths)
+  if (is.null(ora_plot2)) {
+    if (is.null(widths)) widths <- c(1, 1.4)
+    body <- traj_plot + ora_plot + patchwork::plot_layout(widths = widths)
+  } else {
+    if (is.null(widths)) widths <- c(1, 1, 1)
+    body <- traj_plot + ora_plot + ora_plot2 + patchwork::plot_layout(widths = widths)
+  }
   header / body + patchwork::plot_layout(heights = c(0.10, 1))
+}
+
+# MitoCarta-only ORA: same Fisher 2x2 odds-ratio computation as run_hallmark_ora,
+# but restricted to the MitoCarta sublist of rat_gene_sets.rds with the broad
+# compartment aggregates (MITO_DROP_SETS) removed so only real MitoPathways
+# survive. Pairs with Hallmark per Reimand 2019 PMID 30664679 §"two complementary
+# sources"; MitoCarta 3.0 (Rath PMID 33174596) resolves OXPHOS by complex,
+# mito-translation, mitophagy etc. — the granularity a mito-transplant figure needs.
+run_mitocarta_ora <- function(genes, universe,
+                              rat_gene_sets_path = here::here(
+                                "04_Figures", "shared", "rat_gene_sets.rds")) {
+  gs   <- readRDS(rat_gene_sets_path)
+  mito <- gs$MitoCarta
+  if (length(mito) == 0) return(NULL)
+  mito <- mito[!names(mito) %in% MITO_DROP_SETS]
+  if (length(mito) == 0) return(NULL)
+  res <- fgsea::fora(pathways = mito, genes = genes, universe = universe,
+                     minSize = 5, maxSize = 500)
+  res <- as.data.frame(res)
+  if (nrow(res) == 0) return(NULL)
+  K <- length(intersect(genes, universe))
+  N <- length(universe)
+  res$odds_ratio <- vapply(seq_len(nrow(res)), function(i) {
+    a <- res$overlap[i]; b <- K - a
+    c <- res$size[i] - a; d <- N - K - c
+    if (b <= 0 || c <= 0) Inf else (a * d) / (b * c)
+  }, numeric(1))
+  tibble::as_tibble(res)
 }
 
 stack_cluster_rows <- function(rows_list, title, subtitle) {

@@ -113,23 +113,27 @@ run_cmeans_pilot <- function(key, gene_set, gate_label) {
   rows <- lapply(sort(unique(memb$cluster)), function(cl) {
     g_in_cl <- memb$gene[memb$cluster == cl]
     z_cl   <- z[g_in_cl, , drop = FALSE]
-    ora    <- run_hallmark_ora(genes = memb$gene[memb$cluster == cl & memb$core],
-                               universe = ALL_GENES)
+    core_g <- memb$gene[memb$cluster == cl & memb$core]
+    hall   <- run_hallmark_ora(genes = core_g, universe = ALL_GENES)
+    mito   <- run_mitocarta_ora(genes = core_g, universe = ALL_GENES)
     color  <- pal[as.character(cl)]
-    hdr    <- sprintf("Cluster %d  |  n = %d (core %d)  |  Hallmark ORA",
+    hdr    <- sprintf("Cluster %d  |  n = %d (core %d)  |  Hallmark + MitoCarta",
                       cl, length(g_in_cl), sum(memb$cluster == cl & memb$core))
     build_cluster_row(
       traj_plot = build_trajectory_panel(z_cl,
                                          x_levels = H9C2_GROUP_LEVELS,
                                          x_lab = "condition (group mean)",
                                          color = color, kind = "line"),
-      ora_plot  = build_ora_bar_panel(ora, color = color, max_n = 6),
+      ora_plot  = build_ora_bar_panel(hall, color = color, max_n = 6,
+                                      db_name = "Hallmark"),
+      ora_plot2 = build_ora_bar_panel(mito, color = color, max_n = 6,
+                                      db_name = "MitoCarta"),
       header_text = hdr, color = color)
   })
 
   fig <- stack_cluster_rows(rows,
     title    = sprintf("F06 %s — c = %d fuzzy c-means", key, FIXED_C),
-    subtitle = sprintf("gate: %s in >=1 of {%s}; m = %.3f; rows = clusters; right = Hallmark top-6",
+    subtitle = sprintf("gate: %s in >=1 of {%s}; m = %.3f; rows = clusters; middle = Hallmark top-6, right = MitoCarta top-6",
                        gate_label, paste(CORE, collapse = " / "), m))
   h_mm <- 32 + 32 * FIXED_C
   ggsave(file.path(MAIN_PDF, sprintf("MAIN_F06_%s.pdf", key)), fig,
@@ -153,19 +157,26 @@ run_cmeans_pilot <- function(key, gene_set, gate_label) {
   ggsave(file.path(SUPP_PNG, sprintf("MAIN_F06_%s_selection.png", key)), sup,
          width = 120, height = 80, units = "mm", dpi = 300)
 
-  # ORA across all clusters (for the workbook)
+  # ORA across all clusters (for the workbook) — Hallmark + MitoCarta separately
   ora_all <- bind_rows(lapply(sort(unique(memb$cluster)), function(cl) {
     g <- memb$gene[memb$cluster == cl & memb$core]
     o <- run_hallmark_ora(g, universe = ALL_GENES)
     if (is.null(o) || nrow(o) == 0) return(NULL)
     mutate(o, cluster = cl)
   }))
+  ora_mito_all <- bind_rows(lapply(sort(unique(memb$cluster)), function(cl) {
+    g <- memb$gene[memb$cluster == cl & memb$core]
+    o <- run_mitocarta_ora(g, universe = ALL_GENES)
+    if (is.null(o) || nrow(o) == 0) return(NULL)
+    mutate(o, cluster = cl)
+  }))
 
   list(key = key, m = m, fixed_c = FIXED_C, n_genes = nrow(z),
        sheets = list(
-         membership = memb,
-         ora        = ora_all,
-         dmin_tbl   = dmin_tbl))
+         membership   = memb,
+         ora          = ora_all,
+         ora_mito     = ora_mito_all,
+         dmin_tbl     = dmin_tbl))
 }
 
 # ---------------------------------------------------------------------------
@@ -207,16 +218,20 @@ sheet_specs <- list(list(
 for (r in results) {
   if (is.null(r$sheets)) next   # skip pilots with different structure (4-6)
   sh <- r$sheets
+  empty_ora <- tibble(cluster = integer(), pathway = character(),
+                      padj = numeric(), overlap = integer(),
+                      size = integer(), odds_ratio = numeric())
   sheet_specs <- c(sheet_specs, list(
     list(name = paste0(r$key, "_membership"), df = sh$membership,
          role = sprintf("Soft-cluster assignment for %s", r$key),
          contents = "gene, hard cluster, max membership, core flag (>0.5)"),
     list(name = paste0(r$key, "_ora"),
-         df = if (is.null(sh$ora)) tibble(cluster = integer(), pathway = character(),
-                                          padj = numeric(), overlap = integer(),
-                                          size = integer(), odds_ratio = numeric())
-              else sh$ora,
+         df = if (is.null(sh$ora)) empty_ora else sh$ora,
          role = sprintf("Hallmark ORA per cluster for %s", r$key),
+         contents = "cluster, pathway, padj, overlap, size, odds_ratio"),
+    list(name = paste0(r$key, "_ora_mito"),
+         df = if (is.null(sh$ora_mito)) empty_ora else sh$ora_mito,
+         role = sprintf("MitoCarta ORA per cluster for %s", r$key),
          contents = "cluster, pathway, padj, overlap, size, odds_ratio")))
 }
 
@@ -293,20 +308,24 @@ if (file.exists(WGCNA_RDS)) {
     rT   <- signs$r_Transplant[match(mod, signs$module)]
     hdr  <- sprintf("Module %s  |  n = %d  |  %s  |  r(D)=%.2f r(R)=%.2f r(T)=%.2f",
                     mod, length(g_in), sp, rD, rR, rT)
-    ora  <- run_hallmark_ora(g_in, universe = ALL_GENES)
+    hall <- run_hallmark_ora (g_in, universe = ALL_GENES)
+    mito <- run_mitocarta_ora(g_in, universe = ALL_GENES)
     build_cluster_row(
       traj_plot = build_trajectory_panel(z_cl,
                                          x_levels = H9C2_GROUP_LEVELS,
                                          x_lab = "condition (group mean)",
                                          color = color, kind = "line"),
-      ora_plot  = build_ora_bar_panel(ora, color = color, max_n = 6),
+      ora_plot  = build_ora_bar_panel(hall, color = color, max_n = 6,
+                                      db_name = "Hallmark"),
+      ora_plot2 = build_ora_bar_panel(mito, color = color, max_n = 6,
+                                      db_name = "MitoCarta"),
       header_text = hdr, color = color)
   })
   rows <- rows[!vapply(rows, is.null, logical(1))]
 
   fig <- stack_cluster_rows(rows,
     title    = "F06 pilot_wgcna — modules from F05 WGCNA artifact",
-    subtitle = "rows = modules; ordered by Disease<->Rescue sign pattern (reversal first); right = Hallmark top-6")
+    subtitle = "rows = modules; ordered by Disease<->Rescue sign pattern (reversal first); middle = Hallmark top-6, right = MitoCarta top-6")
   h_mm <- 32 + 32 * length(rows)
   ggsave(file.path(MAIN_PDF, "MAIN_F06_pilot_wgcna.pdf"), fig,
          width = FIG_W, height = h_mm, units = "mm", device = pdf_dev, limitsize = FALSE)
@@ -329,10 +348,16 @@ if (file.exists(WGCNA_RDS)) {
          width = 100, height = 6 + 4 * length(unique(me_corr$module)),
          units = "mm", dpi = 300, limitsize = FALSE)
 
-  # ORA across all modules for the workbook
+  # ORA across all modules for the workbook — Hallmark + MitoCarta separately
   ora_w <- bind_rows(lapply(mod_order, function(mod) {
     g <- mods$gene[mods$module == mod]
     o <- run_hallmark_ora(g, universe = ALL_GENES)
+    if (is.null(o) || nrow(o) == 0) return(NULL)
+    mutate(o, module = mod)
+  }))
+  ora_mito_w <- bind_rows(lapply(mod_order, function(mod) {
+    g <- mods$gene[mods$module == mod]
+    o <- run_mitocarta_ora(g, universe = ALL_GENES)
     if (is.null(o) || nrow(o) == 0) return(NULL)
     mutate(o, module = mod)
   }))
@@ -342,7 +367,8 @@ if (file.exists(WGCNA_RDS)) {
     sheets = list(
       pilot_wgcna_membership = mods,
       pilot_wgcna_me_traits  = signs,
-      pilot_wgcna_ora        = if (is.null(ora_w)) tibble() else ora_w))
+      pilot_wgcna_ora        = if (is.null(ora_w))      tibble() else ora_w,
+      pilot_wgcna_ora_mito   = if (is.null(ora_mito_w)) tibble() else ora_mito_w))
 } else {
   warning("WGCNA artifact not found at ", WGCNA_RDS, " — skipping pilot_wgcna")
 }
@@ -358,6 +384,9 @@ if (!is.null(results$pilot_wgcna)) {
               contents = "module, r_Disease, r_Transplant, r_Rescue, r_Interaction, sign_pattern")),
     list(list(name = "pilot_wgcna_ora", df = wg$pilot_wgcna_ora,
               role = "Hallmark ORA per module",
+              contents = "module, pathway, padj, overlap, size, odds_ratio")),
+    list(list(name = "pilot_wgcna_ora_mito", df = wg$pilot_wgcna_ora_mito,
+              role = "MitoCarta ORA per module",
               contents = "module, pathway, padj, overlap, size, odds_ratio")))
   # Add a row to Overview
   overview2 <- tibble(
@@ -410,7 +439,9 @@ rows <- lapply(seq_len(FIXED_C), function(cl) {
   # trajectory = mean-logFC bar per contrast (kind = "barlogfc")
   z_cl  <- lf_mat[g_in, , drop = FALSE]   # already in logFC space
   colnames(z_cl) <- gsub("^logFC_", "", colnames(z_cl))
-  ora   <- run_hallmark_ora(g_in, universe = unique(rownames(lf_mat)))
+  univ  <- unique(rownames(lf_mat))
+  hall  <- run_hallmark_ora (g_in, universe = univ)
+  mito  <- run_mitocarta_ora(g_in, universe = univ)
   cent  <- centroids[centroids$cluster == as.character(cl), ]
   hdr   <- sprintf("Cluster %d  |  n = %d  |  %s",
                    cl, cent$n, cent$label)
@@ -419,13 +450,16 @@ rows <- lapply(seq_len(FIXED_C), function(cl) {
                                        x_levels = colnames(z_cl),
                                        x_lab = "contrast (centroid logFC)",
                                        color = color, kind = "barlogfc"),
-    ora_plot  = build_ora_bar_panel(ora, color = color, max_n = 6),
+    ora_plot  = build_ora_bar_panel(hall, color = color, max_n = 6,
+                                    db_name = "Hallmark"),
+    ora_plot2 = build_ora_bar_panel(mito, color = color, max_n = 6,
+                                    db_name = "MitoCarta"),
     header_text = hdr, color = color)
 })
 
 fig <- stack_cluster_rows(rows,
   title    = sprintf("F06 pilot_logfc — k-means on per-protein 4-D logFC vector (c = %d)", FIXED_C),
-  subtitle = "rows = clusters; cluster labels derived from (Disease, Rescue) sign quadrant; right = Hallmark top-6")
+  subtitle = "rows = clusters; cluster labels derived from (Disease, Rescue) sign quadrant; middle = Hallmark top-6, right = MitoCarta top-6")
 h_mm <- 32 + 32 * FIXED_C
 ggsave(file.path(MAIN_PDF, "MAIN_F06_pilot_logfc.pdf"), fig,
        width = FIG_W, height = h_mm, units = "mm", device = pdf_dev, limitsize = FALSE)
@@ -453,9 +487,16 @@ ggsave(file.path(SUPP_PNG, "MAIN_F06_pilot_logfc_selection.png"), sup,
        width = 120, height = 80, units = "mm", dpi = 300)
 
 memb_lf <- tibble(gene = rownames(lf_mat), cluster = as.integer(km$cluster))
+univ_lf <- unique(rownames(lf_mat))
 ora_lf <- bind_rows(lapply(seq_len(FIXED_C), function(cl) {
   g <- memb_lf$gene[memb_lf$cluster == cl]
-  o <- run_hallmark_ora(g, universe = unique(rownames(lf_mat)))
+  o <- run_hallmark_ora(g, universe = univ_lf)
+  if (is.null(o) || nrow(o) == 0) return(NULL)
+  mutate(o, cluster = cl)
+}))
+ora_lf_mito <- bind_rows(lapply(seq_len(FIXED_C), function(cl) {
+  g <- memb_lf$gene[memb_lf$cluster == cl]
+  o <- run_mitocarta_ora(g, universe = univ_lf)
   if (is.null(o) || nrow(o) == 0) return(NULL)
   mutate(o, cluster = cl)
 }))
@@ -465,7 +506,8 @@ results$pilot_logfc <- list(
   sheets = list(
     pilot_logfc_membership = memb_lf,
     pilot_logfc_centroids  = centroids,
-    pilot_logfc_ora        = if (is.null(ora_lf)) tibble() else ora_lf))
+    pilot_logfc_ora        = if (is.null(ora_lf))      tibble() else ora_lf,
+    pilot_logfc_ora_mito   = if (is.null(ora_lf_mito)) tibble() else ora_lf_mito))
 
 if (!is.null(results$pilot_logfc)) {
   lg <- results$pilot_logfc$sheets
@@ -478,6 +520,9 @@ if (!is.null(results$pilot_logfc)) {
               contents = "cluster, logFC_<contrast>... mean centroid, quadrant label, n")),
     list(list(name = "pilot_logfc_ora", df = lg$pilot_logfc_ora,
               role = "Hallmark ORA per logFC cluster",
+              contents = "cluster, pathway, padj, overlap, size, odds_ratio")),
+    list(list(name = "pilot_logfc_ora_mito", df = lg$pilot_logfc_ora_mito,
+              role = "MitoCarta ORA per logFC cluster",
               contents = "cluster, pathway, padj, overlap, size, odds_ratio")))
   sheet_specs[[1]]$df <- bind_rows(
     sheet_specs[[1]]$df,
@@ -606,28 +651,32 @@ if (requireNamespace("RRHO2", quietly = TRUE)) {
     if (length(g_in) < 5) return(NULL)
     z_cl <- standardise_genes(group_mat[g_in, , drop = FALSE])
     color <- pal_q[q]
-    ora <- run_hallmark_ora(g_in, universe = ALL_GENES)
-    hdr <- sprintf("Quadrant %s  |  n = %d  |  %s", q, length(g_in), quad_role[q])
+    hall  <- run_hallmark_ora (g_in, universe = ALL_GENES)
+    mito  <- run_mitocarta_ora(g_in, universe = ALL_GENES)
+    hdr   <- sprintf("Quadrant %s  |  n = %d  |  %s", q, length(g_in), quad_role[q])
     build_cluster_row(
       traj_plot = build_trajectory_panel(z_cl,
                                          x_levels = H9C2_GROUP_LEVELS,
                                          x_lab = "condition (group mean)",
                                          color = color, kind = "line"),
-      ora_plot  = build_ora_bar_panel(ora, color = color, max_n = 6),
+      ora_plot  = build_ora_bar_panel(hall, color = color, max_n = 6,
+                                      db_name = "Hallmark"),
+      ora_plot2 = build_ora_bar_panel(mito, color = color, max_n = 6,
+                                      db_name = "MitoCarta"),
       header_text = hdr, color = color)
   })
   rows <- rows[!vapply(rows, is.null, logical(1))]
 
   fig <- stack_cluster_rows(rows,
     title    = "F06 pilot_rrho2 — Disease<->Rescue quadrants (per-quadrant ORA)",
-    subtitle = "heatmap saved separately; rows = significant RRHO2 quadrants")
+    subtitle = "heatmap saved separately; rows = significant RRHO2 quadrants; middle = Hallmark top-6, right = MitoCarta top-6")
   h_mm <- 32 + 32 * length(rows)
   ggsave(file.path(MAIN_PDF, "MAIN_F06_pilot_rrho2.pdf"), fig,
          width = FIG_W, height = h_mm, units = "mm", device = pdf_dev, limitsize = FALSE)
   ggsave(file.path(MAIN_PNG, "MAIN_F06_pilot_rrho2.png"), fig,
          width = FIG_W, height = h_mm, units = "mm", dpi = 300, limitsize = FALSE)
 
-  # Workbook payloads
+  # Workbook payloads — Hallmark + MitoCarta separately
   genelist_long <- bind_rows(lapply(names(quad_lists), function(q)
     tibble(quadrant = q, role = quad_role[q], gene = quad_lists[[q]],
            source = quad_source[q])))
@@ -636,12 +685,18 @@ if (requireNamespace("RRHO2", quietly = TRUE)) {
     if (is.null(o) || nrow(o) == 0) return(NULL)
     mutate(o, quadrant = q, role = quad_role[q])
   }))
+  ora_rr_mito <- bind_rows(lapply(names(quad_lists), function(q) {
+    o <- run_mitocarta_ora(quad_lists[[q]], universe = ALL_GENES)
+    if (is.null(o) || nrow(o) == 0) return(NULL)
+    mutate(o, quadrant = q, role = quad_role[q])
+  }))
 
   results$pilot_rrho2 <- list(
     key = "pilot_rrho2",
     sheets = list(
       pilot_rrho2_genelists = genelist_long,
-      pilot_rrho2_ora       = if (is.null(ora_rr)) tibble() else ora_rr))
+      pilot_rrho2_ora       = if (is.null(ora_rr))      tibble() else ora_rr,
+      pilot_rrho2_ora_mito  = if (is.null(ora_rr_mito)) tibble() else ora_rr_mito))
 } else {
   warning("RRHO2 package missing — skipping pilot_rrho2")
 }
@@ -654,6 +709,9 @@ if (!is.null(results$pilot_rrho2)) {
               contents = "quadrant (UU=concordant up, DD=concordant down, UD/DU=reversed), role, gene, source (rrho2_peak=from gene_list_overlap_*, pct_fallback=top-20% rank intersection)")),
     list(list(name = "pilot_rrho2_ora", df = rr$pilot_rrho2_ora,
               role = "Hallmark ORA per RRHO2 quadrant",
+              contents = "quadrant, role, pathway, padj, overlap, size, odds_ratio")),
+    list(list(name = "pilot_rrho2_ora_mito", df = rr$pilot_rrho2_ora_mito,
+              role = "MitoCarta ORA per RRHO2 quadrant",
               contents = "quadrant, role, pathway, padj, overlap, size, odds_ratio")))
   sheet_specs[[1]]$df <- bind_rows(
     sheet_specs[[1]]$df,

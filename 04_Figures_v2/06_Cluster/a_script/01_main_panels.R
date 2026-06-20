@@ -47,9 +47,7 @@ C_RANGE    <- 2:12
 SEEDS_DMIN <- 1:5
 GAP_B      <- 50L            # bootstraps for clusGap (Tibshirani 2001)
 
-# ---------------------------------------------------------------------------
 # Inputs: matrices + tables
-# ---------------------------------------------------------------------------
 dal     <- readRDS(P05$imp_rds)
 prot    <- dal$data
 ann     <- dal$annotation
@@ -70,9 +68,7 @@ rownames(group_mat) <- ALL_GENES
 comb_long <- read_csv(P05$comb, show_col_types = FALSE)
 CORE      <- H9C2_CORE_CONTRASTS
 
-# ---------------------------------------------------------------------------
 # c-means engine (carried over, simplified)
-# ---------------------------------------------------------------------------
 # standardise_genes() is defined in 07_cluster_row_layout.R (generic utility).
 mestimate_fuzzifier <- function(z) {
   N <- nrow(z); D <- ncol(z)
@@ -88,11 +84,9 @@ mean_dmin <- function(z, c, m, seeds = SEEDS_DMIN) {
               numeric(1)))
 }
 
-# ---------------------------------------------------------------------------
 # Per-pilot runner (c-means flavor)
-# ---------------------------------------------------------------------------
 run_cmeans_pilot <- function(key, gene_set, gate_label) {
-  message(sprintf("\n=== %s (n_genes = %d) ===", key, length(gene_set)))
+  message(sprintf("%s: n_genes = %d", key, length(gene_set)))
   mat <- group_mat[intersect(gene_set, rownames(group_mat)), , drop = FALSE]
   if (nrow(mat) < 6L)
     stop(sprintf("pilot %s: too few genes (%d) for clustering", key, nrow(mat)))
@@ -189,9 +183,7 @@ run_cmeans_pilot <- function(key, gene_set, gate_label) {
          dmin_tbl     = dmin_tbl))
 }
 
-# ---------------------------------------------------------------------------
 # PILOTS 1-3 (c-means × p / Π / FDR)
-# ---------------------------------------------------------------------------
 PILOTS_CMEANS <- list(
   list(key = "pilot_p",   col = "P.Value",   threshold = 0.05,
        gate_label = "p < 0.05"),
@@ -209,9 +201,7 @@ for (p in PILOTS_CMEANS) {
                                        gate_label = p$gate_label)
 }
 
-# ---------------------------------------------------------------------------
 # Single supplementary workbook (Pilots 1-3 only at this stage)
-# ---------------------------------------------------------------------------
 overview <- tibble(
   Pilot = vapply(results, `[[`, character(1), "key"),
   Method = "fuzzy c-means on group means",
@@ -222,7 +212,7 @@ overview <- tibble(
   Selection = vapply(results, `[[`, character(1), "selection_basis"))
 
 sheet_specs <- list(list(
-  name = "Overview", df = overview,
+  name = "Pilot_summary", df = overview,
   role = "F06 pilots — run-level summary",
   contents = "pilot key, method, gate, gene count, fuzzifier m, cluster count c"))
 
@@ -246,12 +236,10 @@ for (r in results) {
          contents = "cluster, pathway, padj, overlap, size, odds_ratio")))
 }
 
-# ---------------------------------------------------------------------------
 # PILOT 4 — WGCNA modules
-# ---------------------------------------------------------------------------
 WGCNA_RDS <- here::here("04_Figures", "F05_modules", "c_data", "wgcna_network.rds")
 if (file.exists(WGCNA_RDS)) {
-  message("\n=== pilot_wgcna ===")
+  message("pilot_wgcna")
   w <- load_wgcna_modules(WGCNA_RDS)
   mods <- w$modules |> filter(.data$module != "grey")
   MEs  <- w$MEs
@@ -266,11 +254,11 @@ if (file.exists(WGCNA_RDS)) {
     Rescue     = c("PHE", "PHE_Mito"))
   me_corr <- compute_me_contrast_correlations(MEs, me_meta, contrast_pairs)
 
-  # Interaction contrast: (PHE_Mito - Mito) - (PHE - Ctl) = (-1, +1, +1, -1)
-  # aligned to (Ctl, Mito, PHE, PHE_Mito). Cannot use compute_me_contrast_correlations
-  # (binary indicator only), so compute per-module cor.test directly.
-  int_order <- H9C2_GROUP_LEVELS   # c("Ctl","Mito","PHE","PHE_Mito")
-  int_vec_map <- c(Ctl = -1, Mito = 1, PHE = 1, PHE_Mito = -1)
+  # Interaction contrast: (PHE_Mito - Mito) - (PHE - Ctl) = +Ctl - Mito - PHE + PHE_Mito
+  # aligned to (Ctl, Mito, PHE, PHE_Mito) = (+1, -1, -1, +1). Cannot use
+  # compute_me_contrast_correlations (binary indicator only), so per-module cor.test.
+  int_order <- H9C2_GROUP_LEVELS
+  int_vec_map <- c(Ctl = 1, Mito = -1, PHE = -1, PHE_Mito = 1)
   int_indic <- int_vec_map[me_meta$Group]
   int_keep  <- !is.na(int_indic)
   if (sum(int_keep) >= 4) {
@@ -409,10 +397,8 @@ if (!is.null(results$pilot_wgcna)) {
   sheet_specs[[1]]$df <- bind_rows(sheet_specs[[1]]$df, overview2)
 }
 
-# ---------------------------------------------------------------------------
 # PILOT 5 — k-means on per-protein 4-D logFC vector
-# ---------------------------------------------------------------------------
-message("\n=== pilot_logfc ===")
+message("pilot_logfc")
 comb_wide <- load_combined_wide()
 lf_cols  <- paste0("logFC_", CORE)
 stopifnot(all(lf_cols %in% names(comb_wide)))
@@ -551,16 +537,14 @@ if (!is.null(results$pilot_logfc)) {
            Fuzzifier_m = NA_real_, Cluster_c = pilot_c_lf))
 }
 
-# ---------------------------------------------------------------------------
 # PILOT 6 — RRHO2 Disease <-> Rescue threshold-free concordance map
-# ---------------------------------------------------------------------------
 if (requireNamespace("RRHO2", quietly = TRUE)) {
-  message("\n=== pilot_rrho2 ===")
+  message("pilot_rrho2")
   cw <- load_combined_wide()
   # Rank by signed limma moderated t (Smyth 2004, doi:10.2202/1544-6115.1027) —
   # variance-stabilized at small n and the same statistic fgsea consumes upstream,
   # so RRHO2 and fgsea agree on which gene "leads" each contrast. Replaces the
-  # original Cahill 2018 (PMID 29442049) signed -log10(P) ranking; Cahill notes
+  # original Cahill 2018 (PMID 29942049) signed -log10(P) ranking; Cahill notes
   # the rank, not the metric, drives the hypergeometric tail.
   rank_vec <- function(tstat) {
     tstat[!is.finite(tstat)] <- 0
@@ -686,9 +670,15 @@ if (requireNamespace("RRHO2", quietly = TRUE)) {
   })
   rows <- rows[!vapply(rows, is.null, logical(1))]
 
+  fallback_quads <- names(quad_source)[quad_source == "pct_fallback"]
+  fallback_note  <- if (length(fallback_quads))
+    sprintf(" | %s from top-20%% percentile (RRHO2 peak overlap <5 genes)",
+            paste(fallback_quads, collapse = "/"))
+  else ""
   fig <- stack_cluster_rows(rows,
     title    = "F06 pilot_rrho2 — Disease<->Rescue quadrants (per-quadrant ORA)",
-    subtitle = "heatmap saved separately; rows = significant RRHO2 quadrants; middle = Hallmark top-6, right = MitoCarta top-6")
+    subtitle = paste0("heatmap saved separately; rows = RRHO2 quadrants; ",
+                      "Hallmark + MitoCarta top-6", fallback_note))
   h_mm <- 32 + 32 * length(rows)
   ggsave(file.path(MAIN_PDF, "MAIN_F06_pilot_rrho2.pdf"), fig,
          width = FIG_W, height = h_mm, units = "mm", device = pdf_dev, limitsize = FALSE)

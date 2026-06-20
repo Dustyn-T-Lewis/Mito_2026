@@ -470,7 +470,7 @@ if (requireNamespace("RRHO2", quietly = TRUE)) {
                                 labels = c("Disease (CTLvPHE)", "Rescue (PHEvPHE_MITO)"),
                                 log10.ind = TRUE,
                                 stepsize = ceiling(sqrt(nrow(list1))),
-                                boundary = 0.05)
+                                boundary = 0.025)  # per spec; trims 2.5% from each tail
 
   # Heatmap (saved separately; RRHO2_heatmap uses base graphics so needs its own device)
   hm_pdf <- file.path(MAIN_PDF, "MAIN_F06_pilot_rrho2_heatmap.pdf")
@@ -499,15 +499,24 @@ if (requireNamespace("RRHO2", quietly = TRUE)) {
   dd_peak <- rr$genelist_dd$gene_list_overlap_dd
   ud_peak <- rr$genelist_ud$gene_list_overlap_ud
   du_peak <- rr$genelist_du$gene_list_overlap_du
+  # pick_genes returns a named list with $genes (character) and $source (label)
+  # so downstream can record which genes came from RRHO2 peak overlap vs the
+  # top-20% percentile fallback.
   pick_genes <- function(peak, pct_fallback) {
-    cands <- if (length(peak) >= 5) peak else pct_fallback
-    if (is.null(cands)) character(0) else as.character(cands)
+    if (length(peak) >= 5) {
+      list(genes = as.character(peak), source = "rrho2_peak")
+    } else {
+      cands <- if (is.null(pct_fallback)) character(0) else as.character(pct_fallback)
+      list(genes = cands, source = "pct_fallback")
+    }
   }
-  quad_lists <- list(
+  quad_res <- list(
     UU = pick_genes(uu_peak, intersect(top_d_up,   top_r_up)),
     DD = pick_genes(dd_peak, intersect(top_d_down, top_r_down)),
     UD = pick_genes(ud_peak, intersect(top_d_up,   top_r_down)),  # reversed
     DU = pick_genes(du_peak, intersect(top_d_down, top_r_up)))    # reversed
+  quad_lists  <- lapply(quad_res, `[[`, "genes")
+  quad_source <- vapply(quad_res, `[[`, character(1), "source")
   message(sprintf("RRHO2 quadrant sizes: UU=%d DD=%d UD=%d DU=%d",
     length(quad_lists$UU), length(quad_lists$DD),
     length(quad_lists$UD), length(quad_lists$DU)))
@@ -545,7 +554,8 @@ if (requireNamespace("RRHO2", quietly = TRUE)) {
 
   # Workbook payloads
   genelist_long <- bind_rows(lapply(names(quad_lists), function(q)
-    tibble(quadrant = q, role = quad_role[q], gene = quad_lists[[q]])))
+    tibble(quadrant = q, role = quad_role[q], gene = quad_lists[[q]],
+           source = quad_source[q])))
   ora_rr <- bind_rows(lapply(names(quad_lists), function(q) {
     o <- run_hallmark_ora(quad_lists[[q]], universe = ALL_GENES)
     if (is.null(o) || nrow(o) == 0) return(NULL)
@@ -566,7 +576,7 @@ if (!is.null(results$pilot_rrho2)) {
   sheet_specs <- c(sheet_specs,
     list(list(name = "pilot_rrho2_genelists", df = rr$pilot_rrho2_genelists,
               role = "Per-quadrant gene lists from RRHO2 (UU/DD/UD/DU)",
-              contents = "quadrant (UU=concordant up, DD=concordant down, UD/DU=reversed), role, gene")),
+              contents = "quadrant (UU=concordant up, DD=concordant down, UD/DU=reversed), role, gene, source (rrho2_peak=from gene_list_overlap_*, pct_fallback=top-20% rank intersection)")),
     list(list(name = "pilot_rrho2_ora", df = rr$pilot_rrho2_ora,
               role = "Hallmark ORA per RRHO2 quadrant",
               contents = "quadrant, role, pathway, padj, overlap, size, odds_ratio")))

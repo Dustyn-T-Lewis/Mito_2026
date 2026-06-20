@@ -269,13 +269,9 @@ run_mitocarta_ora <- function(genes, universe,
                      minSize = 5, maxSize = 500)
   res <- as.data.frame(res)
   if (nrow(res) == 0) return(NULL)
-  K <- length(intersect(genes, universe))
-  N <- length(universe)
-  res$odds_ratio <- vapply(seq_len(nrow(res)), function(i) {
-    a <- res$overlap[i]; b <- K - a
-    c <- res$size[i] - a; d <- N - K - c
-    if (b <= 0 || c <= 0) Inf else (a * d) / (b * c)
-  }, numeric(1))
+  res$odds_ratio <- fora_odds_ratio(res$overlap, res$size,
+                                    K = length(intersect(genes, universe)),
+                                    N = length(universe))
   tibble::as_tibble(res)
 }
 
@@ -301,13 +297,9 @@ run_hallmark_ora <- function(genes, universe,
                      minSize = 5, maxSize = 500)
   res <- as.data.frame(res)
   if (nrow(res) == 0) return(NULL)
-  K <- length(intersect(genes, universe))
-  N <- length(universe)
-  res$odds_ratio <- vapply(seq_len(nrow(res)), function(i) {
-    a <- res$overlap[i]; b <- K - a
-    c <- res$size[i] - a; d <- N - K - c
-    if (b <= 0 || c <= 0) Inf else (a * d) / (b * c)
-  }, numeric(1))
+  res$odds_ratio <- fora_odds_ratio(res$overlap, res$size,
+                                    K = length(intersect(genes, universe)),
+                                    N = length(universe))
   tibble::as_tibble(res)
 }
 

@@ -493,21 +493,17 @@ if (!is.null(results$pilot_logfc)) {
 if (requireNamespace("RRHO2", quietly = TRUE)) {
   message("\n=== pilot_rrho2 ===")
   cw <- load_combined_wide()
-  `%|0|%` <- function(a, b) if (length(a) == 0 || !is.finite(a)) b else a
-  rank_vec <- function(p, lfc) {
-    s <- -log10(p) * sign(lfc)
-    # P.Value == 0 -> -log10 = Inf; replace with the largest finite abs score in
-    # the corresponding direction so the gene stays at rank extreme rather than
-    # collapsing to the middle.
-    inf_pos <- is.infinite(s) & s > 0
-    inf_neg <- is.infinite(s) & s < 0
-    s[inf_pos] <- max(s[is.finite(s) & s > 0], na.rm = TRUE) %|0|% 1
-    s[inf_neg] <- min(s[is.finite(s) & s < 0], na.rm = TRUE) %|0|% -1
-    s[!is.finite(s)] <- 0   # remaining NaN/NA
-    s
+  # Rank by signed limma moderated t (Smyth 2004, doi:10.2202/1544-6115.1027) —
+  # variance-stabilized at small n and the same statistic fgsea consumes upstream,
+  # so RRHO2 and fgsea agree on which gene "leads" each contrast. Replaces the
+  # original Cahill 2018 (PMID 29442049) signed -log10(P) ranking; Cahill notes
+  # the rank, not the metric, drives the hypergeometric tail.
+  rank_vec <- function(tstat) {
+    tstat[!is.finite(tstat)] <- 0
+    tstat
   }
-  d_rank <- rank_vec(cw$P.Value_CTLvPHE,      cw$logFC_CTLvPHE)
-  r_rank <- rank_vec(cw$P.Value_PHEvPHE_MITO, cw$logFC_PHEvPHE_MITO)
+  d_rank <- rank_vec(cw$t_CTLvPHE)
+  r_rank <- rank_vec(cw$t_PHEvPHE_MITO)
   keep <- !is.na(d_rank) & !is.na(r_rank) & !is.na(cw$gene) & nzchar(cw$gene)
   rrho_df <- slice_max(
     tibble(gene = cw$gene[keep],
@@ -519,7 +515,7 @@ if (requireNamespace("RRHO2", quietly = TRUE)) {
   list2 <- data.frame(gene = rrho_df$gene, score = rrho_df$score_r)
   set.seed(SEED)
   rr <- RRHO2::RRHO2_initialize(list1, list2,
-                                labels = c("Disease (CTLvPHE)", "Rescue (PHEvPHE_MITO)"),
+                                labels = c("Disease (signed mod-t)", "Rescue (signed mod-t)"),
                                 log10.ind = TRUE,
                                 stepsize = ceiling(sqrt(nrow(list1))),
                                 boundary = 0.025)  # per spec; trims 2.5% from each tail

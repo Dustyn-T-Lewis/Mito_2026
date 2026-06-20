@@ -222,10 +222,15 @@ if (file.exists(WGCNA_RDS)) {
     Rescue     = c("PHE", "PHE_Mito"))
   me_corr <- compute_me_contrast_correlations(MEs, me_meta, contrast_pairs)
 
+  # r_floor 0.30 (vs helper default 0.40): with n = 24 samples and 11 modules,
+  # the strict 0.40 floor collapses every module into "Other"; 0.30 lets the
+  # turquoise (D = +0.34, R = -0.61) and black (D = +0.27, R = -0.40) reversal
+  # candidates surface, which is the whole point of the sign-pattern ordering.
   signs <- me_corr |>
     pivot_wider(id_cols = module, names_from = contrast, values_from = r,
                 names_prefix = "r_") |>
-    mutate(sign_pattern = classify_module_sign_pattern(r_Disease, r_Rescue))
+    mutate(sign_pattern = classify_module_sign_pattern(r_Disease, r_Rescue,
+                                                       r_floor = 0.30))
   # Row order: Reversal first, then Concordant up/down, then Other, then by |r_Rescue|
   mod_order <- signs |>
     arrange(.data$sign_pattern, desc(abs(.data$r_Rescue))) |>

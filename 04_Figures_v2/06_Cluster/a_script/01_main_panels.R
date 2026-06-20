@@ -257,15 +257,18 @@ if (file.exists(WGCNA_RDS)) {
     me_corr <- bind_rows(me_corr, bind_rows(int_rows))
   }
 
-  # r_floor 0.30 (vs helper default 0.40): with n = 24 samples and 11 modules,
-  # the strict 0.40 floor collapses every module into "Other"; 0.30 lets the
-  # turquoise (D = +0.34, R = -0.61) and black (D = +0.27, R = -0.40) reversal
-  # candidates surface, which is the whole point of the sign-pattern ordering.
+  # r_floor 0.25 (vs helper default 0.40): with n = 24 samples and 11 modules,
+  # the strict 0.40 floor collapses every module into "Other"; 0.25 surfaces
+  # the full reversal cohort — turquoise (D=+0.34, R=-0.61), brown (D=-0.28, R=+0.74),
+  # black (D=+0.27, R=-0.40), blue (D=-0.30, R=+0.49) — plus red as Concordant down
+  # (D=-0.29, R=-0.51). At n=24 these correlations are noisier than they'd be in a
+  # larger cohort, so treat the sign-pattern column as a ranking aid rather than an
+  # inferential claim.
   signs <- me_corr |>
     pivot_wider(id_cols = module, names_from = contrast, values_from = r,
                 names_prefix = "r_") |>
     mutate(sign_pattern = classify_module_sign_pattern(r_Disease, r_Rescue,
-                                                       r_floor = 0.30))
+                                                       r_floor = 0.25))
   # Row order: Reversal first, then Concordant up/down, then Other, then by |r_Rescue|
   mod_order <- signs |>
     arrange(.data$sign_pattern, desc(abs(.data$r_Rescue))) |>
@@ -526,23 +529,30 @@ if (requireNamespace("RRHO2", quietly = TRUE)) {
   # top-left) to high rank (most DOWN, bottom-right).
   # UU = top-left (both up), DD = bottom-right (both down),
   # UD = top-right (Disease up / Rescue down), DU = bottom-left (Disease down / Rescue up).
+  # RRHO2_heatmap uses fields::image.plot internally, which leaves the device
+  # active on the color-bar panel, so plain text() after the call writes onto the
+  # legend strip, not the heatmap. Reserving outer margins before the call and
+  # using mtext(outer=TRUE) puts the four corner labels on the device's outer
+  # frame instead, independent of whatever sub-panel is active.
   .add_rrho2_quadrant_labels <- function() {
-    text(grconvertX(0.02, "npc"), grconvertY(0.97, "npc"), "UU",
-         adj = c(0, 1), font = 2, cex = 1.2)
-    text(grconvertX(0.98, "npc"), grconvertY(0.97, "npc"), "UD",
-         adj = c(1, 1), font = 2, cex = 1.2)
-    text(grconvertX(0.02, "npc"), grconvertY(0.03, "npc"), "DU",
-         adj = c(0, 0), font = 2, cex = 1.2)
-    text(grconvertX(0.98, "npc"), grconvertY(0.03, "npc"), "DD",
-         adj = c(1, 0), font = 2, cex = 1.2)
+    mtext("UU", side = 3, line = 0.4, adj = 0.04, outer = TRUE,
+          font = 2, cex = 1.3, col = "grey15")
+    mtext("UD  (reversed)", side = 3, line = 0.4, adj = 0.78, outer = TRUE,
+          font = 2, cex = 1.3, col = "#B2182B")
+    mtext("DU  (reversed)", side = 1, line = 0.4, adj = 0.04, outer = TRUE,
+          font = 2, cex = 1.3, col = "#D6604D")
+    mtext("DD", side = 1, line = 0.4, adj = 0.78, outer = TRUE,
+          font = 2, cex = 1.3, col = "grey15")
   }
   hm_pdf <- file.path(MAIN_PDF, "MAIN_F06_pilot_rrho2_heatmap.pdf")
   hm_png <- file.path(MAIN_PNG, "MAIN_F06_pilot_rrho2_heatmap.png")
   pdf(hm_pdf, width = 7, height = 7)
+  par(oma = c(2, 1, 2, 1))   # bottom, left, top, right outer-margin lines
   RRHO2::RRHO2_heatmap(rr)
   .add_rrho2_quadrant_labels()
   dev.off()
   png(hm_png, width = 1800, height = 1800, res = 300)
+  par(oma = c(2, 1, 2, 1))
   RRHO2::RRHO2_heatmap(rr)
   .add_rrho2_quadrant_labels()
   dev.off()

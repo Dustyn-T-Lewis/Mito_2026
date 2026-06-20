@@ -34,7 +34,7 @@ sets, or enrichment logic. No edits to stages 00–03 or to `04_Figures/`.
   `c_data/F0x_supplementary.xlsx` via `build_workbook(out_file, figure_title, sheet_specs)`,
   where each spec is `list(name=, df=, role=, contents=)` and the builder writes an
   **Overview** sheet first. Emit **no loose CSVs** except `shown_pathways.csv` in
-  figures 04 & 05 (consumed by 06).
+  figure 05 (written for reference; F06 does **not** read it; F04 does not write it).
 
 ## F01 — 01_PCA
 
@@ -64,17 +64,20 @@ sets, or enrichment logic. No edits to stages 00–03 or to `04_Figures/`.
   directly. Companion dodged Up/Down direction strip (Up `#D6604D`, Down `#4393C3`).
 - **Outputs**: `MAIN_F03_venn.{pdf,png}` (~140×100 mm); xlsx sheets `membership`, `region_counts`.
 
-## F04 — 04_Pathway_bars (pathway-changes main report)
+## F04 — 04_Pathway_bars (Panel-D pathway count summary)
 
-- Pool fgsea cache rows for `database ∈ {Hallmark,Reactome,KEGG,MitoCarta}`, `padj<0.05`,
-  `size≥10`, drop MitoCarta compartment sets (`MITOCARTA_{IMM,IMS,MATRIX,OMM,ALL}`).
-- Per contrast: `deduplicate_enrichment(df, pathways=set_pool, jaccard_cutoff=0.5, cross_db=TRUE)`
-  where `set_pool <- c(rat_gene_sets$Hallmark, $Reactome, $KEGG, $MitoCarta)`.
-- Top ≤6 Up / ≤6 Down by padj per contrast; horizontal bars faceted by contrast
-  (`free_y`), fill = NES gradient `c("#08306B","#4393C3","white","#D6604D","#67000D")`,
-  `values=rescale(c(-3,-1.5,0,1.5,3))`, `limits=c(-3,3)`, `oob=squish`. Names via `clean_display_label()`.
-- **Outputs**: `MAIN_F04_pathway_bars.{pdf,png}` (178 mm wide); xlsx `pathway_bars` +
-  per-contrast enrichment sheets; **keep** `c_data/shown_pathways.csv` (contrast, database, pathway).
+- Pool fgsea cache rows for `CANONICAL_DBS` = `{Hallmark,Reactome,KEGG,MitoCarta,GO Slim}`,
+  `padj<0.05`, `size≥10`, drop `MITO_DROP_SETS` (MitoCarta compartment aggregates).
+- Per contrast: `deduplicate_enrichment(df, pathways=set_pool, cutoff=0.375, cross_db=TRUE)`
+  (EnrichmentMap-style combined Jaccard+overlap at 0.375 threshold).
+- **Single panel, no NES bars.** Per contrast, two dodged bars (Up/Down) drawn from 0.
+  Light fill = total significant pathways; dark fill = mito subset overdrawn.
+  Mito flag: `database == "MitoCarta"` OR `grepl(MITO_PATHWAY_REGEX, pathway)`. Sqrt y.
+  Contrast-tinted background bands. 4-key inline legend (Up total / Up mito / Down total / Down mito).
+  Numeric total label above each bar. Names via `clean_display_label()`.
+- **Outputs**: `MAIN_F04_pathway_bars.{pdf,png}` (~120×70 mm); xlsx `dep_pathway_counts` +
+  per-contrast `<role>_sig_pathways` sheets. **Do not write** `shown_pathways.csv`
+  (F06 no longer excludes prior-figure pathways; F04 removes any legacy copy).
 
 ## F05 — 05_Enrich_Volcano
 
@@ -89,28 +92,34 @@ sets, or enrichment logic. No edits to stages 00–03 or to `04_Figures/`.
 - **Outputs**: 4 rings + legend; xlsx `contrast_map` + per-contrast ring-term sheets;
   **keep** `c_data/shown_pathways.csv` (union of displayed ring terms).
 
-## F06 — 06_Cluster (fuzzy c-means → per-cluster ORA)
+## F06 — 06_Cluster (6-pilot cluster framework)
 
-- **Do not use the Mfuzz package** (it needs tcltk/X11). Reimplement on `e1071::cmeans`:
-  `standardise` = per-gene z (`t(scale(t(mat)))`); `mestimate` = Schwämmle & Jensen 2010
-  (`m = 1 + (1418/N+22.05)*D^-2 + (12.33/N+0.243)*D^(-0.0406*log(N)-0.1134)`, N=genes, D=dims);
-  `mfuzz` = `cmeans(z, centers=c, m=m, method="cmeans")`, `set.seed(42)`.
-- Gene-level matrix via `limma::avereps(dal$data, ID=gene)` (drop NA/empty genes).
-- Three variants: **Group_Pi** (4 condition means, genes with Π<0.05 in ≥1 contrast),
-  **Group_All** (4 condition means, all genes), **Sample_All** (24-sample profiles, all genes).
-- **Cluster selection (report it)**: for c=2..12, mean Dmin (= `min(dist(centers))`) over ~5 seeds;
-  pick the curvature knee (point where the per-step decrease flattens), default c=9 if no knee
-  clears ~5% of the Dmin range. Emit a Dmin-vs-c diagnostic to `b_reports/supp/`. Report m and chosen c.
-- Trajectory plots per cluster (membership-weighted alpha/linewidth, faceted). ORA on core
-  members (membership>0.5) via `run_ora_deduplicated(genes, universe=all genes,
-  pathways=build_harmonized_collection(), jaccard_cutoff=0.5)`. **Exclude** pathways listed in
-  `04_Pathway_bars/c_data/shown_pathways.csv` and `05_Enrich_Volcano/c_data/shown_pathways.csv`
-  (union of `pathway` IDs) so clusters surface new biology. Dot/bar of surviving terms per cluster.
-- **Outputs**: `MAIN_F06_<variant>_traj.{pdf,png}` ×3, `MAIN_F06_<variant>_ora.{pdf,png}` ×3,
-  `b_reports/supp/.../MAIN_F06_<variant>_cluster_selection.{pdf,png}` ×3; one
-  `c_data/F06_supplementary.xlsx` with per-variant `_selection`/`_membership`/`_ora` sheets. No loose CSVs.
+Six self-contained pilot figures. All share per-cluster row layout: **trajectory left |
+Hallmark-only ORA bars right**, patchwork widths `c(1, 1.4)`. **Do not exclude** F04/F05
+pathways — each pilot's ORA surfaces unfiltered biology.
+
+- **Pilot 1 `pilot_p`** — fuzzy c-means on 4-D group means; gate `p < 0.05` in ≥1 core contrast.
+  Engine: `e1071::cmeans`, `standardise` = per-gene z, Schwämmle–Jensen fuzzifier m,
+  **fixed c = 6**, `set.seed(42)`. Supp: Dmin-vs-c sweep (c = 2..12, 5 seeds).
+- **Pilot 2 `pilot_pi`** — same engine; gate `Π < 0.05` in ≥1 core contrast.
+- **Pilot 3 `pilot_fdr`** — same engine; gate `adj.P.Val < 0.10` in ≥1 core contrast.
+- **Pilot 4 `pilot_wgcna`** — WGCNA modules from `04_Figures/F05_modules/c_data/wgcna_network.rds`
+  (drop grey). Correlate MEs with contrast indicator vectors. Row order: Reversal first, then
+  Concordant, then Other. Trajectory: group-mean z-profiles (4 conditions); supp: ME×trait heatmap.
+- **Pilot 5 `pilot_logfc`** — k-means (c = 6, nstart = 50) on per-protein 4-D logFC vector.
+  Cluster label from `(mean_logFC_Disease, mean_logFC_Rescue)` sign quadrant. Trajectory: bar
+  of mean logFC per contrast (not group-mean line). Supp: WSS elbow k = 2..10.
+- **Pilot 6 `pilot_rrho2`** — RRHO2 threshold-free Disease↔Rescue map. Heatmap saved separately
+  (base graphics); per-quadrant row layout (UU/DD/UD/DU) with group-mean trajectory + ORA.
+
+ORA for all pilots: `run_hallmark_ora()` (Hallmark only, `fgsea::fora`). Top 6 by padj, bar
+fill = cluster color, x = `-log10(padj)`.
+
+- **Outputs**: `MAIN_F06_<pilot_key>.{pdf,png}` per pilot; supp diagnostics to `b_reports/supp/`;
+  one `c_data/F06_supplementary.xlsx` — Overview sheet + per-pilot `_membership` and `_ora` sheets.
+  No loose CSVs.
 
 ## Verify each script
 
 `Rscript 04_Figures_v2/<fig>/a_script/01_main_panels.R`; confirm images regenerate and the
-single Overview-first xlsx exists. Run 04 and 05 before 06.
+single Overview-first xlsx exists. F04 and F06 are independent — no ordering constraint.

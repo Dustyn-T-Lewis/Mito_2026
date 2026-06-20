@@ -59,10 +59,7 @@ CORE      <- H9C2_CORE_CONTRASTS
 # ---------------------------------------------------------------------------
 # c-means engine (carried over, simplified)
 # ---------------------------------------------------------------------------
-standardise_genes <- function(mat) {
-  z <- t(scale(t(mat)))
-  z[is.finite(rowSums(z)), , drop = FALSE]
-}
+# standardise_genes() is defined in 07_cluster_row_layout.R (generic utility).
 mestimate_fuzzifier <- function(z) {
   N <- nrow(z); D <- ncol(z)
   1 + (1418 / N + 22.05) * D^(-2) +
@@ -241,7 +238,10 @@ if (file.exists(WGCNA_RDS)) {
     g_in <- mods$gene[mods$module == mod]
     g_in <- intersect(g_in, rownames(gene_mat))
     if (length(g_in) < 5) return(NULL)
-    # trajectory on group means (z-scored per gene over conditions)
+    # Trajectory uses group means (4 condition centroids), not individual sample
+    # profiles. Deliberate deviation from spec wording: n=24 sample-level lines
+    # add noise that obscures module shape, and group means keep visual consistency
+    # with the c-means pilots (Pilots 1-3) that also use group means.
     z_cl <- standardise_genes(group_mat[g_in, , drop = FALSE])
     color <- pal[mod]
     sp   <- signs$sign_pattern[match(mod, signs$module)]
@@ -585,7 +585,7 @@ if (!is.null(results$pilot_rrho2)) {
     tibble(Pilot = "pilot_rrho2",
            Method = "RRHO2 threshold-free Disease<->Rescue map",
            Gate = "all genes with non-NA P.Value+logFC in Disease and Rescue",
-           N_genes = nrow(rr$pilot_rrho2_genelists),
+           N_genes = nrow(rrho_df),   # input universe, not long-format output rows
            Fuzzifier_m = NA_real_, Cluster_c = 4L))
 }
 

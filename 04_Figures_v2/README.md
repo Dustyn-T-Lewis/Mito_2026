@@ -29,9 +29,9 @@ Spine = **Disease → Rescue reversal**.
   01_PCA/                     sample PCA + PERMANOVA
   02_DEP_bars/                DEP counts (% proteome) + effect-size distributions
   03_Venn/                    area-proportional 3-set DEP overlap + direction strip
-  04_Pathway_bars/            pooled fgsea enrichment bars (NES gradient)
+  04_Pathway_bars/            Panel-D pathway count summary (total + mito subset, sqrt y)
   05_Enrich_Volcano/          per-contrast volcano-in-ring panels + NES legend
-  06_Cluster/                 fuzzy-c-means trajectories + per-cluster ORA (×3 variants)
+  06_Cluster/                 6-pilot cluster framework (c-means × 3 + WGCNA + logFC + RRHO2)
   BUILD_PROMPT.md             full regeneration spec for an agent
   README.md                   this file
 ```
@@ -44,7 +44,7 @@ Each figure subdir:
   b_reports/main/{pdf,png}/          main standalone figure images (MAIN_F0x_*)
   b_reports/supp/{pdf,png}/          supplementary diagnostics (e.g. cluster selection)
   c_data/F0x_supplementary.xlsx      single workbook: Overview sheet + result sheets
-  c_data/shown_pathways.csv          ONLY in 04 & 05 — consumed by 06
+  c_data/shown_pathways.csv          ONLY in 05 — written for reference (F06 does NOT read it)
 ```
 
 ## functions/ — shared engines (pipeline order)
@@ -74,7 +74,7 @@ Derived-data caches (`rat_gene_sets.rds`, `fgsea_tstat_all_h9c2.csv`,
 ## Conventions
 
 - Root resolved via `here::here()`. Width invariant 178 mm (`PANEL_MD`); pdf via `get_pdf_device()` (cairo → quartz → base), png at 300 dpi, `units = "mm"`.
-- Each figure's tabular output lives **only** in its `F0x_supplementary.xlsx` (Overview sheet documents every other sheet: name, role in the figure, contents). The single exception is `shown_pathways.csv` in figures 04 and 05, which figure 06 reads to exclude already-displayed pathways and surface new biology.
+- Each figure's tabular output lives **only** in its `F0x_supplementary.xlsx` (Overview sheet documents every other sheet: name, role in the figure, contents). The single exception is `shown_pathways.csv` in figure 05, retained on disk for reference (F06 does **not** read it — F04 no longer writes it either).
 - No edits to upstream stages (00–03) or to `04_Figures/`. No new gene-set derivation.
 
 ## Run
@@ -85,5 +85,5 @@ for f in 01_PCA 02_DEP_bars 03_Venn 04_Pathway_bars 05_Enrich_Volcano 06_Cluster
 done
 ```
 
-Run 04 and 05 before 06 (06 consumes their `shown_pathways.csv`). Benign X11/cairo
+F04 and F06 are independent; run order does not matter. Benign X11/cairo
 warnings on stderr are expected — the PDF device falls back to quartz.

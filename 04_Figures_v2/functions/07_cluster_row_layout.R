@@ -1,5 +1,7 @@
 # 04_Figures_v2/functions/07_cluster_row_layout.R
 # Shared helpers for the F06 pilot framework:
+#   * standardise_genes           — per-gene z-score (finite rows only); used by
+#                                   pilots 1-4 (c-means + WGCNA) and pilot 6 (RRHO2)
 #   * filter_sig_in_any_contrast  — per-protein significance gate
 #   * load_wgcna_modules          — slim wrapper around the F05 WGCNA artifact
 #   * compute_me_contrast_correlations / classify_module_sign_pattern
@@ -12,6 +14,13 @@ suppressPackageStartupMessages({
   library(dplyr); library(tidyr); library(tibble); library(stringr)
   library(ggplot2); library(patchwork); library(scales); library(viridis)
 })
+
+# Per-gene z-score across conditions; drops rows that are all-NA or all-constant
+# after scaling (produces non-finite row sums). Used by pilots 1-4 and 6.
+standardise_genes <- function(mat) {
+  z <- t(scale(t(mat)))
+  z[is.finite(rowSums(z)), , drop = FALSE]
+}
 
 filter_sig_in_any_contrast <- function(comb_long, col, threshold,
                                        contrasts, op = c("lt", "le")) {
@@ -148,10 +157,15 @@ build_ora_bar_panel <- function(ora_df, color, max_n = 6) {
                                size = 2.4, color = "grey40") +
              theme_void())
   d <- ora_df |>
+    filter(.data$padj < 0.05) |>      # only significant hits; fall through below if none
     arrange(.data$padj) |>
     head(max_n) |>
     mutate(label = clean_display_label(.data$pathway),
            neglog10 = -log10(.data$padj))
+  if (nrow(d) == 0)
+    return(ggplot() + annotate("text", 0, 0, label = "no Hallmark hits",
+                               size = 2.4, color = "grey40") +
+             theme_void())
   ggplot(d, aes(reorder(.data$label, .data$neglog10), .data$neglog10)) +
     geom_col(fill = color, color = "grey20", linewidth = 0.2, width = 0.78) +
     coord_flip() +
@@ -205,4 +219,5 @@ run_hallmark_ora <- function(genes, universe,
   tibble::as_tibble(res)
 }
 
-`%||%` <- function(a, b) if (!is.null(a)) a else b
+# %||% is defined in 06_supplementary_workbook.R (null/length-0/NA-aware);
+# that helper is sourced transitively in F06 before this file is used.

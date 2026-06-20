@@ -35,14 +35,22 @@ load_wgcna_modules <- function(rds_path) {
     mods <- obj$module_assignments
   } else if (!is.null(obj$net) && !is.null(obj$net$colors) &&
              length(names(obj$net$colors)) > 0) {
-    # Real artifact: net$colors is named by uniprot IDs; ann$gene gives symbols.
+    # Real artifact: net$colors is named by uniprot IDs (numeric cluster IDs);
+    # module_colors (when present) holds the parallel color-name strings;
+    # ann$gene gives gene symbols parallel to both.
     gene_syms <- if (!is.null(obj$ann) && !is.null(obj$ann$gene)) {
       obj$ann$gene
     } else {
       names(obj$net$colors)
     }
+    color_names <- if (!is.null(obj$module_colors) &&
+                       length(obj$module_colors) == length(gene_syms)) {
+      obj$module_colors
+    } else {
+      as.character(unname(obj$net$colors))
+    }
     mods <- tibble(gene   = gene_syms,
-                   module = unname(obj$net$colors))
+                   module = color_names)
   } else if (!is.null(obj$module_colors)) {
     # Positional fallback: module_colors parallel to ann$gene or gene_order.
     gene_syms <- if (!is.null(obj$ann) && !is.null(obj$ann$gene)) {
@@ -59,6 +67,9 @@ load_wgcna_modules <- function(rds_path) {
   MEs <- if (!is.null(obj$MEs)) as.matrix(obj$MEs)
          else if (!is.null(obj$net) && !is.null(obj$net$MEs)) as.matrix(obj$net$MEs)
          else stop("Unrecognised WGCNA artifact shape: cannot find module eigengenes")
+
+  # Strip "ME" prefix from eigengene column names so they match module color labels.
+  colnames(MEs) <- sub("^ME", "", colnames(MEs))
 
   # Module names are colors; the color lookup is the identity unless the
   # artifact already provides a translation.

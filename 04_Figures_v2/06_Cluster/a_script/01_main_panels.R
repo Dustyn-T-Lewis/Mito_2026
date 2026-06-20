@@ -40,11 +40,12 @@ for (d in c(MAIN_PDF, MAIN_PNG, SUPP_PDF, SUPP_PNG)) {
 }
 
 FIG_W      <- PANEL_MD       # 178 mm
-FIXED_C    <- 6L
+DEFAULT_C  <- 6L             # fallback if no flattening detected in Dmin/gap
 SEED       <- 42L
 CORE_MEMB  <- 0.5
 C_RANGE    <- 2:12
 SEEDS_DMIN <- 1:5
+GAP_B      <- 50L            # bootstraps for clusGap (Tibshirani 2001)
 
 # ---------------------------------------------------------------------------
 # Inputs: matrices + tables
@@ -93,23 +94,29 @@ mean_dmin <- function(z, c, m, seeds = SEEDS_DMIN) {
 run_cmeans_pilot <- function(key, gene_set, gate_label) {
   message(sprintf("\n=== %s (n_genes = %d) ===", key, length(gene_set)))
   mat <- group_mat[intersect(gene_set, rownames(group_mat)), , drop = FALSE]
-  if (nrow(mat) < FIXED_C * 2)
-    stop(sprintf("pilot %s: too few genes (%d) for c = %d", key, nrow(mat), FIXED_C))
+  if (nrow(mat) < 6L)
+    stop(sprintf("pilot %s: too few genes (%d) for clustering", key, nrow(mat)))
   z <- standardise_genes(mat)
   m <- mestimate_fuzzifier(z)
 
-  # selection sweep (diagnostic only; not used to pick c)
+  # Per-pilot c selection via Dmin elbow (Schwämmle & Jensen 2010, PMID 20880957)
+  # capped at sqrt(N/2) per Mardia 1979 small-N rule.
   dmin_tbl <- tibble(c = C_RANGE,
                      mean_Dmin = vapply(C_RANGE, function(c) mean_dmin(z, c, m),
                                         numeric(1)))
-  fit  <- mfuzz_cmeans(z, FIXED_C, m, seed = SEED)
+  pick <- pick_c_dmin(dmin_tbl, n_genes = nrow(z),
+                      drop_frac = 0.10, default_c = DEFAULT_C)
+  pilot_c <- pick$c
+  message(sprintf("  %s", pick$basis))
+
+  fit  <- mfuzz_cmeans(z, pilot_c, m, seed = SEED)
   hard <- fit$cluster
   max_mem <- apply(fit$membership, 1, max)
   memb <- tibble(gene = rownames(z), cluster = as.integer(hard),
                  membership = as.numeric(max_mem),
                  core = max_mem > CORE_MEMB)
 
-  pal <- cluster_palette(FIXED_C)
+  pal <- cluster_palette(pilot_c)
   rows <- lapply(sort(unique(memb$cluster)), function(cl) {
     g_in_cl <- memb$gene[memb$cluster == cl]
     z_cl   <- z[g_in_cl, , drop = FALSE]
@@ -132,24 +139,26 @@ run_cmeans_pilot <- function(key, gene_set, gate_label) {
   })
 
   fig <- stack_cluster_rows(rows,
-    title    = sprintf("F06 %s — c = %d fuzzy c-means", key, FIXED_C),
+    title    = sprintf("F06 %s — c = %d fuzzy c-means (%s)", key, pilot_c, pick$basis),
     subtitle = sprintf("gate: %s in >=1 of {%s}; m = %.3f; rows = clusters; middle = Hallmark top-6, right = MitoCarta top-6",
                        gate_label, paste(CORE, collapse = " / "), m))
-  h_mm <- 32 + 32 * FIXED_C
+  h_mm <- 32 + 32 * pilot_c
   ggsave(file.path(MAIN_PDF, sprintf("MAIN_F06_%s.pdf", key)), fig,
          width = FIG_W, height = h_mm, units = "mm", device = pdf_dev, limitsize = FALSE)
   ggsave(file.path(MAIN_PNG, sprintf("MAIN_F06_%s.png", key)), fig,
          width = FIG_W, height = h_mm, units = "mm", dpi = 300, limitsize = FALSE)
 
-  # supp: Dmin-vs-c diagnostic
+  # supp: Dmin-vs-c diagnostic with the chosen c highlighted
   sup <- ggplot(dmin_tbl, aes(c, mean_Dmin)) +
     geom_line(color = "grey50", linewidth = 0.4) +
     geom_point(size = 1.4, color = "grey30") +
-    geom_vline(xintercept = FIXED_C, color = "#D6604D",
+    geom_vline(xintercept = pilot_c, color = "#D6604D",
                linetype = "dashed", linewidth = 0.4) +
+    geom_point(data = dmin_tbl[dmin_tbl$c == pilot_c, ],
+               color = "#D6604D", size = 2.8) +
     scale_x_continuous(breaks = C_RANGE) +
     labs(title = sprintf("F06 %s cluster-selection diagnostic", key),
-         subtitle = sprintf("fixed c = %d (no auto-pick); m = %.3f", FIXED_C, m),
+         subtitle = sprintf("%s; m = %.3f", pick$basis, m),
          x = "number of clusters (c)",
          y = "mean min centroid distance (Dmin)") + FIG_THEME
   ggsave(file.path(SUPP_PDF, sprintf("MAIN_F06_%s_selection.pdf", key)), sup,
@@ -171,7 +180,8 @@ run_cmeans_pilot <- function(key, gene_set, gate_label) {
     mutate(o, cluster = cl)
   }))
 
-  list(key = key, m = m, fixed_c = FIXED_C, n_genes = nrow(z),
+  list(key = key, m = m, pilot_c = pilot_c, n_genes = nrow(z),
+       selection_basis = pick$basis,
        sheets = list(
          membership   = memb,
          ora          = ora_all,
@@ -208,7 +218,8 @@ overview <- tibble(
   Gate = vapply(PILOTS_CMEANS, `[[`, character(1), "gate_label"),
   N_genes = vapply(results, `[[`, integer(1), "n_genes"),
   Fuzzifier_m = vapply(results, function(r) round(r$m, 3), numeric(1)),
-  Cluster_c = vapply(results, `[[`, integer(1), "fixed_c"))
+  Cluster_c = vapply(results, `[[`, integer(1), "pilot_c"),
+  Selection = vapply(results, `[[`, character(1), "selection_basis"))
 
 sheet_specs <- list(list(
   name = "Overview", df = overview,
@@ -411,10 +422,17 @@ lf <- comb_wide |>
          if_all(all_of(lf_cols), ~ !is.na(.x)))
 lf_mat <- as.matrix(lf[, lf_cols])
 rownames(lf_mat) <- lf$gene
-if (nrow(lf_mat) < FIXED_C * 2)
-  stop(sprintf("pilot_logfc: too few genes (%d) for c = %d", nrow(lf_mat), FIXED_C))
+if (nrow(lf_mat) < 12L)
+  stop(sprintf("pilot_logfc: too few genes (%d) for clustering", nrow(lf_mat)))
+# k selection: gap statistic (Tibshirani 2001 doi:10.1111/1467-9868.00293)
+# via cluster::clusGap with firstSEmax — smallest k whose gap is within 1 SE
+# of the maximum, the published anti-overfit choice for k-means on omics.
+gap_pick <- pick_c_gap(lf_mat, k_range = 2:10, B = GAP_B, seed = SEED,
+                       default_c = DEFAULT_C)
+pilot_c_lf <- gap_pick$c
+message(sprintf("pilot_logfc: %s", gap_pick$basis))
 set.seed(SEED)
-km <- kmeans(lf_mat, centers = FIXED_C, nstart = 50, iter.max = 100)
+km <- kmeans(lf_mat, centers = pilot_c_lf, nstart = 50, iter.max = 100)
 
 # Quadrant-style label from (logFC_Disease, logFC_Rescue) centroid signs.
 disease_idx <- which(lf_cols == "logFC_CTLvPHE")
@@ -432,8 +450,8 @@ centroids <- as_tibble(km$centers, rownames = "cluster") |>
                                          km$centers[, rescue_idx]),
          n = km$size)
 
-pal <- cluster_palette(FIXED_C)
-rows <- lapply(seq_len(FIXED_C), function(cl) {
+pal <- cluster_palette(pilot_c_lf)
+rows <- lapply(seq_len(pilot_c_lf), function(cl) {
   g_in <- rownames(lf_mat)[km$cluster == cl]
   color <- pal[as.character(cl)]
   # trajectory = mean-logFC bar per contrast (kind = "barlogfc")
@@ -458,29 +476,30 @@ rows <- lapply(seq_len(FIXED_C), function(cl) {
 })
 
 fig <- stack_cluster_rows(rows,
-  title    = sprintf("F06 pilot_logfc — k-means on per-protein 4-D logFC vector (c = %d)", FIXED_C),
+  title    = sprintf("F06 pilot_logfc — k-means on per-protein 4-D logFC vector (c = %d; %s)",
+                     pilot_c_lf, gap_pick$basis),
   subtitle = "rows = clusters; cluster labels derived from (Disease, Rescue) sign quadrant; middle = Hallmark top-6, right = MitoCarta top-6")
-h_mm <- 32 + 32 * FIXED_C
+h_mm <- 32 + 32 * pilot_c_lf
 ggsave(file.path(MAIN_PDF, "MAIN_F06_pilot_logfc.pdf"), fig,
        width = FIG_W, height = h_mm, units = "mm", device = pdf_dev, limitsize = FALSE)
 ggsave(file.path(MAIN_PNG, "MAIN_F06_pilot_logfc.png"), fig,
        width = FIG_W, height = h_mm, units = "mm", dpi = 300, limitsize = FALSE)
 
-# supp: WSS elbow
-elbow_tbl <- tibble(c = 2:10,
-                    tot_wss = vapply(2:10, function(k) {
-                      set.seed(SEED)
-                      kmeans(lf_mat, centers = k, nstart = 25, iter.max = 100)$tot.withinss
-                    }, numeric(1)))
-sup <- ggplot(elbow_tbl, aes(c, tot_wss)) +
+# supp: gap-statistic diagnostic — gap(k) ± 1 SE bars with chosen c highlighted
+gap_tbl <- gap_pick$gap_tbl
+sup <- ggplot(gap_tbl, aes(.data$k, .data$gap)) +
+  geom_errorbar(aes(ymin = gap - SE.sim, ymax = gap + SE.sim),
+                color = "grey55", width = 0.2, linewidth = 0.3) +
   geom_line(color = "grey50", linewidth = 0.4) +
   geom_point(size = 1.4, color = "grey30") +
-  geom_vline(xintercept = FIXED_C, color = "#D6604D",
+  geom_vline(xintercept = pilot_c_lf, color = "#D6604D",
              linetype = "dashed", linewidth = 0.4) +
+  geom_point(data = gap_tbl[gap_tbl$k == pilot_c_lf, ],
+             color = "#D6604D", size = 2.8) +
   scale_x_continuous(breaks = 2:10) +
   labs(title = "F06 pilot_logfc cluster-selection diagnostic",
-       subtitle = sprintf("fixed c = %d (no auto-pick); within-cluster SS by k", FIXED_C),
-       x = "number of clusters (c)", y = "total within-cluster SS") + FIG_THEME
+       subtitle = sprintf("gap statistic (Tibshirani 2001); %s", gap_pick$basis),
+       x = "number of clusters (k)", y = "gap(k) ± 1 SE") + FIG_THEME
 ggsave(file.path(SUPP_PDF, "MAIN_F06_pilot_logfc_selection.pdf"), sup,
        width = 120, height = 80, units = "mm", device = pdf_dev)
 ggsave(file.path(SUPP_PNG, "MAIN_F06_pilot_logfc_selection.png"), sup,
@@ -488,13 +507,13 @@ ggsave(file.path(SUPP_PNG, "MAIN_F06_pilot_logfc_selection.png"), sup,
 
 memb_lf <- tibble(gene = rownames(lf_mat), cluster = as.integer(km$cluster))
 univ_lf <- unique(rownames(lf_mat))
-ora_lf <- bind_rows(lapply(seq_len(FIXED_C), function(cl) {
+ora_lf <- bind_rows(lapply(seq_len(pilot_c_lf), function(cl) {
   g <- memb_lf$gene[memb_lf$cluster == cl]
   o <- run_hallmark_ora(g, universe = univ_lf)
   if (is.null(o) || nrow(o) == 0) return(NULL)
   mutate(o, cluster = cl)
 }))
-ora_lf_mito <- bind_rows(lapply(seq_len(FIXED_C), function(cl) {
+ora_lf_mito <- bind_rows(lapply(seq_len(pilot_c_lf), function(cl) {
   g <- memb_lf$gene[memb_lf$cluster == cl]
   o <- run_mitocarta_ora(g, universe = univ_lf)
   if (is.null(o) || nrow(o) == 0) return(NULL)
@@ -529,7 +548,7 @@ if (!is.null(results$pilot_logfc)) {
     tibble(Pilot = "pilot_logfc", Method = "k-means on per-protein 4-D logFC vector",
            Gate = "all genes with non-NA logFC across core contrasts",
            N_genes = nrow(lg$pilot_logfc_membership),
-           Fuzzifier_m = NA_real_, Cluster_c = FIXED_C))
+           Fuzzifier_m = NA_real_, Cluster_c = pilot_c_lf))
 }
 
 # ---------------------------------------------------------------------------

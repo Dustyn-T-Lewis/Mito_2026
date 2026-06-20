@@ -22,6 +22,58 @@ standardise_genes <- function(mat) {
   z[is.finite(rowSums(z)), , drop = FALSE]
 }
 
+# Schwämmle & Jensen (PMID 20880957) Dmin elbow with a defensible decision rule.
+# `dmin_tbl` has columns (c, mean_Dmin) over a sweep. The picker (1) caps c at
+# floor(sqrt(N/2)) — Mardia 1979's k <= sqrt(n/2) heuristic, the standard upper
+# bound for cluster count given N samples (the genes being clustered); (2) walks
+# the Dmin curve and picks the first c where the marginal drop to the next c
+# falls below `drop_frac` of the curve's total range — the "flattening knee".
+# Falls back to `default_c` if no flattening is detected (curve still falling
+# steeply at the cap).
+pick_c_dmin <- function(dmin_tbl, n_genes,
+                        drop_frac = 0.10, default_c = 6L,
+                        min_c = 3L) {
+  c_cap <- max(min_c, floor(sqrt(n_genes / 2)))
+  tbl <- dmin_tbl[dmin_tbl$c <= c_cap & dmin_tbl$c >= min_c, , drop = FALSE]
+  if (nrow(tbl) < 2L) return(list(c = max(min_c, c_cap), basis = "cap binds"))
+  rng  <- diff(range(dmin_tbl$mean_Dmin))
+  drop <- -diff(tbl$mean_Dmin)               # always >= 0 in practice
+  knee <- which(drop < drop_frac * rng)[1]
+  if (is.na(knee)) {
+    return(list(c = min(default_c, c_cap),
+                basis = sprintf("default c=%d (no flattening within cap=%d)",
+                                min(default_c, c_cap), c_cap)))
+  }
+  chosen <- tbl$c[knee]
+  list(c = as.integer(chosen),
+       basis = sprintf("Dmin elbow at c=%d (drop < %.0f%% of range; cap=%d)",
+                       chosen, 100 * drop_frac, c_cap))
+}
+
+# Tibshirani 2001 gap statistic (doi:10.1111/1467-9868.00293) for k-means via
+# cluster::clusGap, picking k by the "firstSEmax" rule (smallest k whose gap is
+# within 1 SE of the maximum). B = 50 bootstraps is the published default for
+# omics scale.
+pick_c_gap <- function(mat, k_range = 2:10, B = 50L, seed = 42L,
+                       default_c = 6L) {
+  set.seed(seed)
+  km_fun <- function(x, k) list(cluster = stats::kmeans(x, k, nstart = 25,
+                                                        iter.max = 100)$cluster)
+  gs <- tryCatch(
+    cluster::clusGap(mat, FUNcluster = km_fun, K.max = max(k_range), B = B),
+    error = function(e) NULL)
+  if (is.null(gs))
+    return(list(c = default_c, gap_tbl = NULL,
+                basis = sprintf("default c=%d (clusGap failed)", default_c)))
+  chosen <- cluster::maxSE(f = gs$Tab[, "gap"], SE.f = gs$Tab[, "SE.sim"],
+                           method = "firstSEmax")
+  if (is.na(chosen) || chosen < 2L) chosen <- default_c
+  list(c = as.integer(chosen),
+       gap_tbl = tibble::as_tibble(as.data.frame(gs$Tab)) |>
+         dplyr::mutate(k = seq_len(dplyr::n())),
+       basis = sprintf("gap firstSEmax at k=%d (B=%d)", chosen, B))
+}
+
 filter_sig_in_any_contrast <- function(comb_long, col, threshold,
                                        contrasts, op = c("lt", "le")) {
   op <- match.arg(op)

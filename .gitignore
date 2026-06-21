@@ -52,3 +52,4 @@ renv/staging/
 # rendered quarto docs (source .qmd is tracked, .html is regenerated)
 Mito_pipeline.html
 tutorials/*.html
+*_cache/

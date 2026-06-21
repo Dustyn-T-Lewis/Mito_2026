@@ -65,7 +65,7 @@ ok_pwrs <- with(sft_df, power[R2 >= 0.80 & slope < 0])
 if (length(ok_pwrs) == 0)
   warning(sprintf("WGCNA: no soft power reached R^2 >= 0.80 (best = %.2f); falling back to exploratory power 14.",
                   max(sft_df$R2, na.rm = TRUE)))
-chosen_power <- if (length(ok_pwrs) > 0) min(ok_pwrs) else 14L
+chosen_power <- if (length(ok_pwrs)) min(ok_pwrs) else 14L
 if (chosen_power > 14L) chosen_power <- 14L
 log_msg("Soft-threshold scan: chose power = %d (R^2 = %.2f, mean k = %.1f)",
         chosen_power,

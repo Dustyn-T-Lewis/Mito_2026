@@ -34,7 +34,7 @@ for (d in c(MAIN_PDF, MAIN_PNG, SUPP_PDF, SUPP_PNG)) {
   existing <- list.files(d, pattern = "^MAIN_F06_.*\\.(pdf|png)$", full.names = TRUE)
   valid_re <- paste0("MAIN_F06_(", paste(PILOT_KEYS, collapse = "|"), ")(_selection|_me_traits)?\\.(pdf|png)$")
   stale <- existing[!grepl(valid_re, basename(existing))]
-  if (length(stale) > 0) {
+  if (length(stale)) {
     message(sprintf("Removing %d stale F06 output(s) from %s", length(stale), d))
     file.remove(stale)
   }

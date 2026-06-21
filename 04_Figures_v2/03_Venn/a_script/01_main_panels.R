@@ -98,7 +98,7 @@ strip_dat <- sig |>
   mutate(group = factor(set, levels = names(SET_CONTRASTS)))
 
 core_ids <- m$uniprot_id[m$Disease & m$Transplant & m$Rescue]
-if (length(core_ids) > 0) {
+if (length(core_ids)) {
   core_dir <- sig |>
     filter(uniprot_id %in% core_ids) |>
     distinct(uniprot_id, set, direction) |>
@@ -107,7 +107,7 @@ if (length(core_ids) > 0) {
   strip_dat <- bind_rows(strip_dat, core_dir)
 }
 strip_levels <- c(names(SET_CONTRASTS),
-                  if (length(core_ids) > 0) "Core (all 3)")
+                  if (length(core_ids)) "Core (all 3)")
 strip_dat$group <- factor(strip_dat$group, levels = strip_levels)
 strip_dat$direction <- factor(strip_dat$direction, levels = c("Up", "Down"))
 

@@ -160,7 +160,7 @@ assign_go_slim_consolidated <- function(fg_genes, all_genes, min_cat_size = 2) {
     ungroup()
 
   unmapped <- setdiff(fg_genes, best_consolidated$SYMBOL)
-  if (length(unmapped) > 0) {
+  if (length(unmapped)) {
     best_consolidated <- bind_rows(best_consolidated,
       tibble(SYMBOL = unmapped, slim = "OTHER", consolidated = "Other",
              n_fg = NA_integer_, priority = 3L))
@@ -168,7 +168,7 @@ assign_go_slim_consolidated <- function(fg_genes, all_genes, min_cat_size = 2) {
 
   small_cats <- best_consolidated |> count(consolidated) |>
     filter(n < min_cat_size, consolidated != "Other") |> pull(consolidated)
-  if (length(small_cats) > 0) {
+  if (length(small_cats)) {
     best_consolidated <- best_consolidated |>
       mutate(consolidated = ifelse(consolidated %in% small_cats, "Other", consolidated))
   }

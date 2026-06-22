@@ -94,7 +94,7 @@ build_pathway_bar_panel <- function() {
         xmin = as.integer(contrast) - 0.5, xmax = as.integer(contrast) + 0.5,
         ymin = -Inf, ymax = Inf, fill = I(fill)
       ),
-      alpha = 0.1, inherit.aes = FALSE
+      alpha = 0.1, color = "grey70", linewidth = 0.2, inherit.aes = FALSE
     ) +
     ggplot2::geom_col(
       width = 0.74, color = "black", linewidth = 0.2,

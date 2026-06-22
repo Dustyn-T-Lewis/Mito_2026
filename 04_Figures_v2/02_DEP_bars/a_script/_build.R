@@ -94,7 +94,7 @@ build_dep_count_panel <- function() {
         ymin = -Inf, ymax = Inf,
         fill = I(fill)
       ),
-      alpha = 0.16, inherit.aes = FALSE
+      alpha = 0.16, color = "grey70", linewidth = 0.2, inherit.aes = FALSE
     ) +
     ggplot2::geom_col(
       position  = "identity",

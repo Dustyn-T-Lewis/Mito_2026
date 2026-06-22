@@ -107,7 +107,7 @@ build_dep_count_panel <- function() {
       ggplot2::aes(contrast, label_y, label = label, color = I(text_col)),
       inherit.aes = FALSE,
       hjust = 0.5,
-      size = scale_text(BASE_COUNT, 60) + 1.0,
+      size = scale_text(BASE_COUNT, 60) + 0.2,
       fontface = "bold"
     ) +
     ggplot2::scale_fill_manual(values = FRAC_FILL) +
@@ -170,14 +170,15 @@ build_dep_effect_panel <- function() {
       ggplot2::aes(y = ggplot2::after_stat(count) * hbw),
       color = "grey20", linewidth = 0.4
     ) +
-    ggplot2::geom_text(
+    ggplot2::geom_label(
       data = lfc_stats,
-      ggplot2::aes(x = -0.95, y = Inf, label = lab),
+      ggplot2::aes(x = -0.98, y = Inf, label = lab),
       inherit.aes = FALSE,
-      hjust = 0, vjust = 1.4,
-      size = scale_text(BASE_STAT, 50) + 0.5,
-      fontface = "bold",
-      color = "grey25"
+      hjust = 0, vjust = 1.1,
+      size = scale_text(BASE_STAT, 50) + 1.3,
+      fontface = "bold", color = "grey15",
+      fill = scales::alpha("white", 0.75), label.size = 0,
+      label.padding = ggplot2::unit(0.4, "mm")
     ) +
     ggplot2::facet_wrap(~contrast, ncol = 1, scales = "free_y", strip.position = "top") +
     ggplot2::scale_fill_manual(

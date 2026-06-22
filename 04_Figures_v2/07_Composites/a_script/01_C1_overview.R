@@ -26,7 +26,7 @@ dep_key_df <- tibble::tibble(
 dep_key <- ggplot2::ggplot(dep_key_df) +
   ggplot2::geom_label(
     ggplot2::aes(x, 0, label = lab, alpha = a, color = I(txt)),
-    fill = "grey20", size = 1.8, fontface = "bold",
+    fill = "grey40", size = 1.8, fontface = "bold",
     label.padding = ggplot2::unit(0.5, "mm"), label.size = 0.25
   ) +
   ggplot2::scale_alpha_identity() +
@@ -35,16 +35,19 @@ dep_key <- ggplot2::ggplot(dep_key_df) +
 dep <- add_tag(build_dep_count_panel(), "B") +
   patchwork::inset_element(
     dep_key,
-    left = 0.4, right = 1.0, top = 0.16, bottom = 0.02
+    left = 0.32, right = 0.92, top = 0.13, bottom = 0.0
   )
 
 eff <- add_tag(build_dep_effect_panel(), "C")
 
-# Strip shares column 2 with the DEP-counts panel, so patchwork aligns it to
-# the same plot width and left edge as panel B.
+# free() the strip's left so its y-title sits tight to the axis; the left margin
+# pushes its plot back to the same left edge / width as panel B above it.
 venn <- build_venn_panels()
 venn_gg <- add_tag(venn$venn, "D")
-strip <- add_tag(venn$strip, "E")
+strip <- patchwork::free(
+  add_tag(venn$strip, "E") + ggplot2::theme(plot.margin = ggplot2::margin(3, 2, 1, 38)),
+  side = "l"
+)
 
 pw <- add_tag(build_pathway_bar_panel()$plot, "F")
 

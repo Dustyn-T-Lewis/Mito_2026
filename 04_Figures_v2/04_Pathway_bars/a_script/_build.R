@@ -1,13 +1,14 @@
 #!/usr/bin/env Rscript
 # F04 build function — significant pathways per contrast, stacked by source DB.
-# One bar per contrast; segments = the 5 databases (not pooled), ordered by
-# overall total (largest at the base). Swatch key inset in the upper-right.
+# Diverging: Up above zero, Down below; segments = the 5 databases (not pooled),
+# ordered by overall total (largest at the base). Light fills, black borders,
+# swatch key in the upper-right.
 # Returns list(plot=<ggplot>, bar_df=<df>, sig_pw=<df>, DB_COLORS=<named vec>).
 
-# Database key (Dark2 hues).
+# Database key (Set2 pastels; GO Slim kept clearly distinct from Hallmark).
 PATHWAY_DB_COLORS <- c(
-  Hallmark = "#1B9E77", Reactome = "#7570B3", KEGG = "#E7298A",
-  MitoCarta = "#D95F02", `GO Slim` = "#66A61E"
+  Hallmark = "#66C2A5", Reactome = "#8DA0CB", KEGG = "#E78AC3",
+  MitoCarta = "#FC8D62", `GO Slim` = "#FFD92F"
 )
 
 build_pathway_bar_panel <- function() {
@@ -59,42 +60,42 @@ build_pathway_bar_panel <- function() {
     dplyr::pull(database)
   db_order <- c(db_order, setdiff(names(PATHWAY_DB_COLORS), db_order))
 
+  # counts per contrast x direction x database; Down side drawn negative
   bar_df <- sig_pw |>
-    dplyr::summarise(n = dplyr::n(), .by = c(contrast, database)) |>
+    dplyr::summarise(n = dplyr::n(), .by = c(contrast, direction, database)) |>
     tidyr::complete(
-      contrast = CORE, database = db_order, fill = list(n = 0L)
+      contrast = CORE, direction = c("Up", "Down"), database = db_order,
+      fill = list(n = 0L)
     ) |>
     dplyr::mutate(
       contrast = factor(contrast, levels = CORE),
-      database = factor(database, levels = db_order)
+      database = factor(database, levels = db_order),
+      y = dplyr::if_else(direction == "Down", -as.numeric(n), as.numeric(n))
     )
 
+  # per-contrast Up/Down totals for stack-top labels
   tot_df <- bar_df |>
-    dplyr::summarise(total = sum(n), .by = contrast) |>
+    dplyr::summarise(
+      up   = sum(n[direction == "Up"]),
+      down = sum(n[direction == "Down"]),
+      .by  = contrast
+    ) |>
     dplyr::mutate(contrast = factor(contrast, levels = CORE))
 
-  panel_bg <- tibble::tibble(
-    contrast = factor(CORE, levels = CORE),
-    fill     = unname(CONTRAST_COLORS[CORE])
-  )
-
-  p <- ggplot2::ggplot(bar_df, ggplot2::aes(contrast, n, fill = database)) +
-    ggplot2::geom_rect(
-      data = panel_bg,
-      ggplot2::aes(
-        xmin = as.integer(contrast) - 0.5, xmax = as.integer(contrast) + 0.5,
-        ymin = 0, ymax = Inf, fill = I(fill)
-      ),
-      alpha = 0.1, inherit.aes = FALSE
-    ) +
+  p <- ggplot2::ggplot(bar_df, ggplot2::aes(contrast, y, fill = database)) +
     ggplot2::geom_col(
-      width = 0.78, color = "grey25", linewidth = 0.12,
+      width = 0.74, color = "black", linewidth = 0.2,
       position = ggplot2::position_stack(reverse = TRUE)
     ) +
+    ggplot2::geom_hline(yintercept = 0, linewidth = 0.3, color = "grey35") +
     ggplot2::geom_text(
-      data = dplyr::filter(tot_df, total > 0),
-      ggplot2::aes(contrast, total, label = total),
-      inherit.aes = FALSE, vjust = -0.4, size = 2.3, fontface = "bold"
+      data = tot_df, ggplot2::aes(contrast, up, label = up),
+      inherit.aes = FALSE, vjust = -0.4, size = 2.2, fontface = "bold"
+    ) +
+    ggplot2::geom_text(
+      data = dplyr::filter(tot_df, down > 0),
+      ggplot2::aes(contrast, -down, label = down),
+      inherit.aes = FALSE, vjust = 1.3, size = 2.2, fontface = "bold"
     ) +
     ggplot2::scale_fill_manual(
       values = PATHWAY_DB_COLORS, breaks = db_order, name = NULL,
@@ -104,11 +105,14 @@ build_pathway_bar_panel <- function() {
       labels = stats::setNames(gsub("_", "\n", contrast_brief(CORE)), CORE),
       expand = ggplot2::expansion(add = 0.5)
     ) +
-    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.1))) +
+    ggplot2::scale_y_continuous(
+      labels = abs,
+      expand = ggplot2::expansion(mult = c(0.12, 0.14))
+    ) +
     ggplot2::coord_cartesian(clip = "off") +
     ggplot2::labs(
       title = "Pathway enrichment by database",
-      subtitle = "significant pathways stacked by source DB",
+      subtitle = "stacked by source DB · Up above / Down below zero",
       x = NULL, y = "Significant pathways"
     ) +
     FIG_THEME +
@@ -120,7 +124,7 @@ build_pathway_bar_panel <- function() {
       legend.position = c(0.99, 0.99),
       legend.justification = c(1, 1),
       legend.background = ggplot2::element_rect(
-        fill = scales::alpha("white", 0.75), color = NA
+        fill = scales::alpha("white", 0.8), color = "grey70", linewidth = 0.3
       ),
       legend.key.size = ggplot2::unit(2.4, "mm"),
       legend.margin = ggplot2::margin(1, 2, 1, 1),

@@ -48,9 +48,9 @@ counts_tab <- bar_df |>
   dplyr::filter(n > 0) |>
   dplyr::transmute(
     contrast = contrast_brief(as.character(contrast)),
-    database = as.character(database), n
+    direction, database = as.character(database), n
   ) |>
-  dplyr::arrange(contrast, dplyr::desc(n))
+  dplyr::arrange(contrast, direction, dplyr::desc(n))
 
 per_ctr_tabs <- lapply(CORE, function(ctr) {
   sig_pw |>
@@ -68,9 +68,9 @@ sheet_specs <- c(
   list(list(
     name = "dep_pathway_counts",
     df = counts_tab,
-    role = "F04 bar heights — significant pathways per contrast x source database (stack segments)",
+    role = "F04 bar heights — significant pathways per contrast x direction x source database",
     contents = paste0(
-      "contrast, database, n significant pathways (one stacked bar per contrast). ",
+      "contrast, direction (Up/Down), database, n significant pathways (diverging stack). ",
       "Pool: Hallmark + Reactome + KEGG + MitoCarta + GO Slim (CANONICAL_DBS); ",
       "padj<0.05, size>=10, MITO_DROP_SETS excluded; cross-DB Jaccard+Overlap dedup at 0.375 ",
       "(EnrichmentMap, Merico 2010 / Reimand 2019). Mito flag: database==MitoCarta OR ",

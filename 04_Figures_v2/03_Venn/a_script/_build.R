@@ -126,7 +126,21 @@ build_venn_panels <- function() {
   strip_dat$group <- factor(strip_dat$group, levels = strip_levels)
   strip_dat$direction <- factor(strip_dat$direction, levels = c("Up", "Down"))
 
+  # faint set-colour band behind each group (Core left neutral)
+  strip_bg <- tibble(
+    group = factor(strip_levels, levels = strip_levels),
+    fill  = c(SET_COLORS[names(SET_CONTRASTS)], if (length(core_ids)) "grey70")
+  )
+
   p_strip <- ggplot(strip_dat, aes(group, n, fill = direction)) +
+    geom_rect(
+      data = strip_bg,
+      aes(
+        xmin = as.integer(group) - 0.5, xmax = as.integer(group) + 0.5,
+        ymin = -Inf, ymax = Inf, fill = I(fill)
+      ),
+      alpha = 0.13, inherit.aes = FALSE
+    ) +
     geom_col(
       position = position_dodge(preserve = "single", width = 0.8),
       width = 0.7, color = "grey25", linewidth = 0.15

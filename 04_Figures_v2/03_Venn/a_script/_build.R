@@ -154,9 +154,9 @@ build_venn_panels <- function() {
       width = 0.74, color = "black", linewidth = 0.2
     ) +
     geom_text(
-      aes(label = n),
+      aes(y = n / 2, label = n),
       position = position_dodge(preserve = "single", width = 0.8),
-      vjust = -0.3, size = 2.2, color = "grey15", fontface = "bold"
+      vjust = 0.5, size = 2.2, color = "white", fontface = "bold"
     ) +
     scale_fill_manual(values = DIR_COLORS[c("Up", "Down")], name = NULL) +
     scale_x_discrete(expand = expansion(add = 0.5)) +

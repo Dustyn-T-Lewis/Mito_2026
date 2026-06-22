@@ -47,7 +47,12 @@ venn <- build_venn_panels()
 venn_gg <- add_tag(venn$venn, "D") +
   ggplot2::theme(plot.margin = ggplot2::margin(0, 2, 1, 2))
 strip <- add_tag(venn$strip, "E") +
-  ggplot2::theme(plot.margin = ggplot2::margin(0, 2, 1, 2))
+  ggplot2::theme(
+    plot.margin = ggplot2::margin(0, 2, 1, 2),
+    axis.title.y = ggplot2::element_text(
+      face = "bold", size = 5, margin = ggplot2::margin(r = -14)
+    )
+  )
 
 pw <- add_tag(build_pathway_bar_panel()$plot, "F") +
   ggplot2::theme(plot.margin = ggplot2::margin(0, 4, 1, 2))

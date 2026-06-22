@@ -128,7 +128,10 @@ build_dep_count_panel <- function() {
       plot.subtitle = ggplot2::element_text(
         size = FIG_SUBTITLE_SIZE, face = "italic", color = "grey40"
       ),
-      axis.text.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_text(
+        face = "bold", size = FIG_AXIS_TEXT,
+        color = "grey15"
+      ),
       axis.ticks.y = ggplot2::element_blank(),
       panel.grid.major.y = ggplot2::element_blank(),
       plot.margin = ggplot2::margin(5, 0, 1, 2)

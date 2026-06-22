@@ -45,12 +45,12 @@ ggsave(file.path(RPT_PNG, "MAIN_F04_pathway_bars.png"), p,
 CORE <- H9C2_CONTRAST_ORDER
 
 counts_tab <- bar_df |>
-  dplyr::filter(n > 0) |>
   dplyr::transmute(
     contrast = contrast_brief(as.character(contrast)),
-    direction, database = as.character(database), n
+    direction, total, mito,
+    mito_fraction = ifelse(total > 0, mito / total, NA_real_)
   ) |>
-  dplyr::arrange(contrast, direction, dplyr::desc(n))
+  dplyr::arrange(contrast, direction)
 
 per_ctr_tabs <- lapply(CORE, function(ctr) {
   sig_pw |>
@@ -68,9 +68,9 @@ sheet_specs <- c(
   list(list(
     name = "dep_pathway_counts",
     df = counts_tab,
-    role = "F04 bar heights — significant pathways per contrast x direction x source database",
+    role = "F04 bar heights — total significant pathways and mito subset per contrast x direction",
     contents = paste0(
-      "contrast, direction (Up/Down), database, n significant pathways (stacked bar segments). ",
+      "contrast, direction (Up/Down), total significant pathways, mito subset, mito_fraction. ",
       "Pool: Hallmark + Reactome + KEGG + MitoCarta + GO Slim (CANONICAL_DBS); ",
       "padj<0.05, size>=10, MITO_DROP_SETS excluded; cross-DB Jaccard+Overlap dedup at 0.375 ",
       "(EnrichmentMap, Merico 2010 / Reimand 2019). Mito flag: database==MitoCarta OR ",
@@ -92,7 +92,7 @@ sheet_specs <- c(
 
 build_workbook(
   file.path(DAT, "F04_supplementary.xlsx"),
-  figure_title = "F04 — Panel-D pathway count summary (5-DB pool, stacked by database)",
+  figure_title = "F04 — Panel-D pathway count summary (5-DB pool, mito subset overlaid)",
   sheet_specs  = sheet_specs
 )
 

@@ -42,10 +42,14 @@ dep <- add_tag(build_dep_count_panel(), "B") +
 
 eff <- add_tag(build_dep_effect_panel(), "C")
 
-# Strip stays aligned with the DEP-counts panel above it (same column width).
+# free() the strip's left so its y-title sits tight to the axis; the left margin
+# pushes its plot rightward to line back up with the DEP-counts panel above it.
 venn <- build_venn_panels()
 venn_gg <- add_tag(venn$venn, "D")
-strip <- add_tag(venn$strip, "E")
+strip <- patchwork::free(
+  add_tag(venn$strip, "E") + ggplot2::theme(plot.margin = ggplot2::margin(3, 2, 1, 16)),
+  side = "l"
+)
 
 pw <- add_tag(build_pathway_bar_panel()$plot, "F")
 
@@ -59,20 +63,8 @@ DDEEFF
 fig <- pca + dep + eff + venn_gg + strip + pw +
   patchwork::plot_layout(
     design  = design,
-    widths  = c(1.05, 1.0, 1.0),
+    widths  = c(1.28, 0.98, 0.9),
     heights = c(1.0, 1.0)
-  ) +
-  patchwork::plot_annotation(
-    caption = paste(
-      "Disease = PHE − Ctl; Transplant = Mito − Ctl; Rescue = PHE_Mito − PHE.",
-      "Significance Π < 0.05 (Xiao 2014). Up = red, Down = blue."
-    ),
-    theme = ggplot2::theme(
-      plot.caption.position = "plot",
-      plot.caption = ggplot2::element_text(
-        size = 5, color = "grey35", hjust = 0, lineheight = 1.1
-      )
-    )
   )
 
 save_composite(fig, BASE, "MAIN_C1_overview", width_mm = PANEL_MD, height_mm = 150)

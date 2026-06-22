@@ -3,16 +3,15 @@
 
 prepare_ring_data <- function(go_df,
                               contrast,
-                              n_terms = 12,
-                              gap_degrees = 3,
+                              n_terms      = 12,
+                              gap_degrees  = 3,
                               start_offset = 0,
-                              databases = c("Hallmark", "GO Slim")) {
+                              databases    = c("Hallmark", "GO Slim")) {
+
   ring <- go_df |>
-    filter(
-      contrast == !!contrast,
-      database %in% databases,
-      padj < 0.05
-    ) |>
+    filter(contrast == !!contrast,
+           database %in% databases,
+           padj < 0.05) |>
     arrange(padj) |>
     slice_head(n = n_terms)
 
@@ -31,8 +30,8 @@ prepare_ring_data <- function(go_df,
       end_deg     = start_deg + arc_width_deg,
       mid_deg     = (start_deg + end_deg) / 2,
       start_rad   = start_deg * pi / 180,
-      end_rad     = end_deg * pi / 180,
-      mid_rad     = mid_deg * pi / 180,
+      end_rad     = end_deg   * pi / 180,
+      mid_rad     = mid_deg   * pi / 180,
       arc_r1_var  = 5.6,
       clean_label = clean_ring_label(pathway),
       gene_list   = str_split(leadingEdge, ";")
@@ -44,9 +43,8 @@ build_tick_data <- function(ring_data,
                             contrast,
                             tick_r0 = 4.4,
                             tick_r1 = 4.8) {
-  if (nrow(ring_data) == 0) {
-    return(tibble())
-  }
+
+  if (nrow(ring_data) == 0) return(tibble())
 
   logfc_col <- paste0("logFC_", contrast)
 
@@ -61,12 +59,10 @@ build_tick_data <- function(ring_data,
     row <- ring_data[i, ]
     genes_in_arc <- intersect(row$gene_list[[1]], gene_lfc$gene)
     n_genes <- length(genes_in_arc)
-    if (n_genes == 0) {
-      return(tibble())
-    }
+    if (n_genes == 0) return(tibble())
 
     arc_start <- row$start_rad + pad_rad
-    arc_end <- row$end_rad - pad_rad
+    arc_end   <- row$end_rad   - pad_rad
     if (arc_end <= arc_start) arc_end <- arc_start + pad_rad
 
     tick_angles <- seq(arc_start, arc_end, length.out = n_genes)
@@ -76,9 +72,7 @@ build_tick_data <- function(ring_data,
       filter(!is.na(gene))
 
     n_final <- nrow(matched)
-    if (n_final == 0) {
-      return(tibble())
-    }
+    if (n_final == 0) return(tibble())
     tick_angles <- tick_angles[seq_len(n_final)]
 
     tibble(
@@ -95,3 +89,4 @@ build_tick_data <- function(ring_data,
     )
   })
 }
+

@@ -11,12 +11,8 @@
 #   * run_hallmark_ora            — Hallmark-only ORA (fora) with no dedup
 
 suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(tibble)
-  library(ggplot2)
-  library(patchwork)
-  library(viridis)
+  library(dplyr); library(tidyr); library(tibble)
+  library(ggplot2); library(patchwork); library(viridis)
 })
 
 # Per-gene z-score across conditions; drops rows that are all-NA or all-constant
@@ -39,29 +35,19 @@ pick_c_dmin <- function(dmin_tbl, n_genes,
                         min_c = 3L) {
   c_cap <- max(min_c, floor(sqrt(n_genes / 2)))
   tbl <- dmin_tbl[dmin_tbl$c <= c_cap & dmin_tbl$c >= min_c, , drop = FALSE]
-  if (nrow(tbl) < 2L) {
-    return(list(c = max(min_c, c_cap), basis = "cap binds"))
-  }
-  rng <- diff(range(dmin_tbl$mean_Dmin))
-  drop <- -diff(tbl$mean_Dmin) # always >= 0 in practice
+  if (nrow(tbl) < 2L) return(list(c = max(min_c, c_cap), basis = "cap binds"))
+  rng  <- diff(range(dmin_tbl$mean_Dmin))
+  drop <- -diff(tbl$mean_Dmin)               # always >= 0 in practice
   knee <- which(drop < drop_frac * rng)[1]
   if (is.na(knee)) {
-    return(list(
-      c = min(default_c, c_cap),
-      basis = sprintf(
-        "default c=%d (no flattening within cap=%d)",
-        min(default_c, c_cap), c_cap
-      )
-    ))
+    return(list(c = min(default_c, c_cap),
+                basis = sprintf("default c=%d (no flattening within cap=%d)",
+                                min(default_c, c_cap), c_cap)))
   }
   chosen <- tbl$c[knee]
-  list(
-    c = as.integer(chosen),
-    basis = sprintf(
-      "Dmin elbow at c=%d (drop < %.0f%% of range; cap=%d)",
-      chosen, 100 * drop_frac, c_cap
-    )
-  )
+  list(c = as.integer(chosen),
+       basis = sprintf("Dmin elbow at c=%d (drop < %.0f%% of range; cap=%d)",
+                       chosen, 100 * drop_frac, c_cap))
 }
 
 # Tibshirani 2001 gap statistic (doi:10.1111/1467-9868.00293) for k-means via
@@ -71,33 +57,21 @@ pick_c_dmin <- function(dmin_tbl, n_genes,
 pick_c_gap <- function(mat, k_range = 2:10, B = 50L, seed = 42L,
                        default_c = 6L) {
   set.seed(seed)
-  km_fun <- function(x, k) {
-    list(cluster = stats::kmeans(x, k,
-      nstart = 25,
-      iter.max = 100
-    )$cluster)
-  }
+  km_fun <- function(x, k) list(cluster = stats::kmeans(x, k, nstart = 25,
+                                                        iter.max = 100)$cluster)
   gs <- tryCatch(
     cluster::clusGap(mat, FUNcluster = km_fun, K.max = max(k_range), B = B),
-    error = function(e) NULL
-  )
-  if (is.null(gs)) {
-    return(list(
-      c = default_c, gap_tbl = NULL,
-      basis = sprintf("default c=%d (clusGap failed)", default_c)
-    ))
-  }
-  chosen <- cluster::maxSE(
-    f = gs$Tab[, "gap"], SE.f = gs$Tab[, "SE.sim"],
-    method = "firstSEmax"
-  )
+    error = function(e) NULL)
+  if (is.null(gs))
+    return(list(c = default_c, gap_tbl = NULL,
+                basis = sprintf("default c=%d (clusGap failed)", default_c)))
+  chosen <- cluster::maxSE(f = gs$Tab[, "gap"], SE.f = gs$Tab[, "SE.sim"],
+                           method = "firstSEmax")
   if (is.na(chosen) || chosen < 2L) chosen <- default_c
-  list(
-    c = as.integer(chosen),
-    gap_tbl = tibble::as_tibble(as.data.frame(gs$Tab)) |>
-      dplyr::mutate(k = seq_len(dplyr::n())),
-    basis = sprintf("gap firstSEmax at k=%d (B=%d)", chosen, B)
-  )
+  list(c = as.integer(chosen),
+       gap_tbl = tibble::as_tibble(as.data.frame(gs$Tab)) |>
+         dplyr::mutate(k = seq_len(dplyr::n())),
+       basis = sprintf("gap firstSEmax at k=%d (B=%d)", chosen, B))
 }
 
 filter_sig_in_any_contrast <- function(comb_long, col, threshold,
@@ -106,11 +80,8 @@ filter_sig_in_any_contrast <- function(comb_long, col, threshold,
   stopifnot(col %in% names(comb_long), "gene" %in% names(comb_long))
   d <- comb_long[comb_long$contrast %in% contrasts, , drop = FALSE]
   v <- d[[col]]
-  hit <- if (op == "lt") {
-    !is.na(v) & v < threshold
-  } else {
-    !is.na(v) & v <= threshold
-  }
+  hit <- if (op == "lt") !is.na(v) & v < threshold
+         else            !is.na(v) & v <= threshold
   unique(d$gene[hit & !is.na(d$gene) & nzchar(d$gene)])
 }
 
@@ -124,7 +95,7 @@ load_wgcna_modules <- function(rds_path) {
   if (!is.null(obj$module_assignments)) {
     mods <- obj$module_assignments
   } else if (!is.null(obj$net) && !is.null(obj$net$colors) &&
-    length(names(obj$net$colors)) > 0) {
+             length(names(obj$net$colors)) > 0) {
     # Real artifact: net$colors is named by uniprot IDs (numeric cluster IDs);
     # module_colors (when present) holds the parallel color-name strings;
     # ann$gene gives gene symbols parallel to both.
@@ -134,15 +105,13 @@ load_wgcna_modules <- function(rds_path) {
       names(obj$net$colors)
     }
     color_names <- if (!is.null(obj$module_colors) &&
-      length(obj$module_colors) == length(gene_syms)) {
+                       length(obj$module_colors) == length(gene_syms)) {
       obj$module_colors
     } else {
       as.character(unname(obj$net$colors))
     }
-    mods <- tibble(
-      gene = gene_syms,
-      module = color_names
-    )
+    mods <- tibble(gene   = gene_syms,
+                   module = color_names)
   } else if (!is.null(obj$module_colors)) {
     # Positional fallback: module_colors parallel to ann$gene or gene_order.
     gene_syms <- if (!is.null(obj$ann) && !is.null(obj$ann$gene)) {
@@ -150,21 +119,15 @@ load_wgcna_modules <- function(rds_path) {
     } else {
       obj$gene_order %||% seq_along(obj$module_colors)
     }
-    mods <- tibble(
-      gene = gene_syms,
-      module = obj$module_colors
-    )
+    mods <- tibble(gene   = gene_syms,
+                   module = obj$module_colors)
   } else {
     stop("Unrecognised WGCNA artifact shape: cannot find module assignments")
   }
 
-  MEs <- if (!is.null(obj$MEs)) {
-    as.matrix(obj$MEs)
-  } else if (!is.null(obj$net) && !is.null(obj$net$MEs)) {
-    as.matrix(obj$net$MEs)
-  } else {
-    stop("Unrecognised WGCNA artifact shape: cannot find module eigengenes")
-  }
+  MEs <- if (!is.null(obj$MEs)) as.matrix(obj$MEs)
+         else if (!is.null(obj$net) && !is.null(obj$net$MEs)) as.matrix(obj$net$MEs)
+         else stop("Unrecognised WGCNA artifact shape: cannot find module eigengenes")
 
   # Strip "ME" prefix from eigengene column names so they match module color labels.
   colnames(MEs) <- sub("^ME", "", colnames(MEs))
@@ -185,18 +148,15 @@ compute_me_contrast_correlations <- function(MEs, meta, contrasts) {
   out <- list()
   for (cn in names(contrasts)) {
     pair <- contrasts[[cn]]
-    indic <- ifelse(meta$Group == pair[2], 1,
-      ifelse(meta$Group == pair[1], -1, NA_real_)
-    )
+    indic <- ifelse(meta$Group == pair[2],  1,
+              ifelse(meta$Group == pair[1], -1, NA_real_))
     keep <- !is.na(indic)
     if (sum(keep) < 4) next
     for (mod in colnames(MEs)) {
       ct <- suppressWarnings(cor.test(MEs[keep, mod], indic[keep], method = "pearson"))
-      out[[length(out) + 1]] <- tibble(
-        module = mod, contrast = cn,
-        r = unname(ct$estimate),
-        p = ct$p.value
-      )
+      out[[length(out) + 1]] <- tibble(module = mod, contrast = cn,
+                                       r = unname(ct$estimate),
+                                       p = ct$p.value)
     }
   }
   bind_rows(out)
@@ -205,17 +165,17 @@ compute_me_contrast_correlations <- function(MEs, meta, contrasts) {
 classify_module_sign_pattern <- function(disease_r, rescue_r, r_floor = 0.4) {
   cls <- dplyr::case_when(
     abs(disease_r) >= r_floor & abs(rescue_r) >= r_floor &
-      sign(disease_r) != sign(rescue_r) ~ "Reversal",
-    disease_r >= r_floor & rescue_r >= r_floor ~ "Concordant up",
-    disease_r <= -r_floor & rescue_r <= -r_floor ~ "Concordant down",
-    TRUE ~ "Other"
+      sign(disease_r) != sign(rescue_r)              ~ "Reversal",
+    disease_r >=  r_floor & rescue_r >=  r_floor     ~ "Concordant up",
+    disease_r <= -r_floor & rescue_r <= -r_floor     ~ "Concordant down",
+    TRUE                                             ~ "Other"
   )
   factor(cls, levels = c("Reversal", "Concordant up", "Concordant down", "Other"))
 }
 
 cluster_palette <- function(n) {
   stopifnot(n >= 1)
-  pal <- viridis::turbo(n + 2)[seq_len(n + 1)[-1]] # trim extremes
+  pal <- viridis::turbo(n + 2)[seq_len(n + 1)[-1]]   # trim extremes
   setNames(pal, as.character(seq_len(n)))
 }
 
@@ -229,10 +189,8 @@ build_trajectory_panel <- function(z_mat, x_levels, x_lab,
   if (kind == "line") {
     p <- ggplot(z_df, aes(x, expr, group = gene)) +
       geom_line(color = color, alpha = 0.30, linewidth = 0.25) +
-      stat_summary(aes(group = 1),
-        fun = mean, geom = "line",
-        color = color, linewidth = 0.9
-      )
+      stat_summary(aes(group = 1), fun = mean, geom = "line",
+                   color = color, linewidth = 0.9)
   } else {
     means <- z_df |> summarise(mean_expr = mean(.data$expr), .by = x)
     p <- ggplot(means, aes(x, mean_expr)) +
@@ -242,49 +200,33 @@ build_trajectory_panel <- function(z_mat, x_levels, x_lab,
   p +
     labs(x = x_lab, y = if (kind == "line") "z" else "mean logFC") +
     FIG_THEME +
-    theme(
-      plot.margin = margin(2, 2, 2, 2),
-      axis.text.x = element_text(angle = 30, hjust = 1, size = FIG_AXIS_TEXT)
-    )
+    theme(plot.margin = margin(2, 2, 2, 2),
+          axis.text.x = element_text(angle = 30, hjust = 1, size = FIG_AXIS_TEXT))
 }
 
 build_ora_bar_panel <- function(ora_df, color, max_n = 6,
-                                db_name = "Hallmark") {
-  empty <- function() {
-    ggplot() +
-      annotate("text", 0, 0,
-        label = sprintf("no %s hits", db_name),
-        size = 2.4, color = "grey40"
-      ) +
-      theme_void()
-  }
-  if (is.null(ora_df) || nrow(ora_df) == 0) {
-    return(empty())
-  }
+                                 db_name = "Hallmark") {
+  empty <- function() ggplot() +
+    annotate("text", 0, 0, label = sprintf("no %s hits", db_name),
+             size = 2.4, color = "grey40") +
+    theme_void()
+  if (is.null(ora_df) || nrow(ora_df) == 0) return(empty())
   d <- ora_df |>
     filter(.data$padj < 0.05) |>
     arrange(.data$padj) |>
     head(max_n) |>
-    mutate(
-      label = clean_display_label(.data$pathway),
-      neglog10 = -log10(.data$padj)
-    )
-  if (nrow(d) == 0) {
-    return(empty())
-  }
+    mutate(label = clean_display_label(.data$pathway),
+           neglog10 = -log10(.data$padj))
+  if (nrow(d) == 0) return(empty())
   ggplot(d, aes(reorder(.data$label, .data$neglog10), .data$neglog10)) +
     geom_col(fill = color, color = "grey20", linewidth = 0.2, width = 0.78) +
     coord_flip() +
     labs(x = NULL, y = sprintf("%s | -log10 padj", db_name)) +
     FIG_THEME +
-    theme(
-      plot.margin = margin(2, 4, 2, 2),
-      axis.text.y = element_text(size = FIG_AXIS_TEXT - 0.5),
-      axis.title.x = element_text(
-        size = FIG_AXIS_TEXT - 0.5,
-        face = "bold", color = "grey25"
-      )
-    )
+    theme(plot.margin = margin(2, 4, 2, 2),
+          axis.text.y = element_text(size = FIG_AXIS_TEXT - 0.5),
+          axis.title.x = element_text(size = FIG_AXIS_TEXT - 0.5,
+                                      face = "bold", color = "grey25"))
 }
 
 # Hallmark + MitoCarta side-by-side (Reimand 2019 PMID 30664679: pair a
@@ -294,10 +236,8 @@ build_cluster_row <- function(traj_plot, ora_plot, header_text, color,
                               ora_plot2 = NULL, widths = NULL) {
   header_color <- ifelse(is_light_color(color), "grey15", color)
   header <- ggplot() +
-    annotate("text",
-      x = 0, y = 0.5, label = header_text,
-      hjust = 0, vjust = 0.5, size = 2.3, color = header_color, fontface = "bold"
-    ) +
+    annotate("text", x = 0, y = 0.5, label = header_text,
+             hjust = 0, vjust = 0.5, size = 2.3, color = header_color, fontface = "bold") +
     scale_x_continuous(limits = c(0, 1)) +
     scale_y_continuous(limits = c(0, 1)) +
     theme_void()
@@ -319,75 +259,47 @@ build_cluster_row <- function(traj_plot, ora_plot, header_text, color,
 # mito-translation, mitophagy etc. — the granularity a mito-transplant figure needs.
 run_mitocarta_ora <- function(genes, universe,
                               rat_gene_sets_path = here::here(
-                                "04_Figures", "shared", "rat_gene_sets.rds"
-                              )) {
-  gs <- readRDS(rat_gene_sets_path)
+                                "04_Figures", "shared", "rat_gene_sets.rds")) {
+  gs   <- readRDS(rat_gene_sets_path)
   mito <- gs$MitoCarta
-  if (length(mito) == 0) {
-    return(NULL)
-  }
+  if (length(mito) == 0) return(NULL)
   mito <- mito[!names(mito) %in% MITO_DROP_SETS]
-  if (length(mito) == 0) {
-    return(NULL)
-  }
-  res <- fgsea::fora(
-    pathways = mito, genes = genes, universe = universe,
-    minSize = 5, maxSize = 500
-  )
+  if (length(mito) == 0) return(NULL)
+  res <- fgsea::fora(pathways = mito, genes = genes, universe = universe,
+                     minSize = 5, maxSize = 500)
   res <- as.data.frame(res)
-  if (nrow(res) == 0) {
-    return(NULL)
-  }
+  if (nrow(res) == 0) return(NULL)
   res$odds_ratio <- fora_odds_ratio(res$overlap, res$size,
-    K = length(intersect(genes, universe)),
-    N = length(universe)
-  )
+                                    K = length(intersect(genes, universe)),
+                                    N = length(universe))
   tibble::as_tibble(res)
 }
 
 stack_cluster_rows <- function(rows_list, title, subtitle) {
-  if (length(rows_list) == 0) {
-    return(ggplot() +
-      annotate("text", 0, 0, label = "no clusters") +
-      theme_void())
-  }
+  if (length(rows_list) == 0)
+    return(ggplot() + annotate("text", 0, 0, label = "no clusters") + theme_void())
   patchwork::wrap_plots(rows_list, ncol = 1) +
-    patchwork::plot_annotation(
-      title = title, subtitle = subtitle,
-      theme = theme(
-        plot.title = element_text(face = "bold", size = 8),
-        plot.subtitle = element_text(
-          face = "italic", size = 5,
-          color = "grey30"
-        )
-      )
-    )
+    patchwork::plot_annotation(title = title, subtitle = subtitle,
+      theme = theme(plot.title    = element_text(face = "bold", size = 8),
+                    plot.subtitle = element_text(face = "italic", size = 5,
+                                                 color = "grey30")))
 }
 
 # Hallmark-only ORA: fora over the Hallmark sublist of rat_gene_sets.rds. No
 # dedup needed at the Hallmark level (50 sets, low redundancy).
 run_hallmark_ora <- function(genes, universe,
-                             rat_gene_sets_path = here::here(
-                               "04_Figures", "shared",
-                               "rat_gene_sets.rds"
-                             )) {
-  gs <- readRDS(rat_gene_sets_path)
+                             rat_gene_sets_path = here::here("04_Figures", "shared",
+                                                             "rat_gene_sets.rds")) {
+  gs   <- readRDS(rat_gene_sets_path)
   hall <- gs$Hallmark
-  if (length(hall) == 0) {
-    return(NULL)
-  }
-  res <- fgsea::fora(
-    pathways = hall, genes = genes, universe = universe,
-    minSize = 5, maxSize = 500
-  )
+  if (length(hall) == 0) return(NULL)
+  res <- fgsea::fora(pathways = hall, genes = genes, universe = universe,
+                     minSize = 5, maxSize = 500)
   res <- as.data.frame(res)
-  if (nrow(res) == 0) {
-    return(NULL)
-  }
+  if (nrow(res) == 0) return(NULL)
   res$odds_ratio <- fora_odds_ratio(res$overlap, res$size,
-    K = length(intersect(genes, universe)),
-    N = length(universe)
-  )
+                                    K = length(intersect(genes, universe)),
+                                    N = length(universe))
   tibble::as_tibble(res)
 }
 

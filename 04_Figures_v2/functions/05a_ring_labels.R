@@ -18,45 +18,41 @@ clean_ring_label <- function(name) {
     # CI_SUBUNITS, CV_ASSEMBLY_FACTORS) — the explicit replacements below
     # ("Cv Subunits" -> "Complex V") already encode the complex identity.
     if (length(parts) >= 2 &&
-      grepl("SUBUNITS$|FACTORS$|ASSOCIATED$|COMPLEX$|FAMILY$",
-        leaf,
-        perl = TRUE
-      ) &&
-      nchar(leaf) <= 18 &&
-      !grepl("^C[IV]+_(SUBUNITS|ASSEMBLY_FACTORS)$", leaf)) {
+        grepl("SUBUNITS$|FACTORS$|ASSOCIATED$|COMPLEX$|FAMILY$",
+              leaf, perl = TRUE) &&
+        nchar(leaf) <= 18 &&
+        !grepl("^C[IV]+_(SUBUNITS|ASSEMBLY_FACTORS)$", leaf)) {
       leaf <- paste(parts[length(parts) - 1], leaf, sep = " ")
     }
     leaf <- gsub("_", " ", leaf)
     leaf <- tools::toTitleCase(tolower(leaf))
-    leaf <- gsub("\\bOxphos\\b", "OXPHOS", leaf)
-    leaf <- gsub("\\bTca\\b", "TCA", leaf)
-    leaf <- gsub("\\bAa\\b", "AA", leaf)
-    leaf <- gsub("\\bFa\\b", "FA", leaf)
-    leaf <- gsub("\\bRos\\b", "ROS", leaf)
-    leaf <- gsub("\\bImm\\b", "IMM", leaf)
-    leaf <- gsub("\\bOmm\\b", "OMM", leaf)
-    leaf <- gsub("\\bIms\\b", "IMS", leaf)
-    leaf <- gsub("\\bCi Subunits\\b", "Complex I", leaf)
-    leaf <- gsub("\\bCii Subunits\\b", "Complex II", leaf)
-    leaf <- gsub("\\bCiii Subunits\\b", "Complex III", leaf)
-    leaf <- gsub("\\bCiv Subunits\\b", "Complex IV", leaf)
-    leaf <- gsub("\\bCv Subunits\\b", "Complex V", leaf)
-    leaf <- gsub("\\bCi Assembly Factors\\b", "CI assembly", leaf)
+    leaf <- gsub("\\bOxphos\\b",          "OXPHOS",      leaf)
+    leaf <- gsub("\\bTca\\b",             "TCA",         leaf)
+    leaf <- gsub("\\bAa\\b",              "AA",          leaf)
+    leaf <- gsub("\\bFa\\b",              "FA",          leaf)
+    leaf <- gsub("\\bRos\\b",             "ROS",         leaf)
+    leaf <- gsub("\\bImm\\b",             "IMM",         leaf)
+    leaf <- gsub("\\bOmm\\b",             "OMM",         leaf)
+    leaf <- gsub("\\bIms\\b",             "IMS",         leaf)
+    leaf <- gsub("\\bCi Subunits\\b",     "Complex I",   leaf)
+    leaf <- gsub("\\bCii Subunits\\b",    "Complex II",  leaf)
+    leaf <- gsub("\\bCiii Subunits\\b",   "Complex III", leaf)
+    leaf <- gsub("\\bCiv Subunits\\b",    "Complex IV",  leaf)
+    leaf <- gsub("\\bCv Subunits\\b",     "Complex V",   leaf)
+    leaf <- gsub("\\bCi Assembly Factors\\b",   "CI assembly",   leaf)
     leaf <- gsub("\\bCiii Assembly Factors\\b", "CIII assembly", leaf)
-    leaf <- gsub("\\bCiv Assembly Factors\\b", "CIV assembly", leaf)
-    leaf <- gsub("\\bCv Assembly Factors\\b", "CV assembly", leaf)
-    leaf <- gsub("\\bSlc25a Family\\b", "SLC25A family", leaf)
-    leaf <- gsub("\\bMitochondrial\\b", "Mito.", leaf)
-    leaf <- gsub("\\bMitochondrion\\b", "Mito.", leaf)
-    leaf <- gsub("\\bAmino Acid\\b", "AA", leaf)
-    leaf <- gsub("\\bFatty Acid\\b", "FA", leaf)
+    leaf <- gsub("\\bCiv Assembly Factors\\b",  "CIV assembly",  leaf)
+    leaf <- gsub("\\bCv Assembly Factors\\b",   "CV assembly",   leaf)
+    leaf <- gsub("\\bSlc25a Family\\b",   "SLC25A family",       leaf)
+    leaf <- gsub("\\bMitochondrial\\b",   "Mito.",               leaf)
+    leaf <- gsub("\\bMitochondrion\\b",   "Mito.",               leaf)
+    leaf <- gsub("\\bAmino Acid\\b",      "AA",                  leaf)
+    leaf <- gsub("\\bFatty Acid\\b",      "FA",                  leaf)
     # Collapse adjacent duplicate words: "OXPHOS OXPHOS Subunits" -> "OXPHOS Subunits",
     # "Complex V Complex V" -> "Complex V" (handles parent-context + expansion overlap).
     repeat {
       new_leaf <- gsub("\\b([A-Za-z][A-Za-z0-9.]*)\\b\\s+\\1\\b",
-        "\\1", leaf,
-        perl = TRUE, ignore.case = TRUE
-      )
+                       "\\1", leaf, perl = TRUE, ignore.case = TRUE)
       if (identical(new_leaf, leaf)) break
       leaf <- new_leaf
     }
@@ -129,27 +125,22 @@ clean_ring_label <- function(name) {
     # Redundancies created by upstream MSigDB hierarchies
     str_replace("Citric Acid Cycle TCA Cycle", "TCA Cycle") |>
     str_replace("Aerobic Respiration & Resp. ETC", "Aerobic Resp. + ETC") |>
-    str_replace(
-      "Reg\\. Endogenous Retroelements By Piwi Interacting RNAs piRNAs",
-      "piRNA-Mediated Retroelement Reg."
-    ) |>
-    str_replace(
-      "Formation Of The Dystrophin Glycoprotein Complex DGC",
-      "Dystrophin Glycoprotein Complex"
-    ) |>
+    str_replace("Reg\\. Endogenous Retroelements By Piwi Interacting RNAs piRNAs",
+                "piRNA-Mediated Retroelement Reg.") |>
+    str_replace("Formation Of The Dystrophin Glycoprotein Complex DGC",
+                "Dystrophin Glycoprotein Complex") |>
     str_wrap(width = 15) |>
     # manual overrides post-wrap
-    str_replace(
-      fixed("Protein\nLocalization To\nPlasma Membrane"),
-      "Protein Localiz.\nto Plasma\nMem."
-    ) |>
+    str_replace(fixed("Protein\nLocalization To\nPlasma Membrane"),
+                "Protein Localiz.\nto Plasma\nMem.") |>
     str_replace("(?s).*Maintenance.*Cell.*Polarity.*", "Maintenance\nof Polarity") |>
-    str_replace("^Heme Metabolism$", "Heme\nMetabolism") |>
-    str_replace("^tRNA Metabolism$", "tRNA\nMetabolism") |>
-    str_replace("^Mitotic Spindle$", "Mitotic\nSpindle") |>
-    str_replace("^MYC Targets V1$", "MYC Targets\nV1") |>
-    str_replace("^MYC Targets\nV1$", "MYC Targets\nV1") |>
-    str_replace("^UV Resp\\. to Dn$", "UV Response\nDn") |>
-    str_replace("^UV Response Dn$", "UV Response\nDn") |>
+    str_replace("^Heme Metabolism$",    "Heme\nMetabolism") |>
+    str_replace("^tRNA Metabolism$",    "tRNA\nMetabolism") |>
+    str_replace("^Mitotic Spindle$",    "Mitotic\nSpindle") |>
+    str_replace("^MYC Targets V1$",     "MYC Targets\nV1") |>
+    str_replace("^MYC Targets\nV1$",    "MYC Targets\nV1") |>
+    str_replace("^UV Resp\\. to Dn$",   "UV Response\nDn") |>
+    str_replace("^UV Response Dn$",     "UV Response\nDn") |>
     str_trim()
 }
+

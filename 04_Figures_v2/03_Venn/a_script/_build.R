@@ -171,10 +171,13 @@ build_venn_panels <- function() {
       axis.text.x = element_text(angle = 30, hjust = 1, size = FIG_AXIS_TEXT),
       legend.position = c(0.01, 0.99),
       legend.justification = c(0, 1),
-      legend.direction = "horizontal",
-      legend.background = element_rect(fill = alpha("white", 0.7), color = NA),
-      legend.key.size = unit(2.5, "mm"),
-      legend.margin = margin(1, 1, 1, 1),
+      legend.direction = "vertical",
+      legend.background = element_rect(
+        fill = alpha("white", 0.85), color = "grey60", linewidth = 0.3
+      ),
+      legend.key.size = unit(2.3, "mm"),
+      legend.spacing.y = unit(0.3, "mm"),
+      legend.margin = margin(1, 2, 1, 2),
       plot.margin = margin(3, 2, 1, 1)
     )
 

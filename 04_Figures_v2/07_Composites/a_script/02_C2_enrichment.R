@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# C2 enrichment — pathway-count bars + Disease/Transplant/Rescue rings. What biology.
+# C2 enrichment — three enrichment rings (Disease / Transplant / Rescue) + NES legend.
 suppressPackageStartupMessages({
   library(here)
   library(dplyr)
@@ -17,7 +17,6 @@ source(here::here("04_Figures_v2", "functions", "02_data_paths_and_loaders.R"))
 source(here::here("04_Figures_v2", "functions", "05_volcano_ring_plot_builder.R"))
 source(here::here("04_Figures_v2", "functions", "03_pathway_enrichment_dedup_ora.R"))
 source(here::here("04_Figures_v2", "functions", "04_mitocarta_lens_lookup.R"))
-source(here::here("04_Figures_v2", "04_Pathway_bars", "a_script", "_build.R"))
 
 # Set up globals that build_ring() depends on. These mirror 05_Enrich_Volcano/a_script/01_main_panels.R.
 # build_ring() has ggsave side-effects to RPT_PDF / RPT_PNG; point them at the
@@ -53,35 +52,29 @@ source(here::here("04_Figures_v2", "05_Enrich_Volcano", "a_script", "_build.R"))
 
 BASE <- here::here("04_Figures_v2", "07_Composites")
 
-bars <- build_pathway_bar_panel()$plot
 disease <- build_ring("CTLvPHE", "ctlvphe", "Disease")$plot
 transplant <- build_ring("CTLvMITO", "ctlvmito", "Transplant")$plot
 rescue <- build_ring("PHEvPHE_MITO", "phevphe_mito", "Rescue")$plot
 nes <- build_nes_legend()
 
-# Layout: bars panel spans full width on top (tag A);
-# three equal-sized rings side by side below (tags B/C/D).
-# NES legend is inset into the bars panel (top-right corner). Apply tag A first
-# so it sits on the bars ggplot before the NES patchwork wrapping.
-bars_tagged <- add_tag(bars, "A")
-bars_with_nes <- bars_tagged + patchwork::inset_element(
+# Layout: three equal rings side by side (A / B / C) filling the full width.
+# NES legend inset into the Disease ring (A) at the lower-right corner — that
+# corner is consistently clear of ring-segment labels (the left-half labels run
+# left of centre; the right-half labels run right of centre, leaving a gap near
+# the 5 o'clock position of each ring).  Placing the legend in ring A rather
+# than C avoids the dense Rescue label cluster on the right side of panel C.
+disease_with_nes <- add_tag(disease, "A") + patchwork::inset_element(
   nes,
-  left = 0.62, right = 0.99, top = 0.95, bottom = 0.62,
+  left = 0.62, right = 0.98, top = 0.38, bottom = 0.01,
   align_to = "panel"
 )
 
-design <- "
-AAA
-BCD
-"
-
-fig <- bars_with_nes +
-  add_tag(disease, "B") + add_tag(transplant, "C") + add_tag(rescue, "D") +
-  plot_layout(design = design, heights = c(0.38, 1)) +
+fig <- disease_with_nes + add_tag(transplant, "B") + add_tag(rescue, "C") +
+  plot_layout(ncol = 3) +
   composite_caption(paste(
     "5-DB lens (Hallmark/Reactome/KEGG/MitoCarta/GO Slim), EnrichmentMap dedup.",
     "Ring = top pathways by FDR; centre = protein volcano. NES colour bar shared."
   ))
 
-save_composite(fig, BASE, "MAIN_C2_enrichment", width_mm = PANEL_MD, height_mm = 220)
+save_composite(fig, BASE, "MAIN_C2_enrichment", width_mm = PANEL_MD, height_mm = 178)
 message("C2 composite built")

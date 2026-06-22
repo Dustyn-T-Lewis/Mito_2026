@@ -29,7 +29,7 @@ pw <- build_pathway_bar_panel()$plot
 venn <- build_venn_panels()
 venn$venn <- venn$venn + ggplot2::labs(subtitle = NULL)
 
-# Layout: 2 rows × 3 cols (A/B/C top; D/E/F bottom)
+# Layout: 2 rows × 3 cols (A/B/C top; D/E/F bottom), square 178×178 like YvO F01
 design <- "
 AABBCC
 DDEEFF
@@ -46,10 +46,23 @@ fig <- add_tag(pca, "A") +
     widths  = c(1.1, 1.1, 0.8),
     heights = c(1.15, 1.0)
   ) +
-  composite_caption(paste(
-    "Disease = PHE − Ctl; Transplant = Mito − Ctl; Rescue = PHE_Mito − PHE.",
-    "Significance Π < 0.05 (Xiao 2014). Up = red, Down = blue."
-  ))
+  patchwork::plot_annotation(
+    title = "H9c2 mito-transplant proteome — overview",
+    subtitle = "2×2 factorial · n = 24 (6/group) · 4,806 proteins (DIA-MS)",
+    caption = paste(
+      "Disease = PHE − Ctl; Transplant = Mito − Ctl; Rescue = PHE_Mito − PHE.",
+      "Significance Π < 0.05 (Xiao 2014). Up = red, Down = blue."
+    ),
+    theme = ggplot2::theme(
+      plot.title = ggplot2::element_text(face = "bold", size = 7),
+      plot.subtitle = ggplot2::element_text(
+        face = "italic", size = 5, color = "grey30"
+      ),
+      plot.caption = ggplot2::element_text(
+        size = 5, color = "grey35", hjust = 0, lineheight = 1.1
+      )
+    )
+  )
 
-save_composite(fig, BASE, "MAIN_C1_overview", width_mm = PANEL_MD, height_mm = 210)
+save_composite(fig, BASE, "MAIN_C1_overview", width_mm = PANEL_MD, height_mm = PANEL_MD)
 message("C1 composite built")

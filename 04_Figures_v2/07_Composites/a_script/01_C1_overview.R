@@ -15,29 +15,31 @@ BASE <- here::here("04_Figures_v2", "07_Composites")
 # Panels — add_tag bakes the letter into each title for uniform spacing.
 pca <- add_tag(build_pca_panel()$plot, "A")
 
-# B: DEP counts + a small stringency key (light -> dark = p / FDR / Π), top-right
+# B: DEP counts + a horizontal stringency key (each term boxed + shaded
+# light -> dark = p / FDR / Π), tucked into the bottom-right of the panel.
 dep_key_df <- tibble::tibble(
-  y = 3:1,
+  x = 1:3,
   lab = c("p < 0.05", "FDR < 0.10", "Π < 0.05"),
-  a = c(0.18, 0.45, 1)
+  a = c(0.18, 0.45, 1),
+  txt = c("grey15", "grey15", "white")
 )
 dep_key <- ggplot2::ggplot(dep_key_df) +
   ggplot2::geom_tile(
-    ggplot2::aes(0, y),
-    width = 0.5, height = 0.6,
-    fill = "grey20", alpha = dep_key_df$a, color = "black", linewidth = 0.2
+    ggplot2::aes(x, 0),
+    width = 1, height = 1,
+    fill = "grey20", alpha = dep_key_df$a, color = "black", linewidth = 0.25
   ) +
   ggplot2::geom_text(
-    ggplot2::aes(0.38, y, label = lab),
-    hjust = 0, size = 1.5, fontface = "bold", color = "grey15"
+    ggplot2::aes(x, 0, label = lab, color = I(txt)),
+    size = 1.35, fontface = "bold"
   ) +
-  ggplot2::scale_x_continuous(limits = c(-0.35, 3.1)) +
-  ggplot2::scale_y_continuous(limits = c(0.45, 3.55)) +
+  ggplot2::scale_x_continuous(expand = ggplot2::expansion(add = 0.02)) +
+  ggplot2::scale_y_continuous(expand = ggplot2::expansion(add = 0.02)) +
   ggplot2::theme_void()
 dep <- add_tag(build_dep_count_panel(), "B") +
   patchwork::inset_element(
     dep_key,
-    left = 0.67, right = 1.0, top = 1.0, bottom = 0.75
+    left = 0.46, right = 1.0, top = 0.17, bottom = 0.02
   )
 
 eff <- add_tag(build_dep_effect_panel(), "C")
@@ -47,7 +49,7 @@ eff <- add_tag(build_dep_effect_panel(), "C")
 venn <- build_venn_panels()
 venn_gg <- add_tag(venn$venn, "D")
 strip <- patchwork::free(
-  add_tag(venn$strip, "E") + ggplot2::theme(plot.margin = ggplot2::margin(3, 2, 1, 16)),
+  add_tag(venn$strip, "E") + ggplot2::theme(plot.margin = ggplot2::margin(3, 2, 1, 30)),
   side = "l"
 )
 
@@ -63,7 +65,7 @@ DDEEFF
 fig <- pca + dep + eff + venn_gg + strip + pw +
   patchwork::plot_layout(
     design  = design,
-    widths  = c(1.28, 0.98, 0.9),
+    widths  = c(1.45, 0.95, 0.85),
     heights = c(1.0, 1.0)
   )
 

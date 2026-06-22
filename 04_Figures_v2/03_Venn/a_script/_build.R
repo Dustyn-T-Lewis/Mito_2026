@@ -142,16 +142,17 @@ build_venn_panels <- function() {
       alpha = 0.13, inherit.aes = FALSE
     ) +
     geom_col(
-      position = position_dodge(preserve = "single", width = 0.8),
-      width = 0.7, color = "grey25", linewidth = 0.15
+      position = position_stack(reverse = TRUE),
+      width = 0.86, color = "grey25", linewidth = 0.15
     ) +
     geom_text(
       aes(label = n),
-      position = position_dodge(preserve = "single", width = 0.8),
-      vjust = -0.3, size = 1.6, color = "grey15"
+      position = position_stack(vjust = 0.5, reverse = TRUE),
+      size = 1.6, color = "white", fontface = "bold"
     ) +
     scale_fill_manual(values = DIR_COLORS[c("Up", "Down")], name = NULL) +
-    scale_y_continuous(expand = expansion(mult = c(0, 0.18))) +
+    scale_x_discrete(expand = expansion(add = 0.5)) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
     labs(title = "Direction within set", x = NULL, y = "Proteins (Π < 0.05)") +
     FIG_THEME +
     theme(

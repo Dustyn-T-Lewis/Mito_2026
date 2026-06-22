@@ -40,14 +40,11 @@ dep <- add_tag(build_dep_count_panel(), "B") +
 
 eff <- add_tag(build_dep_effect_panel(), "C")
 
-# free() the strip's left so its y-title sits tight to the axis; the left margin
-# pushes its plot rightward to line back up with the DEP-counts panel above it.
+# Strip shares column 2 with the DEP-counts panel, so patchwork aligns it to
+# the same plot width and left edge as panel B.
 venn <- build_venn_panels()
 venn_gg <- add_tag(venn$venn, "D")
-strip <- patchwork::free(
-  add_tag(venn$strip, "E") + ggplot2::theme(plot.margin = ggplot2::margin(3, 2, 1, 30)),
-  side = "l"
-)
+strip <- add_tag(venn$strip, "E")
 
 pw <- add_tag(build_pathway_bar_panel()$plot, "F")
 
@@ -61,7 +58,7 @@ DDEEFF
 fig <- pca + dep + eff + venn_gg + strip + pw +
   patchwork::plot_layout(
     design  = design,
-    widths  = c(1.0, 1.0, 1.0),
+    widths  = c(1.3, 0.88, 0.82),
     heights = c(1.0, 1.0)
   )
 

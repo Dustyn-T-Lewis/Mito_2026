@@ -85,9 +85,11 @@ build_pca_panel <- function() {
       show.legend = FALSE
     ) +
     geom_point(size = 1.8, alpha = 0.9) +
-    annotate("text",
-      x = -Inf, y = Inf, label = stat_lines, hjust = -0.05,
-      vjust = 1.2, size = 1.6, color = "grey25", lineheight = 0.95
+    annotate("label",
+      x = -Inf, y = Inf, label = stat_lines, hjust = 0, vjust = 1,
+      size = 1.6, color = "grey15", lineheight = 0.95,
+      fill = alpha("white", 0.7), label.size = 0.3,
+      label.padding = unit(0.6, "mm")
     ) +
     scale_color_manual(
       values = GROUP_COLORS, labels = GRP_LAB, name = NULL,
@@ -114,7 +116,9 @@ build_pca_panel <- function() {
       legend.position = c(0.5, 0.01),
       legend.justification = c(0.5, 0),
       legend.direction = "horizontal",
-      legend.background = element_rect(fill = alpha("white", 0.7), color = NA),
+      legend.background = element_rect(
+        fill = alpha("white", 0.75), color = "grey60", linewidth = 0.3
+      ),
       legend.key = element_blank(), legend.key.size = unit(2.6, "mm"),
       legend.margin = margin(1, 1, 1, 1),
       plot.margin = margin(4, 3, 2, 2)

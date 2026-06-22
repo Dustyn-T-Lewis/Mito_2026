@@ -29,22 +29,23 @@ pw <- build_pathway_bar_panel()$plot
 venn <- build_venn_panels()
 venn$venn <- venn$venn + ggplot2::labs(subtitle = NULL)
 
-# Layout: 2 rows × 3 cols (A/B/C top; D/E/F bottom), square 178×178 like YvO F01
+# Layout: square 178×178 like YvO F01.
+# Top row: PCA · Venn · direction strip. Bottom row: DEP counts · effect size · pathways.
 design <- "
 AABBCC
 DDEEFF
 "
 
 fig <- add_tag(pca, "A") +
-  add_tag(dep, "B") +
-  add_tag(eff, "C") +
-  add_tag(pw, "D") +
-  add_tag(venn$venn, "E") +
-  add_tag(venn$strip, "F") +
+  add_tag(venn$venn, "B") +
+  add_tag(venn$strip, "C") +
+  add_tag(dep, "D") +
+  add_tag(eff, "E") +
+  add_tag(pw, "F") +
   patchwork::plot_layout(
     design  = design,
-    widths  = c(1.1, 1.1, 0.8),
-    heights = c(1.15, 1.0)
+    widths  = c(1.05, 1.0, 1.0),
+    heights = c(1.0, 1.0)
   ) +
   patchwork::plot_annotation(
     title = "H9c2 mito-transplant proteome — overview",

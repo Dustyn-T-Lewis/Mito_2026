@@ -62,20 +62,6 @@ build_dep_count_panel <- function() {
     FRAC_FILL[paste(cn, THR_LEVELS[3], sep = "___")] <- col
   }
 
-  THRESH_LAB <- stats::setNames(c("p", "FDR", "Π"), THR_LEVELS)
-
-  label_df <- frac_df |>
-    dplyr::arrange(contrast, threshold) |>
-    dplyr::mutate(
-      next_pct = dplyr::lead(pct, default = 0),
-      seg      = pct - next_pct,
-      label_y  = (next_pct + pct) / 2,
-      label    = THRESH_LAB[as.character(threshold)],
-      text_col = dplyr::if_else(threshold == THR_LEVELS[1], "grey20", "white"),
-      .by      = contrast
-    ) |>
-    dplyr::filter(seg > 1.0)
-
   # Background rect strip per contrast
   panel_bg <- tibble::tibble(
     contrast = factor(unname(CTR_LAB), levels = rev(ctr_levels)),
@@ -101,14 +87,6 @@ build_dep_count_panel <- function() {
       width     = 0.96,
       color     = "black",
       linewidth = 0.3
-    ) +
-    ggplot2::geom_text(
-      data = label_df,
-      ggplot2::aes(contrast, label_y, label = label, color = I(text_col)),
-      inherit.aes = FALSE,
-      hjust = 0.5,
-      size = scale_text(BASE_COUNT, 60) + 0.2,
-      fontface = "bold"
     ) +
     ggplot2::scale_fill_manual(values = FRAC_FILL) +
     ggplot2::scale_y_continuous(

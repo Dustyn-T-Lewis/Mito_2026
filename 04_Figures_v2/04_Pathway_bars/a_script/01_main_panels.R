@@ -31,32 +31,9 @@ out <- build_pathway_bar_panel()
 p <- out$plot
 bar_df <- out$bar_df
 sig_pw <- out$sig_pw
-FILL_TOTAL <- out$FILL_TOTAL
-FILL_MITO <- out$FILL_MITO
-
-# Inline 4-key legend (matches Panel D).
-key_df <- tibble::tibble(
-  y    = 4:1,
-  lab  = c("Up total", "Up mito", "Down total", "Down mito"),
-  fill = c(FILL_TOTAL["Up"], FILL_MITO["Up"], FILL_TOTAL["Down"], FILL_MITO["Down"])
-)
-p_key <- ggplot2::ggplot(key_df) +
-  ggplot2::geom_point(
-    ggplot2::aes(0, y),
-    shape = 22, size = 2, fill = key_df$fill,
-    color = "grey30", stroke = 0.3
-  ) +
-  ggplot2::geom_text(
-    ggplot2::aes(0.22, y, label = lab),
-    hjust = 0, size = 1.6, color = "grey20"
-  ) +
-  ggplot2::scale_x_continuous(limits = c(-0.1, 2.6)) +
-  ggplot2::scale_y_continuous(limits = c(0.5, 4.5)) +
-  ggplot2::theme_void()
-p <- p + patchwork::inset_element(p_key, left = 0.60, right = 0.99, top = 0.99, bottom = 0.62)
 
 FIG_W <- 120
-FIG_H <- 70
+FIG_H <- 80
 ggsave(file.path(RPT_PDF, "MAIN_F04_pathway_bars.pdf"), p,
   width = FIG_W, height = FIG_H, units = "mm", device = pdf_dev, limitsize = FALSE
 )
@@ -68,12 +45,12 @@ ggsave(file.path(RPT_PNG, "MAIN_F04_pathway_bars.png"), p,
 CORE <- H9C2_CONTRAST_ORDER
 
 counts_tab <- bar_df |>
+  dplyr::filter(n > 0) |>
   dplyr::transmute(
     contrast = contrast_brief(as.character(contrast)),
-    direction, total, mito,
-    mito_fraction = ifelse(total > 0, mito / total, NA_real_)
+    direction, database = as.character(database), n
   ) |>
-  dplyr::arrange(contrast, direction)
+  dplyr::arrange(contrast, direction, dplyr::desc(n))
 
 per_ctr_tabs <- lapply(CORE, function(ctr) {
   sig_pw |>
@@ -91,9 +68,9 @@ sheet_specs <- c(
   list(list(
     name = "dep_pathway_counts",
     df = counts_tab,
-    role = "F04 bar heights — total significant pathways and mito subset per contrast x direction",
+    role = "F04 bar heights — significant pathways per contrast x direction x source database",
     contents = paste0(
-      "contrast, direction (Up/Down), total significant pathways, mito subset, mito_fraction. ",
+      "contrast, direction (Up/Down), database, n significant pathways (stacked bar segments). ",
       "Pool: Hallmark + Reactome + KEGG + MitoCarta + GO Slim (CANONICAL_DBS); ",
       "padj<0.05, size>=10, MITO_DROP_SETS excluded; cross-DB Jaccard+Overlap dedup at 0.375 ",
       "(EnrichmentMap, Merico 2010 / Reimand 2019). Mito flag: database==MitoCarta OR ",
@@ -115,7 +92,7 @@ sheet_specs <- c(
 
 build_workbook(
   file.path(DAT, "F04_supplementary.xlsx"),
-  figure_title = "F04 — Panel-D pathway count summary (5-DB pool, mito subset overlaid)",
+  figure_title = "F04 — Panel-D pathway count summary (5-DB pool, stacked by database)",
   sheet_specs  = sheet_specs
 )
 

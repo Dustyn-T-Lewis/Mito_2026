@@ -10,7 +10,7 @@ library(grid)
 H9C2_GROUP_LEVELS <- c("Ctl", "Mito", "PHE", "PHE_Mito")
 H9C2_CORE_CONTRASTS <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO", "Interaction")
 H9C2_CONTRAST_ROLES <- c(
-  CTLvPHE = "Disease", CTLvMITO = "Intervention",
+  CTLvPHE = "Disease", CTLvMITO = "Transplant",
   PHEvPHE_MITO = "Rescue", Interaction = "Interaction",
   MITOvPHE_MITO = "Secondary"
 )

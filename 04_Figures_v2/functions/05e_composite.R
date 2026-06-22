@@ -4,44 +4,43 @@
 make_volcano_ring <- function(de_df,
                               go_df,
                               contrast,
-                              title              = NULL,
-                              contrast_title     = NULL,
-                              contrast_subtitle  = NULL,
-                              title_size         = 22,   # scaled from F01's 12pt @ 215mm to F03's 380mm canvas
-                              subtitle_size      = NULL,
-                              n_terms            = 12,
-                              gap_degrees        = 3,
-                              start_offset       = 0,
-                              databases          = c("Hallmark", "GO Slim"),
-                              volcano_radius     = 3.5,
-                              tick_r0            = 4.4,
-                              tick_r1            = 4.8,
-                              arc_r0             = 4.8,
-                              arc_r1             = 5.6,
-                              label_r            = 7.0,
-                              label_gap          = NULL,
-                              fc_thresh          = log2(1.5),
-                              p_thresh           = 0.05,
-                              up_color           = DIR_COLORS["Up"],
-                              down_color         = DIR_COLORS["Down"],
-                              ns_color           = DIR_COLORS["NS"],
-                              point_size         = 0.6,
-                              point_alpha        = 0.5,
-                              label_size         = 3.0,
-                              count_label_size    = 2.8,
+                              title = NULL,
+                              contrast_title = NULL,
+                              contrast_subtitle = NULL,
+                              title_size = 22, # scaled from F01's 12pt @ 215mm to F03's 380mm canvas
+                              subtitle_size = NULL,
+                              n_terms = 12,
+                              gap_degrees = 3,
+                              start_offset = 0,
+                              databases = c("Hallmark", "GO Slim"),
+                              volcano_radius = 3.5,
+                              tick_r0 = 4.4,
+                              tick_r1 = 4.8,
+                              arc_r0 = 4.8,
+                              arc_r1 = 5.6,
+                              label_r = 7.0,
+                              label_gap = NULL,
+                              fc_thresh = log2(1.5),
+                              p_thresh = 0.05,
+                              up_color = DIR_COLORS["Up"],
+                              down_color = DIR_COLORS["Down"],
+                              ns_color = DIR_COLORS["NS"],
+                              point_size = 0.6,
+                              point_alpha = 0.5,
+                              label_size = 3.0,
+                              count_label_size = 2.8,
                               count_label_padding = 3,
-                              count_border_width  = 0.4,
-                              count_y_mult        = 1.0,
-                              count_x_mult        = 0.5,
-                              label_padding       = 2,
-                              min_angle_gap       = 18,
-                              nudge_outward       = 0.8,
+                              count_border_width = 0.4,
+                              count_y_mult = 1.0,
+                              count_x_mult = 0.5,
+                              label_padding = 2,
+                              min_angle_gap = 18,
+                              nudge_outward = 0.8,
                               ring_data_override = NULL,
-                              bg_color           = NULL,
-                              bg_alpha           = 0.12,
-                              mito_pattern       = NULL,
-                              show_legend        = TRUE) {
-
+                              bg_color = NULL,
+                              bg_alpha = 0.12,
+                              mito_pattern = NULL,
+                              show_legend = TRUE) {
   if (is.null(subtitle_size)) subtitle_size <- title_size * 0.65
 
   if (!is.null(ring_data_override)) {
@@ -95,14 +94,16 @@ make_volcano_ring <- function(de_df,
       x = tick_r0 * cos(seq(0, 2 * pi, length.out = 200)),
       y = tick_r0 * sin(seq(0, 2 * pi, length.out = 200))
     )
-    geom_polygon(data = bg_circle, aes(x = x, y = y),
-                 fill = bg_color, alpha = bg_alpha, color = NA,
-                 inherit.aes = FALSE)
+    geom_polygon(
+      data = bg_circle, aes(x = x, y = y),
+      fill = bg_color, alpha = bg_alpha, color = NA,
+      inherit.aes = FALSE
+    )
   }
 
   legend_pos <- if (show_legend) "right" else "none"
 
-  title_lab    <- contrast_title %||% title
+  title_lab <- contrast_title %||% title
   subtitle_lab <- contrast_subtitle
 
   p <- ggplot() +
@@ -123,27 +124,35 @@ make_volcano_ring <- function(de_df,
       clip = "off"
     ) +
     theme_void() +
-    theme(plot.title    = element_text(face = "bold", size = title_size,
-                                       hjust = 0.5, margin = margin(b = 0, unit = "mm")),
-          plot.subtitle = element_text(face = "bold.italic", size = subtitle_size,
-                                       color = "grey30", hjust = 0.5,
-                                       margin = margin(b = 0.5, unit = "mm")),
-          plot.tag      = element_text(face = "bold", size = 26),  # scaled from F01's 15pt @ 215mm to F03's 380mm canvas
-          plot.tag.position = c(0.02, 0.99),
-          plot.margin   = margin(1, 1, 1, 1, "mm"),
-          legend.position = legend_pos,
-          legend.title = element_text(size = 7, face = "bold", color = "grey30"),
-          legend.text  = element_text(size = 6, color = "grey40"),
-          legend.key.width  = unit(2, "mm"),
-          legend.key.height = unit(12, "mm"),
-          legend.margin = margin(l = 0, r = 0)) +
-    guides(color = "none",
-           fill = guide_colorbar(direction = "vertical"))
+    theme(
+      plot.title = element_text(
+        face = "bold", size = title_size,
+        hjust = 0.5, margin = margin(b = 0, unit = "mm")
+      ),
+      plot.subtitle = element_text(
+        face = "bold.italic", size = subtitle_size,
+        color = "grey30", hjust = 0.5,
+        margin = margin(b = 0.5, unit = "mm")
+      ),
+      plot.tag = element_text(face = "bold", size = 26), # scaled from F01's 15pt @ 215mm to F03's 380mm canvas
+      plot.tag.position = c(0.02, 0.99),
+      plot.margin = margin(1, 1, 1, 1, "mm"),
+      legend.position = legend_pos,
+      legend.title = element_text(size = 7, face = "bold", color = "grey30"),
+      legend.text = element_text(size = 6, color = "grey40"),
+      legend.key.width = unit(2, "mm"),
+      legend.key.height = unit(12, "mm"),
+      legend.margin = margin(l = 0, r = 0)
+    ) +
+    guides(
+      color = "none",
+      fill = guide_colorbar(direction = "vertical")
+    )
 
-  attr(p, "ring_data")  <- ring_data
-  attr(p, "tick_data")  <- tick_data
-  attr(p, "n_up")       <- attr(volcano_layers, "n_up")
-  attr(p, "n_down")     <- attr(volcano_layers, "n_down")
+  attr(p, "ring_data") <- ring_data
+  attr(p, "tick_data") <- tick_data
+  attr(p, "n_up") <- attr(volcano_layers, "n_up")
+  attr(p, "n_down") <- attr(volcano_layers, "n_down")
 
   p
 }
@@ -168,9 +177,11 @@ build_nes_legend_bar <- function(text_size = 10, title_size = 11,
     labs(x = "NES") +
     theme_void() +
     theme(
-      axis.text.x  = element_text(size = text_size, face = "bold", color = "grey25"),
-      axis.title.x = element_text(size = title_size, face = "bold",
-                                   color = "grey25", margin = margin(t = 1)),
-      plot.margin  = bar_margin
+      axis.text.x = element_text(size = text_size, face = "bold", color = "grey25"),
+      axis.title.x = element_text(
+        size = title_size, face = "bold",
+        color = "grey25", margin = margin(t = 1)
+      ),
+      plot.margin = bar_margin
     )
 }

@@ -63,7 +63,8 @@ clean_display_label <- function(pathway, extra = NULL) {
   lab <- ifelse(
     is_mito,
     clean_pathway_name(gsub("_", " ", sub(".*__", "", sub("^MITOCARTA_", "", pathway)))),
-    clean_pathway_name(pathway))
+    clean_pathway_name(pathway)
+  )
   dict <- PATHWAY_DISPLAY_OVERRIDES
   if (!is.null(extra)) dict[names(extra)] <- extra
   hit <- match(lab, names(dict))
@@ -124,11 +125,17 @@ classify_pathway_func <- function(ids) {
       if (grepl(rules[[cat]], id, perl = TRUE)) matches <- c(matches, cat)
     }
     if (length(matches) > 1) {
-      warning("classify_pathway_func: '", id, "' matches multiple categories [",
-              paste(matches, collapse = ", "), "]; using first match: ", matches[1])
+      warning(
+        "classify_pathway_func: '", id, "' matches multiple categories [",
+        paste(matches, collapse = ", "), "]; using first match: ", matches[1]
+      )
     }
-    if (length(matches) >= 1) return(matches[1])
-    if (grepl("METABOL", id, perl = TRUE)) return("Amino Acid & Cofactor Metabolism")
+    if (length(matches) >= 1) {
+      return(matches[1])
+    }
+    if (grepl("METABOL", id, perl = TRUE)) {
+      return("Amino Acid & Cofactor Metabolism")
+    }
     "Other"
   }, character(1), USE.NAMES = FALSE)
 }

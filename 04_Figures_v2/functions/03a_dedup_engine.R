@@ -12,26 +12,37 @@
 # a = overlap (hits in pathway), b = K - a, c = size - a, d = N - K - c.
 fora_odds_ratio <- function(overlap, size, K, N) {
   vapply(seq_along(overlap), function(i) {
-    a <- overlap[i]; b <- K - a; c <- size[i] - a; d <- N - K - c
+    a <- overlap[i]
+    b <- K - a
+    c <- size[i] - a
+    d <- N - K - c
     if (b <= 0 || c <= 0) Inf else (a * d) / (b * c)
   }, numeric(1))
 }
 
 deduplicate_enrichment_flat <- function(results, pathways, cutoff = 0.375) {
-  if (nrow(results) == 0) return(results)
+  if (nrow(results) == 0) {
+    return(results)
+  }
   results <- results[order(results$padj), ]
   kept_sets <- list()
   keep_mask <- logical(nrow(results))
   for (i in seq_len(nrow(results))) {
     pw_genes <- pathways[[results$pathway[i]]]
-    if (is.null(pw_genes)) { keep_mask[i] <- TRUE; next }
+    if (is.null(pw_genes)) {
+      keep_mask[i] <- TRUE
+      next
+    }
     redundant <- FALSE
     for (kept in kept_sets) {
       inter <- length(intersect(pw_genes, kept))
       if (inter == 0L) next
       jaccard <- inter / (length(pw_genes) + length(kept) - inter)
       overlap <- inter / min(length(pw_genes), length(kept))
-      if (0.5 * overlap + 0.5 * jaccard >= cutoff) { redundant <- TRUE; break }
+      if (0.5 * overlap + 0.5 * jaccard >= cutoff) {
+        redundant <- TRUE
+        break
+      }
     }
     if (!redundant) {
       keep_mask[i] <- TRUE
@@ -44,14 +55,19 @@ deduplicate_enrichment_flat <- function(results, pathways, cutoff = 0.375) {
 # Within-database collapse first, then a cross-database pass so the same biology
 # in different DBs (REACTOME_TCA_CYCLE vs KEGG_CITRATE_CYCLE) reduces to one entry.
 deduplicate_enrichment <- function(results, pathways, cutoff = 0.375, cross_db = TRUE) {
-  if (nrow(results) == 0) return(results)
-  if (!"database" %in% names(results))
+  if (nrow(results) == 0) {
+    return(results)
+  }
+  if (!"database" %in% names(results)) {
     return(deduplicate_enrichment_flat(results, pathways, cutoff))
-  within <- lapply(unique(results$database), function(db)
-    deduplicate_enrichment_flat(results[results$database == db, ], pathways, cutoff))
+  }
+  within <- lapply(unique(results$database), function(db) {
+    deduplicate_enrichment_flat(results[results$database == db, ], pathways, cutoff)
+  })
   survivors <- do.call(rbind, within)
   survivors <- survivors[order(survivors$padj), ]
-  if (cross_db && nrow(survivors) > 1)
+  if (cross_db && nrow(survivors) > 1) {
     survivors <- deduplicate_enrichment_flat(survivors, pathways, cutoff)
+  }
   survivors
 }

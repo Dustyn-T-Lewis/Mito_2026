@@ -12,29 +12,24 @@ source(here::here("04_Figures_v2", "04_Pathway_bars", "a_script", "_build.R"))
 
 BASE <- here::here("04_Figures_v2", "07_Composites")
 
-# A: PCA — force square aspect ratio in composite cell
+# A: PCA (square)
 pca <- build_pca_panel()$plot +
   ggplot2::theme(aspect.ratio = 1)
 
-# B: horizontal DEP bars — strip the baked standalone tag before re-tagging
+# B: DEP bars (clear baked tag)
 dep <- build_dep_count_panel() + ggplot2::labs(tag = NULL)
 
-# C: effect-size histogram — strip baked tag "B"
+# C: effect histogram (clear baked tag)
 eff <- build_dep_effect_panel() + ggplot2::labs(tag = NULL)
 
-# D: pathway count bars
+# D: pathway bars
 pw <- build_pathway_bar_panel()$plot
 
-# E + F: Venn diagram and direction strip
+# E + F: Venn + direction strip
 venn <- build_venn_panels()
 venn$venn <- venn$venn + ggplot2::labs(subtitle = NULL)
 
-# Layout: 2 rows x 3 cols
-# Top:    A (PCA square)  |  B (DEP bars)  |  C (histogram)
-# Bottom: D (pathway bars) | E (Venn)       | F (direction strip)
-# Widths: PCA and Venn get equal share; DEP bars slightly wider than histogram;
-# pathway bars match the PCA column.
-# Heights: top row slightly taller to give PCA room to be square.
+# Layout: 2 rows × 3 cols (A/B/C top; D/E/F bottom)
 design <- "
 AABBCC
 DDEEFF

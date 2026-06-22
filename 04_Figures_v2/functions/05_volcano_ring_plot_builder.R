@@ -8,12 +8,19 @@
 #   05e — make_volcano_ring (top-level composer), build_nes_legend_bar
 
 suppressPackageStartupMessages({
-  library(dplyr); library(ggplot2); library(stringr); library(purrr); library(tibble)
-  library(ggforce); library(patchwork); library(scales)
+  library(dplyr)
+  library(ggplot2)
+  library(stringr)
+  library(purrr)
+  library(tibble)
+  library(ggforce)
+  library(patchwork)
+  library(scales)
 })
 
-if (!exists("FIG_THEME"))
+if (!exists("FIG_THEME")) {
   source(here::here("04_Figures_v2", "functions", "01_style_palettes_theme.R"))
+}
 
 source(here::here("04_Figures_v2", "functions", "05a_ring_labels.R"))
 source(here::here("04_Figures_v2", "functions", "05b_ring_data.R"))

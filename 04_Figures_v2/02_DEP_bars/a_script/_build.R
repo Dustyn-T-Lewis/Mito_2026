@@ -150,7 +150,7 @@ build_dep_effect_panel <- function() {
   # Median over ALL proteins; label clarifies scope
   lfc_stats <- lfc_long_all |>
     dplyr::summarise(med_abs = median(abs(logFC), na.rm = TRUE), .by = contrast) |>
-    dplyr::mutate(lab = sprintf("median |log2FC| %.2f (all)", med_abs))
+    dplyr::mutate(lab = sprintf("median |log2FC| %.2f", med_abs))
 
   # Histogram restricted to ±1 window
   lfc_plot <- dplyr::filter(lfc_long_all, abs(logFC) <= 1)
@@ -174,10 +174,10 @@ build_dep_effect_panel <- function() {
       data = lfc_stats,
       ggplot2::aes(x = -0.98, y = Inf, label = lab),
       inherit.aes = FALSE,
-      hjust = 0, vjust = 1.1,
-      size = scale_text(BASE_STAT, 50) + 1.3,
+      hjust = 0, vjust = 1.0,
+      size = scale_text(BASE_STAT, 50) + 1.0,
       fontface = "bold", color = "grey15",
-      fill = scales::alpha("white", 0.75), label.size = 0,
+      fill = scales::alpha("white", 0.8), label.size = 0,
       label.padding = ggplot2::unit(0.4, "mm")
     ) +
     ggplot2::facet_wrap(~contrast, ncol = 1, scales = "free_y", strip.position = "top") +
@@ -189,9 +189,9 @@ build_dep_effect_panel <- function() {
     ggplot2::scale_y_continuous(breaks = NULL) +
     ggplot2::labs(
       title = "Effect size",
-      x     = expression(bold(log[2] ~ FC)),
-      y     = NULL,
-      tag   = "B"
+      subtitle = "log2FC per contrast (median over all proteins)",
+      x = expression(bold(log[2] ~ FC)),
+      y = NULL
     ) +
     FIG_THEME +
     ggplot2::theme(

@@ -29,7 +29,7 @@ Spine = **Disease → Rescue reversal**.
   01_PCA/                     sample PCA + PERMANOVA
   02_DEP_bars/                DEP counts (% proteome) + effect-size distributions
   03_Venn/                    area-proportional 3-set DEP overlap + direction strip
-  04_Pathway_bars/            Panel-D pathway counts, diverging stack by source DB (Up/Down)
+  04_Pathway_bars/            Panel-D pathway counts (total + mito subset, Up/Down, sqrt y)
   05_Enrich_Volcano/          per-contrast volcano-in-ring panels + NES legend
   06_Cluster/                 6-pilot cluster framework (c-means × 3 + WGCNA + logFC + RRHO2)
   07_Composites/              C1 (6-panel overview) and C2 (3 enrichment rings + NES legend)

@@ -44,8 +44,7 @@ save_composite <- function(plot, base, name, width_mm, height_mm) {
   if (!pdf_ok) {
     message("preferred pdf device failed or wrote empty file — falling back to base grDevices::pdf()")
     grDevices::pdf(pdf_path, width = width_mm / 25.4, height = height_mm / 25.4)
-    print(plot)
-    grDevices::dev.off()
+    tryCatch(print(plot), finally = grDevices::dev.off())
   }
 
   ggsave(file.path(out_png, paste0(name, ".png")), plot,

@@ -46,13 +46,12 @@ eff <- add_tag(build_dep_effect_panel(), "C")
 venn <- build_venn_panels()
 venn_gg <- add_tag(venn$venn, "D") +
   ggplot2::theme(plot.margin = ggplot2::margin(0, 2, 1, 2))
-strip <- add_tag(venn$strip, "E") +
-  ggplot2::theme(
-    plot.margin = ggplot2::margin(0, 2, 1, 2),
-    axis.title.y = ggplot2::element_text(
-      face = "bold", size = 5, margin = ggplot2::margin(r = -14)
-    )
-  )
+# free(type = "label") lets E's y-title sit tight to its axis while the panel
+# stays aligned to panel B's width above it.
+strip <- patchwork::free(
+  add_tag(venn$strip, "E") + ggplot2::theme(plot.margin = ggplot2::margin(0, 2, 1, 2)),
+  type = "label", side = "l"
+)
 
 pw <- add_tag(build_pathway_bar_panel()$plot, "F") +
   ggplot2::theme(plot.margin = ggplot2::margin(0, 4, 1, 2))

@@ -98,7 +98,7 @@ build_dep_count_panel <- function() {
     ) +
     ggplot2::geom_col(
       position  = "identity",
-      width     = 0.86,
+      width     = 0.9,
       color     = "black",
       linewidth = 0.3
     ) +
@@ -116,6 +116,7 @@ build_dep_count_panel <- function() {
       limits = c(0, x_lim_top),
       expand = ggplot2::expansion(mult = c(0, 0.02))
     ) +
+    ggplot2::scale_x_discrete(expand = ggplot2::expansion(add = 0.5)) +
     ggplot2::coord_flip() +
     ggplot2::labs(
       title = "DEP counts",
@@ -156,18 +157,7 @@ build_dep_effect_panel <- function() {
 
   hbw <- 2 / 44
 
-  # Background rects per facet (contrast-colored)
-  hist_bg <- tibble::tibble(
-    contrast = factor(unname(CTR_LAB), levels = ctr_levels),
-    fill     = unname(CONTRAST_COLORS[CORE])
-  )
-
   ggplot2::ggplot(lfc_plot, ggplot2::aes(logFC)) +
-    ggplot2::geom_rect(
-      data = hist_bg,
-      ggplot2::aes(xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, fill = I(fill)),
-      alpha = 0.16, inherit.aes = FALSE
-    ) +
     ggplot2::geom_vline(xintercept = 0, linewidth = 0.25, color = "grey55") +
     ggplot2::geom_histogram(
       ggplot2::aes(fill = contrast),

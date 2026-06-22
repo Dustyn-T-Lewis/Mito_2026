@@ -91,12 +91,12 @@ build_pca_panel <- function() {
     ) +
     scale_color_manual(
       values = GROUP_COLORS, labels = GRP_LAB, name = NULL,
-      guide = guide_legend(ncol = 1, override.aes = list(size = 2))
+      guide = guide_legend(nrow = 1, override.aes = list(size = 2))
     ) +
     scale_fill_manual(values = GROUP_COLORS, guide = "none") +
     scale_shape_manual(
       values = GRP_SHP, labels = GRP_LAB, name = NULL,
-      guide = guide_legend(ncol = 1)
+      guide = guide_legend(nrow = 1)
     ) +
     scale_x_continuous(expand = expansion(mult = 0.04)) +
     scale_y_continuous(expand = expansion(mult = 0.04)) +
@@ -111,11 +111,12 @@ build_pca_panel <- function() {
     ) +
     FIG_THEME +
     theme(
-      legend.position = c(0.99, 0.02), legend.justification = c(1, 0),
-      legend.background = element_rect(fill = alpha("white", 0.7), color = NA),
+      legend.position = "bottom",
+      legend.justification = "center",
       legend.key = element_blank(), legend.key.size = unit(2.8, "mm"),
-      legend.spacing.y = unit(0.3, "mm"),
-      plot.margin = margin(4, 3, 2, 2)
+      legend.margin = margin(t = -1, b = 0),
+      legend.box.spacing = unit(1, "pt"),
+      plot.margin = margin(4, 3, 1, 2)
     )
 
   list(plot = p, scores = pca_df, permanova = permanova_out)

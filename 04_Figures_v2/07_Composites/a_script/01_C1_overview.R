@@ -17,6 +17,7 @@ dep_raw[[1]] <- dep_raw[[1]] + labs(tag = NULL)
 dep <- dep_raw
 eff <- build_dep_effect_panel() + labs(tag = NULL)
 venn <- build_venn_panels()
+venn$venn <- venn$venn + labs(subtitle = NULL)
 
 # Layout: PCA dominant top-left (3 rows x 2 cols), Venn top-right,
 # DEP counts mid-right, direction strip bottom spanning full width.

@@ -28,13 +28,28 @@ save_composite <- function(plot, base, name, width_mm, height_mm) {
   out_pdf <- file.path(base, "b_reports", "main", "pdf")
   out_png <- file.path(base, "b_reports", "main", "png")
   for (d in c(out_pdf, out_png)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
-  ggsave(file.path(out_pdf, paste0(name, ".pdf")), plot,
-    width = width_mm,
-    height = height_mm, units = "mm", device = pdf_dev, limitsize = FALSE
+
+  pdf_path <- file.path(out_pdf, paste0(name, ".pdf"))
+  pdf_ok <- tryCatch(
+    {
+      ggsave(pdf_path, plot,
+        width = width_mm, height = height_mm, units = "mm",
+        device = pdf_dev, limitsize = FALSE
+      )
+      file.exists(pdf_path) && file.info(pdf_path)$size > 1000
+    },
+    error = function(e) FALSE
   )
+
+  if (!pdf_ok) {
+    message("preferred pdf device failed or wrote empty file — falling back to base grDevices::pdf()")
+    grDevices::pdf(pdf_path, width = width_mm / 25.4, height = height_mm / 25.4)
+    print(plot)
+    grDevices::dev.off()
+  }
+
   ggsave(file.path(out_png, paste0(name, ".png")), plot,
-    width = width_mm,
-    height = height_mm, units = "mm", dpi = 300, limitsize = FALSE
+    width = width_mm, height = height_mm, units = "mm", dpi = 300, limitsize = FALSE
   )
   invisible(file.path(out_png, paste0(name, ".png")))
 }

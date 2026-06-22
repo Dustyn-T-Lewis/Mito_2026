@@ -98,7 +98,7 @@ build_dep_count_panel <- function() {
     ) +
     ggplot2::geom_col(
       position  = "identity",
-      width     = 0.9,
+      width     = 0.96,
       color     = "black",
       linewidth = 0.3
     ) +
@@ -116,7 +116,7 @@ build_dep_count_panel <- function() {
       limits = c(0, x_lim_top),
       expand = ggplot2::expansion(mult = c(0, 0.02))
     ) +
-    ggplot2::scale_x_discrete(expand = ggplot2::expansion(add = 0.5)) +
+    ggplot2::scale_x_discrete(expand = ggplot2::expansion(add = 0.42)) +
     ggplot2::coord_flip() +
     ggplot2::labs(
       title = "DEP counts",
@@ -152,16 +152,16 @@ build_dep_effect_panel <- function() {
     dplyr::summarise(med_abs = median(abs(logFC), na.rm = TRUE), .by = contrast) |>
     dplyr::mutate(lab = sprintf("median |log2FC| %.2f", med_abs))
 
-  # Histogram restricted to ±1 window
-  lfc_plot <- dplyr::filter(lfc_long_all, abs(logFC) <= 1)
+  # Histogram restricted to ±0.8 window
+  lfc_plot <- dplyr::filter(lfc_long_all, abs(logFC) <= 0.8)
 
-  hbw <- 2 / 44
+  hbw <- 1.6 / 40
 
   ggplot2::ggplot(lfc_plot, ggplot2::aes(logFC)) +
     ggplot2::geom_vline(xintercept = 0, linewidth = 0.25, color = "grey55") +
     ggplot2::geom_histogram(
       ggplot2::aes(fill = contrast),
-      breaks = seq(-1, 1, by = hbw),
+      breaks = seq(-0.8, 0.8, by = hbw),
       color = "white",
       linewidth = 0.1,
       alpha = 0.85
@@ -172,7 +172,7 @@ build_dep_effect_panel <- function() {
     ) +
     ggplot2::geom_label(
       data = lfc_stats,
-      ggplot2::aes(x = -0.98, y = Inf, label = lab),
+      ggplot2::aes(x = -0.78, y = Inf, label = lab),
       inherit.aes = FALSE,
       hjust = 0, vjust = 1.0,
       size = scale_text(BASE_STAT, 50) + 0.3,
@@ -185,7 +185,7 @@ build_dep_effect_panel <- function() {
       values = stats::setNames(unname(CONTRAST_COLORS[CORE]), unname(CTR_LAB)),
       guide  = "none"
     ) +
-    ggplot2::scale_x_continuous(breaks = c(-1, 0, 1)) +
+    ggplot2::scale_x_continuous(breaks = c(-0.8, 0, 0.8)) +
     ggplot2::scale_y_continuous(breaks = NULL) +
     ggplot2::labs(
       title = "Effect size",

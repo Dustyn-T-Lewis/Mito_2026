@@ -40,16 +40,17 @@ dep <- add_tag(build_dep_count_panel(), "B") +
 
 eff <- add_tag(build_dep_effect_panel(), "C")
 
-# free() the strip's left so its y-title sits tight to the axis; the left margin
-# pushes its plot back to the same left edge / width as panel B above it.
+# Strip shares column 2 with panel B, so patchwork aligns it to the same plot
+# width and left edge automatically. Bottom-row panels get a 0 top margin to
+# close the gap to the row above.
 venn <- build_venn_panels()
-venn_gg <- add_tag(venn$venn, "D")
-strip <- patchwork::free(
-  add_tag(venn$strip, "E") + ggplot2::theme(plot.margin = ggplot2::margin(3, 2, 1, 38)),
-  side = "l"
-)
+venn_gg <- add_tag(venn$venn, "D") +
+  ggplot2::theme(plot.margin = ggplot2::margin(0, 2, 1, 2))
+strip <- add_tag(venn$strip, "E") +
+  ggplot2::theme(plot.margin = ggplot2::margin(0, 2, 1, 2))
 
-pw <- add_tag(build_pathway_bar_panel()$plot, "F")
+pw <- add_tag(build_pathway_bar_panel()$plot, "F") +
+  ggplot2::theme(plot.margin = ggplot2::margin(0, 4, 1, 2))
 
 # Layout: square 178×178 like YvO F01.
 # Top row: PCA · DEP counts · effect size. Bottom row: Venn · direction strip · pathways.
@@ -61,7 +62,7 @@ DDEEFF
 fig <- pca + dep + eff + venn_gg + strip + pw +
   patchwork::plot_layout(
     design  = design,
-    widths  = c(1.3, 0.88, 0.82),
+    widths  = c(1.2, 1.02, 0.78),
     heights = c(1.0, 1.0)
   )
 

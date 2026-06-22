@@ -81,7 +81,7 @@ build_venn_panels <- function() {
 
   # area-proportional Venn (eulerr)
   m <- membership
-  eu_fit <- euler(c(
+  venn_vals <- c(
     "Disease"                   = sum(m$Disease & !m$Transplant & !m$Rescue),
     "Transplant"                = sum(!m$Disease & m$Transplant & !m$Rescue),
     "Rescue"                    = sum(!m$Disease & !m$Transplant & m$Rescue),
@@ -89,7 +89,8 @@ build_venn_panels <- function() {
     "Disease&Rescue"            = sum(m$Disease & !m$Transplant & m$Rescue),
     "Transplant&Rescue"         = sum(!m$Disease & m$Transplant & m$Rescue),
     "Disease&Transplant&Rescue" = sum(m$Disease & m$Transplant & m$Rescue)
-  ), shape = "ellipse")
+  )
+  eu_fit <- euler(venn_vals, shape = "ellipse")
 
   # capture fit quality
   fit_stats <- tibble(
@@ -98,13 +99,20 @@ build_venn_panels <- function() {
   )
 
   set_labels <- names(SET_CONTRASTS)
+  # single-set counts white, overlap counts black (only non-zero regions show)
+  q_cols <- ifelse(grepl("&", names(venn_vals)), "black", "white")[venn_vals > 0]
 
   venn_grob <- plot(
     eu_fit,
     fills = list(fill = SET_COLORS, alpha = 0.5),
     edges = list(col = SET_COLORS, lwd = 1.2),
-    labels = list(labels = set_labels, fontsize = 6, fontfamily = "Helvetica", font = 2),
-    quantities = list(fontsize = 6, fontfamily = "Helvetica"),
+    labels = list(
+      labels = set_labels, col = "white",
+      fontsize = 6, fontfamily = "Helvetica", font = 2
+    ),
+    quantities = list(
+      col = q_cols, fontsize = 6, fontfamily = "Helvetica", font = 2
+    ),
     legend = FALSE
   )
 
@@ -139,7 +147,7 @@ build_venn_panels <- function() {
         xmin = as.integer(group) - 0.5, xmax = as.integer(group) + 0.5,
         ymin = -Inf, ymax = Inf, fill = I(fill)
       ),
-      alpha = 0.13, inherit.aes = FALSE
+      alpha = 0.13, color = "grey70", linewidth = 0.2, inherit.aes = FALSE
     ) +
     geom_col(
       position = position_stack(reverse = TRUE),

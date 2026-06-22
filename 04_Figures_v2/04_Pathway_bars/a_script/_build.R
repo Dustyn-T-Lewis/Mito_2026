@@ -133,6 +133,9 @@ build_pathway_bar_panel <- function() {
       axis.text.x = ggplot2::element_text(
         size = FIG_AXIS_TEXT, lineheight = 0.85, face = "bold"
       ),
+      axis.title.y = ggplot2::element_text(
+        face = "bold", size = 5, margin = ggplot2::margin(r = 1)
+      ),
       panel.grid.major.x = ggplot2::element_blank(),
       legend.position = c(0.99, 0.99),
       legend.justification = c(1, 1),

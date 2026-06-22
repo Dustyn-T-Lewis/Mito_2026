@@ -1,18 +1,13 @@
 #!/usr/bin/env Rscript
-# F04 build function — pathway enrichment, YvO Panel-F tactics.
-# Per contrast: Up bar (red) and Down bar (blue), each the total significant
-# pathway count (light) with the mitochondrial subset overlaid darker, both
-# drawn from 0 on a sqrt axis so small bars stay readable. Faint contrast band
-# behind each group; 4-key legend (Up/Down x total/mito).
-# Mito = MitoCarta sets OR broad-DB pathways matching MITO_PATHWAY_REGEX.
-# Returns list(plot=<ggplot>, bar_df=<df>, sig_pw=<df>, FILL_TOTAL=, FILL_MITO=).
+# F04 build function — significant pathways per contrast, stacked by source DB.
+# One bar per contrast; segments = the 5 databases (not pooled), ordered by
+# overall total (largest at the base). Swatch key inset in the upper-right.
+# Returns list(plot=<ggplot>, bar_df=<df>, sig_pw=<df>, DB_COLORS=<named vec>).
 
-# Total = lighter shade, mito = darker (emphasised) per direction (RdBu family).
-FILL_TOTAL <- c(Up = "#F4A582", Down = "#92C5DE")
-FILL_MITO <- c(Up = "#B2182B", Down = "#2166AC")
-PATHWAY_KEYS <- c(
-  "Up total" = "#F4A582", "Up mito" = "#B2182B",
-  "Down total" = "#92C5DE", "Down mito" = "#2166AC"
+# Database key (Dark2 hues).
+PATHWAY_DB_COLORS <- c(
+  Hallmark = "#1B9E77", Reactome = "#7570B3", KEGG = "#E7298A",
+  MitoCarta = "#D95F02", `GO Slim` = "#66A61E"
 )
 
 build_pathway_bar_panel <- function() {
@@ -58,86 +53,62 @@ build_pathway_bar_panel <- function() {
     nrow(sig_pw), length(CORE)
   ))
 
+  # databases ordered by overall total (largest first); base of the stack
+  db_order <- sig_pw |>
+    dplyr::count(database, sort = TRUE) |>
+    dplyr::pull(database)
+  db_order <- c(db_order, setdiff(names(PATHWAY_DB_COLORS), db_order))
+
   bar_df <- sig_pw |>
-    dplyr::summarise(
-      total = dplyr::n(), mito = sum(is_mito),
-      .by = c(contrast, direction)
-    ) |>
+    dplyr::summarise(n = dplyr::n(), .by = c(contrast, database)) |>
     tidyr::complete(
-      contrast  = CORE,
-      direction = c("Up", "Down"),
-      fill      = list(total = 0L, mito = 0L)
+      contrast = CORE, database = db_order, fill = list(n = 0L)
     ) |>
     dplyr::mutate(
-      contrast  = factor(contrast, levels = CORE),
-      direction = factor(direction, levels = c("Up", "Down"))
+      contrast = factor(contrast, levels = CORE),
+      database = factor(database, levels = db_order)
     )
 
-  BAR_W <- 0.34
-  GAP <- 0.06
-  centers <- stats::setNames(seq_along(CORE), CORE)
-  bar_df <- bar_df |>
-    dplyr::mutate(
-      x_center = centers[as.character(contrast)] +
-        ifelse(direction == "Up", -(BAR_W / 2 + GAP / 2), (BAR_W / 2 + GAP / 2)),
-      key_total = paste(as.character(direction), "total"),
-      key_mito = paste(as.character(direction), "mito")
-    )
+  tot_df <- bar_df |>
+    dplyr::summarise(total = sum(n), .by = contrast) |>
+    dplyr::mutate(contrast = factor(contrast, levels = CORE))
 
-  # faint contrast-colour band behind each contrast's bars
   panel_bg <- tibble::tibble(
     contrast = factor(CORE, levels = CORE),
     fill     = unname(CONTRAST_COLORS[CORE])
   )
-  mito_df <- dplyr::filter(bar_df, mito > 0)
 
-  p <- ggplot2::ggplot() +
+  p <- ggplot2::ggplot(bar_df, ggplot2::aes(contrast, n, fill = database)) +
     ggplot2::geom_rect(
       data = panel_bg,
       ggplot2::aes(
         xmin = as.integer(contrast) - 0.5, xmax = as.integer(contrast) + 0.5,
         ymin = 0, ymax = Inf, fill = I(fill)
       ),
-      alpha = 0.16, color = "grey80", linewidth = 0.2
+      alpha = 0.1, inherit.aes = FALSE
     ) +
-    ggplot2::geom_rect(
-      data = bar_df,
-      ggplot2::aes(
-        xmin = x_center - BAR_W / 2, xmax = x_center + BAR_W / 2,
-        ymin = 0, ymax = total, fill = key_total
-      ),
-      color = "black", linewidth = 0.3
-    ) +
-    ggplot2::geom_rect(
-      data = mito_df,
-      ggplot2::aes(
-        xmin = x_center - BAR_W / 2, xmax = x_center + BAR_W / 2,
-        ymin = 0, ymax = mito, fill = key_mito
-      ),
-      color = "black", linewidth = 0.3
+    ggplot2::geom_col(
+      width = 0.78, color = "grey25", linewidth = 0.12,
+      position = ggplot2::position_stack(reverse = TRUE)
     ) +
     ggplot2::geom_text(
-      data = dplyr::filter(bar_df, total > 0),
-      ggplot2::aes(x = x_center, y = total, label = total),
-      vjust = -0.4, size = scale_text(BASE_COUNT, 60) + 0.6, fontface = "bold"
+      data = dplyr::filter(tot_df, total > 0),
+      ggplot2::aes(contrast, total, label = total),
+      inherit.aes = FALSE, vjust = -0.4, size = 2.3, fontface = "bold"
     ) +
     ggplot2::scale_fill_manual(
-      values = PATHWAY_KEYS, breaks = names(PATHWAY_KEYS), name = NULL,
-      guide = ggplot2::guide_legend(nrow = 2)
+      values = PATHWAY_DB_COLORS, breaks = db_order, name = NULL,
+      guide = ggplot2::guide_legend(ncol = 1)
     ) +
-    ggplot2::scale_x_continuous(
-      breaks = seq_along(CORE),
+    ggplot2::scale_x_discrete(
       labels = stats::setNames(gsub("_", "\n", contrast_brief(CORE)), CORE),
-      expand = ggplot2::expansion(mult = 0)
+      expand = ggplot2::expansion(add = 0.5)
     ) +
-    ggplot2::scale_y_sqrt(
-      expand = ggplot2::expansion(mult = c(0, 0.08)),
-      breaks = c(5, 25, 50, 100, 200, 300)
-    ) +
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.1))) +
     ggplot2::coord_cartesian(clip = "off") +
     ggplot2::labs(
-      title = "Pathway enrichment (Up / Down)",
-      subtitle = "5-DB pool · dark = mitochondrial subset · √-scaled",
+      title = "Pathway enrichment by database",
+      subtitle = "significant pathways stacked by source DB",
       x = NULL, y = "Significant pathways"
     ) +
     FIG_THEME +
@@ -146,12 +117,15 @@ build_pathway_bar_panel <- function() {
         size = FIG_AXIS_TEXT, lineheight = 0.85, face = "bold"
       ),
       panel.grid.major.x = ggplot2::element_blank(),
-      legend.position = "bottom",
-      legend.key.size = ggplot2::unit(2.2, "mm"),
-      legend.margin = ggplot2::margin(t = -2),
-      legend.box.spacing = ggplot2::unit(1, "pt"),
+      legend.position = c(0.99, 0.99),
+      legend.justification = c(1, 1),
+      legend.background = ggplot2::element_rect(
+        fill = scales::alpha("white", 0.75), color = NA
+      ),
+      legend.key.size = ggplot2::unit(2.4, "mm"),
+      legend.margin = ggplot2::margin(1, 2, 1, 1),
       plot.margin = ggplot2::margin(2, 4, 1, 2)
     )
 
-  list(plot = p, bar_df = bar_df, sig_pw = sig_pw, FILL_TOTAL = FILL_TOTAL, FILL_MITO = FILL_MITO)
+  list(plot = p, bar_df = bar_df, sig_pw = sig_pw, DB_COLORS = PATHWAY_DB_COLORS)
 }

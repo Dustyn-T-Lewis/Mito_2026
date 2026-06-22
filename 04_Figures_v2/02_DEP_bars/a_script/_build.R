@@ -175,10 +175,10 @@ build_dep_effect_panel <- function() {
       ggplot2::aes(x = -0.98, y = Inf, label = lab),
       inherit.aes = FALSE,
       hjust = 0, vjust = 1.0,
-      size = scale_text(BASE_STAT, 50) + 1.0,
+      size = scale_text(BASE_STAT, 50) + 0.3,
       fontface = "bold", color = "grey15",
       fill = scales::alpha("white", 0.8), label.size = 0,
-      label.padding = ggplot2::unit(0.4, "mm")
+      label.padding = ggplot2::unit(0.3, "mm")
     ) +
     ggplot2::facet_wrap(~contrast, ncol = 1, scales = "free_y", strip.position = "top") +
     ggplot2::scale_fill_manual(

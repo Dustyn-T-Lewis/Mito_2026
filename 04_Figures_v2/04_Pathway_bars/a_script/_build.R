@@ -82,7 +82,20 @@ build_pathway_bar_panel <- function() {
     ) |>
     dplyr::mutate(contrast = factor(contrast, levels = CORE))
 
+  panel_bg <- tibble::tibble(
+    contrast = factor(CORE, levels = CORE),
+    fill     = unname(CONTRAST_COLORS[CORE])
+  )
+
   p <- ggplot2::ggplot(bar_df, ggplot2::aes(contrast, y, fill = database)) +
+    ggplot2::geom_rect(
+      data = panel_bg,
+      ggplot2::aes(
+        xmin = as.integer(contrast) - 0.5, xmax = as.integer(contrast) + 0.5,
+        ymin = -Inf, ymax = Inf, fill = I(fill)
+      ),
+      alpha = 0.1, inherit.aes = FALSE
+    ) +
     ggplot2::geom_col(
       width = 0.74, color = "black", linewidth = 0.2,
       position = ggplot2::position_stack(reverse = TRUE)

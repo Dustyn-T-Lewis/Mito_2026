@@ -97,9 +97,7 @@ build_venn_panels <- function() {
     value  = c(eu_fit$stress, eu_fit$diagError)
   )
 
-  set_labels <- vapply(names(SET_CONTRASTS), function(s) {
-    sprintf("%s\n(%s)", s, contrast_brief(SET_CONTRASTS[[s]]))
-  }, character(1))
+  set_labels <- names(SET_CONTRASTS)
 
   venn_grob <- plot(
     eu_fit,
@@ -152,9 +150,10 @@ build_venn_panels <- function() {
   # wrap venn_grob as ggplot if ggplotify is available
   have_ggplotify <- requireNamespace("ggplotify", quietly = TRUE)
   sub_txt <- sprintf(
-    "Disease (%s) | Transplant (%s) | Rescue (%s)",
-    contrast_brief("CTLvPHE"), contrast_brief("CTLvMITO"),
-    contrast_brief("PHEvPHE_MITO")
+    "Disease: %s  |  Transplant: %s  |  Rescue: %s",
+    CONTRAST_MATH_BRIEF[["CTLvPHE"]],
+    CONTRAST_MATH_BRIEF[["CTLvMITO"]],
+    CONTRAST_MATH_BRIEF[["PHEvPHE_MITO"]]
   )
   if (have_ggplotify) {
     venn_gg <- ggplotify::as.ggplot(venn_grob) +

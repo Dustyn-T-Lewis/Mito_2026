@@ -36,9 +36,10 @@ if (have_ggplotify && have_patchwork) {
   # fallback: venn is still the raw grob from eulerr
   venn_grob <- venn
   sub_txt <- sprintf(
-    "Disease (%s) | Transplant (%s) | Rescue (%s)",
-    contrast_brief("CTLvPHE"), contrast_brief("CTLvMITO"),
-    contrast_brief("PHEvPHE_MITO")
+    "Disease: %s  |  Transplant: %s  |  Rescue: %s",
+    CONTRAST_MATH_BRIEF[["CTLvPHE"]],
+    CONTRAST_MATH_BRIEF[["CTLvMITO"]],
+    CONTRAST_MATH_BRIEF[["PHEvPHE_MITO"]]
   )
   pdf_dev(file.path(RPT_PDF, "MAIN_F03_venn.pdf"), width = 140 / 25.4, height = 100 / 25.4)
   grid::grid.newpage()

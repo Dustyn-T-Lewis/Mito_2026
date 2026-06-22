@@ -12,21 +12,42 @@ source(here::here("04_Figures_v2", "04_Pathway_bars", "a_script", "_build.R"))
 
 BASE <- here::here("04_Figures_v2", "07_Composites")
 
-# A: PCA (fills its cell so the top row aligns top and bottom)
-pca <- build_pca_panel()$plot
+# Panels — add_tag bakes the letter into each title for uniform spacing.
+# free() the PCA left side so its narrow y-axis isn't stretched to match the
+# wide contrast labels of the DEP-counts panel below it in the same column.
+pca <- patchwork::free(add_tag(build_pca_panel()$plot, "A"), side = "l")
 
-# B: DEP bars (clear baked tag)
-dep <- build_dep_count_panel() + ggplot2::labs(tag = NULL)
-
-# C: effect histogram (clear baked tag)
-eff <- build_dep_effect_panel() + ggplot2::labs(tag = NULL)
-
-# D: pathway bars
-pw <- build_pathway_bar_panel()$plot
-
-# E + F: Venn + direction strip
 venn <- build_venn_panels()
-venn$venn <- venn$venn + ggplot2::labs(subtitle = NULL)
+venn_gg <- add_tag(venn$venn, "B")
+strip <- add_tag(venn$strip, "C")
+
+# D: DEP counts + a small stringency key (light -> dark = p / FDR / Π), top-right
+dep_key_df <- tibble::tibble(
+  y = 3:1,
+  lab = c("p < 0.05", "FDR < 0.10", "Π < 0.05"),
+  a = c(0.18, 0.45, 1)
+)
+dep_key <- ggplot2::ggplot(dep_key_df) +
+  ggplot2::geom_tile(
+    ggplot2::aes(0, y),
+    width = 0.7, height = 0.78,
+    fill = "grey20", alpha = dep_key_df$a, color = "black", linewidth = 0.2
+  ) +
+  ggplot2::geom_text(
+    ggplot2::aes(0.5, y, label = lab),
+    hjust = 0, size = 1.5, color = "grey15"
+  ) +
+  ggplot2::scale_x_continuous(limits = c(-0.5, 3.4)) +
+  ggplot2::scale_y_continuous(limits = c(0.3, 3.7)) +
+  ggplot2::theme_void()
+dep <- add_tag(build_dep_count_panel(), "D") +
+  patchwork::inset_element(
+    dep_key,
+    left = 0.6, right = 0.995, top = 0.99, bottom = 0.72
+  )
+
+eff <- add_tag(build_dep_effect_panel(), "E")
+pw <- add_tag(build_pathway_bar_panel()$plot, "F")
 
 # Layout: square 178×178 like YvO F01.
 # Top row: PCA · Venn · direction strip. Bottom row: DEP counts · effect size · pathways.
@@ -35,12 +56,7 @@ AABBCC
 DDEEFF
 "
 
-fig <- add_tag(pca, "A") +
-  add_tag(venn$venn, "B") +
-  add_tag(venn$strip, "C") +
-  add_tag(dep, "D") +
-  add_tag(eff, "E") +
-  add_tag(pw, "F") +
+fig <- pca + venn_gg + strip + dep + eff + pw +
   patchwork::plot_layout(
     design  = design,
     widths  = c(1.05, 1.0, 1.0),

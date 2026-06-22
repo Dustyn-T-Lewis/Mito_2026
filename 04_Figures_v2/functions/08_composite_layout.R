@@ -5,13 +5,15 @@ source(here::here("04_Figures_v2", "functions", "01_style_palettes_theme.R"))
 
 library(patchwork)
 
+# Panel letter is baked into the title (constant gap to the title text, so all
+# panels read uniformly) rather than a free-floating tag whose offset tracks
+# each panel's y-axis width.
 add_tag <- function(p, tag) {
-  p + labs(tag = tag) +
-    theme(
-      plot.tag = element_text(face = "bold", size = BASE_TAG),
-      plot.tag.position = "topleft",
-      plot.tag.location = "margin"
-    )
+  cur <- p$labels$title
+  p + labs(
+    tag = NULL,
+    title = paste0(tag, "  ", if (is.null(cur)) "" else cur)
+  )
 }
 
 composite_caption <- function(text) {

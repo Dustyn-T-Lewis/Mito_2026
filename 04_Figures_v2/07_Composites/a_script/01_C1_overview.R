@@ -42,11 +42,10 @@ dep <- add_tag(build_dep_count_panel(), "B") +
 
 eff <- add_tag(build_dep_effect_panel(), "C")
 
-# free() the strip's left side so its narrow y-axis isn't stretched to match
-# the wide contrast labels of the DEP-counts panel above it in the same column.
+# Strip stays aligned with the DEP-counts panel above it (same column width).
 venn <- build_venn_panels()
 venn_gg <- add_tag(venn$venn, "D")
-strip <- patchwork::free(add_tag(venn$strip, "E"), side = "l")
+strip <- add_tag(venn$strip, "E")
 
 pw <- add_tag(build_pathway_bar_panel()$plot, "F")
 
@@ -76,5 +75,5 @@ fig <- pca + dep + eff + venn_gg + strip + pw +
     )
   )
 
-save_composite(fig, BASE, "MAIN_C1_overview", width_mm = PANEL_MD, height_mm = PANEL_MD)
+save_composite(fig, BASE, "MAIN_C1_overview", width_mm = PANEL_MD, height_mm = 150)
 message("C1 composite built")

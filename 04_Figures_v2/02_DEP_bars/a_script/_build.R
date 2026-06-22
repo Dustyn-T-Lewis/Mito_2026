@@ -3,12 +3,12 @@
 # Exposes: build_dep_count_panel(), build_dep_effect_panel(), dep_count_data().
 # Sourced by 01_main_panels.R — never run directly.
 
-# Narrative order: Disease first (H9C2_CONTRAST_ORDER)
+# Narrative order: Disease -> Transplant -> Rescue -> Interaction
 CORE <- H9C2_CONTRAST_ORDER
-ctr_levels <- role_label(CORE)
+CTR_LAB <- stats::setNames(contrast_brief(CORE), CORE)
+ctr_levels <- unname(CTR_LAB) # top-to-bottom narrative order
 
 THR_LEVELS <- c("p < 0.05", paste0("q < ", H9C2_FDR_EXPLOR), "Π < 0.05")
-ALPHAS <- c(0.30, 0.60, 1.00)
 
 # Load data once at source time so both builders share it.
 comb_long <- readr::read_csv(P05$comb, show_col_types = FALSE)
@@ -20,39 +20,26 @@ dep_results <- stats::setNames(
 comb <- load_combined_wide()
 n_total <- length(unique(comb$gene[!is.na(comb$gene)]))
 
-# ---- counts tibble -----------------------------------------------------------
-sig_flag <- function(r, thr) {
-  switch(thr,
-    "p"   = !is.na(r$P.Value) & r$P.Value < 0.05,
-    "fdr" = !is.na(r$adj.P.Val) & r$adj.P.Val < H9C2_FDR_EXPLOR,
-    "pi"  = !is.na(r$pi_score) & r$pi_score < H9C2_PI_THRESH
-  )
-}
-
+# ---- counts tibble (YvO frac_df style) ---------------------------------------
 .build_counts_df <- function() {
-  dplyr::bind_rows(lapply(CORE, function(c) {
-    r <- dep_results[[c]]
-    dplyr::bind_rows(lapply(c(p = "p", fdr = "fdr", pi = "pi"), function(thr) {
-      s <- sig_flag(r, thr)
-      up <- sum(s & r$logFC > 0, na.rm = TRUE)
-      dn <- sum(s & r$logFC < 0, na.rm = TRUE)
-      tibble::tibble(
-        contrast  = role_label(c),
-        threshold = thr,
-        direction = c("Up", "Down"),
-        n         = c(up, dn)
-      )
-    }), .id = NULL)
+  dplyr::bind_rows(lapply(CORE, function(ctr) {
+    r <- dep_results[[ctr]]
+    n_p <- sum(!is.na(r$P.Value) & r$P.Value < 0.05, na.rm = TRUE)
+    n_fdr <- sum(!is.na(r$adj.P.Val) & r$adj.P.Val < H9C2_FDR_EXPLOR, na.rm = TRUE)
+    n_pi <- sum(!is.na(r$pi_score) & r$pi_score < H9C2_PI_THRESH, na.rm = TRUE)
+    tibble::tibble(
+      contrast  = CTR_LAB[ctr],
+      threshold = THR_LEVELS,
+      n         = c(n_p, n_fdr, n_pi)
+    )
   })) |>
     dplyr::mutate(
-      threshold = dplyr::recode(threshold,
-        p = THR_LEVELS[1], fdr = THR_LEVELS[2], pi = THR_LEVELS[3]
-      ),
-      contrast = factor(contrast, levels = ctr_levels),
+      contrast  = factor(contrast, levels = rev(ctr_levels)), # rev for coord_flip
       threshold = factor(threshold, levels = THR_LEVELS),
-      direction = factor(direction, levels = c("Up", "Down")),
-      pct = 100 * n / n_total
-    )
+      pct       = 100 * n / n_total,
+      fill_key  = paste(as.character(contrast), threshold, sep = "___")
+    ) |>
+    dplyr::filter(n > 0)
 }
 
 counts_df_cache <- .build_counts_df()
@@ -60,115 +47,131 @@ counts_df_cache <- .build_counts_df()
 # ---- public: raw data for workbook ------------------------------------------
 dep_count_data <- function() counts_df_cache
 
-# ---- Panel A: DEP counts -----------------------------------------------------
+# ---- Panel A: DEP counts (horizontal nested-threshold) -----------------------
 build_dep_count_panel <- function() {
-  counts_df <- counts_df_cache
+  frac_df <- counts_df_cache
 
-  y_max <- max(counts_df$pct) * 1.12
+  # Contrast color map keyed on the rev-levelled factor labels
+  SET_COLS <- stats::setNames(unname(CONTRAST_COLORS[CORE]), unname(CTR_LAB))
+  # Nested fills: p = 18% alpha, FDR = 45% alpha, Pi = solid
+  FRAC_FILL <- c()
+  for (cn in names(SET_COLS)) {
+    col <- unname(SET_COLS[cn])
+    FRAC_FILL[paste(cn, THR_LEVELS[1], sep = "___")] <- grDevices::adjustcolor(col, alpha.f = 0.18)
+    FRAC_FILL[paste(cn, THR_LEVELS[2], sep = "___")] <- grDevices::adjustcolor(col, alpha.f = 0.45)
+    FRAC_FILL[paste(cn, THR_LEVELS[3], sep = "___")] <- col
+  }
 
-  # Threshold faint->solid key (neutral grey swatches, inset legend)
-  thr_key <- tibble::tibble(
-    y    = 3:1,
-    lab  = THR_LEVELS,
-    fill = vapply(ALPHAS, \(a) grDevices::adjustcolor("grey25", alpha.f = a), character(1))
+  THRESH_LAB <- stats::setNames(c("p", "FDR", "Π"), THR_LEVELS)
+
+  label_df <- frac_df |>
+    dplyr::arrange(contrast, threshold) |>
+    dplyr::mutate(
+      next_pct = dplyr::lead(pct, default = 0),
+      seg      = pct - next_pct,
+      label_y  = (next_pct + pct) / 2,
+      label    = THRESH_LAB[as.character(threshold)],
+      text_col = dplyr::if_else(threshold == THR_LEVELS[1], "grey20", "white"),
+      .by      = contrast
+    ) |>
+    dplyr::filter(seg > 1.0)
+
+  # Background rect strip per contrast
+  panel_bg <- tibble::tibble(
+    contrast = factor(unname(CTR_LAB), levels = rev(ctr_levels)),
+    fill     = unname(CONTRAST_COLORS[CORE])
   )
-  p_thrkey <- ggplot2::ggplot(thr_key) +
-    ggplot2::geom_point(ggplot2::aes(0, y),
-      shape = 22, size = 2,
-      fill = thr_key$fill, color = "grey40", stroke = 0.3
-    ) +
-    ggplot2::geom_text(ggplot2::aes(0.25, y, label = lab),
-      hjust = 0, size = 1.5, color = "grey20"
-    ) +
-    ggplot2::scale_x_continuous(limits = c(-0.2, 2.4)) +
-    ggplot2::scale_y_continuous(limits = c(0.4, 3.6)) +
-    ggplot2::theme_void()
 
-  p_counts <- ggplot2::ggplot(
-    counts_df,
-    ggplot2::aes(
-      x     = contrast,
-      y     = pct,
-      fill  = direction,
-      alpha = threshold,
-      group = interaction(direction, threshold)
-    )
-  ) +
+  x_max <- max(frac_df$pct, na.rm = TRUE)
+  x_lim_top <- max(22, x_max * 1.08)
+
+  ggplot2::ggplot(frac_df, ggplot2::aes(contrast, pct, fill = fill_key)) +
+    ggplot2::geom_rect(
+      data = panel_bg,
+      ggplot2::aes(
+        xmin = as.integer(contrast) - 0.5,
+        xmax = as.integer(contrast) + 0.5,
+        ymin = -Inf, ymax = Inf,
+        fill = I(fill)
+      ),
+      alpha = 0.16, inherit.aes = FALSE
+    ) +
     ggplot2::geom_col(
-      position  = ggplot2::position_dodge2(width = 0.9, padding = 0.1),
-      color     = "grey20",
-      linewidth = 0.2
+      position  = "identity",
+      width     = 0.86,
+      color     = "black",
+      linewidth = 0.3
     ) +
-    ggplot2::geom_vline(
-      xintercept = head(seq_along(ctr_levels), -1) + 0.5,
-      color = "grey85", linewidth = 0.25
+    ggplot2::geom_text(
+      data = label_df,
+      ggplot2::aes(contrast, label_y, label = label, color = I(text_col)),
+      inherit.aes = FALSE,
+      hjust = 0.5,
+      size = scale_text(BASE_COUNT, 60) + 1.0,
+      fontface = "bold"
     ) +
-    ggplot2::scale_fill_manual(
-      values = DIR_COLORS[c("Up", "Down")],
-      name   = NULL
-    ) +
-    ggplot2::scale_alpha_manual(
-      values = stats::setNames(ALPHAS, levels(counts_df$threshold)),
-      name   = NULL,
-      guide  = "none"
-    ) +
-    ggplot2::scale_x_discrete(expand = ggplot2::expansion(add = 0.6)) +
+    ggplot2::scale_fill_manual(values = FRAC_FILL) +
     ggplot2::scale_y_continuous(
-      limits = c(0, y_max),
+      breaks = c(0, 5, 10, 20),
+      limits = c(0, x_lim_top),
       expand = ggplot2::expansion(mult = c(0, 0.02))
     ) +
+    ggplot2::coord_flip() +
     ggplot2::labs(
-      title = "DEP counts by contrast",
-      subtitle = "Up / Down dodged; p / FDR / Π faint→solid (independent thresholds)",
+      title = "DEP counts",
+      subtitle = "n at p / FDR / Π (independent thresholds)",
       x = NULL, y = "% of proteome", tag = "A"
     ) +
     FIG_THEME +
     ggplot2::theme(
-      legend.position = c(0.99, 0.97),
-      legend.justification = c(1, 1),
-      legend.background = ggplot2::element_rect(
-        fill = scales::alpha("white", 0.7), color = NA
-      ),
-      legend.key.size = ggplot2::unit(2.5, "mm"),
+      legend.position = "none",
       plot.subtitle = ggplot2::element_text(
         size = FIG_SUBTITLE_SIZE, face = "italic", color = "grey40"
       ),
-      axis.text.x = ggplot2::element_text(face = "bold", size = FIG_AXIS_TEXT),
-      panel.grid.major.x = ggplot2::element_blank(),
-      plot.margin = ggplot2::margin(5, 3, 1, 2)
-    ) +
-    patchwork::inset_element(p_thrkey,
-      left = 0.62, right = 0.99,
-      top = 0.78, bottom = 0.52
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      panel.grid.major.y = ggplot2::element_blank(),
+      plot.margin = ggplot2::margin(5, 0, 1, 2)
     )
-
-  p_counts
 }
 
-# ---- Panel B: effect-size companion ------------------------------------------
+# ---- Panel B: effect-size companion (contrast-colored) -----------------------
 build_dep_effect_panel <- function() {
-  # Plot window: ±1; median computed on ALL logFC (no window filter in summarise)
-  lfc_long <- dplyr::bind_rows(lapply(CORE, \(c)
-  tibble::tibble(contrast = role_label(c), logFC = dep_results[[c]]$logFC))) |>
+  # All logFC (no window filter) for the median stat
+  lfc_long_all <- dplyr::bind_rows(lapply(CORE, \(c)
+  tibble::tibble(contrast = CTR_LAB[c], logFC = dep_results[[c]]$logFC))) |>
     dplyr::filter(!is.na(logFC)) |>
     dplyr::mutate(contrast = factor(contrast, levels = ctr_levels))
 
-  # Median over ALL proteins (unfiltered), then restrict plotting window
-  lfc_stats <- lfc_long |>
+  # Median over ALL proteins; label clarifies scope
+  lfc_stats <- lfc_long_all |>
     dplyr::summarise(med_abs = median(abs(logFC), na.rm = TRUE), .by = contrast) |>
     dplyr::mutate(lab = sprintf("median |log2FC| %.2f (all)", med_abs))
 
-  lfc_plot <- lfc_long |> dplyr::filter(abs(logFC) <= 1)
+  # Histogram restricted to ±1 window
+  lfc_plot <- dplyr::filter(lfc_long_all, abs(logFC) <= 1)
 
   hbw <- 2 / 44
 
-  p_eff <- ggplot2::ggplot(lfc_plot, ggplot2::aes(logFC)) +
+  # Background rects per facet (contrast-colored)
+  hist_bg <- tibble::tibble(
+    contrast = factor(unname(CTR_LAB), levels = ctr_levels),
+    fill     = unname(CONTRAST_COLORS[CORE])
+  )
+
+  ggplot2::ggplot(lfc_plot, ggplot2::aes(logFC)) +
+    ggplot2::geom_rect(
+      data = hist_bg,
+      ggplot2::aes(xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, fill = I(fill)),
+      alpha = 0.16, inherit.aes = FALSE
+    ) +
     ggplot2::geom_vline(xintercept = 0, linewidth = 0.25, color = "grey55") +
     ggplot2::geom_histogram(
-      breaks    = seq(-1, 1, by = hbw),
-      fill      = "grey75",
-      color     = "white",
-      linewidth = 0.1
+      ggplot2::aes(fill = contrast),
+      breaks = seq(-1, 1, by = hbw),
+      color = "white",
+      linewidth = 0.1,
+      alpha = 0.85
     ) +
     ggplot2::geom_density(
       ggplot2::aes(y = ggplot2::after_stat(count) * hbw),
@@ -179,37 +182,32 @@ build_dep_effect_panel <- function() {
       ggplot2::aes(x = -0.95, y = Inf, label = lab),
       inherit.aes = FALSE,
       hjust = 0, vjust = 1.4,
-      size = scale_text(BASE_STAT, 50) + 0.3,
+      size = scale_text(BASE_STAT, 50) + 0.5,
       fontface = "bold",
       color = "grey25"
     ) +
-    ggplot2::facet_wrap(~contrast,
-      ncol = 1, scales = "free_y",
-      strip.position = "right"
+    ggplot2::facet_wrap(~contrast, ncol = 1, scales = "free_y", strip.position = "top") +
+    ggplot2::scale_fill_manual(
+      values = stats::setNames(unname(CONTRAST_COLORS[CORE]), unname(CTR_LAB)),
+      guide  = "none"
     ) +
     ggplot2::scale_x_continuous(breaks = c(-1, 0, 1)) +
     ggplot2::scale_y_continuous(breaks = NULL) +
     ggplot2::labs(
       title = "Effect size",
-      subtitle = "signed log2FC (±1 shown); median over all proteins",
-      x = expression(bold(log[2] ~ FC)), y = NULL, tag = "B"
+      x     = expression(bold(log[2] ~ FC)),
+      y     = NULL,
+      tag   = "B"
     ) +
     FIG_THEME +
     ggplot2::theme(
-      strip.text.y = ggplot2::element_text(
-        face = "bold", size = FIG_STRIP_SIZE - 0.5, angle = 0
-      ),
-      strip.background = ggplot2::element_blank(),
-      plot.subtitle = ggplot2::element_text(
-        size = FIG_SUBTITLE_SIZE, face = "italic", color = "grey40"
-      ),
-      axis.text.y = ggplot2::element_blank(),
-      axis.ticks.y = ggplot2::element_blank(),
-      axis.text.x = ggplot2::element_text(size = FIG_AXIS_TEXT),
-      panel.grid = ggplot2::element_blank(),
-      panel.spacing.y = ggplot2::unit(1.5, "pt"),
-      plot.margin = ggplot2::margin(5, 2, 1, 1)
+      strip.text          = ggplot2::element_blank(),
+      strip.background    = ggplot2::element_blank(),
+      axis.text.y         = ggplot2::element_blank(),
+      axis.ticks.y        = ggplot2::element_blank(),
+      axis.text.x         = ggplot2::element_text(size = FIG_AXIS_TEXT),
+      panel.grid          = ggplot2::element_blank(),
+      panel.spacing.y     = ggplot2::unit(1.5, "pt"),
+      plot.margin         = ggplot2::margin(5, 2, 1, 0)
     )
-
-  p_eff
 }

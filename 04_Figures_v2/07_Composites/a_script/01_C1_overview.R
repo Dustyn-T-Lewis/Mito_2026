@@ -15,31 +15,27 @@ BASE <- here::here("04_Figures_v2", "07_Composites")
 # Panels — add_tag bakes the letter into each title for uniform spacing.
 pca <- add_tag(build_pca_panel()$plot, "A")
 
-# B: DEP counts + a horizontal stringency key (each term boxed + shaded
-# light -> dark = p / FDR / Π), tucked into the bottom-right of the panel.
+# B: DEP counts + a stringency key — terms boxed tight and shaded, ordered
+# dark -> light (Π / FDR / p) to read parallel with the bars, bottom-right.
 dep_key_df <- tibble::tibble(
-  x = 1:3,
-  lab = c("p < 0.05", "FDR < 0.10", "Π < 0.05"),
-  a = c(0.18, 0.45, 1),
-  txt = c("grey15", "grey15", "white")
+  x = c(1, 2.15, 3.2),
+  lab = c("Π < 0.05", "FDR < 0.10", "p < 0.05"),
+  a = c(1, 0.45, 0.18),
+  txt = c("white", "grey15", "grey15")
 )
 dep_key <- ggplot2::ggplot(dep_key_df) +
-  ggplot2::geom_tile(
-    ggplot2::aes(x, 0),
-    width = 1, height = 1,
-    fill = "grey20", alpha = dep_key_df$a, color = "black", linewidth = 0.25
+  ggplot2::geom_label(
+    ggplot2::aes(x, 0, label = lab, alpha = a, color = I(txt)),
+    fill = "grey20", size = 1.8, fontface = "bold",
+    label.padding = ggplot2::unit(0.5, "mm"), label.size = 0.25
   ) +
-  ggplot2::geom_text(
-    ggplot2::aes(x, 0, label = lab, color = I(txt)),
-    size = 1.35, fontface = "bold"
-  ) +
-  ggplot2::scale_x_continuous(expand = ggplot2::expansion(add = 0.02)) +
-  ggplot2::scale_y_continuous(expand = ggplot2::expansion(add = 0.02)) +
+  ggplot2::scale_alpha_identity() +
+  ggplot2::scale_x_continuous(expand = ggplot2::expansion(add = 0.4)) +
   ggplot2::theme_void()
 dep <- add_tag(build_dep_count_panel(), "B") +
   patchwork::inset_element(
     dep_key,
-    left = 0.46, right = 1.0, top = 0.17, bottom = 0.02
+    left = 0.4, right = 1.0, top = 0.16, bottom = 0.02
   )
 
 eff <- add_tag(build_dep_effect_panel(), "C")
@@ -65,7 +61,7 @@ DDEEFF
 fig <- pca + dep + eff + venn_gg + strip + pw +
   patchwork::plot_layout(
     design  = design,
-    widths  = c(1.45, 0.95, 0.85),
+    widths  = c(1.0, 1.0, 1.0),
     heights = c(1.0, 1.0)
   )
 

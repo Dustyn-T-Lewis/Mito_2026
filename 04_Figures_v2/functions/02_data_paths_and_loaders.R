@@ -6,25 +6,25 @@
 # fgsea cache, localization table) are still read single-sourced from
 # 04_Figures/shared so they never drift; only the engine CODE lives here.
 
-source(here::here("04_Figures_v2", "functions", "01_style_palettes_theme.R"))   # palettes, groups, contrasts, thresholds
+source(here::here("04_Figures_v2", "functions", "01_style_palettes_theme.R")) # palettes, groups, contrasts, thresholds
 
 # Brief contrast naming
 # The limma model is already fit; 03_combined_results.csv carries 5 contrasts
 # under the OLD names. Map them to the brief's names for display; algebra identical.
 CONTRAST_DISPLAY_MAP <- c(
-  CTLvMITO      = "Transplant_Mito",      # Mito - Ctl       (transplant in healthy cells)
-  CTLvPHE       = "Disease_Phe",          # PHE - Ctl        (α1-adrenergic hypertrophy proxy)
-  PHEvPHE_MITO  = "Rescue_Mito+Phe",      # PHE_Mito - PHE   (transplant under disease)
-  Interaction   = "Interaction_Mito",     # canonical orthogonal 2x2 interaction
-  MITOvPHE_MITO = "Secondary_PheInMito"   # PHE_Mito - Mito  (PHE effect in transplanted cells)
+  CTLvMITO      = "Transplant", # Mito - Ctl
+  CTLvPHE       = "Disease", # PHE - Ctl
+  PHEvPHE_MITO  = "Rescue", # PHE_Mito - PHE
+  Interaction   = "Interaction", # orthogonal 2x2
+  MITOvPHE_MITO = "Secondary" # PHE_Mito - Mito
 )
 
 # Verbatim math labels (Unicode minus U+2212) keyed by OLD name.
 CONTRAST_MATH_BRIEF <- c(
-  CTLvMITO      = "Mito − Ctl",
-  CTLvPHE       = "PHE − Ctl",
-  PHEvPHE_MITO  = "PHE_Mito − PHE",
-  Interaction   = "(PHE_Mito − Mito) − (PHE − Ctl)",
+  CTLvMITO = "Mito − Ctl",
+  CTLvPHE = "PHE − Ctl",
+  PHEvPHE_MITO = "PHE_Mito − PHE",
+  Interaction = "(PHE_Mito − Mito) − (PHE − Ctl)",
   MITOvPHE_MITO = "PHE_Mito − Mito",
   Interaction_Phe = "PHE_Mito − 2·Mito + Ctl"
 )
@@ -34,6 +34,9 @@ contrast_brief <- function(old_name) {
   out <- CONTRAST_DISPLAY_MAP[old_name]
   ifelse(is.na(out), old_name, unname(out))
 }
+
+# Role name for a contrast (Disease / Transplant / Rescue / Interaction / Secondary).
+role_label <- contrast_brief
 
 fig05_base <- function(fig) here::here("04_Figures", fig)
 
@@ -58,22 +61,24 @@ load_combined_wide <- function(path = P05$comb) {
       id_cols     = c(uniprot_id, gene, protein, description),
       names_from  = contrast,
       values_from = c(logFC, t, P.Value, adj.P.Val, pi_score, sig_pi),
-      names_glue  = "{.value}_{contrast}")
+      names_glue  = "{.value}_{contrast}"
+    )
 }
 
 # Print + return a tidy contrast table (sanity check on source-time).
 fig05_contrast_table <- function() {
   old <- names(CONTRAST_DISPLAY_MAP)
   data.frame(
-    old_name   = old,
+    old_name = old,
     brief_name = unname(CONTRAST_DISPLAY_MAP[old]),
     definition = unname(CONTRAST_MATH_BRIEF[old]),
-    role       = unname(H9C2_CONTRAST_ROLES[old]),
+    role = unname(H9C2_CONTRAST_ROLES[old]),
     inferential = TRUE,
     row.names = NULL, stringsAsFactors = FALSE
   ) |>
     rbind(data.frame(
       old_name = "(derived)", brief_name = "Interaction_Phe",
       definition = unname(CONTRAST_MATH_BRIEF["Interaction_Phe"]),
-      role = "Exploratory", inferential = FALSE, stringsAsFactors = FALSE))
+      role = "Exploratory", inferential = FALSE, stringsAsFactors = FALSE
+    ))
 }

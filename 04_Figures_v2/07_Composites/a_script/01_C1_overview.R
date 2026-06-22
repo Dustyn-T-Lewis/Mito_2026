@@ -12,9 +12,8 @@ source(here::here("04_Figures_v2", "04_Pathway_bars", "a_script", "_build.R"))
 
 BASE <- here::here("04_Figures_v2", "07_Composites")
 
-# A: PCA (square)
-pca <- build_pca_panel()$plot +
-  ggplot2::theme(aspect.ratio = 1)
+# A: PCA (fills its cell so the top row aligns top and bottom)
+pca <- build_pca_panel()$plot
 
 # B: DEP bars (clear baked tag)
 dep <- build_dep_count_panel() + ggplot2::labs(tag = NULL)

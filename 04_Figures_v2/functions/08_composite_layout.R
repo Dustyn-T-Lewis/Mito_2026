@@ -9,7 +9,8 @@ add_tag <- function(p, tag) {
   p + labs(tag = tag) +
     theme(
       plot.tag = element_text(face = "bold", size = BASE_TAG),
-      plot.tag.position = c(0.01, 0.99)
+      plot.tag.position = "topleft",
+      plot.tag.location = "margin"
     )
 }
 

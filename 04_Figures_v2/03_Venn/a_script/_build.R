@@ -155,10 +155,14 @@ build_venn_panels <- function() {
     labs(title = "Direction within set", x = NULL, y = "Proteins (Π < 0.05)") +
     FIG_THEME +
     theme(
-      axis.text.x     = element_text(angle = 30, hjust = 1, size = FIG_AXIS_TEXT),
-      legend.position = "top",
+      axis.text.x = element_text(angle = 30, hjust = 1, size = FIG_AXIS_TEXT),
+      legend.position = c(0.01, 0.99),
+      legend.justification = c(0, 1),
+      legend.direction = "horizontal",
+      legend.background = element_rect(fill = alpha("white", 0.7), color = NA),
       legend.key.size = unit(2.5, "mm"),
-      plot.margin     = margin(3, 2, 1, 1)
+      legend.margin = margin(1, 1, 1, 1),
+      plot.margin = margin(3, 2, 1, 1)
     )
 
   # wrap venn_grob as ggplot if ggplotify is available

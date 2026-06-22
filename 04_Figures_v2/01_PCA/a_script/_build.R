@@ -111,12 +111,13 @@ build_pca_panel <- function() {
     ) +
     FIG_THEME +
     theme(
-      legend.position = "bottom",
-      legend.justification = "center",
-      legend.key = element_blank(), legend.key.size = unit(2.8, "mm"),
-      legend.margin = margin(t = -1, b = 0),
-      legend.box.spacing = unit(1, "pt"),
-      plot.margin = margin(4, 3, 1, 2)
+      legend.position = c(0.5, 0.01),
+      legend.justification = c(0.5, 0),
+      legend.direction = "horizontal",
+      legend.background = element_rect(fill = alpha("white", 0.7), color = NA),
+      legend.key = element_blank(), legend.key.size = unit(2.6, "mm"),
+      legend.margin = margin(1, 1, 1, 1),
+      plot.margin = margin(4, 3, 2, 2)
     )
 
   list(plot = p, scores = pca_df, permanova = permanova_out)

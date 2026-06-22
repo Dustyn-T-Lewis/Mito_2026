@@ -70,9 +70,14 @@ fig <- pca + venn_gg + strip + dep + eff + pw +
       "Significance Π < 0.05 (Xiao 2014). Up = red, Down = blue."
     ),
     theme = ggplot2::theme(
-      plot.title = ggplot2::element_text(face = "bold", size = 7),
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      plot.title = ggplot2::element_text(
+        face = "bold", size = 7, hjust = 0, margin = ggplot2::margin(l = 0, b = 1)
+      ),
       plot.subtitle = ggplot2::element_text(
-        face = "italic", size = 5, color = "grey30"
+        face = "italic", size = 5, color = "grey30",
+        hjust = 0, margin = ggplot2::margin(l = 0)
       ),
       plot.caption = ggplot2::element_text(
         size = 5, color = "grey35", hjust = 0, lineheight = 1.1

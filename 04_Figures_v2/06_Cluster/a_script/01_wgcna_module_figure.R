@@ -257,10 +257,18 @@ hub_sig <- readr::read_csv(P05$comb, show_col_types = FALSE) |>
   group_by(gene) |>
   summarise(min_fdr = min(adj.P.Val, na.rm = TRUE), .groups = "drop") |>
   mutate(neglfdr = -log10(pmax(min_fdr, 1e-6)))
-hub_layout <- w$hubs |>
+# Rank from the full kME matrix, not the saved top-5, so proteins lacking an
+# official rat symbol (gene falls back to an Ensembl ID for 11/4806) drop out
+# and each module keeps its top-5 symbol-named hubs.
+hub_layout <- as.data.frame(w$kME) |>
+  tibble::rownames_to_column("uniprot_id") |>
+  tidyr::pivot_longer(-uniprot_id, names_to = "module", values_to = "kME") |>
+  mutate(module = sub("^kME_", "", module)) |>
   filter(module %in% non_grey) |>
+  left_join(distinct(w$ann, uniprot_id, gene), by = "uniprot_id") |>
+  filter(!is.na(gene), nzchar(gene), !grepl("^ENS", gene)) |>
   group_by(module) |>
-  arrange(desc(abs(kME))) |>
+  arrange(desc(abs(kME)), .by_group = TRUE) |>
   slice_head(n = 5) |>
   mutate(rank = row_number()) |>
   ungroup() |>

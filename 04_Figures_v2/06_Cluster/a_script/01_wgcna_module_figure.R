@@ -24,8 +24,6 @@ suppressPackageStartupMessages({
 source(here::here("04_Figures_v2", "functions", "01_style_palettes_theme.R"))
 source(here::here("04_Figures_v2", "functions", "02_data_paths_and_loaders.R"))
 source(here::here("04_Figures_v2", "functions", "03_pathway_enrichment_dedup_ora.R"))
-source(here::here("04_Figures_v2", "functions", "03a_dedup_engine.R"))
-source(here::here("04_Figures_v2", "functions", "03b_enrichment_runners.R"))
 
 BASE <- here::here("04_Figures_v2", "06_Cluster")
 MAIN_PNG <- file.path(BASE, "b_reports", "main", "png")

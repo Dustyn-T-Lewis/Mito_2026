@@ -67,7 +67,6 @@ grid <- volcano_ring_grid(
   term_col = "pathway", nes_col = "NES", size_col = "size",
   genes_col = "leadingEdge", genes_sep = ";",
   p_threshold = 0.05, logfc_threshold = log2(1.5),
-  volcano_radius = 4.2,
   label_size = 2.7, point_size = 2.2, point_alpha = 0.7,
   count_x_mult = 0.55, count_y_mult = 0.55,
   theme = volcano_ring_theme(base_size = 13)

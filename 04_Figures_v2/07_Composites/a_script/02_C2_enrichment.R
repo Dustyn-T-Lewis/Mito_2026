@@ -67,14 +67,28 @@ grid <- volcano_ring_grid(
   term_col = "pathway", nes_col = "NES", size_col = "size",
   genes_col = "leadingEdge", genes_sep = ";",
   p_threshold = 0.05, logfc_threshold = log2(1.5),
+  volcano_radius = 4.2,
   label_size = 2.7, point_size = 2.2, point_alpha = 0.7,
   count_x_mult = 0.55, count_y_mult = 0.55,
   theme = volcano_ring_theme(base_size = 13)
 )
 
-# Large square canvas so the 2x2 reads clearly at print size.
+# Pull the four rings together: trim per-panel margins and move the shared
+# NES bar to the bottom as a horizontal strip so the panels fill the canvas
+# instead of floating in white space.
+fig <- grid$plot &
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.key.width = ggplot2::unit(18, "mm"),
+    legend.key.height = ggplot2::unit(3, "mm"),
+    plot.margin = ggplot2::margin(1, 1, 1, 1, "mm")
+  )
+fig <- fig & ggplot2::guides(
+  fill = ggplot2::guide_colorbar(direction = "horizontal", title.position = "top")
+)
+
 ggplot2::ggsave(
-  file.path(OUT, "MAIN_C2_enrichment.png"), grid$plot,
-  width = 240, height = 240, units = "mm", dpi = 300, limitsize = FALSE
+  file.path(OUT, "MAIN_C2_enrichment.png"), fig,
+  width = 220, height = 230, units = "mm", dpi = 300, limitsize = FALSE
 )
 message("C2 enrichment composite built")

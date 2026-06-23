@@ -32,7 +32,7 @@ Spine = **Disease → Rescue reversal**.
   04_Pathway_bars/            Panel-D pathway counts, stacked by source database (5 DBs)
   05_Enrich_Volcano/          per-contrast volcano-in-ring panels + NES legend
   06_Cluster/                 WGCNA module figure: counts · eigengene heatmap · trajectory · ORA
-  07_Composites/              C1 (6-panel overview) and C2 (3 enrichment rings + NES legend)
+  07_Composites/              C1 (6-panel overview) and C2 (2x2 of 4 enrichment rings)
   BUILD_PROMPT.md             full regeneration spec for an agent
   README.md                   this file
 ```
@@ -54,9 +54,10 @@ Composites write to:
 07_Composites/
   a_script/01_C1_overview.R          6-panel overview (A=PCA, B=DEP bars, C=histogram,
                                       D=pathway bars, E=Venn, F=direction strip)
-  a_script/02_C2_enrichment.R        3 enrichment rings (A=Disease, B=Transplant, C=Rescue)
-                                      + NES legend inset into A
+  a_script/02_C2_enrichment.R        2x2 of 4 enrichment rings (Disease, Transplant,
+                                      Rescue, Interaction) via enrichVolcano; shared NES legend
   b_reports/main/png/                MAIN_C1_overview.png, MAIN_C2_enrichment.png
+  b_reports/panels/                  C1 panels saved standalone (panel_a_pca ... panel_f_pathway)
 ```
 
 ## functions/ — shared engines (pipeline order)

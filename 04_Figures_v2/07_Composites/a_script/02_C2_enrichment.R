@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
-# C2 (package variant) — the four enrichment rings (Disease / Transplant /
-# Rescue / Interaction) drawn by enrichVolcano::volcano_ring_grid() instead of
-# the in-suite builder, fed the same tidy DE + fgsea tables. Parallel to
-# 02_C2_enrichment.R for comparison; writes MAIN_C2_pkg_enrichment.png.
+# C2 enrichment — the four contrast rings (Disease / Transplant / Rescue /
+# Interaction) as a 2x2, drawn by enrichVolcano::volcano_ring_grid() from the
+# reported DE table (pi_score for the volcano) and the fgsea cache (NES arcs,
+# deduped across the 5-DB lens). Writes MAIN_C2_enrichment.png.
 
 suppressPackageStartupMessages({
   library(here)
@@ -74,7 +74,7 @@ grid <- volcano_ring_grid(
 
 # Large square canvas so the 2x2 reads clearly at print size.
 ggplot2::ggsave(
-  file.path(OUT, "MAIN_C2_pkg_enrichment.png"), grid$plot,
+  file.path(OUT, "MAIN_C2_enrichment.png"), grid$plot,
   width = 240, height = 240, units = "mm", dpi = 300, limitsize = FALSE
 )
-message("C2 (package) composite built")
+message("C2 enrichment composite built")

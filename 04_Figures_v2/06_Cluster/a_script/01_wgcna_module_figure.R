@@ -257,40 +257,94 @@ hub_sig <- readr::read_csv(P05$comb, show_col_types = FALSE) |>
   group_by(gene) |>
   summarise(min_fdr = min(adj.P.Val, na.rm = TRUE), .groups = "drop") |>
   mutate(neglfdr = -log10(pmax(min_fdr, 1e-6)))
-# Rank from the full kME matrix, not the saved top-5, so proteins lacking an
-# official rat symbol (gene falls back to an Ensembl ID for 11/4806) drop out
-# and each module keeps its top-5 symbol-named hubs.
-hub_layout <- as.data.frame(w$kME) |>
+# Nodes = each module's top hubs by (positive) kME, symbol-named — proteins
+# lacking an official rat symbol (gene falls back to an Ensembl ID for 11/4806)
+# drop out. Positive kME keeps true signed-module hubs that co-express in one
+# direction, so the arcs read as one coherent cluster.
+HUB_N <- 6L
+EDGE_MIN <- 0.5 # show only genuinely co-expressed hub pairs
+ARC_H <- 0.34 # arc height stays inside the row band (< 0.5)
+expr <- readRDS(P05$imp_rds)$data # proteins x samples, for hub co-expression
+hub_nodes <- as.data.frame(w$kME) |>
   tibble::rownames_to_column("uniprot_id") |>
   tidyr::pivot_longer(-uniprot_id, names_to = "module", values_to = "kME") |>
   mutate(module = sub("^kME_", "", module)) |>
   filter(module %in% non_grey) |>
   left_join(distinct(w$ann, uniprot_id, gene), by = "uniprot_id") |>
-  filter(!is.na(gene), nzchar(gene), !grepl("^ENS", gene)) |>
+  # Keep only real gene symbols: drop the 30/4806 proteins whose `gene` falls
+  # back to an Ensembl ID or a UniProt accession (no official rat symbol).
+  filter(
+    !is.na(gene), nzchar(gene), !grepl("^ENS", gene),
+    !grepl("^[A-Z][0-9][A-Z0-9]{3}[0-9]([A-Z0-9]{4})?$", gene)
+  ) |>
   group_by(module) |>
-  arrange(desc(abs(kME)), .by_group = TRUE) |>
-  slice_head(n = 5) |>
+  arrange(desc(kME), .by_group = TRUE) |>
+  slice_head(n = HUB_N) |>
   mutate(rank = row_number()) |>
   ungroup() |>
   left_join(hub_sig, by = "gene") |>
   mutate(
+    label = sub("[.].*$", "", gene), # primary symbol for ambiguous joins (a.b -> a)
     mod_idx = idx_of(module),
-    ny = mod_idx + (3 - rank) * 0.18, # rank-1 (top hub) at the top of the band
-    face = ifelse(rank == 1, "bold", "plain"),
+    nx = (rank - 0.5) / HUB_N, # hubs spread evenly across the column
+    ny = mod_idx, # baseline at the band centre
     neglfdr = ifelse(is.na(neglfdr), 0, neglfdr)
   )
-p_hub <- ggplot(hub_layout) +
+
+# k-nearest co-expression backbone: each hub links to its 2 most-correlated
+# peers, kept above EDGE_MIN. Bounded semicircle arcs keep edges inside the band.
+arc_for_module <- function(d) {
+  if (nrow(d) < 2) {
+    return(NULL)
+  }
+  r <- stats::cor(t(expr[d$uniprot_id, , drop = FALSE]))
+  diag(r) <- NA_real_
+  k <- min(2L, nrow(d) - 1L)
+  links <- do.call(rbind, lapply(seq_len(nrow(d)), function(i) {
+    j <- order(r[i, ], decreasing = TRUE)[seq_len(k)]
+    cbind(pmin(i, j), pmax(i, j), r[cbind(i, j)])
+  }))
+  links <- unique(links)
+  links <- links[links[, 3] >= EDGE_MIN, , drop = FALSE]
+  if (nrow(links) == 0) {
+    return(NULL)
+  }
+  tibble::tibble(
+    edge_id = paste(d$module[1], seq_len(nrow(links)), sep = "_"),
+    x1 = d$nx[links[, 1]], x2 = d$nx[links[, 2]],
+    y0 = d$ny[1], r = links[, 3]
+  )
+}
+edges <- bind_rows(lapply(split(hub_nodes, hub_nodes$module), arc_for_module))
+arc_paths <- tidyr::expand_grid(edges, t = seq(0, 1, length.out = 24)) |>
+  mutate(
+    x = x1 + t * (x2 - x1),
+    y = y0 + ARC_H * abs(x2 - x1) * sin(pi * t)
+  )
+
+p_hub <- ggplot(hub_nodes) +
   module_rows() +
   ROW_LINES +
-  geom_point(aes(0.05, ny, fill = neglfdr), shape = 21, size = 1.3, color = "grey40", stroke = 0.2) +
-  geom_text(aes(0.12, ny, label = gene, fontface = face), hjust = 0, vjust = 0.5, size = 1.4, color = "grey15") +
+  geom_path(
+    data = arc_paths, aes(x, y, group = edge_id, alpha = r, linewidth = r),
+    color = "grey45", lineend = "round"
+  ) +
+  geom_point(aes(nx, ny, fill = neglfdr, size = kME),
+    shape = 21, color = "grey30", stroke = 0.2
+  ) +
+  geom_text(aes(nx, ny - 0.3, label = label),
+    size = 1.1, color = "grey15", vjust = 1
+  ) +
   scale_fill_gradient(
     low = "grey90", high = "#B2182B", name = "hub −log10 FDR",
     guide = guide_colorbar(barwidth = 5, barheight = 0.4, title.position = "top", title.hjust = 0.5)
   ) +
+  scale_alpha(range = c(0.25, 0.9), guide = "none") +
+  scale_linewidth(range = c(0.2, 0.7), guide = "none") +
+  scale_size(range = c(1.1, 2.3), guide = "none") +
   Y_SCALE +
-  scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) +
-  labs(title = "Hub proteins (top-5)", x = NULL, y = NULL) +
+  scale_x_continuous(limits = c(-0.02, 1.02), expand = c(0, 0)) +
+  labs(title = "Hub co-expression network", x = NULL, y = NULL) +
   FIG_THEME +
   theme(
     axis.text = element_blank(), axis.ticks = element_blank(),
@@ -303,10 +357,10 @@ p_hub <- ggplot(hub_layout) +
 key_txt <- paste0(
   "Contrasts:  Disease = PHE−Ctl   |   Transplant = Mito−Ctl   |   Rescue = PHE_Mito−PHE.   ",
   "Cells: eigengene-limma log2FC over FDR; black box = FDR<0.05.\n",
-  "ORA: 8 rat DBs (GO BP/CC/MF, Hallmark, KEGG, Reactome, MitoCarta, GO Slim; msigdbr Rattus norvegicus / org.Rn.eg.db), per-DB BH, FDR<0.10; best hit / DB, top 4 / module; bars scaled within module.  Hubs: top-5 |kME|, coloured by own DE significance (min FDR over the 3 contrasts)."
+  "ORA: 8 rat DBs (GO BP/CC/MF, Hallmark, KEGG, Reactome, MitoCarta, GO Slim; msigdbr Rattus norvegicus / org.Rn.eg.db), per-DB BH, FDR<0.10; best hit / DB, top 4 / module; bars scaled within module.  Hub network: top-6 hubs by kME as nodes (size = kME, fill = own DE significance, min FDR over the 3 contrasts); arcs = k-nearest co-expression backbone (Pearson r ≥ 0.5)."
 )
 fig <- p_counts + p_heat + p_traj + p_ora + p_hub +
-  plot_layout(widths = c(0.34, 0.7, 0.5, 1.1, 1.0)) +
+  plot_layout(widths = c(0.34, 0.7, 0.5, 1.0, 1.25)) +
   plot_annotation(
     caption = key_txt,
     theme = theme(plot.caption = element_text(size = 4.4, color = "grey35", hjust = 0, lineheight = 1.2))

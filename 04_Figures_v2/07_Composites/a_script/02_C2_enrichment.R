@@ -67,7 +67,7 @@ grid <- volcano_ring_grid(
   term_col = "pathway", nes_col = "NES", size_col = "size",
   genes_col = "leadingEdge", genes_sep = ";",
   p_threshold = 0.05, logfc_threshold = log2(1.5),
-  ring_radius = 5.5,
+  ring_radius = 5.5, volcano_radius = 5.2, arc_height_range = c(0.1, 2.8),
   label_size = 2.7, point_size = 2.2, point_alpha = 0.7,
   count_x_mult = 0.55, count_y_mult = 0.55,
   theme = volcano_ring_theme(base_size = 13)
@@ -79,8 +79,12 @@ grid <- volcano_ring_grid(
 fig <- grid$plot &
   ggplot2::theme(
     legend.position = "bottom",
-    legend.key.width = ggplot2::unit(18, "mm"),
-    legend.key.height = ggplot2::unit(3, "mm"),
+    legend.key.width = ggplot2::unit(13, "mm"),
+    legend.key.height = ggplot2::unit(2.5, "mm"),
+    legend.title = ggplot2::element_text(size = 8),
+    legend.text = ggplot2::element_text(size = 7),
+    legend.box.spacing = ggplot2::unit(0, "mm"),
+    legend.margin = ggplot2::margin(0, 0, 0, 0),
     plot.margin = ggplot2::margin(1, 1, 1, 1, "mm")
   )
 fig <- fig & ggplot2::guides(

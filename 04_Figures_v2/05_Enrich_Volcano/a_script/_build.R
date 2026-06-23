@@ -50,7 +50,7 @@ build_ring <- function(ctr, tag, role) {
     term_col = "pathway", nes_col = "NES", size_col = "size",
     genes_col = "leadingEdge", genes_sep = ";",
     p_threshold = H9C2_PI_THRESH, logfc_threshold = log2(1.5),
-    ring_radius = 5.5,
+    ring_radius = 5.5, volcano_radius = 5.2, arc_height_range = c(0.1, 2.8),
     title = contrast_brief(ctr),
     subtitle = sprintf(
       "%s | %d DEPs, %d pathways", CONTRAST_MATH_BRIEF[ctr], n_dep, n_path

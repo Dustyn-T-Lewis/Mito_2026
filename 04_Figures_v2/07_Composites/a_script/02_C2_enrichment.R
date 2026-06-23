@@ -1,22 +1,21 @@
 #!/usr/bin/env Rscript
-# C2 enrichment — three enrichment rings (Disease / Transplant / Rescue) + NES legend.
+# C2 (package variant) — the four enrichment rings (Disease / Transplant /
+# Rescue / Interaction) drawn by enrichVolcano::volcano_ring_grid() instead of
+# the in-suite builder, fed the same tidy DE + fgsea tables. Parallel to
+# 02_C2_enrichment.R for comparison; writes MAIN_C2_pkg_enrichment.png.
+
 suppressPackageStartupMessages({
   library(here)
-  library(ggplot2)
-  library(ggforce)
-  library(patchwork)
+  library(dplyr)
+  library(enrichVolcano)
 })
 
-source(here::here("04_Figures_v2", "functions", "08_composite_layout.R"))
 source(here::here("04_Figures_v2", "functions", "02_data_paths_and_loaders.R"))
-source(here::here("04_Figures_v2", "functions", "05_volcano_ring_plot_builder.R"))
 source(here::here("04_Figures_v2", "functions", "03_pathway_enrichment_dedup_ora.R"))
-source(here::here("04_Figures_v2", "functions", "04_mitocarta_lens_lookup.R"))
 
-# Globals for build_ring(); side-effect writes go to existing F05 dirs.
-F05_BASE <- here::here("04_Figures_v2", "05_Enrich_Volcano")
-RPT_PNG <- file.path(F05_BASE, "b_reports", "main", "png")
-dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
+BASE <- here::here("04_Figures_v2", "07_Composites")
+OUT <- file.path(BASE, "b_reports", "main", "png")
+dir.create(OUT, recursive = TRUE, showWarnings = FALSE)
 
 dep_df <- load_combined_wide()
 fgsea_all <- readr::read_csv(
@@ -24,42 +23,58 @@ fgsea_all <- readr::read_csv(
   show_col_types = FALSE
 )
 rat_gene_sets <- readRDS(here::here("04_Figures", "shared", "rat_gene_sets.rds"))
+set_pool <- do.call(c, unname(rat_gene_sets[CANONICAL_DBS]))
 
-POOL_DBS <- CANONICAL_DBS
-SET_POOL <- do.call(c, unname(rat_gene_sets[POOL_DBS]))
+# old contrast key -> role used as the ring title; pi_score drives volcano
+# significance (suite-wide Π < 0.05), fgsea padj drives ring selection.
+ring_map <- c(
+  CTLvPHE = "Disease", CTLvMITO = "Transplant",
+  PHEvPHE_MITO = "Rescue", Interaction = "Interaction"
+)
 RING_N <- 12
-RING_PADJ <- 0.05
-SIM_CUT <- 0.375
-RING_MIN_SZ <- 10
 
-EMPTY_RING <- build_ring_180_split(
-  head(arrange(filter(fgsea_all, contrast == "PHEvPHE_MITO", database == "Hallmark"), padj), 2),
-  "PHEvPHE_MITO", fgsea_all,
-  databases = "Hallmark"
-)[0, ]
+volc_long <- bind_rows(lapply(names(ring_map), function(ctr) {
+  dep_df |>
+    transmute(
+      gene,
+      logFC = .data[[paste0("logFC_", ctr)]],
+      P.Value = .data[[paste0("P.Value_", ctr)]],
+      padj = .data[[paste0("pi_score_", ctr)]],
+      contrast = ring_map[[ctr]]
+    ) |>
+    filter(!is.na(logFC), !is.na(P.Value))
+}))
 
-source(here::here("04_Figures_v2", "05_Enrich_Volcano", "a_script", "_build.R"))
+# Per contrast: keep significant terms, collapse redundant biology across DBs
+# (EnrichmentMap combined coefficient), then take the top RING_N by FDR.
+enrich_long <- bind_rows(lapply(names(ring_map), function(ctr) {
+  sig <- fgsea_all |>
+    filter(contrast == ctr, database %in% CANONICAL_DBS, padj < 0.05) |>
+    as.data.frame()
+  deduplicate_enrichment(sig, set_pool, cutoff = 0.375) |>
+    arrange(padj) |>
+    slice_head(n = RING_N) |>
+    mutate(contrast = ring_map[[ctr]])
+}))
 
-BASE <- here::here("04_Figures_v2", "07_Composites")
-
-disease <- build_ring("CTLvPHE", "ctlvphe", "Disease")$plot
-transplant <- build_ring("CTLvMITO", "ctlvmito", "Transplant")$plot
-rescue <- build_ring("PHEvPHE_MITO", "phevphe_mito", "Rescue")$plot
-nes <- build_nes_legend()
-
-# A / B / C side by side; NES legend inset into A lower-right (clear of labels)
-disease_with_nes <- add_tag(disease, "A") + patchwork::inset_element(
-  nes,
-  left = 0.62, right = 0.98, top = 0.38, bottom = 0.01,
-  align_to = "panel"
+grid <- volcano_ring_grid(
+  volc_dfs = volc_long,
+  enrich_dfs = enrich_long,
+  contrasts = unname(ring_map),
+  subtitles = unname(CONTRAST_MATH_BRIEF[names(ring_map)]),
+  ncol = 2,
+  gene_col = "gene", logfc_col = "logFC", pval_col = "P.Value", padj_col = "padj",
+  term_col = "pathway", nes_col = "NES", size_col = "size",
+  genes_col = "leadingEdge", genes_sep = ";",
+  p_threshold = 0.05, logfc_threshold = log2(1.5),
+  label_size = 2.7, point_size = 2.2, point_alpha = 0.7,
+  count_x_mult = 0.55, count_y_mult = 0.55,
+  theme = volcano_ring_theme(base_size = 13)
 )
 
-fig <- disease_with_nes + add_tag(transplant, "B") + add_tag(rescue, "C") +
-  plot_layout(ncol = 3) +
-  composite_caption(paste(
-    "5-DB lens (Hallmark/Reactome/KEGG/MitoCarta/GO Slim), EnrichmentMap dedup.",
-    "Ring = top pathways by FDR; centre = protein volcano. NES colour bar shared."
-  ))
-
-save_composite(fig, BASE, "MAIN_C2_enrichment", width_mm = PANEL_MD, height_mm = 178)
-message("C2 composite built")
+# Large square canvas so the 2x2 reads clearly at print size.
+ggplot2::ggsave(
+  file.path(OUT, "MAIN_C2_pkg_enrichment.png"), grid$plot,
+  width = 240, height = 240, units = "mm", dpi = 300, limitsize = FALSE
+)
+message("C2 (package) composite built")

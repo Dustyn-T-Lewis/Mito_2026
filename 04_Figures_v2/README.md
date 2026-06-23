@@ -31,7 +31,7 @@ Spine = **Disease → Rescue reversal**.
   03_Venn/                    area-proportional 3-set DEP overlap + direction strip
   04_Pathway_bars/            Panel-D pathway counts, stacked by source database (5 DBs)
   05_Enrich_Volcano/          per-contrast volcano-in-ring panels + NES legend
-  06_Cluster/                 6-pilot cluster framework (c-means × 3 + WGCNA + logFC + RRHO2)
+  06_Cluster/                 WGCNA module figure: counts · eigengene heatmap · trajectory · ORA
   07_Composites/              C1 (6-panel overview) and C2 (3 enrichment rings + NES legend)
   BUILD_PROMPT.md             full regeneration spec for an agent
   README.md                   this file

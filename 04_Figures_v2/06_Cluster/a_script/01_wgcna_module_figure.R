@@ -71,14 +71,23 @@ mod_stats <- bind_rows(lapply(names(CONTRASTS), function(cn) {
   tt <- limma::topTable(fit, coef = cn, number = Inf, sort.by = "none")
   tibble(module = non_grey, contrast = cn, logFC = tt$logFC, p = tt$P.Value, fdr = tt$adj.P.Val)
 }))
-mod_order <- mod_stats |>
-  group_by(module) |>
-  summarise(score = sum(abs(logFC) * -log10(p)), .groups = "drop") |>
-  arrange(desc(score)) |>
+# order modules by protein-set size (largest at the top)
+mod_size <- count(tibble(module = w$module_colors), module)
+mod_order <- mod_size |>
+  filter(module %in% non_grey) |>
+  arrange(desc(n)) |>
   pull(module)
 mod_levels <- rev(mod_order)
 n_mod <- length(non_grey)
 idx_of <- function(m) as.integer(factor(m, levels = mod_levels))
+
+# top-3 hub proteins per module (highest |kME|)
+hub_df <- w$hubs |>
+  group_by(module) |>
+  arrange(desc(abs(kME))) |>
+  summarise(hubs = paste(head(gene, 3), collapse = ", "), .groups = "drop") |>
+  right_join(tibble(module = mod_levels), by = "module") |>
+  mutate(y = idx_of(module), hubs = ifelse(is.na(hubs), "", hubs))
 
 # ---- consolidated ORA — maximal DB coverage --------------------------------
 # 5 canonical DBs (Hallmark/Reactome/KEGG/MitoCarta/GO Slim) + full GO BP/CC/MF.
@@ -99,7 +108,7 @@ mod_genes <- tibble(gene = w$ann$gene, module = w$module_colors) |>
 universe <- unique(w$ann$gene[!is.na(w$ann$gene) & nzchar(w$ann$gene)])
 ora_all <- bind_rows(lapply(mod_order, function(m) {
   res <- tryCatch(
-    run_ora_deduplicated(mod_genes$gene[mod_genes$module == m], universe, pw_collection),
+    run_ora_deduplicated(mod_genes$gene[mod_genes$module == m], universe, pw_collection, padj_cutoff = 0.10),
     error = function(e) NULL
   )
   if (is.null(res) || nrow(res) == 0) {
@@ -147,6 +156,20 @@ p_counts <- ggplot(cnt_df, aes(n, y)) +
     axis.text.x = element_blank(), axis.ticks = element_blank(),
     panel.grid = element_blank(), panel.border = element_blank(),
     plot.margin = margin(2, 1, 1, 2)
+  )
+
+# ---- hub proteins (top-3 by |kME|) ------------------------------------------
+p_hubs <- ggplot(hub_df) +
+  module_rows() +
+  geom_text(aes(0.02, y, label = hubs), hjust = 0, vjust = 0.5, size = 1.5, fontface = "italic", color = "grey15") +
+  Y_SCALE +
+  scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) +
+  labs(title = "Hub proteins", x = NULL, y = NULL) +
+  FIG_THEME +
+  theme(
+    axis.text = element_blank(), axis.ticks = element_blank(),
+    panel.grid = element_blank(), panel.border = element_blank(),
+    plot.margin = margin(2, 1, 1, 1)
   )
 
 # ---- A. eigengene-limma heatmap (log2FC value + FDR stacked, labels bottom) --
@@ -225,11 +248,11 @@ p_ora <- ggplot(ora_d) +
 # ---- assemble ---------------------------------------------------------------
 key_txt <- paste0(
   "Contrasts:  Disease = PHE−Ctl   |   Transplant = Mito−Ctl   |   Rescue = PHE_Mito−PHE.   ",
-  "Cells: eigengene-limma log2FC over FDR; black box = FDR<0.05.\n",
-  "ORA: GO BP/CC/MF + Hallmark + KEGG + Reactome + MitoCarta + GO Slim, cross-DB Jaccard dedup; top 2 / module."
+  "Cells: eigengene-limma log2FC over FDR; black box = FDR<0.05.  Hubs: top-3 |kME|.\n",
+  "ORA: GO BP/CC/MF + Hallmark + KEGG + Reactome + MitoCarta + GO Slim, per-DB BH cross-DB dedup; FDR<0.10, top 2 / module."
 )
-fig <- p_counts + p_heat + p_traj + p_ora +
-  plot_layout(widths = c(0.5, 0.92, 0.62, 1.5)) +
+fig <- p_counts + p_hubs + p_heat + p_traj + p_ora +
+  plot_layout(widths = c(0.42, 0.62, 0.86, 0.56, 1.45)) +
   plot_annotation(
     caption = key_txt,
     theme = theme(plot.caption = element_text(size = 4.4, color = "grey35", hjust = 0, lineheight = 1.2))

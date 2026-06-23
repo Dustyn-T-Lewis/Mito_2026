@@ -22,6 +22,8 @@ fgsea_all <- readr::read_csv(
   here::here("04_Figures", "shared", "fgsea_tstat_all_h9c2.csv"),
   show_col_types = FALSE
 )
+rat_gene_sets <- readRDS(here::here("04_Figures", "shared", "rat_gene_sets.rds"))
+set_pool <- do.call(c, unname(rat_gene_sets[CANONICAL_DBS]))
 
 # old contrast key -> role used as the ring title; pi_score drives volcano
 # significance (suite-wide Π < 0.05), fgsea padj drives ring selection.
@@ -43,13 +45,17 @@ volc_long <- bind_rows(lapply(names(ring_map), function(ctr) {
     filter(!is.na(logFC), !is.na(P.Value))
 }))
 
-enrich_long <- fgsea_all |>
-  filter(contrast %in% names(ring_map), database %in% CANONICAL_DBS, padj < 0.05) |>
-  mutate(contrast = ring_map[contrast]) |>
-  group_by(contrast) |>
-  arrange(padj, .by_group = TRUE) |>
-  slice_head(n = RING_N) |>
-  ungroup()
+# Per contrast: keep significant terms, collapse redundant biology across DBs
+# (EnrichmentMap combined coefficient), then take the top RING_N by FDR.
+enrich_long <- bind_rows(lapply(names(ring_map), function(ctr) {
+  sig <- fgsea_all |>
+    filter(contrast == ctr, database %in% CANONICAL_DBS, padj < 0.05) |>
+    as.data.frame()
+  deduplicate_enrichment(sig, set_pool, cutoff = 0.375) |>
+    arrange(padj) |>
+    slice_head(n = RING_N) |>
+    mutate(contrast = ring_map[[ctr]])
+}))
 
 grid <- volcano_ring_grid(
   volc_dfs = volc_long,
@@ -59,11 +65,14 @@ grid <- volcano_ring_grid(
   gene_col = "gene", logfc_col = "logFC", pval_col = "P.Value", padj_col = "padj",
   term_col = "pathway", nes_col = "NES", size_col = "size",
   genes_col = "leadingEdge", genes_sep = ";",
-  p_threshold = 0.05, logfc_threshold = log2(1.5)
+  p_threshold = 0.05, logfc_threshold = log2(1.5),
+  label_size = 3.4, point_size = 2.2, point_alpha = 0.7,
+  theme = volcano_ring_theme(base_size = 13)
 )
 
+# Large square canvas so the 2x2 reads clearly at print size.
 ggplot2::ggsave(
   file.path(OUT, "MAIN_C2_pkg_enrichment.png"), grid$plot,
-  width = PANEL_MD, height = PANEL_MD, units = "mm", dpi = 300, limitsize = FALSE
+  width = 240, height = 240, units = "mm", dpi = 300, limitsize = FALSE
 )
 message("C2 (package) composite built")

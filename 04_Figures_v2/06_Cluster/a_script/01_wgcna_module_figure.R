@@ -161,7 +161,7 @@ p_counts <- ggplot(cnt_df, aes(n, y)) +
   geom_text(aes(label = n), hjust = 1.2, size = 1.6, fontface = "bold", color = "grey20") +
   scale_x_reverse(expand = expansion(mult = c(0.22, 0))) +
   scale_y_continuous(breaks = seq_len(n_mod), labels = mod_levels, limits = c(0.5, n_mod + 0.5), expand = c(0, 0)) +
-  labs(title = "n", x = NULL, y = NULL) +
+  labs(title = "Proteins (n)", x = NULL, y = NULL) +
   FIG_THEME +
   theme(
     axis.text.y = element_text(face = "bold", size = FIG_AXIS_TEXT, color = "grey15"),
@@ -210,9 +210,11 @@ p_traj <- ggplot(traj, aes(gx, y, group = module)) +
   geom_point(aes(fill = I(module)), shape = 21, size = 1, color = "grey30", stroke = 0.2) +
   scale_x_continuous(breaks = 1:4, labels = unname(GROUP_SHORT), limits = c(0.7, 4.3), expand = c(0, 0)) +
   Y_SCALE +
-  labs(title = "Trajectory", x = NULL, y = NULL) +
+  labs(title = "Trajectory", x = "Group", y = "Eigengene (per-module scaled)") +
   FIG_THEME +
   theme(
+    axis.title.x = element_text(size = FIG_AXIS_TEXT, face = "bold", margin = margin(t = 1)),
+    axis.title.y = element_text(size = FIG_AXIS_TEXT - 0.5, face = "bold", angle = 90),
     axis.text.x = element_text(angle = 35, hjust = 1, size = FIG_AXIS_TEXT - 0.5),
     axis.text.y = element_blank(), axis.ticks.y = element_blank(),
     panel.grid = element_blank(), plot.margin = margin(2, 2, 1, 1)
@@ -248,43 +250,55 @@ p_ora <- ggplot(ora_d) +
     legend.key.size = unit(2.2, "mm"), legend.margin = margin(t = -2), plot.margin = margin(2, 1, 1, 1)
   )
 
-# ---- D. hub proteins — top-3 by |kME|, clean ranked list --------------------
+# ---- D. hub proteins — top-5 by |kME|, coloured by DE significance -----------
+# Each hub's own differential abundance: min FDR across the 3 core contrasts.
+hub_sig <- readr::read_csv(P05$comb, show_col_types = FALSE) |>
+  filter(contrast %in% c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO")) |>
+  group_by(gene) |>
+  summarise(min_fdr = min(adj.P.Val, na.rm = TRUE), .groups = "drop") |>
+  mutate(neglfdr = -log10(pmax(min_fdr, 1e-6)))
 hub_layout <- w$hubs |>
   filter(module %in% non_grey) |>
   group_by(module) |>
   arrange(desc(abs(kME))) |>
-  slice_head(n = 3) |>
+  slice_head(n = 5) |>
   mutate(rank = row_number()) |>
   ungroup() |>
+  left_join(hub_sig, by = "gene") |>
   mutate(
     mod_idx = idx_of(module),
-    ny = mod_idx + (2 - rank) * 0.26, # rank-1 (top hub) at the top of the band
-    nsz = ifelse(rank == 1, 1.8, 1.1),
-    face = ifelse(rank == 1, "bold", "plain")
+    ny = mod_idx + (3 - rank) * 0.18, # rank-1 (top hub) at the top of the band
+    face = ifelse(rank == 1, "bold", "plain"),
+    neglfdr = ifelse(is.na(neglfdr), 0, neglfdr)
   )
 p_hub <- ggplot(hub_layout) +
   module_rows() +
   ROW_LINES +
-  geom_point(aes(0.06, ny, fill = I(module), size = nsz), shape = 21, color = "grey30", stroke = 0.2) +
-  geom_text(aes(0.15, ny, label = gene, fontface = face), hjust = 0, vjust = 0.5, size = 1.4, color = "grey15") +
-  scale_size_identity() +
+  geom_point(aes(0.05, ny, fill = neglfdr), shape = 21, size = 1.3, color = "grey40", stroke = 0.2) +
+  geom_text(aes(0.12, ny, label = gene, fontface = face), hjust = 0, vjust = 0.5, size = 1.4, color = "grey15") +
+  scale_fill_gradient(
+    low = "grey90", high = "#B2182B", name = "hub −log10 FDR",
+    guide = guide_colorbar(barwidth = 5, barheight = 0.4, title.position = "top", title.hjust = 0.5)
+  ) +
   Y_SCALE +
   scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) +
-  labs(title = "Hub proteins", x = NULL, y = NULL) +
+  labs(title = "Hub proteins (top-5)", x = NULL, y = NULL) +
   FIG_THEME +
   theme(
     axis.text = element_blank(), axis.ticks = element_blank(),
-    panel.grid = element_blank(), panel.border = element_blank(), plot.margin = margin(2, 1, 1, 1)
+    panel.grid = element_blank(), panel.border = element_blank(),
+    legend.position = "bottom", legend.title = element_text(size = FIG_LEGEND_TITLE - 1),
+    legend.margin = margin(t = -2), plot.margin = margin(2, 1, 1, 1)
   )
 
 # ---- assemble ---------------------------------------------------------------
 key_txt <- paste0(
   "Contrasts:  Disease = PHE−Ctl   |   Transplant = Mito−Ctl   |   Rescue = PHE_Mito−PHE.   ",
   "Cells: eigengene-limma log2FC over FDR; black box = FDR<0.05.\n",
-  "ORA: 8 rat DBs (GO BP/CC/MF, Hallmark, KEGG, Reactome, MitoCarta, GO Slim; msigdbr Rattus norvegicus / org.Rn.eg.db), per-DB BH, FDR<0.10; best hit / DB, top 4 / module; bars scaled within module.  Hubs: top-3 |kME|."
+  "ORA: 8 rat DBs (GO BP/CC/MF, Hallmark, KEGG, Reactome, MitoCarta, GO Slim; msigdbr Rattus norvegicus / org.Rn.eg.db), per-DB BH, FDR<0.10; best hit / DB, top 4 / module; bars scaled within module.  Hubs: top-5 |kME|, coloured by own DE significance (min FDR over the 3 contrasts)."
 )
 fig <- p_counts + p_heat + p_traj + p_ora + p_hub +
-  plot_layout(widths = c(0.36, 0.74, 0.46, 1.3, 0.6)) +
+  plot_layout(widths = c(0.34, 0.7, 0.5, 1.1, 1.0)) +
   plot_annotation(
     caption = key_txt,
     theme = theme(plot.caption = element_text(size = 4.4, color = "grey35", hjust = 0, lineheight = 1.2))

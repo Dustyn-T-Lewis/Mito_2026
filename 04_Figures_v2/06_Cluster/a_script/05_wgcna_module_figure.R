@@ -1,14 +1,14 @@
 #!/usr/bin/env Rscript
 # F06 WGCNA module figure — one row-aligned block, module = row:
-#   [cluster] [eigengene-limma heatmap, 5 contrasts] [group trajectory] [5-DB ORA]
-# Rows are shaded by module colour so clusters read across the panels.
+#   [protein counts] [eigengene-limma heatmap, 3 core contrasts] [trajectory] [ORA]
+# Rows shaded by module colour so clusters read across the panels.
 #
 # Modules: signed WGCNA network (04_Figures/F05_modules; power 7, signed TOM,
 # minModuleSize 30, mergeCutHeight 0.25, deepSplit 2). A module eigengene is the
 # module's 1st PC — one value per sample — run through the same limma model as
-# the proteins (~0 + Group, 5 contrasts) so heatmap cells are tested log2FC.
+# the proteins (~0 + Group) so heatmap cells are tested log2FC (+ FDR).
 # Trajectory = eigengene group means (Ctl -> Mito -> PHE -> PHE_Mito).
-# ORA = consolidated Hallmark/Reactome/KEGG/MitoCarta/GO-Slim, cross-DB
+# ORA = consolidated GO:BP / Hallmark / KEGG / Reactome / MitoCarta, cross-DB
 # deduplicated (run_ora_deduplicated); top 2 hits / module.
 
 library(here)
@@ -34,19 +34,24 @@ for (d in c(MAIN_PDF, MAIN_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnin
 pdf_dev <- get_pdf_device()
 
 DB_COLORS <- c(
-  Hallmark = "#66C2A5", Reactome = "#8DA0CB", KEGG = "#E78AC3",
-  MitoCarta = "#FC8D62", `GO Slim` = "#FFD92F"
+  `GO:BP` = "#66C2A5", Hallmark = "#FC8D62", KEGG = "#E78AC3",
+  Reactome = "#8DA0CB", MitoCarta = "#FFD92F"
 )
 CONTRASTS <- c(
-  Disease     = "PHE - Ctl",
-  Transplant  = "Mito - Ctl",
-  Rescue      = "PHE_Mito - PHE",
-  Interaction = "(PHE_Mito - Mito) - (PHE - Ctl)",
-  Secondary   = "PHE_Mito - Mito"
+  Disease    = "PHE - Ctl",
+  Transplant = "Mito - Ctl",
+  Rescue     = "PHE_Mito - PHE"
 )
 GROUP_SHORT <- c(Ctl = "Ctl", Mito = "Mito", PHE = "PHE", PHE_Mito = "PHE+Mito")
+fmt_fdr <- function(p) {
+  ifelse(is.na(p), "",
+    ifelse(p < 0.001, "<.001",
+      ifelse(p < 0.01, sub("^0", "", sprintf("%.3f", p)), sub("^0", "", sprintf("%.2f", p)))
+    )
+  )
+}
 
-# ---- network + eigengene-limma ----------------------------------------------
+# ---- network + eigengene-limma (3 core contrasts) ---------------------------
 w <- readRDS(here::here("04_Figures", "F05_modules", "c_data", "wgcna_network.rds"))
 meta <- as_tibble(readRDS(P05$imp_rds)$metadata)
 non_grey <- setdiff(sub("^ME", "", colnames(w$MEs)), "grey")
@@ -74,12 +79,22 @@ mod_levels <- rev(mod_order)
 n_mod <- length(non_grey)
 idx_of <- function(m) as.integer(factor(m, levels = mod_levels))
 
-# ---- consolidated 5-DB ORA per module (top 2) -------------------------------
+# ---- consolidated ORA (GO:BP + Hallmark + KEGG + Reactome + MitoCarta) -------
+gobp_cache <- file.path(DAT, "rat_gobp_sets.rds")
+if (file.exists(gobp_cache)) {
+  gobp <- readRDS(gobp_cache)
+} else {
+  m5 <- msigdbr::msigdbr(species = "Rattus norvegicus", collection = "C5", subcollection = "GO:BP")
+  gobp <- split(m5$gene_symbol, m5$gs_name)
+  saveRDS(gobp, gobp_cache)
+}
+base_coll <- build_harmonized_collection()
+base_coll <- base_coll[classify_database(names(base_coll)) != "GO Slim"]
+pw_collection <- c(base_coll, gobp)
+
 mod_genes <- tibble(gene = w$ann$gene, module = w$module_colors) |>
   filter(!is.na(gene), nzchar(gene), module %in% non_grey)
-# ORA background = every detected protein (grey included), not just module genes
 universe <- unique(w$ann$gene[!is.na(w$ann$gene) & nzchar(w$ann$gene)])
-pw_collection <- build_harmonized_collection()
 ora_all <- bind_rows(lapply(mod_order, function(m) {
   res <- tryCatch(
     run_ora_deduplicated(mod_genes$gene[mod_genes$module == m], universe, pw_collection),
@@ -102,8 +117,7 @@ traj <- as.data.frame(me) |>
   group_by(module, Group) |>
   summarise(m = mean(v), .groups = "drop") |>
   mutate(gx = as.integer(Group), mod_idx = idx_of(module))
-traj_scale <- 0.4 / max(abs(traj$m))
-traj <- mutate(traj, y = mod_idx + m * traj_scale)
+traj <- mutate(traj, y = mod_idx + m * (0.4 / max(abs(traj$m))))
 
 # ---- shared row geometry ----------------------------------------------------
 row_bg <- tibble(y = seq_len(n_mod), fill = mod_levels)
@@ -116,44 +130,47 @@ module_rows <- function(alpha = 0.18) {
 }
 Y_SCALE <- ggplot2::scale_y_continuous(limits = c(0.5, n_mod + 0.5), expand = c(0, 0))
 
-# ---- cluster strip ----------------------------------------------------------
-clust_df <- tibble(
-  y = seq_len(n_mod), module = mod_levels,
-  txt = ifelse(vapply(mod_levels, is_light_color, logical(1)), "grey10", "white")
-)
-p_clust <- ggplot(clust_df) +
-  geom_tile(aes(1, y, fill = I(module)), width = 0.92, height = 0.92, color = "grey40", linewidth = 0.25) +
-  geom_text(aes(1, y, label = module, color = I(txt)), size = 1.6, fontface = "bold") +
-  Y_SCALE +
-  scale_x_continuous(limits = c(0.5, 1.5), expand = c(0, 0)) +
-  labs(title = "Module", x = NULL, y = NULL) +
-  theme_void() +
-  theme(plot.title = element_text(face = "bold", size = FIG_TITLE_SIZE, hjust = 0.5), plot.margin = margin(2, 1, 1, 2))
+# ---- protein-count bars (YvO style) — module names on the y-axis ------------
+cnt_df <- tibble(module = mod_levels, y = seq_len(n_mod)) |>
+  left_join(count(tibble(module = w$module_colors), module), by = "module")
+p_counts <- ggplot(cnt_df, aes(n, y)) +
+  geom_col(aes(fill = I(module)), width = 0.78, color = "grey40", linewidth = 0.2, orientation = "y") +
+  geom_text(aes(label = n), hjust = -0.15, size = 1.6, fontface = "bold", color = "grey20") +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.2))) +
+  scale_y_continuous(breaks = seq_len(n_mod), labels = mod_levels, limits = c(0.5, n_mod + 0.5), expand = c(0, 0)) +
+  labs(title = "Module (n proteins)", x = NULL, y = NULL) +
+  FIG_THEME +
+  theme(
+    axis.text.y = element_text(face = "bold", size = FIG_AXIS_TEXT, color = "grey15"),
+    axis.text.x = element_blank(), axis.ticks = element_blank(),
+    panel.grid = element_blank(), panel.border = element_blank(),
+    plot.margin = margin(2, 1, 1, 2)
+  )
 
-# ---- A. eigengene-limma contrast heatmap ------------------------------------
+# ---- A. eigengene-limma heatmap (log2FC value + FDR stacked, labels bottom) --
 heat <- mod_stats |>
   mutate(
     contrast = factor(contrast, levels = names(CONTRASTS)),
-    y = idx_of(module), x = as.integer(contrast), stars = sig_stars(fdr)
+    y = idx_of(module), x = as.integer(contrast)
   )
 ax <- stats::quantile(abs(heat$logFC), 0.98, na.rm = TRUE)
+heat$text_col <- ifelse(abs(heat$logFC) >= 0.55 * ax, "white", "grey15")
 p_heat <- ggplot(heat, aes(x, y)) +
-  module_rows(alpha = 0.10) +
   geom_tile(aes(fill = logFC), color = "grey85", linewidth = 0.2) +
   geom_tile(data = filter(heat, fdr < 0.05), fill = NA, color = "black", linewidth = 0.5) +
-  geom_text(aes(label = stars), size = 2.3, fontface = "bold", color = "grey10", vjust = 0.72) +
-  geom_vline(xintercept = 3.5, color = "grey55", linewidth = 0.3) +
+  geom_text(aes(label = sprintf("%.2f", logFC), color = I(text_col)), size = 1.7, fontface = "bold", vjust = -0.35) +
+  geom_text(aes(label = fmt_fdr(fdr), color = I(text_col)), size = 1.4, vjust = 1.45) +
   scale_fill_gradient2(
     low = "#2166AC", mid = "white", high = "#B2182B", midpoint = 0,
     limits = c(-ax, ax), oob = scales::squish, name = "eigengene\nlog2FC",
     guide = guide_colorbar(barwidth = 0.5, barheight = 3.2)
   ) +
-  scale_x_continuous(breaks = seq_along(CONTRASTS), labels = names(CONTRASTS), position = "top", expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq_along(CONTRASTS), labels = names(CONTRASTS), expand = c(0, 0)) +
   Y_SCALE +
   labs(title = "Eigengene response", x = NULL, y = NULL) +
   FIG_THEME +
   theme(
-    axis.text.x.top = element_text(angle = 35, hjust = 0, size = FIG_AXIS_TEXT, face = "bold"),
+    axis.text.x = element_text(angle = 30, hjust = 1, size = FIG_AXIS_TEXT, face = "bold"),
     axis.text.y = element_blank(), axis.ticks = element_blank(),
     panel.grid = element_blank(), panel.border = element_blank(),
     legend.position = "left", plot.margin = margin(2, 1, 1, 1)
@@ -175,7 +192,7 @@ p_traj <- ggplot(traj, aes(gx, y, group = module)) +
     panel.grid = element_blank(), plot.margin = margin(2, 2, 1, 1)
   )
 
-# ---- C. consolidated 5-DB ORA -----------------------------------------------
+# ---- C. consolidated ORA ----------------------------------------------------
 ora_d <- ora_all |>
   mutate(mod_idx = idx_of(module)) |>
   group_by(mod_idx) |>
@@ -187,7 +204,6 @@ ora_d <- ora_all |>
   ungroup()
 empty_df <- tibble(module = setdiff(mod_levels, ora_all$module)) |> mutate(y = idx_of(module))
 x_max <- max(ora_d$neglp, na.rm = TRUE) * 1.04
-
 p_ora <- ggplot(ora_d) +
   module_rows() +
   geom_col(aes(x = neglp, y = y, fill = database), orientation = "y", width = 0.32, color = "grey30", linewidth = 0.1) +
@@ -196,7 +212,7 @@ p_ora <- ggplot(ora_d) +
   scale_fill_manual(values = DB_COLORS, name = NULL, guide = guide_legend(nrow = 1)) +
   Y_SCALE +
   scale_x_continuous(limits = c(0, x_max), expand = expansion(mult = c(0, 0.02))) +
-  labs(title = "Pathway enrichment (5-DB consolidated)", x = expression(-log[10] ~ FDR), y = NULL) +
+  labs(title = "Pathway enrichment (consolidated)", x = expression(-log[10] ~ FDR), y = NULL) +
   FIG_THEME +
   theme(
     axis.text.y = element_blank(), axis.ticks.y = element_blank(),
@@ -206,13 +222,12 @@ p_ora <- ggplot(ora_d) +
 
 # ---- assemble ---------------------------------------------------------------
 key_txt <- paste0(
-  "Contrasts:  Disease = PHE−Ctl   |   Transplant = Mito−Ctl   |   Rescue = PHE_Mito−PHE",
-  "   |   Interaction = (PHE_Mito−Mito)−(PHE−Ctl)   |   Secondary = PHE_Mito−Mito\n",
-  "Stars: * FDR<0.05  ** <0.01  *** <0.001 (eigengene limma).  ",
-  "ORA: 5-DB consolidated, cross-DB Jaccard dedup; top 2 / module."
+  "Contrasts:  Disease = PHE−Ctl   |   Transplant = Mito−Ctl   |   Rescue = PHE_Mito−PHE.   ",
+  "Cells: eigengene-limma log2FC over FDR; black box = FDR<0.05.\n",
+  "ORA: GO:BP + Hallmark + KEGG + Reactome + MitoCarta, cross-DB Jaccard dedup; top 2 / module."
 )
-fig <- p_clust + p_heat + p_traj + p_ora +
-  plot_layout(widths = c(0.32, 1.05, 0.7, 1.55)) +
+fig <- p_counts + p_heat + p_traj + p_ora +
+  plot_layout(widths = c(0.5, 0.92, 0.62, 1.5)) +
   plot_annotation(
     caption = key_txt,
     theme = theme(plot.caption = element_text(size = 4.4, color = "grey35", hjust = 0, lineheight = 1.2))

@@ -149,11 +149,14 @@ module_rows <- function(alpha = 0.18) {
   )
 }
 Y_SCALE <- ggplot2::scale_y_continuous(limits = c(0.5, n_mod + 0.5), expand = c(0, 0))
+# thin separators between module rows (added to every panel for a clean grid)
+ROW_LINES <- ggplot2::geom_hline(yintercept = seq_len(n_mod + 1) - 0.5, color = "grey70", linewidth = 0.2)
 
 # ---- protein-count bars — grow right-to-left, sit against the heatmap --------
 cnt_df <- tibble(module = mod_levels, y = seq_len(n_mod)) |>
   left_join(count(tibble(module = w$module_colors), module), by = "module")
 p_counts <- ggplot(cnt_df, aes(n, y)) +
+  ROW_LINES +
   geom_col(aes(fill = I(module)), width = 0.78, color = "grey40", linewidth = 0.2, orientation = "y") +
   geom_text(aes(label = n), hjust = 1.2, size = 1.6, fontface = "bold", color = "grey20") +
   scale_x_reverse(expand = expansion(mult = c(0.22, 0))) +
@@ -177,6 +180,7 @@ ax <- stats::quantile(abs(heat$logFC), 0.98, na.rm = TRUE)
 heat$text_col <- ifelse(abs(heat$logFC) >= 0.55 * ax, "white", "grey15")
 p_heat <- ggplot(heat, aes(x, y)) +
   geom_tile(aes(fill = logFC), color = "grey85", linewidth = 0.2) +
+  ROW_LINES +
   geom_tile(data = filter(heat, fdr < 0.05), fill = NA, color = "black", linewidth = 0.5) +
   geom_text(aes(label = sprintf("%.2f", logFC), color = I(text_col)), size = 1.7, fontface = "bold", vjust = -0.35) +
   geom_text(aes(label = fmt_fdr(fdr), color = I(text_col)), size = 1.4, vjust = 1.45) +
@@ -200,7 +204,8 @@ p_heat <- ggplot(heat, aes(x, y)) +
 # ---- B. group trajectory ----------------------------------------------------
 p_traj <- ggplot(traj, aes(gx, y, group = module)) +
   module_rows() +
-  geom_segment(data = row_bg, aes(x = 0.7, xend = 4.3, y = y, yend = y), color = "grey70", linewidth = 0.2, inherit.aes = FALSE) +
+  ROW_LINES +
+  geom_segment(data = row_bg, aes(x = 0.7, xend = 4.3, y = y, yend = y), color = "grey85", linewidth = 0.15, inherit.aes = FALSE) +
   geom_line(aes(color = I(module)), linewidth = 0.5) +
   geom_point(aes(fill = I(module)), shape = 21, size = 1, color = "grey30", stroke = 0.2) +
   scale_x_continuous(breaks = 1:4, labels = unname(GROUP_SHORT), limits = c(0.7, 4.3), expand = c(0, 0)) +
@@ -213,27 +218,29 @@ p_traj <- ggplot(traj, aes(gx, y, group = module)) +
     panel.grid = element_blank(), plot.margin = margin(2, 2, 1, 1)
   )
 
-# ---- C. consolidated ORA — bars scaled within each module, labels aligned ---
+# ---- C. consolidated ORA — bars scaled within each module, top hit first -----
 ora_d <- ora_all |>
   mutate(mod_idx = idx_of(module), neglp = -log10(padj)) |>
   group_by(mod_idx) |>
+  arrange(padj, .by_group = TRUE) |>
   mutate(
     rank = row_number(), y = mod_idx + (2.5 - rank) * 0.2,
-    bar = 0.3 * neglp / max(neglp), # per-module relative length (top hit = full bar)
+    bar = 0.26 * neglp / max(neglp), # per-module relative length (top hit = full bar)
     lab = clean_pathway_name(pathway),
-    lab = ifelse(nchar(lab) > 42, paste0(substr(lab, 1, 40), "…"), lab)
+    lab = ifelse(nchar(lab) > 40, paste0(substr(lab, 1, 38), "…"), lab)
   ) |>
   ungroup()
 empty_df <- tibble(module = setdiff(mod_levels, ora_all$module)) |> mutate(y = idx_of(module))
 p_ora <- ggplot(ora_d) +
   module_rows() +
-  geom_col(aes(x = bar, y = y, fill = database), orientation = "y", width = 0.16, color = "grey30", linewidth = 0.1) +
-  geom_text(aes(0.34, y, label = lab), hjust = 0, vjust = 0.5, size = 1.3, color = "grey10") +
+  ROW_LINES +
+  geom_col(aes(x = bar, y = y, fill = database), orientation = "y", width = 0.16, color = "grey25", linewidth = 0.12) +
+  geom_text(aes(0.3, y, label = lab), hjust = 0, vjust = 0.5, size = 1.3, color = "grey10") +
   geom_text(data = empty_df, aes(0.02, y, label = "no enrichment"), hjust = 0, size = 1.4, fontface = "italic", color = "grey55") +
   scale_fill_manual(values = DB_COLORS, name = NULL, guide = guide_legend(nrow = 1)) +
   Y_SCALE +
-  scale_x_continuous(limits = c(0, 1.75), expand = c(0, 0)) +
-  labs(title = "Pathway enrichment (bar = within-module rank)", x = NULL, y = NULL) +
+  scale_x_continuous(limits = c(0, 1.55), expand = c(0, 0)) +
+  labs(title = "Pathway enrichment (top hit first)", x = NULL, y = NULL) +
   FIG_THEME +
   theme(
     axis.text = element_blank(), axis.ticks = element_blank(),
@@ -241,7 +248,7 @@ p_ora <- ggplot(ora_d) +
     legend.key.size = unit(2.2, "mm"), legend.margin = margin(t = -2), plot.margin = margin(2, 1, 1, 1)
   )
 
-# ---- D. hub-protein diagrams (top-3 by |kME|, star: hub1 + 2 spokes) ---------
+# ---- D. hub proteins — top-3 by |kME|, clean ranked list --------------------
 hub_layout <- w$hubs |>
   filter(module %in% non_grey) |>
   group_by(module) |>
@@ -251,21 +258,18 @@ hub_layout <- w$hubs |>
   ungroup() |>
   mutate(
     mod_idx = idx_of(module),
-    nx = ifelse(rank == 1, 0.1, 0.42),
-    ny = mod_idx + dplyr::case_when(rank == 1 ~ 0, rank == 2 ~ 0.22, TRUE ~ -0.22),
-    nsz = ifelse(rank == 1, 1.7, 1.1)
+    ny = mod_idx + (2 - rank) * 0.26, # rank-1 (top hub) at the top of the band
+    nsz = ifelse(rank == 1, 1.8, 1.1),
+    face = ifelse(rank == 1, "bold", "plain")
   )
-hub_edges <- hub_layout |>
-  filter(rank > 1) |>
-  left_join(filter(hub_layout, rank == 1) |> select(module, cx = nx, cy = ny), by = "module")
-p_hub <- ggplot() +
+p_hub <- ggplot(hub_layout) +
   module_rows() +
-  geom_segment(data = hub_edges, aes(cx, cy, xend = nx, yend = ny), color = "grey55", linewidth = 0.2) +
-  geom_point(data = hub_layout, aes(nx, ny, fill = I(module), size = nsz), shape = 21, color = "grey30", stroke = 0.2) +
-  geom_text(data = hub_layout, aes(nx + 0.04, ny, label = gene), hjust = 0, size = 1.3, color = "grey15") +
+  ROW_LINES +
+  geom_point(aes(0.06, ny, fill = I(module), size = nsz), shape = 21, color = "grey30", stroke = 0.2) +
+  geom_text(aes(0.15, ny, label = gene, fontface = face), hjust = 0, vjust = 0.5, size = 1.4, color = "grey15") +
   scale_size_identity() +
   Y_SCALE +
-  scale_x_continuous(limits = c(0, 1.25), expand = c(0, 0)) +
+  scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) +
   labs(title = "Hub proteins", x = NULL, y = NULL) +
   FIG_THEME +
   theme(
@@ -277,10 +281,10 @@ p_hub <- ggplot() +
 key_txt <- paste0(
   "Contrasts:  Disease = PHE−Ctl   |   Transplant = Mito−Ctl   |   Rescue = PHE_Mito−PHE.   ",
   "Cells: eigengene-limma log2FC over FDR; black box = FDR<0.05.\n",
-  "ORA: 8 DBs (GO BP/CC/MF, Hallmark, KEGG, Reactome, MitoCarta, GO Slim), per-DB BH, FDR<0.10; best hit / DB, top 4 DBs / module; bars scaled within each module.  Hubs: top-3 |kME|."
+  "ORA: 8 rat DBs (GO BP/CC/MF, Hallmark, KEGG, Reactome, MitoCarta, GO Slim; msigdbr Rattus norvegicus / org.Rn.eg.db), per-DB BH, FDR<0.10; best hit / DB, top 4 / module; bars scaled within module.  Hubs: top-3 |kME|."
 )
 fig <- p_counts + p_heat + p_traj + p_ora + p_hub +
-  plot_layout(widths = c(0.4, 0.78, 0.5, 1.55, 0.92)) +
+  plot_layout(widths = c(0.36, 0.74, 0.46, 1.3, 0.6)) +
   plot_annotation(
     caption = key_txt,
     theme = theme(plot.caption = element_text(size = 4.4, color = "grey35", hjust = 0, lineheight = 1.2))

@@ -64,7 +64,7 @@ build_pca_panel <- function() {
     tibble(role = "dispersion (betadisper)", R2 = NA_real_, p = bd_p)
   )
 
-  GRP_LAB <- c(Ctl = "Ctl", Mito = "Mito", PHE = "PHE", PHE_Mito = "PHE+Mito")
+  GRP_LAB <- GROUP_LABELS
   GRP_SHP <- c(Ctl = 16, Mito = 17, PHE = 15, PHE_Mito = 18)
   fmt_perm <- function(role, r2, p) sprintf("%s R²=%.2f, %s", role, r2, fmt_p(p))
   stat_lines <- paste(c(

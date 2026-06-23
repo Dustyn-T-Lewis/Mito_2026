@@ -19,15 +19,22 @@ CONTRAST_DISPLAY_MAP <- c(
   MITOvPHE_MITO = "Secondary" # PHE_Mito - Mito
 )
 
-# Verbatim math labels (Unicode minus U+2212) keyed by OLD name.
-CONTRAST_MATH_BRIEF <- c(
-  CTLvMITO = "Mito − Ctl",
-  CTLvPHE = "PHE − Ctl",
-  PHEvPHE_MITO = "PHE_Mito − PHE",
-  Interaction = "(PHE_Mito − Mito) − (PHE − Ctl)",
-  MITOvPHE_MITO = "PHE_Mito − Mito",
-  Interaction_Phe = "PHE_Mito − 2·Mito + Ctl"
-)
+# Verbatim math labels (Unicode minus U+2212) keyed by OLD name, built from the
+# condition display labels so a relabel flows through here automatically.
+CONTRAST_MATH_BRIEF <- local({
+  g <- H9C2_GROUP_LABELS
+  c(
+    CTLvMITO = sprintf("%s − %s", g[["Mito"]], g[["Ctl"]]),
+    CTLvPHE = sprintf("%s − %s", g[["PHE"]], g[["Ctl"]]),
+    PHEvPHE_MITO = sprintf("%s − %s", g[["PHE_Mito"]], g[["PHE"]]),
+    Interaction = sprintf(
+      "(%s − %s) − (%s − %s)",
+      g[["PHE_Mito"]], g[["Mito"]], g[["PHE"]], g[["Ctl"]]
+    ),
+    MITOvPHE_MITO = sprintf("%s − %s", g[["PHE_Mito"]], g[["Mito"]]),
+    Interaction_Phe = sprintf("%s − 2·%s + %s", g[["PHE_Mito"]], g[["Mito"]], g[["Ctl"]])
+  )
+})
 
 # Short brief display name for tight strips.
 contrast_brief <- function(old_name) {

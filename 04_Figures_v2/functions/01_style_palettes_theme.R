@@ -8,6 +8,9 @@ library(grid)
 
 # --- groups / contrasts / palettes / thresholds (match the 00-03 scripts) ----
 H9C2_GROUP_LEVELS <- c("Ctl", "Mito", "PHE", "PHE_Mito")
+# Display annotations for the four conditions (legends, axis strips, contrast math).
+# Internal tokens above drive data joins and must not change; only these strings show.
+H9C2_GROUP_LABELS <- c(Ctl = "CTL", Mito = "MitoTx", PHE = "Phe-only", PHE_Mito = "Phe+MitoTx")
 H9C2_CORE_CONTRASTS <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO", "Interaction")
 H9C2_CONTRAST_ROLES <- c(
   CTLvPHE = "Disease", CTLvMITO = "Transplant",
@@ -30,6 +33,7 @@ options(device = function(...) grDevices::pdf(file = nullfile(), ...))
 
 # Palettes (aliases used by figure scripts)
 GROUP_COLORS <- H9C2_PAL_GROUP # Ctl / Mito / PHE / PHE_Mito
+GROUP_LABELS <- H9C2_GROUP_LABELS
 DIR_COLORS <- H9C2_PAL_DIR # Up / Down / NS
 DIR_COLORS_MITO <- H9C2_PAL_DIR_MITO
 CONTRAST_COLORS <- H9C2_PAL_CONTRAST

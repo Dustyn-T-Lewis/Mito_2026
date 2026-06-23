@@ -44,7 +44,6 @@ CONTRASTS <- c(
   Transplant = "Mito - Ctl",
   Rescue     = "PHE_Mito - PHE"
 )
-GROUP_SHORT <- c(Ctl = "Ctl", Mito = "Mito", PHE = "PHE", PHE_Mito = "PHE+Mito")
 fmt_fdr <- function(p) {
   ifelse(is.na(p), "",
     ifelse(p < 0.001, "<.001",
@@ -208,7 +207,7 @@ p_traj <- ggplot(traj, aes(gx, y, group = module)) +
   geom_segment(data = row_bg, aes(x = 0.7, xend = 4.3, y = y, yend = y), color = "grey85", linewidth = 0.15, inherit.aes = FALSE) +
   geom_line(aes(color = I(module)), linewidth = 0.5) +
   geom_point(aes(fill = I(module)), shape = 21, size = 1, color = "grey30", stroke = 0.2) +
-  scale_x_continuous(breaks = 1:4, labels = unname(GROUP_SHORT), limits = c(0.7, 4.3), expand = c(0, 0)) +
+  scale_x_continuous(breaks = 1:4, labels = unname(GROUP_LABELS), limits = c(0.7, 4.3), expand = c(0, 0)) +
   Y_SCALE +
   labs(title = "Trajectory", x = "Group", y = "Eigengene (per-module scaled)") +
   FIG_THEME +

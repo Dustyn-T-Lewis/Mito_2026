@@ -20,7 +20,7 @@ dep_results <- stats::setNames(
 comb <- load_combined_wide()
 n_total <- length(unique(comb$gene[!is.na(comb$gene)]))
 
-# ---- counts tibble (YvO frac_df style) ---------------------------------------
+# counts tibble (YvO frac_df style)
 .build_counts_df <- function() {
   dplyr::bind_rows(lapply(CORE, function(ctr) {
     r <- dep_results[[ctr]]
@@ -44,10 +44,10 @@ n_total <- length(unique(comb$gene[!is.na(comb$gene)]))
 
 counts_df_cache <- .build_counts_df()
 
-# ---- public: raw data for workbook ------------------------------------------
+# public: raw data for workbook
 dep_count_data <- function() counts_df_cache
 
-# ---- Panel A: DEP counts (horizontal nested-threshold) -----------------------
+# Panel A: DEP counts (horizontal nested-threshold)
 build_dep_count_panel <- function() {
   frac_df <- counts_df_cache
 
@@ -117,7 +117,7 @@ build_dep_count_panel <- function() {
     )
 }
 
-# ---- Panel B: effect-size companion (contrast-colored) -----------------------
+# Panel B: effect-size companion (contrast-colored)
 build_dep_effect_panel <- function() {
   # All logFC (no window filter) for the median stat
   lfc_long_all <- dplyr::bind_rows(lapply(CORE, \(c)

@@ -48,7 +48,7 @@ fmt_fdr <- function(p) {
   )
 }
 
-# ---- network + eigengene-limma (3 core contrasts) ---------------------------
+# network + eigengene-limma (3 core contrasts)
 w <- readRDS(here::here("04_Figures", "F05_modules", "c_data", "wgcna_network.rds"))
 meta <- as_tibble(readRDS(P05$imp_rds)$metadata)
 non_grey <- setdiff(sub("^ME", "", colnames(w$MEs)), "grey")
@@ -77,7 +77,7 @@ mod_levels <- rev(mod_order)
 n_mod <- length(non_grey)
 idx_of <- function(m) as.integer(factor(m, levels = mod_levels))
 
-# ---- consolidated ORA — maximal DB coverage --------------------------------
+# consolidated ORA — maximal DB coverage
 # 5 canonical DBs (Hallmark/Reactome/KEGG/MitoCarta/GO Slim) + full GO BP/CC/MF.
 go_cache <- file.path(DAT, "rat_go_bpccmf_sets.rds")
 if (file.exists(go_cache)) {
@@ -124,7 +124,7 @@ ora_all <- bind_rows(lapply(mod_order, function(m) {
     transmute(module = m, database, pathway, padj)
 }))
 
-# ---- eigengene group-mean trajectory ----------------------------------------
+# eigengene group-mean trajectory
 traj <- as.data.frame(me) |>
   rownames_to_column("Col_ID") |>
   pivot_longer(-Col_ID, names_to = "module", values_to = "v") |>
@@ -134,7 +134,7 @@ traj <- as.data.frame(me) |>
   mutate(gx = as.integer(Group), mod_idx = idx_of(module))
 traj <- mutate(traj, y = mod_idx + m * (0.4 / max(abs(traj$m))))
 
-# ---- shared row geometry ----------------------------------------------------
+# shared row geometry
 row_bg <- tibble(y = seq_len(n_mod), fill = mod_levels)
 module_rows <- function(alpha = 0.18) {
   ggplot2::geom_rect(
@@ -147,7 +147,7 @@ Y_SCALE <- ggplot2::scale_y_continuous(limits = c(0.5, n_mod + 0.5), expand = c(
 # thin separators between module rows (added to every panel for a clean grid)
 ROW_LINES <- ggplot2::geom_hline(yintercept = seq_len(n_mod + 1) - 0.5, color = "grey70", linewidth = 0.2)
 
-# ---- protein-count bars — grow right-to-left, sit against the heatmap --------
+# protein-count bars — grow right-to-left, sit against the heatmap
 cnt_df <- tibble(module = mod_levels, y = seq_len(n_mod)) |>
   left_join(count(tibble(module = w$module_colors), module), by = "module")
 p_counts <- ggplot(cnt_df, aes(n, y)) +
@@ -165,7 +165,7 @@ p_counts <- ggplot(cnt_df, aes(n, y)) +
     plot.margin = margin(2, 0, 1, 2)
   )
 
-# ---- A. eigengene-limma heatmap (log2FC over FDR; key horizontal below) ------
+# A. eigengene-limma heatmap (log2FC over FDR; key horizontal below)
 heat <- mod_stats |>
   mutate(
     contrast = factor(contrast, levels = names(CONTRASTS)),
@@ -196,7 +196,7 @@ p_heat <- ggplot(heat, aes(x, y)) +
     legend.margin = margin(t = -2), plot.margin = margin(2, 1, 1, 1)
   )
 
-# ---- B. group trajectory ----------------------------------------------------
+# B. group trajectory
 p_traj <- ggplot(traj, aes(gx, y, group = module)) +
   module_rows() +
   ROW_LINES +
@@ -215,7 +215,7 @@ p_traj <- ggplot(traj, aes(gx, y, group = module)) +
     panel.grid = element_blank(), plot.margin = margin(2, 2, 1, 1)
   )
 
-# ---- C. consolidated ORA — bars scaled within each module, top hit first -----
+# C. consolidated ORA — bars scaled within each module, top hit first
 ora_d <- ora_all |>
   mutate(mod_idx = idx_of(module), neglp = -log10(padj)) |>
   group_by(mod_idx) |>
@@ -245,7 +245,7 @@ p_ora <- ggplot(ora_d) +
     legend.key.size = unit(2.2, "mm"), legend.margin = margin(t = -2), plot.margin = margin(2, 1, 1, 1)
   )
 
-# ---- D. hub proteins — top-5 by |kME|, coloured by DE significance -----------
+# D. hub proteins — top-5 by |kME|, coloured by DE significance
 # Each hub's own differential abundance: min FDR across the 3 core contrasts.
 hub_sig <- readr::read_csv(P05$comb, show_col_types = FALSE) |>
   filter(contrast %in% c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO")) |>
@@ -348,7 +348,7 @@ p_hub <- ggplot(hub_nodes) +
     legend.margin = margin(t = -2), plot.margin = margin(2, 1, 1, 1)
   )
 
-# ---- assemble ---------------------------------------------------------------
+# assemble
 key_txt <- paste0(
   "Contrasts:  Disease = PHE−Ctl   |   Transplant = Mito−Ctl   |   Rescue = PHE_Mito−PHE.   ",
   "Cells: eigengene-limma log2FC over FDR; black box = FDR<0.05.\n",

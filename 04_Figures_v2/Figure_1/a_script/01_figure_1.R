@@ -26,7 +26,7 @@ venn_p <- venn_l$venn
 strip_p <- venn_l$strip
 pw_p <- build_pathway_bar_panel()$plot
 
-# ---- standalone panel PNGs (each with its own tight axes) -------------------
+# standalone panel PNGs (each with its own tight axes)
 panel_specs <- list(
   list(name = "panel_a_pca", plot = pca_p, w = 95, h = 80),
   list(name = "panel_b_dep_counts", plot = dep_p, w = 95, h = 72),
@@ -43,7 +43,7 @@ for (s in panel_specs) {
 }
 message(sprintf("Figure 1: wrote %d standalone panels", length(panel_specs)))
 
-# ---- composite (letters baked into titles via add_tag) ----------------------
+# composite (letters baked into titles via add_tag)
 # B: DEP counts + a stringency key — terms boxed tight and shaded, ordered
 # dark -> light (Π / FDR / p) to read parallel with the bars, bottom-right.
 dep_key_df <- tibble::tibble(

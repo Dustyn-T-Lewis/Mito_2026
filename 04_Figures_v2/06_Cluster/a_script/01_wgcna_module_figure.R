@@ -1,15 +1,16 @@
 #!/usr/bin/env Rscript
 # F06 WGCNA module figure — one row-aligned block, module = row:
-#   [protein counts] [eigengene-limma heatmap, 3 core contrasts] [trajectory] [ORA]
-# Rows shaded by module colour so clusters read across the panels.
+#   [counts] [hub proteins] [eigengene heatmap, 3 contrasts] [trajectory] [ORA]
+# Rows shaded by module colour so clusters read across the panels; modules
+# ordered by protein-set size.
 #
 # Modules: signed WGCNA network (04_Figures/F05_modules; power 7, signed TOM,
 # minModuleSize 30, mergeCutHeight 0.25, deepSplit 2). A module eigengene is the
 # module's 1st PC — one value per sample — run through the same limma model as
 # the proteins (~0 + Group) so heatmap cells are tested log2FC (+ FDR).
 # Trajectory = eigengene group means (Ctl -> Mito -> PHE -> PHE_Mito).
-# ORA = consolidated GO:BP / Hallmark / KEGG / Reactome / MitoCarta, cross-DB
-# deduplicated (run_ora_deduplicated); top 2 hits / module.
+# ORA = 8 DBs (GO BP/CC/MF, Hallmark, KEGG, Reactome, MitoCarta, GO Slim),
+# per-DB BH at FDR<0.10; best hit per DB, top 4 distinct DBs / module.
 
 library(here)
 suppressPackageStartupMessages({
@@ -106,17 +107,33 @@ pw_collection <- c(build_harmonized_collection(), go_sets)
 mod_genes <- tibble(gene = w$ann$gene, module = w$module_colors) |>
   filter(!is.na(gene), nzchar(gene), module %in% non_grey)
 universe <- unique(w$ann$gene[!is.na(w$ann$gene) & nzchar(w$ann$gene)])
+pw_by_db <- split(names(pw_collection), classify_database(names(pw_collection)))
+
+# Per-module ORA: per-DB fora (each DB BH-corrected on its own), then the best
+# hit from each DB and the top 3 distinct DBs — so curated pathway DBs (KEGG,
+# Reactome, Hallmark, MitoCarta) surface alongside GO rather than being deduped
+# into their GO equivalents.
 ora_all <- bind_rows(lapply(mod_order, function(m) {
-  res <- tryCatch(
-    run_ora_deduplicated(mod_genes$gene[mod_genes$module == m], universe, pw_collection, padj_cutoff = 0.10),
-    error = function(e) NULL
-  )
-  if (is.null(res) || nrow(res) == 0) {
+  g <- intersect(mod_genes$gene[mod_genes$module == m], universe)
+  res <- bind_rows(lapply(names(pw_by_db), function(db) {
+    dp <- pw_collection[pw_by_db[[db]]]
+    if (length(dp) < 2) {
+      return(NULL)
+    }
+    r <- as.data.frame(fgsea::fora(pathways = dp, genes = g, universe = universe, minSize = 10, maxSize = 500))
+    r$database <- db
+    r
+  }))
+  sig <- res[!is.na(res$padj) & res$padj < 0.10, ]
+  if (!nrow(sig)) {
     return(NULL)
   }
-  res |>
+  sig |>
+    group_by(database) |>
+    slice_min(padj, n = 1, with_ties = FALSE) |>
+    ungroup() |>
     arrange(padj) |>
-    head(2) |>
+    head(4) |>
     transmute(module = m, database, pathway, padj)
 }))
 
@@ -222,7 +239,7 @@ ora_d <- ora_all |>
   mutate(mod_idx = idx_of(module)) |>
   group_by(mod_idx) |>
   mutate(
-    rank = row_number(), y = mod_idx + (1.5 - rank) * 0.3, neglp = -log10(padj),
+    rank = row_number(), y = mod_idx + (2.5 - rank) * 0.2, neglp = -log10(padj),
     lab = clean_pathway_name(pathway),
     lab = ifelse(nchar(lab) > 36, paste0(substr(lab, 1, 34), "…"), lab)
   ) |>
@@ -231,8 +248,8 @@ empty_df <- tibble(module = setdiff(mod_levels, ora_all$module)) |> mutate(y = i
 x_max <- max(ora_d$neglp, na.rm = TRUE) * 1.04
 p_ora <- ggplot(ora_d) +
   module_rows() +
-  geom_col(aes(x = neglp, y = y, fill = database), orientation = "y", width = 0.32, color = "grey30", linewidth = 0.1) +
-  geom_text(aes(0.05, y, label = lab), hjust = 0, vjust = 0.5, size = 1.5, color = "grey10") +
+  geom_col(aes(x = neglp, y = y, fill = database), orientation = "y", width = 0.16, color = "grey30", linewidth = 0.1) +
+  geom_text(aes(0.05, y, label = lab), hjust = 0, vjust = 0.5, size = 1.25, color = "grey10") +
   geom_text(data = empty_df, aes(0.05, y, label = "no enrichment"), hjust = 0, size = 1.4, fontface = "italic", color = "grey55") +
   scale_fill_manual(values = DB_COLORS, name = NULL, guide = guide_legend(nrow = 1)) +
   Y_SCALE +
@@ -249,7 +266,7 @@ p_ora <- ggplot(ora_d) +
 key_txt <- paste0(
   "Contrasts:  Disease = PHE−Ctl   |   Transplant = Mito−Ctl   |   Rescue = PHE_Mito−PHE.   ",
   "Cells: eigengene-limma log2FC over FDR; black box = FDR<0.05.  Hubs: top-3 |kME|.\n",
-  "ORA: GO BP/CC/MF + Hallmark + KEGG + Reactome + MitoCarta + GO Slim, per-DB BH cross-DB dedup; FDR<0.10, top 2 / module."
+  "ORA: GO BP/CC/MF + Hallmark + KEGG + Reactome + MitoCarta + GO Slim, per-DB BH; FDR<0.10, best hit / DB, top 4 distinct DBs / module."
 )
 fig <- p_counts + p_hubs + p_heat + p_traj + p_ora +
   plot_layout(widths = c(0.42, 0.62, 0.86, 0.56, 1.45)) +
@@ -259,7 +276,7 @@ fig <- p_counts + p_hubs + p_heat + p_traj + p_ora +
   )
 
 FIG_W <- PANEL_MD
-FIG_H <- 135
+FIG_H <- 160
 ggsave(file.path(MAIN_PDF, "MAIN_F06_wgcna_modules.pdf"), fig,
   width = FIG_W, height = FIG_H, units = "mm", device = pdf_dev, limitsize = FALSE
 )

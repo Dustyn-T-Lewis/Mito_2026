@@ -21,11 +21,9 @@ source(here::here("04_Figures_v2", "functions", "06_supplementary_workbook.R"))
 source(here::here("04_Figures_v2", "04_Pathway_bars", "a_script", "_build.R"))
 
 BASE <- here::here("04_Figures_v2", "04_Pathway_bars")
-RPT_PDF <- file.path(BASE, "b_reports", "main", "pdf")
 RPT_PNG <- file.path(BASE, "b_reports", "main", "png")
 DAT <- file.path(BASE, "c_data")
-for (d in c(RPT_PDF, RPT_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
-pdf_dev <- get_pdf_device()
+for (d in c(RPT_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
 out <- build_pathway_bar_panel()
 p <- out$plot
@@ -34,14 +32,10 @@ sig_pw <- out$sig_pw
 
 FIG_W <- 120
 FIG_H <- 80
-ggsave(file.path(RPT_PDF, "MAIN_F04_pathway_bars.pdf"), p,
-  width = FIG_W, height = FIG_H, units = "mm", device = pdf_dev, limitsize = FALSE
-)
 ggsave(file.path(RPT_PNG, "MAIN_F04_pathway_bars.png"), p,
   width = FIG_W, height = FIG_H, units = "mm", dpi = 300, limitsize = FALSE
 )
 
-# ---- Workbook ----------------------------------------------------------------
 CORE <- H9C2_CONTRAST_ORDER
 
 counts_tab <- bar_df |>

@@ -15,10 +15,8 @@ source(here::here("04_Figures_v2", "functions", "04_mitocarta_lens_lookup.R"))
 
 # Globals for build_ring(); side-effect writes go to existing F05 dirs.
 F05_BASE <- here::here("04_Figures_v2", "05_Enrich_Volcano")
-RPT_PDF <- file.path(F05_BASE, "b_reports", "main", "pdf")
 RPT_PNG <- file.path(F05_BASE, "b_reports", "main", "png")
-for (d in c(RPT_PDF, RPT_PNG)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
-pdf_dev <- get_pdf_device()
+dir.create(RPT_PNG, recursive = TRUE, showWarnings = FALSE)
 
 dep_df <- load_combined_wide()
 fgsea_all <- readr::read_csv(

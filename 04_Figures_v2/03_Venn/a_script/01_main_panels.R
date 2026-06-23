@@ -11,11 +11,9 @@ source(here::here("04_Figures_v2", "functions", "06_supplementary_workbook.R"))
 source(here::here("04_Figures_v2", "03_Venn", "a_script", "_build.R"))
 
 BASE <- here::here("04_Figures_v2", "03_Venn")
-RPT_PDF <- file.path(BASE, "b_reports", "main", "pdf")
 RPT_PNG <- file.path(BASE, "b_reports", "main", "png")
 DAT <- file.path(BASE, "c_data")
-for (d in c(RPT_PDF, RPT_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
-pdf_dev <- get_pdf_device()
+for (d in c(RPT_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
 out <- build_venn_panels()
 venn <- out$venn
@@ -26,30 +24,17 @@ have_patchwork <- requireNamespace("patchwork", quietly = TRUE)
 
 if (have_ggplotify && have_patchwork) {
   combined <- patchwork::wrap_plots(venn, strip, widths = c(1.6, 1))
-  ggsave(file.path(RPT_PDF, "MAIN_F03_venn.pdf"), combined,
-    width = 140, height = 100, units = "mm", device = pdf_dev
-  )
   ggsave(file.path(RPT_PNG, "MAIN_F03_venn.png"), combined,
     width = 140, height = 100, units = "mm", dpi = 300
   )
 } else {
   # fallback: venn is still the raw grob from eulerr
-  venn_grob <- venn
   sub_txt <- sprintf(
     "Disease: %s  |  Transplant: %s  |  Rescue: %s",
     CONTRAST_MATH_BRIEF[["CTLvPHE"]],
     CONTRAST_MATH_BRIEF[["CTLvMITO"]],
     CONTRAST_MATH_BRIEF[["PHEvPHE_MITO"]]
   )
-  pdf_dev(file.path(RPT_PDF, "MAIN_F03_venn.pdf"), width = 140 / 25.4, height = 100 / 25.4)
-  grid::grid.newpage()
-  grid::grid.text("DEP overlap (Π < 0.05)",
-    y = 0.97,
-    gp = grid::gpar(fontface = "bold", fontsize = 8)
-  )
-  grid::grid.text(sub_txt, y = 0.93, gp = grid::gpar(fontsize = 5, col = "grey30"))
-  print(venn_grob, newpage = FALSE)
-  dev.off()
   png(file.path(RPT_PNG, "MAIN_F03_venn.png"),
     width = 140, height = 100,
     units = "mm", res = 300
@@ -60,11 +45,8 @@ if (have_ggplotify && have_patchwork) {
     gp = grid::gpar(fontface = "bold", fontsize = 8)
   )
   grid::grid.text(sub_txt, y = 0.93, gp = grid::gpar(fontsize = 5, col = "grey30"))
-  print(venn_grob, newpage = FALSE)
+  print(venn, newpage = FALSE)
   dev.off()
-  ggsave(file.path(RPT_PDF, "MAIN_F03_venn_direction.pdf"), strip,
-    width = 80, height = 70, units = "mm", device = pdf_dev
-  )
   ggsave(file.path(RPT_PNG, "MAIN_F03_venn_direction.png"), strip,
     width = 80, height = 70, units = "mm", dpi = 300
   )

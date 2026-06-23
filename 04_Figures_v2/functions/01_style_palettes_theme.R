@@ -161,27 +161,3 @@ clean_pathway_name <- function(name) {
   }
   out
 }
-
-get_pdf_device <- function() {
-  # cairo_pdf > quartz > base pdf
-  tryCatch(
-    {
-      cairo_pdf(tempfile())
-      dev.off()
-      cairo_pdf
-    },
-    error = function(e) {
-      tryCatch(
-        {
-          fp <- tempfile(fileext = ".pdf")
-          quartz(type = "pdf", file = fp)
-          dev.off()
-          function(filename, width, height, ...) {
-            quartz(file = filename, type = "pdf", width = width, height = height)
-          }
-        },
-        error = function(e) "pdf"
-      )
-    }
-  )
-}

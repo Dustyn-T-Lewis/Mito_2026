@@ -22,30 +22,21 @@ source(here::here("04_Figures_v2", "functions", "06_supplementary_workbook.R"))
 source(here::here("04_Figures_v2", "02_DEP_bars", "a_script", "_build.R"))
 
 BASE <- here::here("04_Figures_v2", "02_DEP_bars")
-RPT_PDF <- file.path(BASE, "b_reports", "main", "pdf")
 RPT_PNG <- file.path(BASE, "b_reports", "main", "png")
 DAT <- file.path(BASE, "c_data")
-for (d in c(RPT_PDF, RPT_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
-pdf_dev <- get_pdf_device()
+for (d in c(RPT_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
-# ---- Build panels ------------------------------------------------------------
 pDEP <- build_dep_count_panel()
 pHIST <- build_dep_effect_panel()
 
-# ---- Compose -----------------------------------------------------------------
 fig <- pDEP + pHIST + plot_layout(widths = c(1, 0.62))
 
 FIG_W <- 178
 FIG_H <- 120
-ggsave(file.path(RPT_PDF, "MAIN_F02_dep_bars.pdf"), fig,
-  width = FIG_W, height = FIG_H, units = "mm",
-  device = pdf_dev, limitsize = FALSE
-)
 ggsave(file.path(RPT_PNG, "MAIN_F02_dep_bars.png"), fig,
   width = FIG_W, height = FIG_H, units = "mm", dpi = 300, limitsize = FALSE
 )
 
-# ---- Supplementary workbook --------------------------------------------------
 dep_tabs <- lapply(CORE, function(c) {
   dep_results[[c]] |>
     transmute(uniprot_id, gene, logFC, P.Value, adj.P.Val, pi_score) |>

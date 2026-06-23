@@ -28,11 +28,9 @@ source(here::here("04_Figures_v2", "functions", "03a_dedup_engine.R"))
 source(here::here("04_Figures_v2", "functions", "03b_enrichment_runners.R"))
 
 BASE <- here::here("04_Figures_v2", "06_Cluster")
-MAIN_PDF <- file.path(BASE, "b_reports", "main", "pdf")
 MAIN_PNG <- file.path(BASE, "b_reports", "main", "png")
 DAT <- file.path(BASE, "c_data")
-for (d in c(MAIN_PDF, MAIN_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
-pdf_dev <- get_pdf_device()
+for (d in c(MAIN_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
 DB_COLORS <- c(
   `GO:BP` = "#1B9E77", `GO:CC` = "#66C2A5", `GO:MF` = "#A6D854",
@@ -367,9 +365,6 @@ fig <- p_counts + p_heat + p_traj + p_ora + p_hub +
 
 FIG_W <- PANEL_MD
 FIG_H <- 160
-ggsave(file.path(MAIN_PDF, "MAIN_F06_wgcna_modules.pdf"), fig,
-  width = FIG_W, height = FIG_H, units = "mm", device = pdf_dev, limitsize = FALSE
-)
 ggsave(file.path(MAIN_PNG, "MAIN_F06_wgcna_modules.png"), fig,
   width = FIG_W, height = FIG_H, units = "mm", dpi = 300, limitsize = FALSE
 )

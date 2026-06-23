@@ -17,9 +17,7 @@ PANELS <- file.path(RPT, "panels")
 for (d in c(RPT, PANELS, file.path(BASE, "c_data"))) {
   dir.create(d, recursive = TRUE, showWarnings = FALSE)
 }
-pdf_dev <- get_pdf_device()
 
-# ---- build each panel once --------------------------------------------------
 pca_p <- build_pca_panel()$plot
 dep_p <- build_dep_count_panel()
 eff_p <- build_dep_effect_panel()
@@ -100,20 +98,4 @@ ggplot2::ggsave(
   file.path(RPT, "MAIN_figure_1.png"), fig,
   width = COMP_W, height = COMP_H, units = "mm", dpi = 300, limitsize = FALSE
 )
-pdf_path <- file.path(RPT, "MAIN_figure_1.pdf")
-pdf_ok <- tryCatch(
-  {
-    ggplot2::ggsave(pdf_path, fig,
-      width = COMP_W, height = COMP_H, units = "mm",
-      device = pdf_dev, limitsize = FALSE
-    )
-    file.exists(pdf_path) && file.info(pdf_path)$size > 1000
-  },
-  error = function(e) FALSE
-)
-if (!pdf_ok) {
-  message("preferred pdf device failed — falling back to base grDevices::pdf()")
-  grDevices::pdf(pdf_path, width = COMP_W / 25.4, height = COMP_H / 25.4)
-  tryCatch(print(fig), finally = grDevices::dev.off())
-}
 message("Figure 1 composite built")

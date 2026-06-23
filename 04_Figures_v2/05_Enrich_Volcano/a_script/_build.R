@@ -86,9 +86,6 @@ build_ring <- function(ctr, tag, role) {
     show_legend = FALSE
   )
 
-  ggsave(file.path(RPT_PDF, sprintf("MAIN_F05_%s_ring.pdf", tag)), p,
-    width = 110, height = 110, units = "mm", device = pdf_dev
-  )
   ggsave(file.path(RPT_PNG, sprintf("MAIN_F05_%s_ring.png", tag)), p,
     width = 110, height = 110, units = "mm", dpi = 300
   )

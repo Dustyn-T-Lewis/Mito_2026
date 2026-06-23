@@ -42,8 +42,8 @@ Each standalone figure subdir:
 ```
 <fig>/
   a_script/01_main_panels.R          builds + exports the figure
-  b_reports/main/{pdf,png}/          main standalone figure images (MAIN_F0x_*)
-  b_reports/supp/{pdf,png}/          supplementary diagnostics (e.g. cluster selection)
+  b_reports/main/png/                main standalone figure images (MAIN_F0x_*)
+  b_reports/supp/png/                supplementary diagnostics (e.g. cluster selection)
   c_data/F0x_supplementary.xlsx      single workbook: Overview sheet + result sheets
   c_data/shown_pathways.csv          ONLY in 05 — written for reference (F06 does NOT read it)
 ```
@@ -56,7 +56,7 @@ Composites write to:
                                       D=pathway bars, E=Venn, F=direction strip)
   a_script/02_C2_enrichment.R        3 enrichment rings (A=Disease, B=Transplant, C=Rescue)
                                       + NES legend inset into A
-  b_reports/main/{pdf,png}/          MAIN_C1_overview.{pdf,png}, MAIN_C2_enrichment.{pdf,png}
+  b_reports/main/png/                MAIN_C1_overview.png, MAIN_C2_enrichment.png
 ```
 
 ## functions/ — shared engines (pipeline order)
@@ -69,13 +69,13 @@ Derived-data caches (`rat_gene_sets.rds`, `fgsea_tstat_all_h9c2.csv`,
 
 | File | Provides |
 |---|---|
-| `01_style_palettes_theme.R` | `FIG_THEME`, group/contrast palettes, thresholds, `get_pdf_device()`, `scale_text()`, `clean_pathway_name()`, `fmt_p()` |
+| `01_style_palettes_theme.R` | `FIG_THEME`, group/contrast palettes + `GROUP_LABELS`, thresholds, `scale_text()`, `clean_pathway_name()`, `fmt_p()` |
 | `02_data_paths_and_loaders.R` | `P05` input paths, `load_combined_wide()`, contrast naming maps, `contrast_brief()`; sources 01 |
 | `03_pathway_enrichment_dedup_ora.R` | `deduplicate_enrichment()`, `run_ora_deduplicated()`, `build_harmonized_collection()`, `clean_display_label()`, `classify_database()` |
 | `04_mitocarta_lens_lookup.R` | `MITO_PATHWAY_REGEX`, MitoCarta block loader |
 | `05_volcano_ring_plot_builder.R` | `make_volcano_ring()`, `build_ring_180_split()`, `build_nes_legend_bar()`; sources 01 if needed |
 | `06_supplementary_workbook.R` | `build_workbook(out_file, figure_title, sheet_specs)` — writes an Overview sheet first, then data sheets; deletes nothing |
-| `08_composite_layout.R` | `add_tag()`, `composite_caption()`, `save_composite()` — assembles patchwork composites; PDF device falls back to base `grDevices::pdf()` when cairo/quartz is unavailable |
+| `08_composite_layout.R` | `add_tag()`, `composite_caption()`, `save_composite()` — assembles patchwork composites and writes the PNG |
 
 ## Inputs (read-only)
 
@@ -86,12 +86,11 @@ Derived-data caches (`rat_gene_sets.rds`, `fgsea_tstat_all_h9c2.csv`,
 
 ## Conventions
 
-- Root resolved via `here::here()`. Width invariant 178 mm (`PANEL_MD`); pdf via `get_pdf_device()` (cairo → quartz → base), png at 300 dpi, `units = "mm"`.
+- Root resolved via `here::here()`. Width invariant 178 mm (`PANEL_MD`); figures export a single PNG at 300 dpi, `units = "mm"`.
 - Each figure's tabular output lives **only** in its `F0x_supplementary.xlsx` (Overview sheet documents every other sheet: name, role in the figure, contents). The single exception is `shown_pathways.csv` in figure 05, retained on disk for reference (F06 does **not** read it — F04 no longer writes it either).
 - No edits to upstream stages (00–03) or to `04_Figures/`. No new gene-set derivation.
-- **Group colours** (Ctl=#3B7DB5, Mito=#009E73, PHE=#E08214, PHE_Mito=#8073AC) match `GROUP_COLORS` in `01_style_palettes_theme.R`. Contrast **role names** (Disease / Transplant / Rescue / Secondary / Interaction) come from `contrast_brief()` / its alias `role_label()` (backed by `CONTRAST_DISPLAY_MAP`) and are used on axis labels, bar fills, and panel titles throughout.
+- **Group colours** (Ctl=#3B7DB5, Mito=#009E73, PHE=#E08214, PHE_Mito=#8073AC) match `GROUP_COLORS` in `01_style_palettes_theme.R`. The four conditions display as CTL / MitoTx / Phe-only / Phe+MitoTx via `GROUP_LABELS` (legends, trajectory axis, contrast math); the internal tokens (Ctl/Mito/PHE/PHE_Mito) stay unchanged for data joins. Contrast **role names** (Disease / Transplant / Rescue / Secondary / Interaction) come from `contrast_brief()` / its alias `role_label()` (backed by `CONTRAST_DISPLAY_MAP`) and are used on axis labels, bar fills, and panel titles throughout.
 - **Direction palette**: `DIR_COLORS` (Up=#D6604D / Down=#4393C3 / NS=grey70) for all DEP direction plots; `DIR_COLORS_MITO` (Up=#B2182B / Down=#2166AC) for the MitoCarta-subset direction strip.
-- **PDF device fallback**: `get_pdf_device()` tries `cairo_pdf` first, then `quartz`, then base `grDevices::pdf()`. On this machine (no XQuartz / no cairo), the base-pdf fallback is active. Greek Π may render as a placeholder glyph in the base-pdf output; the PNG (300 dpi raster) is the Π-correct canonical file for figures containing the Π symbol.
 
 ## Run
 
@@ -107,4 +106,5 @@ Rscript 04_Figures_v2/07_Composites/a_script/02_C2_enrichment.R
 ```
 
 F04 and F06 are independent; run order does not matter. Benign X11/cairo
-warnings on stderr are expected — the PDF device falls back to base pdf.
+warnings on stderr are expected on machines without XQuartz and do not affect
+the PNG output.

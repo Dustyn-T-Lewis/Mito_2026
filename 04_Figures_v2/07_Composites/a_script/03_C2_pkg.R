@@ -61,12 +61,14 @@ grid <- volcano_ring_grid(
   volc_dfs = volc_long,
   enrich_dfs = enrich_long,
   contrasts = unname(ring_map),
+  subtitles = unname(CONTRAST_MATH_BRIEF[names(ring_map)]),
   ncol = 2,
   gene_col = "gene", logfc_col = "logFC", pval_col = "P.Value", padj_col = "padj",
   term_col = "pathway", nes_col = "NES", size_col = "size",
   genes_col = "leadingEdge", genes_sep = ";",
   p_threshold = 0.05, logfc_threshold = log2(1.5),
-  label_size = 3.4, point_size = 2.2, point_alpha = 0.7,
+  label_size = 2.7, point_size = 2.2, point_alpha = 0.7,
+  count_x_mult = 0.55, count_y_mult = 0.55,
   theme = volcano_ring_theme(base_size = 13)
 )
 

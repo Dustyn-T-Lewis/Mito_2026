@@ -30,7 +30,7 @@ Spine = **Disease → Rescue reversal**.
   02_DEP_bars/                DEP counts (% proteome) + effect-size distributions
   03_Venn/                    area-proportional 3-set DEP overlap + direction strip
   04_Pathway_bars/            Panel-D pathway counts, stacked by source database (5 DBs)
-  05_Enrich_Volcano/          per-contrast volcano-in-ring panels + NES legend
+  05_Enrich_Volcano/          per-contrast volcano-in-ring panels (enrichVolcano)
   06_Cluster/                 WGCNA module figure: counts · eigengene heatmap · trajectory · ORA
   07_Composites/              C1 (6-panel overview) and C2 (2x2 of 4 enrichment rings)
   BUILD_PROMPT.md             full regeneration spec for an agent
@@ -68,13 +68,16 @@ Derived-data caches (`rat_gene_sets.rds`, `fgsea_tstat_all_h9c2.csv`,
 `protein_localization_rat.csv`) are NOT copied — they are read single-sourced from
 `04_Figures/shared/` so they can never drift.
 
+The volcano-in-ring figures (F05 panels, C2 composite) are drawn by the external
+`enrichVolcano` package via `volcano_ring()` / `volcano_ring_grid()`, fed the tidy
+DE table and the fgsea cache; there is no in-suite ring builder.
+
 | File | Provides |
 |---|---|
 | `01_style_palettes_theme.R` | `FIG_THEME`, group/contrast palettes + `GROUP_LABELS`, thresholds, `scale_text()`, `clean_pathway_name()`, `fmt_p()` |
 | `02_data_paths_and_loaders.R` | `P05` input paths, `load_combined_wide()`, contrast naming maps, `contrast_brief()`; sources 01 |
 | `03_pathway_enrichment_dedup_ora.R` | `deduplicate_enrichment()`, `run_ora_deduplicated()`, `build_harmonized_collection()`, `clean_display_label()`, `classify_database()` |
 | `04_mitocarta_lens_lookup.R` | `MITO_PATHWAY_REGEX`, MitoCarta block loader |
-| `05_volcano_ring_plot_builder.R` | `make_volcano_ring()`, `build_ring_180_split()`, `build_nes_legend_bar()`; sources 01 if needed |
 | `06_supplementary_workbook.R` | `build_workbook(out_file, figure_title, sheet_specs)` — writes an Overview sheet first, then data sheets; deletes nothing |
 | `08_composite_layout.R` | `add_tag()`, `composite_caption()`, `save_composite()` — assembles patchwork composites and writes the PNG |
 

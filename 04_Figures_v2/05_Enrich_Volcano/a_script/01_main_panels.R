@@ -23,13 +23,11 @@ suppressPackageStartupMessages({
   library(tibble)
   library(tidyr)
   library(readr)
-  library(stringr)
   library(ggplot2)
-  library(ggforce)
+  library(enrichVolcano)
 })
 
 source(here::here("04_Figures_v2", "functions", "02_data_paths_and_loaders.R"))
-source(here::here("04_Figures_v2", "functions", "05_volcano_ring_plot_builder.R"))
 source(here::here("04_Figures_v2", "functions", "03_pathway_enrichment_dedup_ora.R"))
 source(here::here("04_Figures_v2", "functions", "06_supplementary_workbook.R"))
 source(here::here("04_Figures_v2", "functions", "04_mitocarta_lens_lookup.R"))
@@ -61,23 +59,9 @@ CONTRASTS <- tribble(
   "Interaction",   "interaction",  "Interaction"
 )
 
-# 0-row ring template (correct columns) for panels with no sig terms, so
-# make_volcano_ring draws an empty ring instead of its own fallback selection.
-EMPTY_RING <- build_ring_180_split(
-  head(arrange(filter(fgsea_all, contrast == "PHEvPHE_MITO", database == "Hallmark"), padj), 2),
-  "PHEvPHE_MITO", fgsea_all,
-  databases = "Hallmark"
-)[0, ]
-
 source(here::here("04_Figures_v2", "05_Enrich_Volcano", "a_script", "_build.R"))
 
 panels <- Map(build_ring, CONTRASTS$ctr, CONTRASTS$tag, CONTRASTS$role)
-
-# Shared NES legend strip (~80 x 20 mm).
-nes_legend <- build_nes_legend()
-ggsave(file.path(RPT_PNG, "MAIN_F05_nes_legend.png"), nes_legend,
-  width = 80, height = 20, units = "mm", dpi = 300
-)
 
 # shown_pathways.csv — union of all displayed ring terms across the 4 contrasts.
 # F06 reads this to avoid re-showing the same biology.
@@ -119,6 +103,6 @@ build_workbook(
 write_csv(shown_pathways, file.path(DAT, "shown_pathways.csv"))
 
 message(sprintf(
-  "F05: %d standalone rings + NES legend -> b_reports/main; %d shown pathways logged",
+  "F05: %d standalone rings -> b_reports/main; %d shown pathways logged",
   length(panels), nrow(shown_pathways)
 ))

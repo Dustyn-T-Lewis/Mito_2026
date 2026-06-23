@@ -34,8 +34,9 @@ for (d in c(MAIN_PDF, MAIN_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnin
 pdf_dev <- get_pdf_device()
 
 DB_COLORS <- c(
-  `GO:BP` = "#66C2A5", Hallmark = "#FC8D62", KEGG = "#E78AC3",
-  Reactome = "#8DA0CB", MitoCarta = "#FFD92F"
+  `GO:BP` = "#1B9E77", `GO:CC` = "#66C2A5", `GO:MF` = "#A6D854",
+  Hallmark = "#FC8D62", KEGG = "#E78AC3", Reactome = "#8DA0CB",
+  MitoCarta = "#FFD92F", `GO Slim` = "#B3B3B3"
 )
 CONTRASTS <- c(
   Disease    = "PHE - Ctl",
@@ -79,18 +80,19 @@ mod_levels <- rev(mod_order)
 n_mod <- length(non_grey)
 idx_of <- function(m) as.integer(factor(m, levels = mod_levels))
 
-# ---- consolidated ORA (GO:BP + Hallmark + KEGG + Reactome + MitoCarta) -------
-gobp_cache <- file.path(DAT, "rat_gobp_sets.rds")
-if (file.exists(gobp_cache)) {
-  gobp <- readRDS(gobp_cache)
+# ---- consolidated ORA — maximal DB coverage --------------------------------
+# 5 canonical DBs (Hallmark/Reactome/KEGG/MitoCarta/GO Slim) + full GO BP/CC/MF.
+go_cache <- file.path(DAT, "rat_go_bpccmf_sets.rds")
+if (file.exists(go_cache)) {
+  go_sets <- readRDS(go_cache)
 } else {
-  m5 <- msigdbr::msigdbr(species = "Rattus norvegicus", collection = "C5", subcollection = "GO:BP")
-  gobp <- split(m5$gene_symbol, m5$gs_name)
-  saveRDS(gobp, gobp_cache)
+  go_sets <- do.call(c, lapply(c("GO:BP", "GO:CC", "GO:MF"), function(sub) {
+    m5 <- msigdbr::msigdbr(species = "Rattus norvegicus", collection = "C5", subcollection = sub)
+    split(m5$gene_symbol, m5$gs_name)
+  }))
+  saveRDS(go_sets, go_cache)
 }
-base_coll <- build_harmonized_collection()
-base_coll <- base_coll[classify_database(names(base_coll)) != "GO Slim"]
-pw_collection <- c(base_coll, gobp)
+pw_collection <- c(build_harmonized_collection(), go_sets)
 
 mod_genes <- tibble(gene = w$ann$gene, module = w$module_colors) |>
   filter(!is.na(gene), nzchar(gene), module %in% non_grey)
@@ -224,7 +226,7 @@ p_ora <- ggplot(ora_d) +
 key_txt <- paste0(
   "Contrasts:  Disease = PHE−Ctl   |   Transplant = Mito−Ctl   |   Rescue = PHE_Mito−PHE.   ",
   "Cells: eigengene-limma log2FC over FDR; black box = FDR<0.05.\n",
-  "ORA: GO:BP + Hallmark + KEGG + Reactome + MitoCarta, cross-DB Jaccard dedup; top 2 / module."
+  "ORA: GO BP/CC/MF + Hallmark + KEGG + Reactome + MitoCarta + GO Slim, cross-DB Jaccard dedup; top 2 / module."
 )
 fig <- p_counts + p_heat + p_traj + p_ora +
   plot_layout(widths = c(0.5, 0.92, 0.62, 1.5)) +

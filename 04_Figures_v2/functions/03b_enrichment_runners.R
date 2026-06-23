@@ -4,9 +4,11 @@
 # Canonical 5-DB pathway lens — single source of truth for every enrichment
 # figure (rings, pathway bars, cluster ORA). MITO_DROP_SETS are MitoCarta
 # localization/aggregate sets (not pathways) excluded everywhere.
-CANONICAL_DBS  <- c("Hallmark", "Reactome", "KEGG", "MitoCarta", "GO Slim")
-MITO_DROP_SETS <- c("MITOCARTA_ALL", "MITOCARTA_IMM", "MITOCARTA_IMS",
-                    "MITOCARTA_MATRIX", "MITOCARTA_OMM")
+CANONICAL_DBS <- c("Hallmark", "Reactome", "KEGG", "MitoCarta", "GO Slim")
+MITO_DROP_SETS <- c(
+  "MITOCARTA_ALL", "MITOCARTA_IMM", "MITOCARTA_IMS",
+  "MITOCARTA_MATRIX", "MITOCARTA_OMM"
+)
 
 # Pathogen / disease sets are irrelevant to an in-vitro mito-transplant study and
 # leak in as high-NES noise (Reactome "Dengue Virus Host Interactions" overlaps
@@ -14,17 +16,20 @@ MITO_DROP_SETS <- c("MITOCARTA_ALL", "MITOCARTA_IMM", "MITOCARTA_IMS",
 DISEASE_VIRAL_RE <- paste0(
   "DISEASE|CANCER|TUMOR|CARCINOMA|LEUKEMIA|LYMPHOMA|MELANOMA|GLIOMA|",
   "HEPATITIS|HIV|INFECTION|INFECTIOUS|VIRAL|VIRUS|INFLUENZA|SARS|HCMV|",
-  "MEASLES|BACTERIAL|LISTERIA|LEISHMANIA|PARASIT")
+  "MEASLES|BACTERIAL|LISTERIA|LEISHMANIA|PARASIT"
+)
 
 classify_database <- function(pathway_names) {
   dplyr::case_when(
-    grepl("^HALLMARK_",       pathway_names) ~ "Hallmark",
-    grepl("^REACTOME_",       pathway_names) ~ "Reactome",
-    grepl("^KEGG_MEDICUS_",   pathway_names) ~ "KEGG",
-    grepl("^KEGG_",           pathway_names) ~ "KEGG",
-    grepl("^GOSLIM_",         pathway_names) ~ "GO Slim",
-    grepl("^GOBP_",           pathway_names) ~ "GO:BP",
-    grepl("^MITOCARTA_",      pathway_names) ~ "MitoCarta",
+    grepl("^HALLMARK_", pathway_names) ~ "Hallmark",
+    grepl("^REACTOME_", pathway_names) ~ "Reactome",
+    grepl("^KEGG_MEDICUS_", pathway_names) ~ "KEGG",
+    grepl("^KEGG_", pathway_names) ~ "KEGG",
+    grepl("^GOSLIM_", pathway_names) ~ "GO Slim",
+    grepl("^GOBP_", pathway_names) ~ "GO:BP",
+    grepl("^GOCC_", pathway_names) ~ "GO:CC",
+    grepl("^GOMF_", pathway_names) ~ "GO:MF",
+    grepl("^MITOCARTA_", pathway_names) ~ "MitoCarta",
     TRUE ~ "Other"
   )
 }
@@ -32,8 +37,9 @@ classify_database <- function(pathway_names) {
 # Flat gene-set collection over CANONICAL_DBS for ORA. Reads the unified
 # rat_gene_sets.rds so it enriches against the same backbone as the rings.
 build_harmonized_collection <- function(
-    cache = here::here("04_Figures", "shared", "rat_gene_sets.rds"),
-    min_size = 10, max_size = 350) {
+  cache = here::here("04_Figures", "shared", "rat_gene_sets.rds"),
+  min_size = 10, max_size = 350
+) {
   gs <- readRDS(cache)
   pw <- do.call(c, unname(gs[CANONICAL_DBS]))
   pw <- pw[!names(pw) %in% MITO_DROP_SETS]
@@ -42,8 +48,10 @@ build_harmonized_collection <- function(
   pw <- lapply(pw, unique)
   sizes <- vapply(pw, length, integer(1))
   pw <- pw[sizes >= min_size & sizes <= max_size]
-  message(sprintf("Harmonized collection: %d sets (%s), size %d-%d",
-                  length(pw), paste(CANONICAL_DBS, collapse = "+"), min_size, max_size))
+  message(sprintf(
+    "Harmonized collection: %d sets (%s), size %d-%d",
+    length(pw), paste(CANONICAL_DBS, collapse = "+"), min_size, max_size
+  ))
   pw
 }
 
@@ -57,13 +65,19 @@ run_fgsea_cache <- function(dep_wide, gene_sets, db_name, contrasts,
     stats <- stats[!is.na(stats) & !is.na(names(stats)) & names(stats) != ""]
     if (anyDuplicated(names(stats))) stats <- tapply(stats, names(stats), mean)
     stats <- sort(stats)
-    set.seed(42)   # per-call so fgsea's multilevel p-values are independent of loop order
-    res <- fgsea::fgseaMultilevel(pathways = gene_sets, stats = stats,
-                                  minSize = min_size, maxSize = max_size, eps = 0)
-    if (nrow(res) == 0) return(NULL)
+    set.seed(42) # per-call so fgsea's multilevel p-values are independent of loop order
+    res <- fgsea::fgseaMultilevel(
+      pathways = gene_sets, stats = stats,
+      minSize = min_size, maxSize = max_size, eps = 0
+    )
+    if (nrow(res) == 0) {
+      return(NULL)
+    }
     res |>
-      dplyr::mutate(database = db_name, contrast = contrast,
-                    leadingEdge = vapply(leadingEdge, paste, character(1), collapse = ";")) |>
+      dplyr::mutate(
+        database = db_name, contrast = contrast,
+        leadingEdge = vapply(leadingEdge, paste, character(1), collapse = ";")
+      ) |>
       dplyr::select(pathway, pval, padj, log2err, ES, NES, size, leadingEdge, database, contrast)
   }
   dplyr::bind_rows(lapply(contrasts, one))
@@ -78,10 +92,13 @@ build_goslim_gene_sets <- function(species = "Rattus norvegicus",
   if (is.null(orgdb)) {
     orgdb <- switch(species,
       "Rattus norvegicus" = "org.Rn.eg.db",
-      "Homo sapiens"      = "org.Hs.eg.db",
-      "Mus musculus"      = "org.Mm.eg.db",
-      stop("No default orgdb for species '", species,
-           "'. Pass orgdb explicitly."))
+      "Homo sapiens" = "org.Hs.eg.db",
+      "Mus musculus" = "org.Mm.eg.db",
+      stop(
+        "No default orgdb for species '", species,
+        "'. Pass orgdb explicitly."
+      )
+    )
   }
   requireNamespace("GO.db", quietly = TRUE)
   requireNamespace(orgdb, quietly = TRUE)
@@ -121,7 +138,8 @@ build_goslim_gene_sets <- function(species = "Rattus norvegicus",
   goslim_sets <- list()
   slim_names <- vapply(bp_slim, function(id) {
     tryCatch(AnnotationDbi::Term(GO.db::GOTERM[[id]]),
-             error = function(e) NA_character_)
+      error = function(e) NA_character_
+    )
   }, character(1))
 
   for (i in seq_along(bp_slim)) {
@@ -134,7 +152,8 @@ build_goslim_gene_sets <- function(species = "Rattus norvegicus",
     if (!is.null(desc)) all_terms <- c(all_terms, desc)
 
     genes <- unique(unlist(go_to_symbols[intersect(all_terms, names(go_to_symbols))],
-                           use.names = FALSE))
+      use.names = FALSE
+    ))
     genes <- genes[!is.na(genes)]
 
     if (length(genes) >= min_size && length(genes) <= max_size) {
@@ -143,8 +162,10 @@ build_goslim_gene_sets <- function(species = "Rattus norvegicus",
     }
   }
 
-  message(sprintf("GO Slim: %d/%d terms passed size filter (%d-%d)",
-                  length(goslim_sets), length(bp_slim), min_size, max_size))
+  message(sprintf(
+    "GO Slim: %d/%d terms passed size filter (%d-%d)",
+    length(goslim_sets), length(bp_slim), min_size, max_size
+  ))
   goslim_sets
 }
 
@@ -152,7 +173,7 @@ run_ora_deduplicated <- function(genes, universe, pathways,
                                  cutoff = 0.375,
                                  min_size = 10, max_size = 500,
                                  padj_cutoff = 0.05) {
-  requireNamespace("fgsea", quietly = TRUE)   # fora is exact; no seed needed
+  requireNamespace("fgsea", quietly = TRUE) # fora is exact; no seed needed
   genes <- intersect(genes, universe)
 
   pw_by_db <- split(names(pathways), classify_database(names(pathways)))
@@ -174,7 +195,8 @@ run_ora_deduplicated <- function(genes, universe, pathways,
   res <- do.call(rbind, db_results)
 
   res$odds_ratio <- fora_odds_ratio(res$overlap, res$size,
-                                    K = length(genes), N = length(universe))
+    K = length(genes), N = length(universe)
+  )
   res <- tibble::as_tibble(res)
 
   sig <- res[!is.na(res$padj) & res$padj < padj_cutoff, ]
@@ -182,8 +204,10 @@ run_ora_deduplicated <- function(genes, universe, pathways,
 
   n_removed <- nrow(sig) - nrow(sig_dedup)
   pct <- if (nrow(sig) > 0) round(100 * n_removed / nrow(sig), 1) else 0
-  message(sprintf("ORA dedup: %d sig -> %d kept (removed %d, %.1f%%)",
-                  nrow(sig), nrow(sig_dedup), n_removed, pct))
+  message(sprintf(
+    "ORA dedup: %d sig -> %d kept (removed %d, %.1f%%)",
+    nrow(sig), nrow(sig_dedup), n_removed, pct
+  ))
 
   sig_dedup
 }

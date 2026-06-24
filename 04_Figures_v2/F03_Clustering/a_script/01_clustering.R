@@ -223,7 +223,7 @@ ora_d <- ora_all |>
   mutate(
     rank = row_number(), y = mod_idx + (2.5 - rank) * 0.2,
     bar = 0.26 * neglp / max(neglp), # per-module relative length (top hit = full bar)
-    lab = clean_pathway_name(pathway),
+    lab = clean_display_label(pathway),
     lab = ifelse(nchar(lab) > 40, paste0(substr(lab, 1, 38), "…"), lab)
   ) |>
   ungroup()

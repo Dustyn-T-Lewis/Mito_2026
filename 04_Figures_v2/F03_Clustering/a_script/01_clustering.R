@@ -24,6 +24,7 @@ suppressPackageStartupMessages({
 source(here::here("04_Figures_v2", "functions", "01_style_palettes_theme.R"))
 source(here::here("04_Figures_v2", "functions", "02_data_paths_and_loaders.R"))
 source(here::here("04_Figures_v2", "functions", "03_pathway_enrichment_dedup_ora.R"))
+source(here::here("04_Figures_v2", "functions", "06_supplementary_workbook.R"))
 
 BASE <- here::here("04_Figures_v2", "F03_Clustering")
 MAIN_PNG <- file.path(BASE, "b_reports", "main", "png")
@@ -79,7 +80,8 @@ idx_of <- function(m) as.integer(factor(m, levels = mod_levels))
 
 # consolidated ORA — maximal DB coverage
 # 5 canonical DBs (Hallmark/Reactome/KEGG/MitoCarta/GO Slim) + full GO BP/CC/MF.
-go_cache <- file.path(DAT, "rat_go_bpccmf_sets.rds")
+# cache lives outside c_data (c_data holds only the supplementary workbook)
+go_cache <- file.path(BASE, "b_reports", "rat_go_bpccmf_sets.rds")
 if (file.exists(go_cache)) {
   go_sets <- readRDS(go_cache)
 } else {
@@ -326,4 +328,56 @@ FIG_H <- 160
 ggsave(file.path(MAIN_PNG, "MAIN_F03_clustering.png"), fig,
   width = FIG_W, height = FIG_H, units = "mm", dpi = 300, limitsize = FALSE
 )
+
+# Supplementary workbook — one sheet per figure column.
+mod_summary <- mod_size |>
+  filter(module %in% non_grey) |>
+  arrange(desc(n)) |>
+  transmute(module, n_proteins = n)
+eig_tab <- mod_stats |>
+  transmute(module, contrast,
+    log2FC = round(logFC, 3), p = signif(p, 3), fdr = signif(fdr, 3)
+  )
+traj_tab <- traj |>
+  arrange(module, gx) |>
+  transmute(module, group = as.character(Group), eigengene_mean = round(m, 4))
+ora_tab <- ora_all |>
+  transmute(module, database, pathway, padj = signif(padj, 3)) |>
+  arrange(module, padj)
+hub_tab <- hub_nodes |>
+  transmute(module, gene, kME = round(kME, 3), hub_min_fdr = signif(min_fdr, 3), rank) |>
+  arrange(module, rank)
+
+build_workbook(
+  file.path(DAT, "F03_supplementary.xlsx"),
+  figure_title = "F03: WGCNA module clustering",
+  sheet_specs = list(
+    list(
+      name = "module_summary", df = mod_summary,
+      role = "Protein counts column",
+      contents = "module colour and number of member proteins"
+    ),
+    list(
+      name = "eigengene_limma", df = eig_tab,
+      role = "Eigengene response heatmap",
+      contents = "module x contrast eigengene log2FC, p, FDR (limma on module eigengenes)"
+    ),
+    list(
+      name = "trajectory", df = traj_tab,
+      role = "Trajectory column",
+      contents = "mean module eigengene per group (Ctl, Mito, PHE, PHE_Mito)"
+    ),
+    list(
+      name = "module_ora", df = ora_tab,
+      role = "Pathway enrichment column",
+      contents = "per-module over-representation hits: database, pathway, FDR"
+    ),
+    list(
+      name = "top_hubs", df = hub_tab,
+      role = "Top module hubs column",
+      contents = "top-6 proteins per module by kME, with the protein's own DE min-FDR"
+    )
+  )
+)
+
 message("F03 clustering figure built")

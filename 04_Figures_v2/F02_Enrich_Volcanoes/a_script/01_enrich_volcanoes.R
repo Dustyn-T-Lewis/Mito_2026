@@ -151,7 +151,7 @@ pathway_sheets <- lapply(seq_len(nrow(contrasts)), function(i) {
 })
 build_workbook(
   file.path(DAT, "F02_supplementary.xlsx"),
-  figure_title = "F02 — Per-contrast enrichment volcano-in-ring panels (5-DB lens)",
+  figure_title = "F02: Enrichment volcano-in-ring panels (5-DB lens)",
   sheet_specs = c(
     list(list(
       name = "contrast_map", df = contrast_map,

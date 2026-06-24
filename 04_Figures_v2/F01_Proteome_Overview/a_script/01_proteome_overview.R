@@ -135,7 +135,7 @@ sheet_specs <- c(
   list(
     list(
       name = "pca_scores", df = pca_res$scores,
-      role = "Panel A coordinates — the PCA scatter points",
+      role = "PCA scatter coordinates (panel A)",
       contents = "PC1/PC2 scores per sample (Col_ID) with Group"
     ),
     list(
@@ -145,7 +145,7 @@ sheet_specs <- c(
     ),
     list(
       name = "dep_counts", df = dep_count_data() |> select(contrast, threshold, n, pct),
-      role = "Panel B bar heights — DEP counts per contrast",
+      role = "DEP count bar heights (panel B)",
       contents = "Counts and % of proteome at each threshold (p<0.05, FDR, Π<0.05) per contrast"
     )
   ),
@@ -159,7 +159,7 @@ sheet_specs <- c(
   list(
     list(
       name = "venn_membership", df = venn$membership,
-      role = "Panels D/E — per-protein set membership behind the overlap",
+      role = "Per-protein set membership (panels D/E)",
       contents = "One row per Π<0.05 protein: membership + direction in Disease/Transplant/Rescue, region_key"
     ),
     list(
@@ -174,7 +174,7 @@ sheet_specs <- c(
     ),
     list(
       name = "pathway_counts", df = pw_counts,
-      role = "Panel F bar heights — significant pathways per contrast x direction x database",
+      role = "Pathway count bar heights (panel F)",
       contents = "contrast, direction, database, n (5-DB lens, padj<0.05, EnrichmentMap dedup at 0.375)"
     )
   ),
@@ -189,7 +189,7 @@ sheet_specs <- c(
 
 build_workbook(
   file.path(DAT, "F01_supplementary.xlsx"),
-  figure_title = "F01 — Proteome overview (PCA, DEP counts, effect size, overlap, pathway counts)",
+  figure_title = "F01: Proteome overview (PCA, DEP counts, effect size, overlap, pathway counts)",
   sheet_specs = sheet_specs
 )
 

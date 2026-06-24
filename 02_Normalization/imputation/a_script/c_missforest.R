@@ -15,23 +15,27 @@
 # reproducible seed.
 
 pacman::p_load(proteoDA, here, missForest)
-set.seed(42)                                       # missForest is stochastic (random forests)
-norm_dir <- here("02_Normalization", "c_data")                  # read stage-02 normalized matrix
-data_dir <- here("02_Normalization", "imputation", "c_data")     # write imputed DAList here
+set.seed(42) # missForest is stochastic (random forests)
+norm_dir <- here("02_Normalization", "c_data") # read stage-02 normalized matrix
+data_dir <- here("02_Normalization", "imputation", "c_data") # write imputed DAList here
 dir.create(data_dir, recursive = TRUE, showWarnings = FALSE)
 
 dal <- readRDS(file.path(norm_dir, "DAList_normalized.rds"))
 mat <- as.matrix(dal$data)
 cat(sprintf("[missforest] %d x %d | %.1f%% missing\n", nrow(mat), ncol(mat), mean(is.na(mat)) * 100))
 
-mf  <- missForest(mat, maxiter = 10, ntree = 100, verbose = FALSE)
+mf <- missForest(mat, maxiter = 10, ntree = 100, verbose = FALSE)
 imp <- mf$ximp
 dimnames(imp) <- dimnames(mat)
 stopifnot(sum(is.na(imp)) == 0, identical(dim(imp), dim(mat)))
 
 dal$data <- imp
-dal$imputation <- list(method = "missForest::missForest", maxiter = 10, ntree = 100,
-                       OOB_NRMSE = unname(mf$OOBerror["NRMSE"]))
+dal$imputation <- list(
+  method = "missForest::missForest", maxiter = 10, ntree = 100,
+  OOB_NRMSE = unname(mf$OOBerror["NRMSE"])
+)
 saveRDS(dal, file.path(data_dir, "DAList_imputed_missforest.rds"))
-cat(sprintf("[missforest] done: imputed %d cells (OOB NRMSE = %.4f) -> DAList_imputed_missforest.rds\n",
-            sum(is.na(mat)), unname(mf$OOBerror["NRMSE"])))
+cat(sprintf(
+  "[missforest] done: imputed %d cells (OOB NRMSE = %.4f) -> DAList_imputed_missforest.rds\n",
+  sum(is.na(mat)), unname(mf$OOBerror["NRMSE"])
+))

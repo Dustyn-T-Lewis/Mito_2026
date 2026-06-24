@@ -7,21 +7,25 @@
 # external MAR/MNAR classifier is used. Output feeds figures + 03_DEP/b_imputed.
 
 pacman::p_load(proteoDA, here, imp4p)
-set.seed(42)                                       # impute.mi is stochastic (multiple imputation)
-norm_dir <- here("02_Normalization", "c_data")                  # read stage-02 normalized matrix
-data_dir <- here("02_Normalization", "imputation", "c_data")     # write imputed DAList here
+set.seed(42) # impute.mi is stochastic (multiple imputation)
+norm_dir <- here("02_Normalization", "c_data") # read stage-02 normalized matrix
+data_dir <- here("02_Normalization", "imputation", "c_data") # write imputed DAList here
 dir.create(data_dir, recursive = TRUE, showWarnings = FALSE)
 
-dal  <- readRDS(file.path(norm_dir, "DAList_normalized.rds"))
-mat  <- as.matrix(dal$data)
+dal <- readRDS(file.path(norm_dir, "DAList_normalized.rds"))
+mat <- as.matrix(dal$data)
 cond <- factor(dal$metadata$group[match(colnames(mat), dal$metadata$Col_ID)])
-cat(sprintf("[imp4p] %d x %d | %.1f%% missing | conditions: %s\n",
-            nrow(mat), ncol(mat), mean(is.na(mat)) * 100, paste(levels(cond), collapse = "/")))
+cat(sprintf(
+  "[imp4p] %d x %d | %.1f%% missing | conditions: %s\n",
+  nrow(mat), ncol(mat), mean(is.na(mat)) * 100, paste(levels(cond), collapse = "/")
+))
 
 # mle for the MCAR part, igcda for the MNAR part; imp4p decides the per-protein mix.
 
-imp <- as.matrix(impute.mi(tab = mat, conditions = cond,
-                           methodMCAR = "mle", methodMNAR = "igcda", progress.bar = FALSE))
+imp <- as.matrix(impute.mi(
+  tab = mat, conditions = cond,
+  methodMCAR = "mle", methodMNAR = "igcda", progress.bar = FALSE
+))
 dimnames(imp) <- dimnames(mat)
 stopifnot(sum(is.na(imp)) == 0, identical(dim(imp), dim(mat)))
 

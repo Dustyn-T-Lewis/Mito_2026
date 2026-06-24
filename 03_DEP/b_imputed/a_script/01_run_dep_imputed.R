@@ -1,11 +1,11 @@
 #!/usr/bin/env Rscript
 # Mito COMPARISON DEP on the imputed matrices (exploratory; a_non_imputed stays the reported analysis).
-# imp4p = canonical (full proteoDA tables + plots); mscoreutils = comparison (tables only).
+# missforest = the arm used downstream (full proteoDA tables + plots); imp4p, mscoreutils = comparison (tables only).
 # CAVEAT: impute-before-test can inflate false positives -> logFC is checked against the non-imputed fit.
 
 pacman::p_load(proteoDA, here, readr, dplyr, tibble, purrr)
 
-CANONICAL <- "imp4p"
+CANONICAL <- "missforest"
 clear_dir <- function(d) {
   dir.create(d, recursive = TRUE, showWarnings = FALSE)
   unlink(setdiff(list.files(d, full.names = TRUE), file.path(d, ".gitkeep")), recursive = TRUE)

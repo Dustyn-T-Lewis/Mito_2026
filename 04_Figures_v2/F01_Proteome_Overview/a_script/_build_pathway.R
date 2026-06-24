@@ -1,9 +1,8 @@
 #!/usr/bin/env Rscript
-# F04 build function — significant pathways per contrast, stacked by source DB.
+# Significant pathways per contrast for F01 panel F, stacked by source DB.
 # Diverging: Up above zero, Down below; segments = the 5 databases (not pooled),
-# ordered by overall total (largest at the base). Light fills, black borders,
-# swatch key in the upper-right.
-# Returns list(plot=<ggplot>, bar_df=<df>, sig_pw=<df>, DB_COLORS=<named vec>).
+# ordered by overall total (largest at the base).
+# build_pathway_bar_panel() returns list(plot, bar_df, sig_pw, DB_COLORS).
 
 # Database key (Set2 pastels; GO Slim kept clearly distinct from Hallmark).
 PATHWAY_DB_COLORS <- c(

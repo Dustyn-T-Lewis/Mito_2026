@@ -1,4 +1,4 @@
-# 04_Figures_v2/01_PCA/a_script/_build.R
+# PCA scores + PERMANOVA stats for F01 panel A.
 suppressPackageStartupMessages({
   library(dplyr)
   library(tidyr)

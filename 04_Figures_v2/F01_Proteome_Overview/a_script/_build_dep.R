@@ -1,7 +1,5 @@
-# 04_Figures_v2/02_DEP_bars/a_script/_build.R
-# Builder functions for F02 DEP bars + effect-size panels.
-# Exposes: build_dep_count_panel(), build_dep_effect_panel(), dep_count_data().
-# Sourced by 01_main_panels.R — never run directly.
+# DEP count bars + effect-size histograms for F01 panels B and C.
+# Exposes build_dep_count_panel(), build_dep_effect_panel(), dep_count_data().
 
 # Narrative order: Disease -> Transplant -> Rescue -> Interaction
 CORE <- H9C2_CONTRAST_ORDER

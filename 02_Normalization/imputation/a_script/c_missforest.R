@@ -1,12 +1,14 @@
 #!/usr/bin/env Rscript
-# STANDALONE imputation option C: missForest (exploratory arm; not the canonical DEP input).
+# STANDALONE imputation option C: missForest — the imputed arm the figures use (the DEP input stays non-imputed).
 #
 # missForest (Stekhoven & Buhlmann 2012) is a non-parametric random-forest imputer. It is a
 # MAR/MCAR method: each protein's missing values are predicted from the multivariate structure
 # of the OTHER samples, with no left-censoring model. The Stage-02 missingness here is largely
 # left-censored MNAR (low-abundance dropout: Spearman[abundance, missingness] ~= -0.54), which
-# missForest does not model, so this arm is included for COMPARISON against imp4p (MNAR-aware
-# mixture) and the MsCoreUtils knn/QRILC hybrid — not as a recommended canonical input.
+# missForest does not model. Even so it empirically tracks the non-imputed effect sizes most
+# closely (Spearman 0.98-0.99 in 03_DEP) and barely adds DEPs, whereas imp4p and the MsCoreUtils
+# knn/QRILC hybrid inflate DEP counts from missing-only proteins; so missForest is the arm the
+# figures use, with the other two kept as comparisons.
 #
 # Orientation: the normalized matrix is proteins (rows) x samples (columns). missForest treats
 # COLUMNS as the variables to impute, so run on the matrix as-is — each sample column's missing

@@ -4,7 +4,8 @@
 # imp4p (Giai Gianetto et al.) is purpose-built for label-free proteomics with a MIXTURE
 # of MCAR/MNAR missingness. It estimates the mechanism ITSELF (estim.bound -> estim.mix ->
 # prob.mcar -> mi.mix); we supply only the data and the experimental-group factor, so no
-# external MAR/MNAR classifier is used. Output feeds figures + 03_DEP/b_imputed.
+# external MAR/MNAR classifier is used. Output feeds the 03_DEP/b_imputed comparison;
+# the figures use the missForest arm, which is the more concordant imputer here.
 
 pacman::p_load(proteoDA, here, imp4p)
 set.seed(42) # impute.mi is stochastic (multiple imputation)

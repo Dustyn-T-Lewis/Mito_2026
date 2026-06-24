@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
-# C1 overview — PCA + DEP bars + effect histogram + pathway bars + Venn. Who differs.
+# F01 proteome overview — PCA + DEP bars + effect histogram + Venn + pathway bars.
+# Saves each panel standalone under b_reports/panels, then the 6-panel composite.
 library(here)
 source(here::here("04_Figures_v2", "functions", "08_composite_layout.R"))
 source(here::here("04_Figures_v2", "functions", "02_data_paths_and_loaders.R"))
@@ -10,7 +11,7 @@ source(here::here("04_Figures_v2", "02_DEP_bars", "a_script", "_build.R"))
 source(here::here("04_Figures_v2", "03_Venn", "a_script", "_build.R"))
 source(here::here("04_Figures_v2", "04_Pathway_bars", "a_script", "_build.R"))
 
-BASE <- here::here("04_Figures_v2", "07_Composites")
+BASE <- here::here("04_Figures_v2", "F01_Proteome_Overview")
 
 # Base panels, built once — saved standalone below, then tagged for the composite.
 pca_p <- build_pca_panel()$plot
@@ -93,5 +94,5 @@ fig <- pca + dep + eff + venn_gg + strip + pw +
     heights = c(1.0, 1.0)
   )
 
-save_composite(fig, BASE, "MAIN_C1_overview", width_mm = PANEL_MD, height_mm = 150)
-message("C1 composite built")
+save_composite(fig, BASE, "MAIN_F01_proteome_overview", width_mm = PANEL_MD, height_mm = 150)
+message("F01 proteome overview built")

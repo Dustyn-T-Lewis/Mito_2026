@@ -67,7 +67,7 @@ grid <- volcano_ring_grid(
   term_col = "pathway", nes_col = "NES", size_col = "size",
   genes_col = "leadingEdge", genes_sep = ";",
   p_threshold = 0.05, logfc_threshold = log2(1.5),
-  ring_radius = 5.5, volcano_radius = 5.2, arc_height_range = c(0.1, 2.8),
+  ring_radius = 5.5, volcano_radius = 5.2, arc_height_range = c(0.1, 3.2),
   label_size = 2.7, point_size = 2.2, point_alpha = 0.7,
   count_x_mult = 0.55, count_y_mult = 0.55,
   theme = volcano_ring_theme(base_size = 13)
@@ -93,6 +93,6 @@ fig <- fig & ggplot2::guides(
 
 ggplot2::ggsave(
   file.path(OUT, "MAIN_C2_enrichment.png"), fig,
-  width = 220, height = 230, units = "mm", dpi = 300, limitsize = FALSE
+  width = 270, height = 285, units = "mm", dpi = 300, limitsize = FALSE
 )
 message("C2 enrichment composite built")

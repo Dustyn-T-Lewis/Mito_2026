@@ -1,28 +1,39 @@
 #!/usr/bin/env Rscript
 # F01 proteome overview — PCA + DEP bars + effect histogram + Venn + pathway bars.
-# Saves each panel standalone under b_reports/panels, then the 6-panel composite.
-library(here)
+# Builds each panel once: saves them standalone under b_reports/panels, assembles
+# the 6-panel composite, and writes one supplementary workbook holding the data
+# behind every panel (PCA scores, DE tables, overlap membership, pathway counts).
+
+suppressPackageStartupMessages({
+  library(here)
+  library(dplyr)
+})
+
 source(here::here("04_Figures_v2", "functions", "08_composite_layout.R"))
 source(here::here("04_Figures_v2", "functions", "02_data_paths_and_loaders.R"))
 source(here::here("04_Figures_v2", "functions", "03_pathway_enrichment_dedup_ora.R"))
 source(here::here("04_Figures_v2", "functions", "04_mitocarta_lens_lookup.R"))
-source(here::here("04_Figures_v2", "01_PCA", "a_script", "_build.R"))
-source(here::here("04_Figures_v2", "02_DEP_bars", "a_script", "_build.R"))
-source(here::here("04_Figures_v2", "03_Venn", "a_script", "_build.R"))
-source(here::here("04_Figures_v2", "04_Pathway_bars", "a_script", "_build.R"))
+source(here::here("04_Figures_v2", "functions", "06_supplementary_workbook.R"))
+source(here::here("04_Figures_v2", "F01_Proteome_Overview", "a_script", "_build_pca.R"))
+source(here::here("04_Figures_v2", "F01_Proteome_Overview", "a_script", "_build_dep.R"))
+source(here::here("04_Figures_v2", "F01_Proteome_Overview", "a_script", "_build_venn.R"))
+source(here::here("04_Figures_v2", "F01_Proteome_Overview", "a_script", "_build_pathway.R"))
 
 BASE <- here::here("04_Figures_v2", "F01_Proteome_Overview")
+PANELS <- file.path(BASE, "b_reports", "panels")
+DAT <- file.path(BASE, "c_data")
+for (d in c(PANELS, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
-# Base panels, built once — saved standalone below, then tagged for the composite.
-pca_p <- build_pca_panel()$plot
+# Base panels + their underlying data, built once.
+pca_res <- build_pca_panel()
+pca_p <- pca_res$plot
 dep_p <- build_dep_count_panel()
 eff_p <- build_dep_effect_panel()
 venn <- build_venn_panels()
-pw_p <- build_pathway_bar_panel()$plot
+pw_out <- build_pathway_bar_panel()
+pw_p <- pw_out$plot
 
 # Standalone named panels, each with its own tight axes.
-PANELS <- file.path(BASE, "b_reports", "panels")
-dir.create(PANELS, recursive = TRUE, showWarnings = FALSE)
 panel_specs <- list(
   list(name = "panel_a_pca", plot = pca_p, w = 95, h = 80),
   list(name = "panel_b_dep_counts", plot = dep_p, w = 95, h = 72),
@@ -95,4 +106,91 @@ fig <- pca + dep + eff + venn_gg + strip + pw +
   )
 
 save_composite(fig, BASE, "MAIN_F01_proteome_overview", width_mm = PANEL_MD, height_mm = 150)
+
+# Supplementary workbook — the data behind each panel, one sheet group per panel.
+CORE <- H9C2_CONTRAST_ORDER
+dep_tabs <- lapply(CORE, function(ctr) {
+  dep_results[[ctr]] |>
+    transmute(uniprot_id, gene, logFC, P.Value, adj.P.Val, pi_score) |>
+    arrange(pi_score)
+})
+pw_tabs <- lapply(CORE, function(ctr) {
+  pw_out$sig_pw |>
+    filter(contrast == ctr) |>
+    transmute(pathway, database,
+      clean_label = clean_display_label(pathway),
+      NES = round(NES, 3), padj = signif(padj, 3), size, direction, is_mito
+    ) |>
+    arrange(padj)
+})
+pw_counts <- pw_out$bar_df |>
+  filter(n > 0) |>
+  transmute(
+    contrast = contrast_brief(as.character(contrast)),
+    direction, database = as.character(database), n
+  ) |>
+  arrange(contrast, direction, desc(n))
+
+sheet_specs <- c(
+  list(
+    list(
+      name = "pca_scores", df = pca_res$scores,
+      role = "Panel A coordinates — the PCA scatter points",
+      contents = "PC1/PC2 scores per sample (Col_ID) with Group"
+    ),
+    list(
+      name = "permanova", df = pca_res$permanova,
+      role = "Panel A stats annotation",
+      contents = "adonis2 R2/p for overall Group + Disease/Transplant/Rescue pairwise, plus betadisper p"
+    ),
+    list(
+      name = "dep_counts", df = dep_count_data() |> select(contrast, threshold, n, pct),
+      role = "Panel B bar heights — DEP counts per contrast",
+      contents = "Counts and % of proteome at each threshold (p<0.05, FDR, Π<0.05) per contrast"
+    )
+  ),
+  Map(function(ctr, tab) {
+    list(
+      name = paste0(contrast_brief(ctr), "_DE"), df = tab,
+      role = sprintf("Per-protein DE table for the %s contrast", contrast_brief(ctr)),
+      contents = "uniprot_id, gene, logFC, P.Value, adj.P.Val, pi_score (sorted by Π)"
+    )
+  }, CORE, dep_tabs),
+  list(
+    list(
+      name = "venn_membership", df = venn$membership,
+      role = "Panels D/E — per-protein set membership behind the overlap",
+      contents = "One row per Π<0.05 protein: membership + direction in Disease/Transplant/Rescue, region_key"
+    ),
+    list(
+      name = "venn_regions", df = venn$region_counts,
+      role = "Panel D Euler region areas + directional strip counts",
+      contents = "Protein count per overlap region (region_key), sorted descending"
+    ),
+    list(
+      name = "euler_fit", df = venn$fit_stats,
+      role = "Panel D Euler fit quality",
+      contents = "stress and diagError from the eulerr fit"
+    ),
+    list(
+      name = "pathway_counts", df = pw_counts,
+      role = "Panel F bar heights — significant pathways per contrast x direction x database",
+      contents = "contrast, direction, database, n (5-DB lens, padj<0.05, EnrichmentMap dedup at 0.375)"
+    )
+  ),
+  Map(function(ctr, tab) {
+    list(
+      name = paste0(contrast_brief(ctr), "_pathways"), df = tab,
+      role = sprintf("Post-dedup significant pathways behind the %s bars", contrast_brief(ctr)),
+      contents = "pathway, database, clean_label, NES, padj, size, direction, is_mito"
+    )
+  }, CORE, pw_tabs)
+)
+
+build_workbook(
+  file.path(DAT, "F01_supplementary.xlsx"),
+  figure_title = "F01 — Proteome overview (PCA, DEP counts, effect size, overlap, pathway counts)",
+  sheet_specs = sheet_specs
+)
+
 message("F01 proteome overview built")

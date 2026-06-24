@@ -26,43 +26,37 @@ Spine = **Disease → Rescue reversal**.
 ```
 04_Figures_v2/
   functions/                 shared engine code (pipeline-ordered; see below)
-  01_PCA/                     sample PCA + PERMANOVA
-  02_DEP_bars/                DEP counts (% proteome) + effect-size distributions
-  03_Venn/                    area-proportional 3-set DEP overlap + direction strip
-  04_Pathway_bars/            Panel-D pathway counts, stacked by source database (5 DBs)
-  06_Cluster/                 WGCNA module figure: counts · eigengene heatmap · trajectory · ORA
-  F01_Proteome_Overview/      6-panel overview composite + its standalone panels
-  F02_Enrich_Volcanoes/       2x2 of 4 enrichment rings (enrichVolcano) + its ring panels
+  F01_Proteome_Overview/      PCA, DEP, effect-size, overlap, pathway-count panels + composite
+  F02_Enrich_Volcanoes/       4 enrichment rings (enrichVolcano) + 2x2 composite
+  F03_Clustering/             WGCNA module figure: counts · heatmap · trajectory · ORA
   README.md                   this file
 ```
 
-01–04 and 06 are panel builders. F01 sources the 01–04 `_build.R` panels into the
-overview composite; F02 builds the enrichment rings directly from the DE + fgsea
-tables via the `enrichVolcano` package. Each assembled figure writes its composite
-to `b_reports/main/png/` and the individual panels to `b_reports/panels/`.
+Three self-contained figures. F01 holds the proteome-overview panel builders
+(`_build_pca.R`, `_build_dep.R`, `_build_venn.R`, `_build_pathway.R`) and assembles
+them; F02 builds the enrichment rings directly from the DE + fgsea tables via the
+`enrichVolcano` package; F03 is the WGCNA module figure. Each writes its composite
+to `b_reports/main/png/`, the individual panels to `b_reports/panels/`, and the
+panel data to a single `c_data/F0x_supplementary.xlsx`.
 
 Each standalone figure subdir:
 
 ```
-<fig>/
-  a_script/01_main_panels.R          builds + exports the figure
-  b_reports/main/png/                main standalone figure images (MAIN_F0x_*)
-  b_reports/supp/png/                supplementary diagnostics (e.g. cluster selection)
-  c_data/F0x_supplementary.xlsx      single workbook: Overview sheet + result sheets
-```
-
-Assembled figures write the composite + the individual panels:
-
-```
 F01_Proteome_Overview/
-  a_script/01_proteome_overview.R    PCA, DEP bars, effect histogram, Venn, direction, pathway bars
+  a_script/01_proteome_overview.R    composite driver
+  a_script/_build_{pca,dep,venn,pathway}.R   panel builders
   b_reports/main/png/                MAIN_F01_proteome_overview.png
   b_reports/panels/                  panel_a_pca ... panel_f_pathway
+  c_data/F01_supplementary.xlsx      PCA scores, DE tables, overlap membership, pathway counts
 F02_Enrich_Volcanoes/
   a_script/01_enrich_volcanoes.R     4 enrichment rings (Disease/Transplant/Rescue/Interaction)
   b_reports/main/png/                MAIN_F02_enrich_volcanoes.png   (2x2 composite)
   b_reports/panels/                  MAIN_F02_{disease,transplant,rescue,interaction}_ring.png
   c_data/F02_supplementary.xlsx      contrast key + every tested pathway per contrast
+F03_Clustering/
+  a_script/01_clustering.R           WGCNA module figure (single panel)
+  b_reports/main/png/                MAIN_F03_clustering.png
+  c_data/                            cached GO BP/CC/MF sets for the per-module ORA
 ```
 
 ## functions/ — shared engines (pipeline order)
@@ -104,17 +98,11 @@ cache; there is no in-suite ring builder.
 ## Run
 
 ```sh
-# Standalone panel builders
-for f in 01_PCA 02_DEP_bars 03_Venn 04_Pathway_bars; do
-  Rscript 04_Figures_v2/$f/a_script/01_main_panels.R
-done
-Rscript 04_Figures_v2/06_Cluster/a_script/01_wgcna_module_figure.R
-
-# Assembled figures (F01 sources the 01-04 panels; F02 is self-contained)
 Rscript 04_Figures_v2/F01_Proteome_Overview/a_script/01_proteome_overview.R
 Rscript 04_Figures_v2/F02_Enrich_Volcanoes/a_script/01_enrich_volcanoes.R
+Rscript 04_Figures_v2/F03_Clustering/a_script/01_clustering.R
 ```
 
-F04 and F06 are independent; run order does not matter. Benign X11/cairo
+The three figures are independent; run order does not matter. Benign X11/cairo
 warnings on stderr are expected on machines without XQuartz and do not affect
 the PNG output.

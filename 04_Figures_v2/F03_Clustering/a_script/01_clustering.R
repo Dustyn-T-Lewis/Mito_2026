@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# F06 WGCNA module figure — one row-aligned block, module = row:
+# F03 clustering — WGCNA module figure, one row-aligned block, module = row:
 #   [counts] [hub proteins] [eigengene heatmap, 3 contrasts] [trajectory] [ORA]
 # Rows shaded by module colour so clusters read across the panels; modules
 # ordered by protein-set size.
@@ -25,7 +25,7 @@ source(here::here("04_Figures_v2", "functions", "01_style_palettes_theme.R"))
 source(here::here("04_Figures_v2", "functions", "02_data_paths_and_loaders.R"))
 source(here::here("04_Figures_v2", "functions", "03_pathway_enrichment_dedup_ora.R"))
 
-BASE <- here::here("04_Figures_v2", "06_Cluster")
+BASE <- here::here("04_Figures_v2", "F03_Clustering")
 MAIN_PNG <- file.path(BASE, "b_reports", "main", "png")
 DAT <- file.path(BASE, "c_data")
 for (d in c(MAIN_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
@@ -363,7 +363,7 @@ fig <- p_counts + p_heat + p_traj + p_ora + p_hub +
 
 FIG_W <- PANEL_MD
 FIG_H <- 160
-ggsave(file.path(MAIN_PNG, "MAIN_F06_wgcna_modules.png"), fig,
+ggsave(file.path(MAIN_PNG, "MAIN_F03_clustering.png"), fig,
   width = FIG_W, height = FIG_H, units = "mm", dpi = 300, limitsize = FALSE
 )
-message("F06 WGCNA module figure built")
+message("F03 clustering figure built")

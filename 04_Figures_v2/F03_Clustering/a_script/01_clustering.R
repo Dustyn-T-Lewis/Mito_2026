@@ -245,7 +245,7 @@ p_ora <- ggplot(ora_d) +
     legend.key.size = unit(2.2, "mm"), legend.margin = margin(t = -2), plot.margin = margin(2, 1, 1, 1)
   )
 
-# D. hub proteins — top-5 by |kME|, coloured by DE significance
+# D. top module proteins — top-6 by kME (module membership), coloured by DE significance
 # Each hub's own differential abundance: min FDR across the 3 core contrasts.
 hub_sig <- readr::read_csv(P05$comb, show_col_types = FALSE) |>
   filter(contrast %in% c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO")) |>
@@ -257,9 +257,6 @@ hub_sig <- readr::read_csv(P05$comb, show_col_types = FALSE) |>
 # drop out. Positive kME keeps true signed-module hubs that co-express in one
 # direction, so the arcs read as one coherent cluster.
 HUB_N <- 6L
-EDGE_MIN <- 0.5 # show only genuinely co-expressed hub pairs
-ARC_H <- 0.34 # arc height stays inside the row band (< 0.5)
-expr <- readRDS(P05$imp_rds)$data # proteins x samples, for hub co-expression
 hub_nodes <- as.data.frame(w$kME) |>
   tibble::rownames_to_column("uniprot_id") |>
   tidyr::pivot_longer(-uniprot_id, names_to = "module", values_to = "kME") |>
@@ -286,60 +283,23 @@ hub_nodes <- as.data.frame(w$kME) |>
     neglfdr = ifelse(is.na(neglfdr), 0, neglfdr)
   )
 
-# k-nearest co-expression backbone: each hub links to its 2 most-correlated
-# peers, kept above EDGE_MIN. Bounded semicircle arcs keep edges inside the band.
-arc_for_module <- function(d) {
-  if (nrow(d) < 2) {
-    return(NULL)
-  }
-  r <- stats::cor(t(expr[d$uniprot_id, , drop = FALSE]))
-  diag(r) <- NA_real_
-  k <- min(2L, nrow(d) - 1L)
-  links <- do.call(rbind, lapply(seq_len(nrow(d)), function(i) {
-    j <- order(r[i, ], decreasing = TRUE)[seq_len(k)]
-    cbind(pmin(i, j), pmax(i, j), r[cbind(i, j)])
-  }))
-  links <- unique(links)
-  links <- links[links[, 3] >= EDGE_MIN, , drop = FALSE]
-  if (nrow(links) == 0) {
-    return(NULL)
-  }
-  tibble::tibble(
-    edge_id = paste(d$module[1], seq_len(nrow(links)), sep = "_"),
-    x1 = d$nx[links[, 1]], x2 = d$nx[links[, 2]],
-    y0 = d$ny[1], r = links[, 3]
-  )
-}
-edges <- bind_rows(lapply(split(hub_nodes, hub_nodes$module), arc_for_module))
-arc_paths <- tidyr::expand_grid(edges, t = seq(0, 1, length.out = 24)) |>
-  mutate(
-    x = x1 + t * (x2 - x1),
-    y = y0 + ARC_H * abs(x2 - x1) * sin(pi * t)
-  )
-
 p_hub <- ggplot(hub_nodes) +
   module_rows() +
   ROW_LINES +
-  geom_path(
-    data = arc_paths, aes(x, y, group = edge_id, alpha = r, linewidth = r),
-    color = "grey45", lineend = "round"
-  ) +
   geom_point(aes(nx, ny, fill = neglfdr, size = kME),
     shape = 21, color = "grey30", stroke = 0.2
   ) +
-  geom_text(aes(nx, ny - 0.3, label = label),
+  geom_text(aes(nx, ny - 0.32, label = label),
     size = 1.1, color = "grey15", vjust = 1
   ) +
   scale_fill_gradient(
     low = "grey90", high = "#B2182B", name = "hub −log10 FDR",
     guide = guide_colorbar(barwidth = 5, barheight = 0.4, title.position = "top", title.hjust = 0.5)
   ) +
-  scale_alpha(range = c(0.25, 0.9), guide = "none") +
-  scale_linewidth(range = c(0.2, 0.7), guide = "none") +
-  scale_size(range = c(1.1, 2.3), guide = "none") +
+  scale_size(range = c(1.4, 3.2), guide = "none") +
   Y_SCALE +
   scale_x_continuous(limits = c(-0.02, 1.02), expand = c(0, 0)) +
-  labs(title = "Hub co-expression network", x = NULL, y = NULL) +
+  labs(title = "Top module hubs (kME)", x = NULL, y = NULL) +
   FIG_THEME +
   theme(
     axis.text = element_blank(), axis.ticks = element_blank(),
@@ -352,7 +312,7 @@ p_hub <- ggplot(hub_nodes) +
 key_txt <- paste0(
   "Contrasts:  Disease = PHE−Ctl   |   Transplant = Mito−Ctl   |   Rescue = PHE_Mito−PHE.   ",
   "Cells: eigengene-limma log2FC over FDR; black box = FDR<0.05.\n",
-  "ORA: 8 rat DBs (GO BP/CC/MF, Hallmark, KEGG, Reactome, MitoCarta, GO Slim; msigdbr Rattus norvegicus / org.Rn.eg.db), per-DB BH, FDR<0.10; best hit / DB, top 4 / module; bars scaled within module.  Hub network: top-6 hubs by kME as nodes (size = kME, fill = own DE significance, min FDR over the 3 contrasts); arcs = k-nearest co-expression backbone (Pearson r ≥ 0.5)."
+  "ORA: 8 rat DBs (GO BP/CC/MF, Hallmark, KEGG, Reactome, MitoCarta, GO Slim; msigdbr Rattus norvegicus / org.Rn.eg.db), per-DB BH, FDR<0.10; best hit / DB, top 4 / module; bars scaled within module.  Module hubs: top-6 proteins per module by kME (module membership), node size = kME, fill = own DE significance (min FDR over the 3 contrasts)."
 )
 fig <- p_counts + p_heat + p_traj + p_ora + p_hub +
   plot_layout(widths = c(0.34, 0.7, 0.5, 1.0, 1.25)) +

@@ -93,11 +93,13 @@ This normalized, **non-imputed** object is the primary hand-off to stage 03 —
 # Imputation for methods that need a complete matrix {#sec-impute}
 
 PCA, WGCNA, the MitoCarta set scores, and the rotation tests need a matrix with
-no gaps. Three independent methods are kept so the choice can be checked: the
-two mechanism-aware ones shown below, plus a missForest random-forest arm
-(`c_missforest.R`) carried for comparison.
+no gaps. Three methods are compared, and **missForest** (random forest,
+`c_missforest.R`) is the arm the figures use: here it tracks the non-imputed
+effect sizes most closely (Spearman 0.98–0.99 in stage 03) and barely adds
+DEPs, where the two mechanism-aware alternatives below inflate them. The two
+alternatives are shown here as the comparison.
 
-## imp4p (canonical imputation arm) {#sec-imp4p}
+## imp4p (MNAR-aware comparison) {#sec-imp4p}
 
 `imp4p` is mechanism-aware: it estimates the per-protein mix of missing-at-random
 vs too-low-to-detect values and imputes each accordingly. It is stochastic, so
@@ -162,9 +164,9 @@ arms write to `02_Normalization/imputation/c_data/`:
 | File | Location | Missing values? | Used by |
 |---|---|---|---|
 | `DAList_normalized.rds` | `c_data/` | kept | the DE test (stage 03) — **primary** |
-| `DAList_imputed_imp4p.rds` | `imputation/c_data/` | filled | figures, WGCNA, rotation (canonical imputation arm) |
+| `DAList_imputed_imp4p.rds` | `imputation/c_data/` | filled | the MNAR-aware comparison |
 | `DAList_imputed_mscoreutils.rds` | `imputation/c_data/` | filled | the robustness comparison |
-| `DAList_imputed_missforest.rds` | `imputation/c_data/` | filled | the random-forest comparison |
+| `DAList_imputed_missforest.rds` | `imputation/c_data/` | filled | figures, WGCNA, rotation (the arm used) |
 
 Normalization levels the samples but never invents data; imputation is applied
 only for methods that cannot run on an incomplete matrix, and never before the DE

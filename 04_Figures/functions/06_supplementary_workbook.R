@@ -10,6 +10,8 @@ suppressPackageStartupMessages({
   library(readr)
 })
 
+`%||%` <- function(a, b) if (is.null(a) || length(a) == 0 || (length(a) == 1 && is.na(a))) b else a
+
 # Excel sheet name: <=31 chars, none of []:*?/\, unique within the workbook.
 .sheet_name <- function(base, taken) {
   nm <- substr(gsub("[\\[\\]:*?/\\\\]", "_", base), 1, 31)
@@ -88,5 +90,3 @@ build_workbook <- function(out_file, figure_title, sheet_specs) {
     out_file, file.size(out_file) / 1e3, length(taken) - 1L
   ))
 }
-
-`%||%` <- function(a, b) if (is.null(a) || length(a) == 0 || (length(a) == 1 && is.na(a))) b else a

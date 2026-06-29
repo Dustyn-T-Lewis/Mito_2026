@@ -99,7 +99,7 @@ classify_database <- function(pathway_names) {
 # Flat gene-set collection over CANONICAL_DBS for ORA. Reads the unified
 # rat_gene_sets.rds so it enriches against the same backbone as the rings.
 build_harmonized_collection <- function(
-  cache = here::here("04_Figures", "shared", "rat_gene_sets.rds"),
+  cache = here::here("04_Figures", "shared", "c_data", "rat_gene_sets.rds"),
   min_size = 10, max_size = 350
 ) {
   gs <- readRDS(cache)
@@ -117,71 +117,11 @@ build_harmonized_collection <- function(
   pw
 }
 
-# Display-label dictionary for the enrichment figures, keyed on
-# clean_pathway_name() output (Title Case, "_"->" ", DB prefix stripped,
-# MitoCarta reduced to its most-specific last segment).
-PATHWAY_DISPLAY_OVERRIDES <- c(
-  "Oxidative Phosphorylation"                              = "OXPHOS",
-  "Oxphos Subunits"                                        = "OXPHOS Subunits",
-  "Cv Subunits"                                            = "Complex V Subunits",
-  "Ci Subunits"                                            = "Complex I Subunits",
-  "Civ Subunits"                                           = "Complex IV Subunits",
-  "Aerobic Respiration And Respiratory Electron Transport" = "Aerobic Resp. + ETC",
-  "Respiratory Electron Transport"                         = "Respiratory ETC",
-  "Complex I Biogenesis"                                   = "Complex I Biogenesis",
-  "Citric Acid Cycle Tca Cycle"                            = "TCA Cycle",
-  "Tca Cycle"                                              = "TCA Cycle",
-  "Mitochondrial Translation"                              = "Mito Translation",
-  "Mitochondrial Ribosome"                                 = "Mitoribosome",
-  "Mitochondrial Protein Degradation"                      = "Mito Protein Deg.",
-  "Mitochondrial Calcium Ion Transport"                    = "Mito Ca²⁺ Transport",
-  "Pink1 Prkn Mediated Mitophagy"                          = "PINK1/PRKN Mitophagy",
-  "Fatty Acid Beta Oxidation"                              = "FA β-Oxidation",
-  "Fatty Acid Oxidation"                                   = "FA Oxidation",
-  "Fatty Acid Metabolism"                                  = "FA Metabolism",
-  "Branched Chain Amino Acid Metabolism"                   = "BCAA Metabolism",
-  "Cardiolipin Biosynthesis"                               = "Cardiolipin Biosynth.",
-  "Mitochondrion Organization"                             = "Mito Organization",
-  "Mitochondrial Organization"                             = "Mito Org.",
-  "Mitochondrial Transport"                                = "Mito Transport",
-  "Mitochondrial Protein Import"                           = "Mito Protein Import",
-  "Small Molecule Transport"                               = "Sm. Molecule Transport",
-  "Slc25a Family"                                          = "SLC25A Carriers",
-  "Proteases"                                              = "Mito Proteases",
-  "Ros And Glutathione Metabolism"                         = "ROS/Glutathione Metab.",
-  "Xenobiotic Metabolism"                                  = "Xenobiotic Metab.",
-  "Lysine Metabolism"                                      = "Lysine Metab.",
-  "Amino Acid Metabolic Process"                           = "Amino Acid Metab.",
-  "Amino Acid Metabolism"                                  = "Amino Acid Metab.",
-  "Extracellular Matrix Organization"                      = "ECM Organization",
-  "Epithelial Mesenchymal Transition"                      = "EMT",
-  "Cytoplasmic Translation"                                = "Cytoplasmic Transl.",
-  "Glycolysis Gluconeogenesis"                             = "Glycolysis/Gluconeo.",
-  "Generation Of Precursor Metabolites And Energy"         = "Precursor Metab. & Energy",
-  "Organophosphate Metabolic Process"                      = "Organophosphate Metab.",
-  "Organic Acid Metabolic Process"                         = "Organic Acid Metab.",
-  "Carboxylic Acid Metabolic Process"                      = "Carboxylic Acid Metab.",
-  "Monocarboxylic Acid Metabolic Process"                  = "Monocarbox. Acid Metab.",
-  "Small Molecule Catabolic Process"                       = "Sm. Molecule Catab.",
-  "Small Molecule Metabolic Process"                       = "Sm. Molecule Metab.",
-  "Ketone Metabolic Process"                               = "Ketone Metabolism",
-  "Protein Localization To Plasma Membrane"                = "Plasma Membr. Protein Loc.",
-  "Striated Muscle Contraction"                            = "Striated Muscle Contr."
-)
-
-# Human-readable pathway label for any DB. MitoCarta names are a
-# "MITOCARTA_A__B__TERM" hierarchy -> keep the most specific last segment, drop
-# the prefix; everything else goes through clean_pathway_name(). Then apply the
-# shared override dictionary (extra = figure-specific extension, merged on top).
-clean_display_label <- function(pathway, extra = NULL) {
-  is_mito <- grepl("^MITOCARTA_", pathway)
-  lab <- ifelse(
-    is_mito,
-    clean_pathway_name(gsub("_", " ", sub(".*__", "", sub("^MITOCARTA_", "", pathway)))),
-    clean_pathway_name(pathway)
-  )
-  dict <- PATHWAY_DISPLAY_OVERRIDES
-  if (!is.null(extra)) dict[names(extra)] <- extra
-  hit <- match(lab, names(dict))
-  ifelse(!is.na(hit), unname(dict[hit]), lab)
+# Display label for any pathway via the enrichVolcano cleaner, the same logic the volcano
+# rings use. Its wrapping newlines are flattened so the pathway-bar labels stay one row.
+clean_display_label <- function(pathway) {
+  if (!length(pathway)) {
+    return(character(0))
+  }
+  gsub("\n", " ", enrichVolcano::ev_clean_label(pathway))
 }

@@ -21,6 +21,14 @@ H9C2_PAL_CONTRAST <- c(
 H9C2_PI_THRESH <- 0.05
 H9C2_FDR_EXPLOR <- 0.10
 
+# Enrichment-database palette, shared by every figure that colours pathways by source.
+# Colourblind-safe (Paul Tol), all dark enough to carry white bold labels on the bars.
+DB_COLORS <- c(
+  Hallmark = "#CC3311", Reactome = "#0077BB", KEGG = "#AA3377",
+  MitoCarta = "#009988", `GO Slim` = "#555555",
+  `GO:BP` = "#117733", `GO:CC` = "#44AA99", `GO:MF` = "#882255"
+)
+
 # suppress stray Rplots.pdf from implicit device opens
 options(device = function(...) grDevices::pdf(file = nullfile(), ...))
 
@@ -81,30 +89,4 @@ fmt_p <- function(p) {
     return(sprintf("p = %.3f", p))
   }
   sprintf("p = %.2f", p)
-}
-
-# Pathway-name cleaner for the enrichment figures.
-.DB_PREFIXES <- c(
-  "^HALLMARK_", "^GOSLIM_", "^GOBP_", "^GOCC_", "^GOMF_",
-  "^REACTOME_", "^KEGG_MEDICUS_", "^KEGG_"
-)
-.SCI_CAPS <- c(
-  "Mtorc1" = "mTORC1", "Myc " = "MYC ", "E2f " = "E2F ", "Dna " = "DNA ",
-  "Rna " = "RNA ", "Tnfa " = "TNFa ", "Uv " = "UV ", "G2m " = "G2M ",
-  "Il6 " = "IL6 ", "Il2 " = "IL2 ", "Kras " = "KRAS ", "P53 " = "p53 ",
-  "Tgf " = "TGF ", "Nfkb" = "NF-kB", "Atp " = "ATP ", "Nadh " = "NADH ",
-  "Oxidative Phosphorylation" = "OXPHOS",
-  "External Encapsulating Structure Or.*" = "Extracellular Matrix Organization",
-  "Enzyme Linked Receptor Protein Signaling.*" = "Receptor Protein Signaling"
-)
-
-clean_pathway_name <- function(name) {
-  out <- name
-  for (pfx in .DB_PREFIXES) out <- stringr::str_remove(out, pfx)
-  out <- stringr::str_replace_all(out, "_", " ")
-  out <- stringr::str_to_title(out)
-  for (i in seq_along(.SCI_CAPS)) {
-    out <- stringr::str_replace(out, names(.SCI_CAPS)[i], .SCI_CAPS[i])
-  }
-  out
 }

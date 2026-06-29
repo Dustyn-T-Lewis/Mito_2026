@@ -5,6 +5,7 @@
 .Rhistory
 .RData
 .Rdata
+*.RData
 .Rproj.user/
 .Renviron
 .httr-oauth

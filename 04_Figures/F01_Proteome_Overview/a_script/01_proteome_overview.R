@@ -14,10 +14,8 @@ source(here::here("04_Figures", "functions", "02_data_paths_and_loaders.R"))
 source(here::here("04_Figures", "functions", "03_pathway_enrichment_dedup_ora.R"))
 source(here::here("04_Figures", "functions", "04_mitocarta_lens_lookup.R"))
 source(here::here("04_Figures", "functions", "06_supplementary_workbook.R"))
-source(here::here("04_Figures", "F01_Proteome_Overview", "a_script", "_build_pca.R"))
-source(here::here("04_Figures", "F01_Proteome_Overview", "a_script", "_build_dep.R"))
-source(here::here("04_Figures", "F01_Proteome_Overview", "a_script", "_build_venn.R"))
-source(here::here("04_Figures", "F01_Proteome_Overview", "a_script", "_build_pathway.R"))
+panels <- here::here("04_Figures", "F01_Proteome_Overview", "a_script", "panels")
+for (f in list.files(panels, full.names = TRUE)) source(f)
 
 BASE <- here::here("04_Figures", "F01_Proteome_Overview")
 PANELS <- file.path(BASE, "b_reports", "panels")
@@ -55,7 +53,11 @@ pca <- add_tag(pca_p, "A")
 # dark -> light (Π / FDR / p) to read parallel with the bars, bottom-right.
 dep_key_df <- tibble::tibble(
   x = c(1, 2.15, 3.2),
-  lab = c("Π < 0.05", "FDR < 0.10", "p < 0.05"),
+  lab = c(
+    paste0("Π < ", H9C2_PI_THRESH),
+    paste0("FDR < ", H9C2_FDR_EXPLOR),
+    "p < 0.05"
+  ),
   a = c(1, 0.45, 0.18),
   txt = c("white", "grey15", "grey15")
 )

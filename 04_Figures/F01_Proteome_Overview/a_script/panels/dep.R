@@ -6,7 +6,9 @@ CORE <- H9C2_CONTRAST_ORDER
 CTR_LAB <- stats::setNames(contrast_brief(CORE), CORE)
 ctr_levels <- unname(CTR_LAB) # top-to-bottom narrative order
 
-THR_LEVELS <- c("p < 0.05", paste0("q < ", H9C2_FDR_EXPLOR), "Π < 0.05")
+THR_LEVELS <- c(
+  "p < 0.05", paste0("q < ", H9C2_FDR_EXPLOR), paste0("Π < ", H9C2_PI_THRESH)
+)
 
 # Load data once at source time so both builders share it.
 comb_long <- readr::read_csv(P05$comb, show_col_types = FALSE)
@@ -45,7 +47,7 @@ counts_df_cache <- .build_counts_df()
 # public: raw data for workbook
 dep_count_data <- function() counts_df_cache
 
-# Panel A: DEP counts (horizontal nested-threshold)
+# Panel B: DEP counts (horizontal nested-threshold)
 build_dep_count_panel <- function() {
   frac_df <- counts_df_cache
 
@@ -115,7 +117,7 @@ build_dep_count_panel <- function() {
     )
 }
 
-# Panel B: effect-size companion (contrast-colored)
+# Panel C: effect-size companion (contrast-colored)
 build_dep_effect_panel <- function() {
   # All logFC (no window filter) for the median stat
   lfc_long_all <- dplyr::bind_rows(lapply(CORE, \(c)

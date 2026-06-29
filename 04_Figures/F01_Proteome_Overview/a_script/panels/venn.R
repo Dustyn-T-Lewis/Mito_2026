@@ -163,7 +163,7 @@ build_venn_panels <- function() {
     labs(
       title = "Direction within set",
       subtitle = "Up / Down per contrast set",
-      x = NULL, y = "Proteins (Π < 0.05)"
+      x = NULL, y = paste0("Proteins (Π < ", H9C2_PI_THRESH, ")")
     ) +
     FIG_THEME +
     theme(
@@ -180,30 +180,21 @@ build_venn_panels <- function() {
       plot.margin = margin(3, 2, 1, 1)
     )
 
-  # wrap venn_grob as ggplot if ggplotify is available
-  have_ggplotify <- requireNamespace("ggplotify", quietly = TRUE)
-  sub_txt <- "Disease · Transplant · Rescue sets"
-  if (have_ggplotify) {
-    venn_gg <- ggplotify::as.ggplot(venn_grob) +
-      labs(title = "DEP overlap (Π < 0.05)", subtitle = sub_txt) +
-      theme_void(base_family = "Helvetica") +
-      theme(
-        plot.title = element_text(
-          face = "bold", size = FIG_TITLE_SIZE,
-          margin = margin(b = 1)
-        ),
-        plot.subtitle = element_text(
-          face = "bold.italic", size = FIG_SUBTITLE_SIZE,
-          color = "grey30", margin = margin(b = 2)
-        ),
-        plot.margin = margin(3, 2, 1, 2)
-      )
-  } else {
-    venn_gg <- venn_grob
-  }
+  # eulerr returns a grob; patchwork needs it as a ggplot for the composite
+  venn_gg <- ggplotify::as.ggplot(venn_grob) +
+    labs(title = paste0("DEP overlap (Π < ", H9C2_PI_THRESH, ")"), subtitle = "Disease · Transplant · Rescue sets") +
+    theme_void(base_family = "Helvetica") +
+    theme(
+      plot.title = element_text(face = "bold", size = FIG_TITLE_SIZE, margin = margin(b = 1)),
+      plot.subtitle = element_text(
+        face = "bold.italic", size = FIG_SUBTITLE_SIZE,
+        color = "grey30", margin = margin(b = 2)
+      ),
+      plot.margin = margin(3, 2, 1, 2)
+    )
 
   message(sprintf(
-    "F03 Venn | sets: Disease=%d Transplant=%d Rescue=%d | %d sig proteins, %d regions",
+    "F01 Venn | sets: Disease=%d Transplant=%d Rescue=%d | %d sig proteins, %d regions",
     set_sizes[["Disease"]], set_sizes[["Transplant"]], set_sizes[["Rescue"]],
     nrow(membership), nrow(region_counts)
   ))

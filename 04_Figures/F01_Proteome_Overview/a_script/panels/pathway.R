@@ -4,11 +4,8 @@
 # ordered by overall total (largest at the base).
 # build_pathway_bar_panel() returns list(plot, bar_df, sig_pw, DB_COLORS).
 
-# Database key (Set2 pastels; GO Slim kept clearly distinct from Hallmark).
-PATHWAY_DB_COLORS <- c(
-  Hallmark = "#66C2A5", Reactome = "#8DA0CB", KEGG = "#E78AC3",
-  MitoCarta = "#FC8D62", `GO Slim` = "#FFD92F"
-)
+# Database key: the shared palette, so a database reads the same colour across figures.
+PATHWAY_DB_COLORS <- DB_COLORS[CANONICAL_DBS]
 
 build_pathway_bar_panel <- function() {
   CORE <- H9C2_CONTRAST_ORDER # Disease-first
@@ -17,10 +14,10 @@ build_pathway_bar_panel <- function() {
   SIM_CUT <- 0.375
 
   fgsea_all <- readr::read_csv(
-    here::here("04_Figures", "shared", "fgsea_tstat_all_h9c2.csv"),
+    here::here("04_Figures", "shared", "c_data", "fgsea_tstat_all_h9c2.csv"),
     show_col_types = FALSE
   )
-  rat_gene_sets <- readRDS(here::here("04_Figures", "shared", "rat_gene_sets.rds"))
+  rat_gene_sets <- readRDS(here::here("04_Figures", "shared", "c_data", "rat_gene_sets.rds"))
   set_pool <- do.call(c, unname(rat_gene_sets[CANONICAL_DBS]))
 
   per_contrast <- function(ctr) {
@@ -49,7 +46,7 @@ build_pathway_bar_panel <- function() {
 
   sig_pw <- dplyr::bind_rows(lapply(CORE, per_contrast))
   message(sprintf(
-    "F04: %d total post-dedup sig pathways across %d contrasts",
+    "F01: %d total post-dedup sig pathways across %d contrasts",
     nrow(sig_pw), length(CORE)
   ))
 

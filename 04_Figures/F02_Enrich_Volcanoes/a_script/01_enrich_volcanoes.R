@@ -21,11 +21,7 @@ DAT <- file.path(BASE, "c_data")
 for (d in c(RPT_PNG, PANELS, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
 dep_df <- load_combined_wide()
-fgsea_all <- readr::read_csv(
-  here::here("04_Figures", "shared", "fgsea_tstat_all_h9c2.csv"),
-  show_col_types = FALSE
-)
-rat_gene_sets <- readRDS(here::here("04_Figures", "shared", "rat_gene_sets.rds"))
+rat_gene_sets <- readRDS(here::here("04_Figures", "shared", "c_data", "rat_gene_sets.rds"))
 set_pool <- do.call(c, unname(rat_gene_sets[CANONICAL_DBS]))
 
 contrasts <- tibble::tribble(
@@ -36,6 +32,24 @@ contrasts <- tibble::tribble(
   "Interaction", "Interaction", "interaction"
 )
 RING_N <- 12
+
+# fgsea over the 5-DB lens, ranked by the limma moderated t, written to c_data so the
+# rings here and the supplementary pathway figures trace to one generated source.
+de_long <- readr::read_csv(P05$comb, show_col_types = FALSE)
+fgsea_all <- bind_rows(lapply(contrasts$ctr, function(ctr) {
+  ranks <- de_long |>
+    filter(contrast == ctr, is_real_symbol(gene), !is.na(t)) |>
+    group_by(gene) |>
+    summarise(t = t[which.max(abs(t))], .groups = "drop")
+  stats <- sort(setNames(ranks$t, ranks$gene))
+  bind_rows(lapply(CANONICAL_DBS, function(db) {
+    set.seed(42)
+    res <- fgsea::fgsea(rat_gene_sets[[db]], stats, minSize = 10, maxSize = 500)
+    res$leadingEdge <- vapply(res$leadingEdge, paste, character(1), collapse = ";")
+    mutate(tibble::as_tibble(res), database = db, contrast = ctr)
+  }))
+}))
+readr::write_csv(fgsea_all, file.path(DAT, "fgsea_results.csv"))
 
 # Per contrast: tidy volcano (pi_score = significance) + ring terms
 # (significant -> EnrichmentMap dedup -> top RING_N by FDR).
@@ -54,7 +68,7 @@ prep <- lapply(seq_len(nrow(contrasts)), function(i) {
   sig <- fgsea_all |>
     filter(
       contrast == ctr, database %in% CANONICAL_DBS, padj < 0.05,
-      !pathway %in% MITO_DROP_SETS
+      !pathway %in% MITO_DROP_SETS, !grepl(DISEASE_VIRAL_RE, pathway, ignore.case = TRUE)
     ) |>
     as.data.frame()
   enrich <- deduplicate_enrichment(sig, set_pool, cutoff = 0.375) |>

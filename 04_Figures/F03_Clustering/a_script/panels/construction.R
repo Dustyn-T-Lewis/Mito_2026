@@ -34,5 +34,6 @@ panel_dendro <- function(net) {
       hang = 0.03, guideHang = 0.05, main = "Protein dendrogram and modules",
       cex.colorLabels = 0.6, cex.main = 0.8, cex.axis = 0.6, cex.lab = 0.6, marAll = c(1, 4, 2, 0)
     )
-  })
+  }) +
+    theme(plot.margin = margin(t = 6, r = 2, b = 2, l = 2, unit = "mm"))
 }

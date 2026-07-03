@@ -99,18 +99,6 @@ fdr_by <- function(cn) {
 }
 disease_fdr <- fdr_by("Disease")
 rescue_fdr <- fdr_by("Rescue")
-# Rescue index = fraction of the PHE eigengene departure reversed by transplant (>100%
-# means transplant overshoots the control baseline); the q shown is the Rescue contrast
-# (PHE_Mito - PHE), the transplant effect the trajectory tests.
-rescue_index <- group_eig |>
-  select(module, Group, mean_eig) |>
-  pivot_wider(names_from = Group, values_from = mean_eig) |>
-  transmute(
-    module,
-    rescue = (PHE - PHE_Mito) / (PHE - Ctl),
-    fdr = rescue_fdr[module],
-    disease_fdr = disease_fdr[module]
-  )
 
 # per-module ORA: per-DB fora, BH within DB, keep every FDR<0.10 hit (full table), then
 # EnrichmentMap dedup for the displayed top terms
@@ -171,7 +159,9 @@ module_figure <- function(mods, title) {
 
 # main figure: each responsive module is a card -- its contrast cells stacked over its
 # eigengene trajectory -- beside the top ORA pathway
-fig <- module_figure(responsive_modules, "Design-responsive modules  (min eigengene p ≤ 0.10 over Disease/Transplant/Rescue)")
+fig <- module_figure(responsive_modules, sprintf(
+  "Design-responsive modules  (min eigengene p ≤ %.2f over Disease/Transplant/Rescue)", P_NOMINAL
+))
 ggsave(file.path(MAIN_PNG, "MAIN_F03_clustering.png"), fig,
   width = 290, height = 220, units = "mm", dpi = 300, limitsize = FALSE
 )
@@ -235,14 +225,14 @@ build_workbook(
     list(
       name = "trajectory",
       df = group_eig |>
-        left_join(rescue_index, by = "module") |>
         transmute(module,
           group = as.character(Group), eigengene_mean = round(mean_eig, 4),
-          se = round(se, 4), rescue_frac = round(rescue, 3),
-          rescue_fdr = signif(fdr, 3), disease_fdr = signif(disease_fdr, 3)
+          se = round(se, 4),
+          rescue_fdr = signif(rescue_fdr[module], 3),
+          disease_fdr = signif(disease_fdr[module], 3)
         ),
       role = "Panel C rescue trajectories",
-      contents = "per-group mean eigengene, SE, rescue fraction, Rescue and Disease FDR per module"
+      contents = "per-group mean eigengene, SE, Rescue and Disease FDR per module"
     ),
     list(
       name = "module_ora",

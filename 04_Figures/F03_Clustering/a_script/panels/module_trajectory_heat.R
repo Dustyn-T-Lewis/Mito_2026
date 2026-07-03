@@ -108,10 +108,11 @@ panel_cluster_trajectory <- function(prot_traj, eig_traj, modules) {
     )
 }
 
-ora_aligned <- function(ora_top5, modules, top_n = 5L) {
-  # Name fits its bar: name inside (white), q/p outside (dark). Bar too short:
-  # q/p inside right-aligned (white), name outside (dark). bar_chars tunes the
-  # fit threshold (free_x panels share physical width but not scale).
+ora_aligned <- function(ora_top5, modules, top_n = 5L, sig = H9C2_FDR_EXPLOR) {
+  # Label placement scales with bar length: name inside (white) + q/p outside (dark)
+  # when the name fits; q/p inside right-aligned (white) + name outside (dark) when it
+  # doesn't; both outside (dark) when the bar is too short for either. bar_chars tunes
+  # the fit threshold (free_x panels share physical width but not scale).
   bar_chars <- 78
   d <- ora_top5 |>
     filter(module %in% modules) |>
@@ -124,13 +125,17 @@ ora_aligned <- function(ora_top5, modules, top_n = 5L) {
       database = factor(database, levels = names(DB_COLORS)),
       lp = -log10(padj),
       yb = top_n + 1 - k,
-      sig_fdr = padj < 0.10,
-      star = ifelse(padj < 0.10, "✱ ", ifelse(p < 0.10, "· ", "")),
+      sig_fdr = padj < sig,
+      star = ifelse(padj < sig, "✱ ", ifelse(p < sig, "· ", "")),
       name = clean_display_label(pathway),
       name = ifelse(nchar(name) > 34, paste0(substr(name, 1, 33), "…"), name),
-      sig = paste0(star, "q", fmt_pq(padj), " p", fmt_pq(p)),
+      lab = paste0(star, "q", fmt_pq(padj), " p", fmt_pq(p)),
       gap = 0.03 * xmax,
-      fits = nchar(name) <= lp / xmax * bar_chars
+      cap = lp / xmax * bar_chars,
+      name_fits = nchar(name) <= cap,
+      sig_inside = !name_fits & nchar(lab) <= cap,
+      both_outside = !name_fits & nchar(lab) > cap,
+      combo = paste0(name, "   ", lab)
     )
   ggplot(d, aes(lp, yb, fill = database)) +
     geom_col(width = 0.72, colour = "grey35", linewidth = 0.2, orientation = "y") +
@@ -139,19 +144,23 @@ ora_aligned <- function(ora_top5, modules, top_n = 5L) {
       colour = "black", linewidth = 0.7, orientation = "y"
     ) +
     geom_text(
-      data = filter(d, fits), aes(x = gap, label = name),
+      data = filter(d, name_fits), aes(x = gap, label = name),
       hjust = 0, size = 1.5, fontface = "bold", colour = "white"
     ) +
     geom_text(
-      data = filter(d, fits), aes(x = lp + gap, label = sig),
+      data = filter(d, name_fits), aes(x = lp + gap, label = lab),
       hjust = 0, size = 1.4, fontface = "bold", colour = "grey15"
     ) +
     geom_text(
-      data = filter(d, !fits), aes(x = lp - gap, label = sig),
+      data = filter(d, sig_inside), aes(x = lp - gap, label = lab),
       hjust = 1, size = 1.4, fontface = "bold", colour = "white"
     ) +
     geom_text(
-      data = filter(d, !fits), aes(x = lp + gap, label = name),
+      data = filter(d, sig_inside), aes(x = lp + gap, label = name),
+      hjust = 0, size = 1.5, fontface = "bold", colour = "grey15"
+    ) +
+    geom_text(
+      data = filter(d, both_outside), aes(x = lp + gap, label = combo),
       hjust = 0, size = 1.5, fontface = "bold", colour = "grey15"
     ) +
     facet_wrap(~module, ncol = 1, scales = "free_x") +
@@ -159,7 +168,10 @@ ora_aligned <- function(ora_top5, modules, top_n = 5L) {
     scale_x_continuous(expand = expansion(mult = c(0, 0.4))) +
     scale_y_continuous(limits = c(0.4, top_n + 0.6), expand = c(0, 0)) +
     coord_cartesian(clip = "off") +
-    labs(title = "Top 5 ORA pathways  (✱ FDR<0.10  · p<0.10)", x = NULL, y = NULL) +
+    labs(
+      title = sprintf("Top %d ORA pathways  (✱ FDR<%.2f  · p<%.2f)", top_n, sig, sig),
+      x = NULL, y = NULL
+    ) +
     FIG_THEME +
     theme(
       plot.title = element_text(face = "bold", size = FIG_AXIS_TEXT + 1, colour = "grey15"),

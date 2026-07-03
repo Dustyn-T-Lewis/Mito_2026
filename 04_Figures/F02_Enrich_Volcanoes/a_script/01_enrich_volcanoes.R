@@ -33,22 +33,15 @@ contrasts <- tibble::tribble(
 )
 RING_N <- 12
 
-# fgsea over the 5-DB lens, ranked by the limma moderated t, written to c_data so the
-# rings here and the supplementary pathway figures trace to one generated source.
-de_long <- readr::read_csv(P05$comb, show_col_types = FALSE)
-fgsea_all <- bind_rows(lapply(contrasts$ctr, function(ctr) {
-  ranks <- de_long |>
-    filter(contrast == ctr, is_real_symbol(gene), !is.na(t)) |>
-    group_by(gene) |>
-    summarise(t = t[which.max(abs(t))], .groups = "drop")
-  stats <- sort(setNames(ranks$t, ranks$gene))
-  bind_rows(lapply(CANONICAL_DBS, function(db) {
-    set.seed(42)
-    res <- fgsea::fgsea(rat_gene_sets[[db]], stats, minSize = 10, maxSize = 500)
-    res$leadingEdge <- vapply(res$leadingEdge, paste, character(1), collapse = ";")
-    mutate(tibble::as_tibble(res), database = db, contrast = ctr)
-  }))
-}))
+# fgsea over the 5-DB lens, ranked by the limma moderated t. Read from the shared
+# cache (shared/a_script/02_build_fgsea_cache.R) so the rings here, the F01 pathway
+# bars, and the supplements all trace to one computation. A filtered copy goes to
+# c_data for the supplementary GSEA figure.
+fgsea_all <- readr::read_csv(
+  here::here("04_Figures", "shared", "c_data", "fgsea_tstat_all_h9c2.csv"),
+  show_col_types = FALSE
+) |>
+  filter(contrast %in% contrasts$ctr, database %in% CANONICAL_DBS)
 readr::write_csv(fgsea_all, file.path(DAT, "fgsea_results.csv"))
 
 # Per contrast: tidy volcano (pi_score = significance) + ring terms
@@ -71,11 +64,13 @@ prep <- lapply(seq_len(nrow(contrasts)), function(i) {
       !pathway %in% MITO_DROP_SETS, !grepl(DISEASE_VIRAL_RE, pathway, ignore.case = TRUE)
     ) |>
     as.data.frame()
+  dedup <- dedup_report(sig, set_pool, cutoff = 0.375)
   enrich <- deduplicate_enrichment(sig, set_pool, cutoff = 0.375) |>
     arrange(padj) |>
     slice_head(n = RING_N)
   list(
-    volc = volc, enrich = enrich,
+    volc = volc, enrich = enrich, dedup = dedup,
+    n_dep = n_dep, n_sig = nrow(sig),
     subtitle = sprintf(
       "%s | %d DEPs, %d pathways", CONTRAST_MATH_BRIEF[ctr], n_dep, nrow(enrich)
     )
@@ -83,12 +78,14 @@ prep <- lapply(seq_len(nrow(contrasts)), function(i) {
 })
 names(prep) <- contrasts$role
 
-# Shared ring styling for the panels and the composite.
+# Ring styling for the per-contrast supplement panels (leading-edge ticks on).
 ring_args <- list(
   gene_col = "gene", logfc_col = "logFC", pval_col = "P.Value", padj_col = "padj",
   term_col = "pathway", nes_col = "NES", size_col = "size",
   genes_col = "leadingEdge", genes_sep = ";",
-  p_threshold = H9C2_PI_THRESH, logfc_threshold = log2(1.5),
+  # significance is pi_score alone (it already embeds |logFC|); no extra fold gate,
+  # so the coloured points match the subtitle DEP count and the F01/F03 rule.
+  p_threshold = H9C2_PI_THRESH, logfc_threshold = 0,
   ring_radius = 5.5, volcano_radius = 5.2, arc_height_range = c(0.1, 3.2),
   label_size = 2.7, point_size = 2.0, point_alpha = 0.7,
   count_x_mult = 0.55, count_y_mult = 0.55
@@ -108,19 +105,36 @@ for (i in seq_len(nrow(contrasts))) {
   )
 }
 
-# Four-ring 2x2 composite, shared NES legend collected as a bottom strip.
-grid <- do.call(volcano_ring_grid, c(
-  list(
-    volc_dfs = lapply(prep, `[[`, "volc"),
-    enrich_dfs = lapply(prep, `[[`, "enrich"),
-    contrasts = contrasts$role,
-    subtitles = vapply(prep, `[[`, character(1), "subtitle"),
-    ncol = 2, theme = volcano_ring_theme(base_size = 13)
-  ),
-  ring_args
-))
+# Four-ring 2x2 composite with leading-edge ticks, NES legend as a bottom strip.
+# The subtitle carries contrast, DEP count, and shown/tested pathway split; the
+# dedup rule, top-12 cap, and FDR ranges live in the caption.
+composite_subtitle <- vapply(seq_len(nrow(contrasts)), function(i) {
+  e <- prep[[i]]$enrich
+  sprintf(
+    "**%s**<br>%d DEPs · %d/%d sig. pathways (%d↑ %d↓)",
+    CONTRAST_MATH_BRIEF[contrasts$ctr[i]], prep[[i]]$n_dep,
+    nrow(e), prep[[i]]$n_sig, sum(e$NES > 0), sum(e$NES < 0)
+  )
+}, character(1))
+
+grid <- volcano_ring_grid(
+  volc_dfs = lapply(prep, `[[`, "volc"),
+  enrich_dfs = lapply(prep, `[[`, "enrich"),
+  contrasts = contrasts$role,
+  subtitles = composite_subtitle,
+  gene_col = "gene", logfc_col = "logFC", pval_col = "P.Value", padj_col = "padj",
+  term_col = "pathway", nes_col = "NES", size_col = "size",
+  genes_col = "leadingEdge", genes_sep = ";",
+  p_threshold = H9C2_PI_THRESH, logfc_threshold = 0,
+  x_scale = 0.9, y_scale = 0.93,
+  label_size = 2.6, ncol = 2, theme = volcano_ring_theme(base_size = 13)
+)
 fig <- grid$plot &
   ggplot2::theme(
+    plot.subtitle = ggtext::element_markdown(
+      hjust = 0.5, halign = 0.5, colour = "grey30",
+      size = ggplot2::rel(0.7), lineheight = 1.15
+    ),
     legend.position = "bottom",
     legend.key.width = ggplot2::unit(13, "mm"),
     legend.key.height = ggplot2::unit(2.5, "mm"),
@@ -135,7 +149,7 @@ fig <- fig & ggplot2::guides(
 )
 ggplot2::ggsave(
   file.path(RPT_PNG, "MAIN_F02_enrich_volcanoes.png"), fig,
-  width = 270, height = 285, units = "mm", dpi = 300, limitsize = FALSE
+  width = 260, height = 240, units = "mm", dpi = 300, bg = "white", limitsize = FALSE
 )
 
 # Supplementary workbook: contrast key + every tested pathway per contrast.
@@ -155,12 +169,21 @@ pathway_sheets <- lapply(seq_len(nrow(contrasts)), function(i) {
     transmute(pathway, database, padj, pval, NES, size,
       shown = pathway %in% prep[[i]]$enrich$pathway
     ) |>
+    left_join(
+      prep[[i]]$dedup |> select(pathway, dedup_status, merged_into, overlap_jaccard),
+      by = "pathway"
+    ) |>
+    mutate(dedup_status = tidyr::replace_na(dedup_status, "ns")) |>
     arrange(padj) |>
     as.data.frame()
   list(
     name = contrasts$role[i], df = full,
     role = sprintf("All tested pathways for the %s contrast", contrasts$role[i]),
-    contents = "pathway, database, padj, pval, NES, size, shown (drawn on the ring); sorted by padj"
+    contents = paste(
+      "pathway, database, padj, pval, NES, size, shown (drawn on the ring),",
+      "dedup_status (kept representative / redundant / ns = not significant),",
+      "merged_into + overlap+jaccard coefficient for redundant terms; sorted by padj"
+    )
   )
 })
 build_workbook(

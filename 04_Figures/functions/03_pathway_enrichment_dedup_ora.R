@@ -43,6 +43,41 @@ deduplicate_enrichment_flat <- function(results, pathways, cutoff = 0.375) {
   results[keep_mask, ]
 }
 
+# Audit trail for the supplementary table: flags each pathway as the retained
+# representative or redundant, and for redundant ones names the retained pathway
+# it overlaps most and the overlap+jaccard coefficient to it. Reuses
+# deduplicate_enrichment for the retained set, so the flags cannot drift from the
+# ring. overlap+jaccard is the EnrichmentMap combined coefficient (see above).
+dedup_report <- function(results, pathways, cutoff = 0.375, cross_db = TRUE) {
+  results$dedup_status <- "kept"
+  results$merged_into <- NA_character_
+  results$overlap_jaccard <- NA_real_
+  if (nrow(results) == 0) {
+    return(results)
+  }
+  kept <- deduplicate_enrichment(results, pathways, cutoff, cross_db)$pathway
+  redundant <- setdiff(results$pathway, kept)
+  results$dedup_status[results$pathway %in% redundant] <- "redundant"
+  coef <- function(a, b) {
+    genes_a <- pathways[[a]]
+    genes_b <- pathways[[b]]
+    inter <- length(intersect(genes_a, genes_b))
+    if (inter == 0L) {
+      return(0)
+    }
+    0.5 * inter / min(length(genes_a), length(genes_b)) +
+      0.5 * inter / (length(genes_a) + length(genes_b) - inter)
+  }
+  for (p in redundant) {
+    if (is.null(pathways[[p]])) next
+    sims <- vapply(kept, coef, numeric(1), a = p)
+    best <- which.max(sims)
+    results$merged_into[results$pathway == p] <- kept[best]
+    results$overlap_jaccard[results$pathway == p] <- sims[best]
+  }
+  results[order(results$padj), , drop = FALSE]
+}
+
 # Within-database collapse first, then a cross-database pass so the same biology
 # in different DBs (REACTOME_TCA_CYCLE vs KEGG_CITRATE_CYCLE) reduces to one entry.
 deduplicate_enrichment <- function(results, pathways, cutoff = 0.375, cross_db = TRUE) {

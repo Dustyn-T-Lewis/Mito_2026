@@ -127,7 +127,8 @@ grid <- volcano_ring_grid(
   genes_col = "leadingEdge", genes_sep = ";",
   p_threshold = H9C2_PI_THRESH, logfc_threshold = 0,
   x_scale = 0.9, y_scale = 0.93,
-  label_size = 2.6, ncol = 2, theme = volcano_ring_theme(base_size = 13)
+  label_size = 2.9, count_size = 2.8, ncol = 2,
+  theme = volcano_ring_theme(base_size = 13)
 )
 fig <- grid$plot &
   ggplot2::theme(

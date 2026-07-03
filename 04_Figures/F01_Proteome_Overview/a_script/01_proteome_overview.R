@@ -49,31 +49,35 @@ for (s in panel_specs) {
 # Composite — add_tag bakes the letter into each title for uniform spacing.
 pca <- add_tag(pca_p, "A")
 
-# B: DEP counts + a stringency key — terms boxed tight and shaded, ordered
-# dark -> light (Π / FDR / p) to read parallel with the bars, bottom-right.
+# B: DEP counts + a stringency key — square swatch then the bold term, stacked
+# dark -> light (Π / FDR / p) top to bottom to read with the bars, bottom-right.
 dep_key_df <- tibble::tibble(
-  x = c(1, 2.15, 3.2),
+  y = c(3, 2, 1),
+  a = c(1, 0.45, 0.18),
   lab = c(
     paste0("Π < ", H9C2_PI_THRESH),
     paste0("FDR < ", H9C2_FDR_EXPLOR),
     "p < 0.05"
-  ),
-  a = c(1, 0.45, 0.18),
-  txt = c("white", "grey15", "grey15")
+  )
 )
-dep_key <- ggplot2::ggplot(dep_key_df) +
-  ggplot2::geom_label(
-    ggplot2::aes(x, 0, label = lab, alpha = a, color = I(txt)),
-    fill = "grey40", size = 1.8, fontface = "bold",
-    label.padding = ggplot2::unit(0.5, "mm"), label.size = 0.25
+dep_key <- ggplot2::ggplot(dep_key_df, ggplot2::aes(0, y)) +
+  ggplot2::geom_point(
+    ggplot2::aes(alpha = a),
+    shape = 22, size = 3, fill = "grey40", color = "grey20", stroke = 0.4
+  ) +
+  ggplot2::geom_text(
+    ggplot2::aes(x = 0.18, label = lab),
+    hjust = 0, size = 1.9, fontface = "bold", color = "grey15"
   ) +
   ggplot2::scale_alpha_identity() +
-  ggplot2::scale_x_continuous(expand = ggplot2::expansion(add = 0.4)) +
+  ggplot2::scale_x_continuous(expand = ggplot2::expansion(add = c(0.15, 1.4))) +
+  ggplot2::scale_y_continuous(expand = ggplot2::expansion(add = 1.1)) +
+  ggplot2::coord_cartesian(clip = "off") +
   ggplot2::theme_void()
 dep <- add_tag(dep_p, "B") +
   patchwork::inset_element(
     dep_key,
-    left = 0.32, right = 0.92, top = 0.13, bottom = 0.0
+    left = 0.7, right = 1.0, top = 0.24, bottom = 0.0
   )
 
 eff <- add_tag(eff_p, "C")

@@ -83,15 +83,32 @@ missing <- setdiff(unname(CONTRASTS), as.character(unique(shown$contrast)))
 sub <- "left = down-regulated, right = up-regulated; bar = -log10 FDR; name inside the bar; colour = database"
 if (length(missing)) sub <- paste0(sub, " (no enrichment: ", paste(missing, collapse = ", "), ")")
 xmax <- max(abs(shown$lp)) * 1.15
+# name inside the bar (white) when it fits; outside (dark) when the bar is
+# too short, with the FDR moving inside so the two never collide at the tip
+shown <- shown |> mutate(fits = nchar(name) <= abs(lp) / xmax * 70)
 
 fig <- ggplot(shown, aes(lp, rid, fill = database)) +
   geom_col(width = 0.78, colour = "black", linewidth = 0.25) +
   geom_vline(xintercept = 0, colour = "grey40", linewidth = 0.3) +
-  geom_text(aes(label = name, x = dir * 0.04, hjust = ifelse(dir > 0, 0, 1)),
+  geom_text(
+    data = filter(shown, fits),
+    aes(label = name, x = dir * 0.04, hjust = ifelse(dir > 0, 0, 1)),
     size = 2.4, fontface = "bold", colour = "white"
   ) +
-  geom_text(aes(label = fdr, hjust = ifelse(dir > 0, -0.18, 1.18)),
+  geom_text(
+    data = filter(shown, !fits),
+    aes(label = name, x = lp + dir * 0.04, hjust = ifelse(dir > 0, 0, 1)),
+    size = 2.4, fontface = "bold", colour = "grey20"
+  ) +
+  geom_text(
+    data = filter(shown, fits),
+    aes(label = fdr, hjust = ifelse(dir > 0, -0.18, 1.18)),
     size = 1.9, fontface = "bold", colour = "grey20"
+  ) +
+  geom_text(
+    data = filter(shown, !fits),
+    aes(label = fdr, hjust = ifelse(dir > 0, 1.15, -0.15)),
+    size = 1.9, fontface = "bold", colour = "white"
   ) +
   facet_grid(contrast ~ ., scales = "free_y", space = "free_y") +
   scale_fill_manual(values = DB_COLORS, name = NULL, limits = CANONICAL_DBS) +

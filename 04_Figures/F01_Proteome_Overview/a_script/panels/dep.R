@@ -88,6 +88,12 @@ build_dep_count_panel <- function() {
       color     = "black",
       linewidth = 0.3
     ) +
+    ggplot2::geom_text(
+      data = dplyr::filter(frac_df, threshold == THR_LEVELS[3]),
+      ggplot2::aes(contrast, pct, label = paste0("Π=", n)),
+      hjust = -0.2, size = 2.2, fontface = "bold", color = "grey15",
+      inherit.aes = FALSE
+    ) +
     ggplot2::scale_fill_manual(values = FRAC_FILL) +
     ggplot2::scale_y_continuous(
       breaks = c(0, 5, 10, 20),

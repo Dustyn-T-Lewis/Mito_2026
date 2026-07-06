@@ -34,7 +34,7 @@ SUPP_PNG <- file.path(BASE, "b_reports", "supp", "png")
 DAT <- file.path(BASE, "c_data")
 for (d in c(MAIN_PNG, SUPP_PNG, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 P_NOMINAL <- 0.10 # responsive = nominal eigengene p on Disease/Transplant/Rescue
-CORE <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO")
+PRIMARY_CONTRASTS <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO")
 
 cache <- file.path(MOD, "wgcna_network.rds")
 stats_cache <- file.path(MOD, "module_stats.rds")
@@ -66,7 +66,7 @@ responsive_modules <- mod_stats |>
   arrange(min_p) |>
   pull(module)
 if (!length(responsive_modules)) {
-  responsive_modules <- mod_order[1:3]
+  responsive_modules <- head(mod_order, 3)
   message("no module reached eigengene p<=", P_NOMINAL, "; featuring the 3 largest instead")
 }
 other_modules <- setdiff(non_grey, responsive_modules)
@@ -144,7 +144,7 @@ ora_dedup <- bind_rows(lapply(unique(ora_full$module), function(m) {
 
 # per-protein peak-contrast abundance change for the hub node fill
 ab <- readr::read_csv(P05$comb, show_col_types = FALSE) |>
-  filter(contrast %in% CORE, !is.na(adj.P.Val)) |>
+  filter(contrast %in% PRIMARY_CONTRASTS, !is.na(adj.P.Val)) |>
   group_by(uniprot_id) |>
   slice_min(adj.P.Val, n = 1, with_ties = FALSE) |>
   ungroup() |>
@@ -256,7 +256,7 @@ build_workbook(
   )
 )
 
-cat(sprintf("F03 built | responsive modules: %s\n", paste(responsive_modules, collapse = ", ")))
+message(sprintf("F03 built | responsive modules: %s", paste(responsive_modules, collapse = ", ")))
 print(mod_stats |>
   filter(module %in% responsive_modules, contrast %in% c("Disease", "Transplant", "Rescue")) |>
   arrange(module, contrast))

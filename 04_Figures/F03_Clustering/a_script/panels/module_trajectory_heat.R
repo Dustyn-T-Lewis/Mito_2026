@@ -10,7 +10,19 @@ suppressPackageStartupMessages({
 
 HEAT_CONTRASTS <- c("Disease", "Transplant", "Rescue", "Interaction")
 
-fmt_pq <- function(x) ifelse(x < 0.01, "<.01", sub("^0", "", sprintf("%.2f", x)))
+fmt_pq <- function(x) ifelse(x < 0.01, "< 0.01", sprintf("= %.2f", x))
+
+# Tints every panel in a module's row with that module's own colour, so all four
+# columns of a row read as one unit. inherit.aes = FALSE + fill = I(...) keeps this
+# independent of whatever fill scale (logFC, database) the panel's own geoms use.
+module_bg_layer <- function(modules, alpha = 0.12) {
+  bg <- data.frame(module = factor(modules, levels = modules))
+  geom_rect(
+    data = bg, aes(fill = I(as.character(module))),
+    xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf,
+    alpha = alpha, inherit.aes = FALSE
+  )
+}
 
 panel_count_bars <- function(mod_size, modules) {
   d <- mod_size |>
@@ -20,19 +32,22 @@ panel_count_bars <- function(mod_size, modules) {
     geom_col(width = 0.4, colour = "black", linewidth = 0.2, orientation = "y") +
     shadowtext::geom_shadowtext(aes(label = n),
       hjust = 1.2, size = 1.8, fontface = "bold",
-      colour = "white", bg.colour = "grey15", bg.r = 0.12
+      colour = "black", bg.colour = "white", bg.r = 0.15
     ) +
     facet_wrap(~module, ncol = 1, strip.position = "left") +
     scale_fill_identity() +
-    scale_x_reverse(expand = expansion(mult = c(0.42, 0.02))) +
+    scale_x_reverse(expand = expansion(mult = c(0.42, 0.08))) +
     scale_y_continuous(limits = c(0.4, 1.6), expand = c(0, 0)) +
-    labs(title = "Proteins", x = NULL, y = NULL) +
+    labs(title = "Proteins (n)", subtitle = "member-protein count per module", x = NULL, y = NULL) +
     FIG_THEME +
     theme(
-      plot.title = element_text(face = "bold", size = FIG_AXIS_TEXT + 1, colour = "grey15"),
+      plot.title = element_text(face = "bold", size = FIG_AXIS_TEXT, colour = "grey15"),
+      plot.subtitle = element_text(size = FIG_AXIS_TEXT - 1, colour = "grey40"),
       strip.placement = "outside", strip.background = element_blank(),
-      strip.text.y.left = element_text(angle = 0, face = "bold", size = FIG_AXIS_TEXT + 1, hjust = 1, colour = "grey10"),
-      axis.text = element_blank(), axis.ticks = element_blank(),
+      strip.text.y.left = element_text(angle = 0, face = "bold", size = FIG_AXIS_TEXT + 1, hjust = 1, colour = "black"),
+      axis.text.x = element_text(size = FIG_AXIS_TEXT - 1, colour = "grey35"),
+      axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+      axis.ticks.x = element_line(colour = "grey60", linewidth = 0.2),
       panel.grid = element_blank(), panel.spacing.y = unit(0.8, "mm"),
       legend.position = "none", plot.margin = margin(2, 1, 2, 2)
     )
@@ -51,15 +66,31 @@ panel_contrast_bars <- function(mod_size, mod_stats) {
       module = factor(module, levels = modules),
       contrast = factor(contrast, levels = HEAT_CONTRASTS),
       sig_fdr = fdr < 0.10,
-      star = ifelse(fdr < 0.10, "✱", ifelse(p < 0.10, "·", "")),
-      lab = sprintf("%s q%s p%s", star, fmt_pq(fdr), fmt_pq(p)),
-      vj = ifelse(logFC >= 0, -0.3, 1.3)
-    )
+      star = ifelse(fdr < 0.05, "✱ ", ""),
+      lab_out = sprintf("%sp %s (q %s)", star, fmt_pq(p), fmt_pq(fdr)),
+      lab_in = sprintf("%sp %s\nq %s", star, fmt_pq(p), fmt_pq(fdr)),
+      vj_out = ifelse(logFC >= 0, -0.45, 1.45)
+    ) |>
+    # a bar tall enough (relative to its own row) fits its p/q label stacked inside;
+    # a short bar gets the label pushed just clear of the tip instead
+    group_by(module) |>
+    mutate(fits_inside = abs(logFC) >= 0.6 * max(abs(logFC))) |>
+    ungroup()
   ggplot(d, aes(contrast, logFC, fill = logFC)) +
+    module_bg_layer(modules) +
     geom_hline(yintercept = 0, colour = "grey55", linewidth = 0.3) +
     geom_col(width = 0.64, colour = "grey30", linewidth = 0.2) +
     geom_col(data = filter(d, sig_fdr), width = 0.64, fill = NA, colour = "black", linewidth = 0.8) +
-    geom_text(aes(label = lab, vjust = vj), size = 1.3, fontface = "bold", colour = "grey20") +
+    geom_text(
+      data = filter(d, !fits_inside),
+      aes(label = lab_out, vjust = vj_out, fontface = ifelse(sig_fdr, "bold", "plain")),
+      size = 1.7, colour = "black"
+    ) +
+    geom_text(
+      data = filter(d, fits_inside),
+      aes(label = lab_in, vjust = ifelse(logFC >= 0, 1.15, -0.15), fontface = ifelse(sig_fdr, "bold", "plain")),
+      size = 1.6, colour = "white", lineheight = 0.85
+    ) +
     facet_wrap(~module, ncol = 1, scales = "free_y") +
     scale_fill_gradient2(
       low = "#1A3D6E", mid = "white", high = "#8B1A1A", midpoint = 0, limits = c(-lim, lim),
@@ -67,12 +98,17 @@ panel_contrast_bars <- function(mod_size, mod_stats) {
       guide = guide_colorbar(barwidth = 8, barheight = 0.5, title.position = "top", title.hjust = 0.5)
     ) +
     scale_x_discrete(expand = expansion(add = 0.18)) +
-    scale_y_continuous(expand = expansion(mult = 0.32)) +
+    scale_y_continuous(expand = expansion(mult = 0.16)) +
     coord_cartesian(clip = "off") +
-    labs(title = "Eigengene response", x = NULL, y = "Δ eigengene (SD units)") +
+    labs(
+      title = "Eigengene response",
+      subtitle = "p (q) · bold + outline FDR < 0.10 · ✱ FDR < 0.05",
+      x = NULL, y = "Δ eigengene (SD units)"
+    ) +
     FIG_THEME +
     theme(
-      plot.title = element_text(face = "bold", size = FIG_AXIS_TEXT + 1, colour = "grey15"),
+      plot.title = element_text(face = "bold", size = FIG_AXIS_TEXT, colour = "grey15"),
+      plot.subtitle = element_text(size = FIG_AXIS_TEXT - 1, colour = "grey40"),
       strip.text = element_blank(),
       axis.text.x = element_text(angle = 30, hjust = 1, size = FIG_AXIS_TEXT, face = "bold"),
       axis.text.y = element_text(size = FIG_AXIS_TEXT - 1, colour = "grey45"),
@@ -88,6 +124,7 @@ panel_cluster_trajectory <- function(prot_traj, eig_traj, modules) {
     filter(module %in% modules) |>
     mutate(module = factor(module, levels = modules), gx = match(Group, H9C2_GROUP_LEVELS))
   ggplot() +
+    module_bg_layer(modules) +
     geom_hline(yintercept = 0, colour = "grey85", linewidth = 0.2) +
     geom_line(data = pt, aes(gx, zmean, group = uniprot_id), colour = "grey65", linewidth = 0.1, alpha = 0.2) +
     geom_line(data = et, aes(gx, zmean, colour = as.character(module)), linewidth = 1.1) +
@@ -96,10 +133,15 @@ panel_cluster_trajectory <- function(prot_traj, eig_traj, modules) {
     scale_colour_identity() +
     scale_x_continuous(breaks = 1:4, labels = unname(GROUP_LABELS), expand = expansion(mult = 0.03)) +
     scale_y_continuous(expand = expansion(mult = 0.04)) +
-    labs(title = "Protein cluster (z)", x = NULL, y = "standardized abundance") +
+    labs(
+      title = "Protein cluster (z)",
+      subtitle = "z-scored abundance · grey = individual proteins",
+      x = NULL, y = "standardized abundance"
+    ) +
     FIG_THEME +
     theme(
-      plot.title = element_text(face = "bold", size = FIG_AXIS_TEXT + 1, colour = "grey15"),
+      plot.title = element_text(face = "bold", size = FIG_AXIS_TEXT, colour = "grey15"),
+      plot.subtitle = element_text(size = FIG_AXIS_TEXT - 1, colour = "grey40"),
       strip.text = element_blank(),
       axis.text.x = element_text(angle = 30, hjust = 1, face = "bold", size = FIG_AXIS_TEXT),
       axis.text.y = element_text(size = FIG_AXIS_TEXT - 1, colour = "grey45"),
@@ -109,11 +151,13 @@ panel_cluster_trajectory <- function(prot_traj, eig_traj, modules) {
 }
 
 ora_aligned <- function(ora_top5, modules, top_n = 5L, sig = H9C2_FDR_EXPLOR) {
-  # Label placement scales with bar length: name inside (white) + q/p outside (dark)
-  # when the name fits; q/p inside right-aligned (white) + name outside (dark) when it
-  # doesn't; both outside (dark) when the bar is too short for either. bar_chars tunes
-  # the fit threshold (free_x panels share physical width but not scale).
-  bar_chars <- 78
+  # Name always sits outside the bar (black, unconstrained by bar length); p/(FDR)
+  # always sits inside, right-aligned near the tip (white via shadowtext, so it reads
+  # against every bar colour). Both turn bold at FDR < sig; the ✱ marks FDR < 0.05 on
+  # top of that. Each module keeps its own x range (free_x): a scale shared across
+  # modules made the weak modules' bars unreadable slivers next to turquoise's huge
+  # OXPHOS hit, and the printed p/(FDR) already gives the exact number, so
+  # cross-module bar-length comparison isn't needed.
   d <- ora_top5 |>
     filter(module %in% modules) |>
     group_by(module) |>
@@ -122,60 +166,50 @@ ora_aligned <- function(ora_top5, modules, top_n = 5L, sig = H9C2_FDR_EXPLOR) {
     ungroup() |>
     mutate(
       module = factor(module, levels = modules),
-      database = factor(database, levels = names(DB_COLORS)),
+      database = factor(database, levels = names(ORA_DB_COLORS)),
       lp = -log10(padj),
       yb = top_n + 1 - k,
       sig_fdr = padj < sig,
-      star = ifelse(padj < sig, "✱ ", ifelse(p < sig, "· ", "")),
+      star = ifelse(padj < 0.05, "✱ ", ""),
       name = clean_display_label(pathway),
       name = ifelse(nchar(name) > 34, paste0(substr(name, 1, 33), "…"), name),
-      lab = paste0(star, "q", fmt_pq(padj), " p", fmt_pq(p)),
-      gap = 0.03 * xmax,
-      cap = lp / xmax * bar_chars,
-      name_fits = nchar(name) <= cap,
-      sig_inside = !name_fits & nchar(lab) <= cap,
-      both_outside = !name_fits & nchar(lab) > cap,
-      combo = paste0(name, "   ", lab)
+      lab = sprintf("%sp %s (q %s)", star, fmt_pq(p), fmt_pq(padj)),
+      # bounded so a short bar never pushes its inside-aligned label past x = 0
+      gap = pmin(0.03 * xmax, 0.4 * lp)
     )
   ggplot(d, aes(lp, yb, fill = database)) +
+    module_bg_layer(modules) +
     geom_col(width = 0.72, colour = "grey35", linewidth = 0.2, orientation = "y") +
     geom_col(
       data = filter(d, sig_fdr), width = 0.72, fill = NA,
       colour = "black", linewidth = 0.7, orientation = "y"
     ) +
     geom_text(
-      data = filter(d, name_fits), aes(x = gap, label = name),
-      hjust = 0, size = 1.5, fontface = "bold", colour = "white"
+      aes(x = lp + gap, label = name, fontface = ifelse(sig_fdr, "bold", "plain")),
+      hjust = 0, size = 1.9, colour = "black"
     ) +
-    geom_text(
-      data = filter(d, name_fits), aes(x = lp + gap, label = lab),
-      hjust = 0, size = 1.4, fontface = "bold", colour = "grey15"
-    ) +
-    geom_text(
-      data = filter(d, sig_inside), aes(x = lp - gap, label = lab),
-      hjust = 1, size = 1.4, fontface = "bold", colour = "white"
-    ) +
-    geom_text(
-      data = filter(d, sig_inside), aes(x = lp + gap, label = name),
-      hjust = 0, size = 1.5, fontface = "bold", colour = "grey15"
-    ) +
-    geom_text(
-      data = filter(d, both_outside), aes(x = lp + gap, label = combo),
-      hjust = 0, size = 1.5, fontface = "bold", colour = "grey15"
+    shadowtext::geom_shadowtext(
+      aes(x = lp - gap, label = lab, fontface = ifelse(sig_fdr, "bold.italic", "italic")),
+      hjust = 1, size = 1.7, colour = "white", bg.colour = "grey25", bg.r = 0.08
     ) +
     facet_wrap(~module, ncol = 1, scales = "free_x") +
-    scale_fill_manual(values = DB_COLORS, drop = FALSE, name = NULL) +
-    scale_x_continuous(expand = expansion(mult = c(0, 0.4))) +
+    scale_fill_manual(values = ORA_DB_COLORS, drop = FALSE, name = NULL) +
+    scale_x_continuous(expand = expansion(mult = c(0, 0.32)), breaks = scales::breaks_pretty(3)) +
     scale_y_continuous(limits = c(0.4, top_n + 0.6), expand = c(0, 0)) +
     coord_cartesian(clip = "off") +
     labs(
-      title = sprintf("Top %d ORA pathways  (✱ FDR<%.2f  · p<%.2f)", top_n, sig, sig),
-      x = NULL, y = NULL
+      title = sprintf("Top %d ORA pathways", top_n),
+      subtitle = "p (q) · bold + outline FDR < 0.10 · ✱ FDR < 0.05",
+      x = expression(-log[10] ~ FDR), y = NULL
     ) +
     FIG_THEME +
     theme(
-      plot.title = element_text(face = "bold", size = FIG_AXIS_TEXT + 1, colour = "grey15"),
-      strip.text = element_blank(), axis.text = element_blank(), axis.ticks = element_blank(),
+      plot.title = element_text(face = "bold", size = FIG_AXIS_TEXT, colour = "grey15"),
+      plot.subtitle = element_text(size = FIG_AXIS_TEXT - 1, colour = "grey40"),
+      strip.text = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+      axis.text.x = element_text(size = FIG_AXIS_TEXT - 1, colour = "grey35"),
+      axis.ticks.x = element_line(colour = "grey60", linewidth = 0.2),
+      axis.title.x = element_text(size = FIG_AXIS_TEXT - 1, colour = "grey35"),
       panel.grid = element_blank(), panel.spacing.y = unit(0.8, "mm"),
       legend.position = "bottom", plot.margin = margin(2, 2, 2, 1)
     )

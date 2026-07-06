@@ -24,7 +24,6 @@ build_pca_panel <- function() {
     left_join(dplyr::select(imp_meta, Col_ID, Group), by = "Col_ID") |>
     mutate(Group = factor(Group, levels = H9C2_GROUP_LEVELS))
 
-  set.seed(42)
   dist_mat <- dist(scale(t(imp_mat)))
   set.seed(42)
   perm <- adonis2(dist_mat ~ Group, data = imp_meta, permutations = 9999, by = "terms")

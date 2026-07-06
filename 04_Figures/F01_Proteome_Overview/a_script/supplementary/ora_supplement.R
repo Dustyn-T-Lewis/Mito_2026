@@ -90,10 +90,10 @@ shown <- shown |> mutate(fits = nchar(name) <= abs(lp) / xmax * 70)
 fig <- ggplot(shown, aes(lp, rid, fill = database)) +
   geom_col(width = 0.78, colour = "black", linewidth = 0.25) +
   geom_vline(xintercept = 0, colour = "grey40", linewidth = 0.3) +
-  geom_text(
+  shadowtext::geom_shadowtext(
     data = filter(shown, fits),
     aes(label = name, x = dir * 0.04, hjust = ifelse(dir > 0, 0, 1)),
-    size = 2.4, fontface = "bold", colour = "white"
+    size = 2.4, fontface = "bold", colour = "white", bg.colour = "grey25", bg.r = 0.08
   ) +
   geom_text(
     data = filter(shown, !fits),
@@ -105,13 +105,13 @@ fig <- ggplot(shown, aes(lp, rid, fill = database)) +
     aes(label = fdr, hjust = ifelse(dir > 0, -0.18, 1.18)),
     size = 1.9, fontface = "bold", colour = "grey20"
   ) +
-  geom_text(
+  shadowtext::geom_shadowtext(
     data = filter(shown, !fits),
     aes(label = fdr, hjust = ifelse(dir > 0, 1.15, -0.15)),
-    size = 1.9, fontface = "bold", colour = "white"
+    size = 1.9, fontface = "bold", colour = "white", bg.colour = "grey25", bg.r = 0.08
   ) +
   facet_grid(contrast ~ ., scales = "free_y", space = "free_y") +
-  scale_fill_manual(values = DB_COLORS, name = NULL, limits = CANONICAL_DBS) +
+  scale_fill_manual(values = ORA_DB_COLORS, name = NULL, limits = CANONICAL_DBS) +
   scale_y_discrete(labels = NULL) +
   scale_x_continuous(limits = c(-xmax, xmax), expand = expansion(mult = 0.02)) +
   coord_cartesian(clip = "off") +
@@ -138,14 +138,13 @@ overlap <- bind_rows(lapply(unname(CONTRASTS), function(cn) {
     overlap_coef = round(n_overlap / set_size, 3), overlap_genes = leading_edge
   )
 
-build_workbook(
-  file.path(DAT, "F01_ora_supplementary.xlsx"),
-  figure_title = "F01 supplementary: ORA of the significant proteins per contrast",
+append_workbook(
+  file.path(DAT, "F01_supplementary.xlsx"),
   sheet_specs = list(list(
     name = "ora_overlap", df = overlap,
-    role = "Per-contrast ORA figures",
+    role = "Supplement: ORA of the significant proteins per contrast",
     contents = "shown pathways with FDR, overlap count, set size, overlap coefficient, and the overlapping genes"
   ))
 )
 
-cat(sprintf("F01 ORA supplement: 1 figure, %d shown pathways\n", nrow(overlap)))
+message(sprintf("F01 ORA supplement: 1 figure, %d shown pathways", nrow(overlap)))

@@ -1,16 +1,13 @@
-#!/usr/bin/env Rscript
 # Significant pathways per contrast for F01 panel F, stacked by source DB.
 # Diverging: Up above zero, Down below; segments = the 5 databases (not pooled),
 # ordered by overall total (largest at the base).
 # build_pathway_bar_panel() returns list(plot, bar_df, sig_pw, DB_COLORS).
 
 # Database key: the shared palette, so a database reads the same colour across figures.
-PATHWAY_DB_COLORS <- DB_COLORS[CANONICAL_DBS]
+PATHWAY_DB_COLORS <- ORA_DB_COLORS[CANONICAL_DBS]
 
 build_pathway_bar_panel <- function() {
   CORE <- H9C2_CONTRAST_ORDER # Disease-first
-  PADJ_CUT <- 0.05
-  MIN_SIZE <- 10
   SIM_CUT <- 0.375
 
   fgsea_all <- readr::read_csv(
@@ -21,13 +18,7 @@ build_pathway_bar_panel <- function() {
   set_pool <- do.call(c, unname(rat_gene_sets[CANONICAL_DBS]))
 
   per_contrast <- function(ctr) {
-    sig <- fgsea_all |>
-      dplyr::filter(
-        contrast == ctr, database %in% CANONICAL_DBS,
-        !is.na(padj), padj < PADJ_CUT,
-        size >= MIN_SIZE, !pathway %in% MITO_DROP_SETS
-      ) |>
-      dplyr::arrange(padj)
+    sig <- significant_pathways(fgsea_all, ctr)
     if (nrow(sig) > 1) {
       sig <- deduplicate_enrichment(
         as.data.frame(sig),
@@ -121,7 +112,7 @@ build_pathway_bar_panel <- function() {
     ggplot2::coord_cartesian(clip = "off") +
     ggplot2::labs(
       title = "Pathway enrichment by database",
-      subtitle = "stacked by source DB · Up above / Down below zero",
+      subtitle = "fgsea padj < 0.05, deduped · Up above / Down below 0",
       x = NULL, y = "Significant pathways"
     ) +
     FIG_THEME +

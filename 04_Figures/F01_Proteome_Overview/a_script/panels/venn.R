@@ -1,4 +1,3 @@
-#!/usr/bin/env Rscript
 # DEP-overlap Euler diagram + direction strip for F01 panels D and E.
 # build_venn_panels() returns list(venn, strip, membership, region_counts, fit_stats).
 

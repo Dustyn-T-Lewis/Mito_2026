@@ -68,8 +68,22 @@ build_dep_count_panel <- function() {
     fill     = unname(CONTRAST_COLORS[CORE])
   )
 
-  x_max <- max(frac_df$pct, na.rm = TRUE)
-  x_lim_top <- max(22, x_max * 1.08)
+  x_lim_top <- 23
+
+  # label anchored to the Π<0.05 bar's own tip: Disease/Interaction sit just past
+  # it, Transplant/Rescue sit inside it (plenty of room there). Both show the plain
+  # Π-score count, the subtitle already says what it is.
+  lab_df <- dplyr::filter(frac_df, threshold == THR_LEVELS[3]) |>
+    dplyr::mutate(
+      inside = as.character(contrast) %in% unname(CTR_LAB[c("CTLvMITO", "PHEvPHE_MITO")]),
+      # Disease's bar is the tightest fit of the two outside contrasts, so it gets a
+      # touch more clearance than Interaction
+      hjust_val = dplyr::case_when(
+        as.character(contrast) == unname(CTR_LAB["CTLvPHE"]) ~ -0.45,
+        !inside ~ -0.2,
+        TRUE ~ 1.15
+      )
+    )
 
   ggplot2::ggplot(frac_df, ggplot2::aes(contrast, pct, fill = fill_key)) +
     ggplot2::geom_rect(
@@ -89,10 +103,9 @@ build_dep_count_panel <- function() {
       linewidth = 0.3
     ) +
     ggplot2::geom_text(
-      data = dplyr::filter(frac_df, threshold == THR_LEVELS[3]),
-      ggplot2::aes(contrast, pct, label = paste0("Π=", n)),
-      hjust = -0.2, size = 2.2, fontface = "bold", color = "grey15",
-      inherit.aes = FALSE
+      data = lab_df,
+      ggplot2::aes(x = contrast, y = pct, label = n, hjust = hjust_val),
+      size = 1.8, fontface = "bold", color = "black", inherit.aes = FALSE
     ) +
     ggplot2::scale_fill_manual(values = FRAC_FILL) +
     ggplot2::scale_y_continuous(
@@ -104,8 +117,8 @@ build_dep_count_panel <- function() {
     ggplot2::coord_flip() +
     ggplot2::labs(
       title = "DEP counts",
-      subtitle = "n at p / FDR / Π (independent thresholds)",
-      x = NULL, y = "% of proteome", tag = "A"
+      subtitle = "counts at independent p / FDR / Π thresholds",
+      x = NULL, y = "% of proteome"
     ) +
     FIG_THEME +
     ggplot2::theme(

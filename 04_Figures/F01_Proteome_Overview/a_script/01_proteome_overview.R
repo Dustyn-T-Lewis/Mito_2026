@@ -56,18 +56,18 @@ dep_key_df <- tibble::tibble(
   a = c(1, 0.45, 0.18),
   lab = c(
     paste0("Π < ", H9C2_PI_THRESH),
-    paste0("FDR < ", H9C2_FDR_EXPLOR),
+    "FDR < 0.10",
     "p < 0.05"
   )
 )
 dep_key <- ggplot2::ggplot(dep_key_df, ggplot2::aes(0, y)) +
   ggplot2::geom_point(
     ggplot2::aes(alpha = a),
-    shape = 22, size = 3, fill = "grey40", color = "grey20", stroke = 0.4
+    shape = 22, size = 3, fill = "grey40", color = "black", stroke = 0.4
   ) +
   ggplot2::geom_text(
     ggplot2::aes(x = 0.18, label = lab),
-    hjust = 0, size = 1.9, fontface = "bold", color = "grey15"
+    hjust = 0, size = 1.6, fontface = "bold", color = "grey15"
   ) +
   ggplot2::scale_alpha_identity() +
   ggplot2::scale_x_continuous(expand = ggplot2::expansion(add = c(0.15, 1.4))) +

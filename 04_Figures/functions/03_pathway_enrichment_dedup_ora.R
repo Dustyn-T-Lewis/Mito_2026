@@ -116,6 +116,22 @@ DISEASE_VIRAL_RE <- paste0(
   "MEASLES|BACTERIAL|LISTERIA|LEISHMANIA|PARASIT"
 )
 
+# Single gate for "is this pathway an eligible, significant hit for this
+# contrast" — every enrichment figure (F01 bars, F02 rings, F03 module ORA)
+# calls this instead of re-deriving the filter, so they can't drift apart the
+# way the F01 bars and F02 rings once did over the disease/viral exclusion.
+significant_pathways <- function(fgsea_df, ctr, padj_cut = 0.05, min_size = 10, max_size = 500) {
+  fgsea_df |>
+    dplyr::filter(
+      contrast == ctr, database %in% CANONICAL_DBS,
+      !is.na(padj), padj < padj_cut,
+      size >= min_size, size <= max_size,
+      !pathway %in% MITO_DROP_SETS,
+      !grepl(DISEASE_VIRAL_RE, pathway, ignore.case = TRUE)
+    ) |>
+    dplyr::arrange(padj)
+}
+
 classify_database <- function(pathway_names) {
   dplyr::case_when(
     grepl("^HALLMARK_", pathway_names) ~ "Hallmark",
@@ -135,7 +151,7 @@ classify_database <- function(pathway_names) {
 # rat_gene_sets.rds so it enriches against the same backbone as the rings.
 build_harmonized_collection <- function(
   cache = here::here("04_Figures", "shared", "c_data", "rat_gene_sets.rds"),
-  min_size = 10, max_size = 350
+  min_size = 10, max_size = 500
 ) {
   gs <- readRDS(cache)
   pw <- do.call(c, unname(gs[CANONICAL_DBS]))

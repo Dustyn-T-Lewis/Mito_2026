@@ -1,6 +1,5 @@
-# 04_Figures/functions/08_composite_layout.R
-# Pipeline step 08: stitch refined standalone panels into composites. The last
-# assembly step — sources nothing the panels do not already provide.
+# Stitch refined standalone panels into composites. Sources nothing the panels
+# do not already provide.
 source(here::here("04_Figures", "functions", "01_style_palettes_theme.R"))
 
 library(patchwork)

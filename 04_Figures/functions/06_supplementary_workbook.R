@@ -1,5 +1,4 @@
-# 04_Figures/functions/06_supplementary_workbook.R
-# Pipeline step 06: assemble each figure's single supplementary .xlsx.
+# Assemble each figure's single supplementary .xlsx.
 # Every figure writes ONE workbook to its c_data/. The first sheet is always an
 # Overview that documents, per data sheet: the sheet name, how it was used in the
 # figure, and what its rows/columns contain. Result tables live only in the
@@ -31,7 +30,7 @@ suppressPackageStartupMessages({
   )
   freezePane(wb, name, firstRow = TRUE)
   setColWidths(wb, name, cols = seq_len(max(1, ncol(data))), widths = "auto")
-  cat(sprintf("    + %s: %d x %d\n", name, nrow(data), ncol(data)))
+  message(sprintf("    + %s: %d x %d", name, nrow(data), ncol(data)))
 }
 
 # out_file     path to the .xlsx (its dirname is the figure's c_data/).
@@ -48,28 +47,33 @@ build_workbook <- function(out_file, figure_title, sheet_specs) {
   addWorksheet(wb, "Overview")
 
   taken <- "Overview"
-  ov <- data.frame(
-    Sheet = character(0), `Role in figure` = character(0),
-    Contents = character(0), check.names = FALSE
-  )
+  ov_rows <- list()
   for (spec in sheet_specs) {
     df <- spec$df
     if (is.null(df) && !is.null(spec$path) && file.exists(spec$path)) {
       df <- as.data.frame(read_csv(spec$path, show_col_types = FALSE))
     }
     if (is.null(df)) {
-      cat(sprintf("    SKIP (no data): %s\n", spec$name))
+      message(sprintf("    SKIP (no data): %s", spec$name))
       next
     }
     nm <- .sheet_name(spec$name, taken)
     .add_sheet(wb, nm, df)
     taken <- c(taken, nm)
-    ov <- rbind(ov, data.frame(
+    ov_rows[[length(ov_rows) + 1L]] <- data.frame(
       Sheet = nm,
       `Role in figure` = spec$role %||% "",
       Contents = spec$contents %||% sprintf("%d rows x %d cols", nrow(df), ncol(df)),
       check.names = FALSE
-    ))
+    )
+  }
+  ov <- if (length(ov_rows)) {
+    do.call(rbind, ov_rows)
+  } else {
+    data.frame(
+      Sheet = character(0), `Role in figure` = character(0),
+      Contents = character(0), check.names = FALSE
+    )
   }
 
   # Overview: title row, then the sheet directory.
@@ -85,8 +89,45 @@ build_workbook <- function(out_file, figure_title, sheet_specs) {
   freezePane(wb, "Overview", firstActiveRow = 4)
 
   saveWorkbook(wb, out_file, overwrite = TRUE)
-  cat(sprintf(
-    "  Saved: %s (%.0f KB) — %d data sheets + Overview\n\n",
+  message(sprintf(
+    "  Saved: %s (%.0f KB) — %d data sheets + Overview",
     out_file, file.size(out_file) / 1e3, length(taken) - 1L
   ))
+}
+
+# Add a supplement figure's sheets to the figure's existing workbook so each
+# figure keeps a single .xlsx. Appends the sheets and extends the Overview.
+append_workbook <- function(out_file, sheet_specs) {
+  wb <- loadWorkbook(out_file)
+  taken <- names(wb)
+  existing_ov <- read.xlsx(out_file, sheet = "Overview", startRow = 3)
+  next_row <- 4L + nrow(existing_ov)
+
+  new_rows <- list()
+  for (spec in sheet_specs) {
+    df <- spec$df
+    if (is.null(df) && !is.null(spec$path) && file.exists(spec$path)) {
+      df <- as.data.frame(read_csv(spec$path, show_col_types = FALSE))
+    }
+    if (is.null(df)) {
+      message(sprintf("    SKIP (no data): %s", spec$name))
+      next
+    }
+    nm <- .sheet_name(spec$name, taken)
+    .add_sheet(wb, nm, df)
+    taken <- c(taken, nm)
+    new_rows[[length(new_rows) + 1L]] <- data.frame(
+      Sheet = nm,
+      `Role in figure` = spec$role %||% "",
+      Contents = spec$contents %||% sprintf("%d rows x %d cols", nrow(df), ncol(df)),
+      check.names = FALSE
+    )
+  }
+  if (length(new_rows)) {
+    writeData(wb, "Overview", do.call(rbind, new_rows),
+      startRow = next_row, startCol = 1, colNames = FALSE
+    )
+  }
+  saveWorkbook(wb, out_file, overwrite = TRUE)
+  message(sprintf("  Appended %d sheet(s) to %s", length(new_rows), basename(out_file)))
 }

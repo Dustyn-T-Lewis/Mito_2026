@@ -5,7 +5,7 @@ library(ggplot2)
 library(scales)
 library(grid)
 
-# --- groups / contrasts / palettes / thresholds (match the 00-03 scripts) ----
+# Groups, contrasts, palettes, thresholds (match the 00-03 scripts).
 H9C2_GROUP_LEVELS <- c("Ctl", "Mito", "PHE", "PHE_Mito")
 # Display annotations for the four conditions (legends, axis strips, contrast math).
 # Internal tokens above drive data joins and must not change; only these strings show.
@@ -27,6 +27,17 @@ DB_COLORS <- c(
   Hallmark = "#CC3311", Reactome = "#0077BB", KEGG = "#AA3377",
   MitoCarta = "#009988", `GO Slim` = "#555555",
   `GO:BP` = "#117733", `GO:CC` = "#44AA99", `GO:MF` = "#882255"
+)
+
+# Lighter qualitative palette for the named ORA pathway-bar panels (F01's ORA
+# supplement and Figure 1F's stacked counts, F03's per-module top-5) — DB_COLORS
+# above stays as the F02 GSEA supplement's palette, which wasn't part of this restyle.
+# Significance text inside these bars uses shadowtext so it stays legible at this
+# lighter saturation.
+ORA_DB_COLORS <- c(
+  Hallmark = "#F7C08A", Reactome = "#8FC9BC", KEGG = "#B3A5D9",
+  MitoCarta = "#9CCDEE", `GO Slim` = "#BFBFBF",
+  `GO:BP` = "#A3CBB0", `GO:CC` = "#E8B8D0", `GO:MF` = "#E0A985"
 )
 
 # suppress stray Rplots.pdf from implicit device opens

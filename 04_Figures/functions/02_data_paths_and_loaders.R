@@ -26,8 +26,7 @@ CONTRAST_MATH_BRIEF <- local({
       "(%s − %s) − (%s − %s)",
       g[["PHE_Mito"]], g[["Mito"]], g[["PHE"]], g[["Ctl"]]
     ),
-    MITOvPHE_MITO = sprintf("%s − %s", g[["PHE_Mito"]], g[["Mito"]]),
-    Interaction_Phe = sprintf("%s − 2·%s + %s", g[["PHE_Mito"]], g[["Mito"]], g[["Ctl"]])
+    MITOvPHE_MITO = sprintf("%s − %s", g[["PHE_Mito"]], g[["Mito"]])
   )
 })
 

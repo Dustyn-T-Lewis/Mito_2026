@@ -31,18 +31,20 @@ contrasts <- tibble::tribble(
   "PHEvPHE_MITO", "Rescue", "rescue",
   "Interaction", "Interaction", "interaction"
 )
+# Cards/rings across F02 and F03 both read cleanest at a 12-item cap (a full
+# ring divides evenly into quarters of 3), so RING_N is the one shared display
+# ceiling — it truncates the already-deduplicated set, it never changes which
+# pathways are eligible or how many survive dedup.
 RING_N <- 12
 
 # fgsea over the 5-DB lens, ranked by the limma moderated t. Read from the shared
 # cache (shared/a_script/02_build_fgsea_cache.R) so the rings here, the F01 pathway
-# bars, and the supplements all trace to one computation. A filtered copy goes to
-# c_data for the supplementary GSEA figure.
+# bars, and the supplements all trace to one computation.
 fgsea_all <- readr::read_csv(
   here::here("04_Figures", "shared", "c_data", "fgsea_tstat_all_h9c2.csv"),
   show_col_types = FALSE
 ) |>
   filter(contrast %in% contrasts$ctr, database %in% CANONICAL_DBS)
-readr::write_csv(fgsea_all, file.path(DAT, "fgsea_results.csv"))
 
 # Per contrast: tidy volcano (pi_score = significance) + ring terms
 # (significant -> EnrichmentMap dedup -> top RING_N by FDR).
@@ -58,19 +60,13 @@ prep <- lapply(seq_len(nrow(contrasts)), function(i) {
       padj = .data[[pi_col]]
     ) |>
     filter(!is.na(logFC), !is.na(P.Value))
-  sig <- fgsea_all |>
-    filter(
-      contrast == ctr, database %in% CANONICAL_DBS, padj < 0.05,
-      !pathway %in% MITO_DROP_SETS, !grepl(DISEASE_VIRAL_RE, pathway, ignore.case = TRUE)
-    ) |>
-    as.data.frame()
+  sig <- significant_pathways(fgsea_all, ctr) |> as.data.frame()
   dedup <- dedup_report(sig, set_pool, cutoff = 0.375)
-  enrich <- deduplicate_enrichment(sig, set_pool, cutoff = 0.375) |>
-    arrange(padj) |>
-    slice_head(n = RING_N)
+  enrich_deduped <- deduplicate_enrichment(sig, set_pool, cutoff = 0.375) |> arrange(padj)
+  enrich <- slice_head(enrich_deduped, n = RING_N)
   list(
     volc = volc, enrich = enrich, dedup = dedup,
-    n_dep = n_dep, n_sig = nrow(sig),
+    n_dep = n_dep, n_dedup = nrow(enrich_deduped),
     subtitle = sprintf(
       "%s | %d DEPs, %d pathways", CONTRAST_MATH_BRIEF[ctr], n_dep, nrow(enrich)
     )
@@ -106,14 +102,15 @@ for (i in seq_len(nrow(contrasts))) {
 }
 
 # Four-ring 2x2 composite with leading-edge ticks, NES legend as a bottom strip.
-# The subtitle carries contrast, DEP count, and shown/tested pathway split; the
-# dedup rule, top-12 cap, and FDR ranges live in the caption.
+# The subtitle's "shown/deduplicated" ratio is the RING_N cap biting against the
+# post-dedup total (prep$n_dedup), so a reader can tell when the ring is truncating
+# vs. showing everything. The dedup rule and FDR ranges live in the caption.
 composite_subtitle <- vapply(seq_len(nrow(contrasts)), function(i) {
   e <- prep[[i]]$enrich
   sprintf(
-    "**%s**<br>%d DEPs · %d/%d sig. pathways (%d↑ %d↓)",
+    "**%s**<br>%d DEPs · %d/%d deduplicated pathways shown (%d↑ %d↓)",
     CONTRAST_MATH_BRIEF[contrasts$ctr[i]], prep[[i]]$n_dep,
-    nrow(e), prep[[i]]$n_sig, sum(e$NES > 0), sum(e$NES < 0)
+    nrow(e), prep[[i]]$n_dedup, sum(e$NES > 0), sum(e$NES < 0)
   )
 }, character(1))
 

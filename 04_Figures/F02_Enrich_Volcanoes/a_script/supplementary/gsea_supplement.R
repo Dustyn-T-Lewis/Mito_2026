@@ -1,9 +1,8 @@
 #!/usr/bin/env Rscript
-# Supplementary GSEA figures for the enrich-volcano contrasts, drawn from the fgsea
-# 01_enrich_volcanoes.R computes (c_data/fgsea_results.csv). Per contrast the top 30
-# up- and down-regulated pathways across the ring databases sit back to back, named
-# inside their bars with FDR at each tip. The leading-edge genes behind every shown
-# pathway (the overlap driving each enrichment) go to the supplementary workbook.
+# Supplementary GSEA figures for the enrich-volcano contrasts, drawn from the shared
+# fgsea cache. Per contrast the top 30 up- and down-regulated pathways across the ring
+# databases sit back to back, named inside their bars with FDR at each tip. The
+# leading-edge genes behind every shown pathway append to the F02 workbook.
 
 library(here)
 suppressPackageStartupMessages({
@@ -25,7 +24,10 @@ dir.create(PNG, recursive = TRUE, showWarnings = FALSE)
 CONTRASTS <- CONTRAST_DISPLAY_MAP[c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO", "Interaction")]
 TOP_N <- 30L
 
-gsea <- readr::read_csv(file.path(DAT, "fgsea_results.csv"), show_col_types = FALSE) |>
+gsea <- readr::read_csv(
+  here::here("04_Figures", "shared", "c_data", "fgsea_tstat_all_h9c2.csv"),
+  show_col_types = FALSE
+) |>
   filter(
     contrast %in% names(CONTRASTS), database %in% CANONICAL_DBS,
     !pathway %in% MITO_DROP_SETS, !grepl(DISEASE_VIRAL_RE, pathway, ignore.case = TRUE)
@@ -101,13 +103,12 @@ overlap <- bind_rows(lapply(unname(CONTRASTS), function(cn) {
     )
 }))
 
-build_workbook(
-  file.path(DAT, "F02_gsea_supplementary.xlsx"),
-  figure_title = "F02 supplementary: contrast-level GSEA",
+append_workbook(
+  file.path(DAT, "F02_supplementary.xlsx"),
   sheet_specs = list(
     list(
       name = "gsea_overlap", df = overlap,
-      role = "Per-contrast GSEA figures",
+      role = "Supplement: per-contrast GSEA figures",
       contents = "shown pathways with NES, FDR, set size, and the leading-edge genes driving each enrichment"
     ),
     list(
@@ -119,10 +120,10 @@ build_workbook(
           size, leading_edge = leadingEdge
         ) |>
         arrange(contrast, database, padj),
-      role = "All fgsea results",
+      role = "Supplement: all fgsea results",
       contents = "every pathway tested per contrast and database (no dedup)"
     )
   )
 )
 
-cat(sprintf("F02 GSEA supplement: %d figures, %d shown pathways\n", length(CONTRASTS), nrow(overlap)))
+message(sprintf("F02 GSEA supplement: %d figures, %d shown pathways", length(CONTRASTS), nrow(overlap)))

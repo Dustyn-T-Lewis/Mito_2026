@@ -166,7 +166,7 @@ read_csv(here("03_DEP", "a_non_imputed", "c_data", "combined_results_pi.csv"),
 
 # Did imputation matter? {#sec-concordance}
 
-`03_DEP/b_imputed/` re-runs the model on the two imputed matrices and correlates
+`03_DEP/b_imputed/` re-runs the model on the three imputed matrices and correlates
 fold changes against this non-imputed answer:
 
 ```{r}
@@ -175,7 +175,8 @@ read_csv(here("03_DEP", "b_imputed", "c_data", "logFC_vs_nonimputed.csv"),
          show_col_types = FALSE) |> as.data.frame()
 ```
 
-Both methods track the non-imputed result closely (ρ ≈ 0.95+) — Mito's low
+All three methods track the non-imputed result closely (ρ ≈ 0.95+), with
+missForest tightest at ρ ≈ 0.98–0.99 — Mito's low
 missingness means the imputation choice barely moves the answer, so the
 non-imputed result is the one reported.
 

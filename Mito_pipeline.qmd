@@ -61,11 +61,11 @@ hand-off + one consolidated `.xlsx`).
 ```
 00_input/        raw matrix, metadata, contaminant references, R/ helpers
 01_Filtering/    keratin + FBS-serum + missingness + outlier filtering
-02_Normalization/ cycloess + (imp4p | mscoreutils) imputation
+02_Normalization/ cycloess + (imp4p | mscoreutils | missForest) imputation
 03_DEP/
   a_non_imputed/  PRIMARY limma DE (NA-tolerant)
   b_imputed/      imputed DE (concordance check)
-04_Figures/       consolidated publication composites (F01–F06)
+04_Figures/       consolidated publication composites (F01–F03)
 ```
 
 # Stage 00 — Inputs {#sec-inputs}
@@ -145,15 +145,16 @@ dal <- filter_proteins_by_group(dal, min_reps = 4, min_groups = 1,
 # Stage 02 — Normalization & imputation {#sec-norm}
 
 Identical machinery to CvH: cyclic-loess via `normalize_data()`, bracketed by
-`write_norm_report` / `write_qc_report`, then two **independent** imputation
+`write_norm_report` / `write_qc_report`, then three **independent** imputation
 options used only by complete-matrix methods (never the DE test):
 
 ```{r}
 #| label: normalize
 dal <- normalize_data(dal, norm_method = "cycloess")
 saveRDS(dal, file.path(data_dir, "DAList_normalized.rds"))
-# imputation/a_script/a_imp4p.R       -> imputation/c_data/DAList_imputed_imp4p.rds      (canonical, MCAR=mle / MNAR=igcda)
-# imputation/a_script/b_mscoreutils.R -> imputation/c_data/DAList_imputed_mscoreutils.rds (mixed knn / QRILC)
+# imputation/a_script/a_imp4p.R       -> imputation/c_data/DAList_imputed_imp4p.rds       (comparison, MCAR=mle / MNAR=igcda)
+# imputation/a_script/b_mscoreutils.R -> imputation/c_data/DAList_imputed_mscoreutils.rds (comparison, mixed knn / QRILC)
+# imputation/a_script/c_missforest.R  -> imputation/c_data/DAList_imputed_missforest.rds  (canonical; feeds figures + WGCNA)
 ```
 
 # Stage 03 — Differential expression {#sec-dep}
@@ -198,12 +199,13 @@ rescue and intervention effects are largely additive at the per-protein level).
 
 ## Imputed concordance {#sec-dep-concordance}
 
-Mito has far less missingness than CvH, so both imputation methods track the
+Mito has far less missingness than CvH, so all three imputation methods track the
 non-imputed primary very closely (Spearman ρ on logFC):
 
 | Method | range across 5 contrasts |
 |---|---|
-| **imp4p** (canonical) | ρ = 0.95 – 0.97 |
+| **missForest** (canonical; feeds figures + WGCNA) | ρ = 0.98 – 0.99 |
+| imp4p | ρ = 0.95 – 0.97 |
 | mscoreutils | ρ = 0.95 – 0.96 |
 
 This high concordance (vs CvH, where the weak contrast diverged) confirms the
@@ -216,14 +218,11 @@ A consolidated figure stage builds publication composites from the DEP outputs:
 
 | Figure | Content |
 |---|---|
-| `F01_QC_overview` | filtering, normalization, imputation QC |
-| `F02_volcano` | per-contrast volcano landscape |
-| `F03_concordance` | imputed vs non-imputed, method agreement |
-| **`F04_rescue`** | the rescue axis: does Mito move PHE back toward Ctl |
-| `F05_modules` | WGCNA co-expression modules (LMM with `(1\|Replicate)`) |
-| `F06_complex_mito` | mitochondrial complex / MitoCarta covariation |
+| `F01_Proteome_Overview` | PCA, DEP counts, effect size, overlap, direction, pathway ORA |
+| `F02_Enrich_Volcanoes` | per-contrast volcano-in-ring enrichment landscape |
+| `F03_Clustering` | WGCNA co-expression modules (eigengene LMM with `(1\|Replicate)`) |
 
-![Mito rescue composite — `04_Figures/F04_rescue/b_reports/main/png/MAIN_F04_composite.png`](04_Figures/F04_rescue/b_reports/main/png/MAIN_F04_composite.png)
+![Proteome overview composite — `04_Figures/F01_Proteome_Overview/b_reports/main/png/MAIN_F01_proteome_overview.png`](04_Figures/F01_Proteome_Overview/b_reports/main/png/MAIN_F01_proteome_overview.png)
 
 > **Provenance note.** The figure stage was consolidated into `04_Figures/` and its
 > composites rebuilt against the current `03_DEP/a_non_imputed/c_data/` outputs, so
@@ -235,8 +234,9 @@ A consolidated figure stage builds publication composites from the DEP outputs:
 ```bash
 Rscript 01_Filtering/a_script/01_run_filtering.R
 Rscript 02_Normalization/a_script/01_run_normalization.R
-Rscript 02_Normalization/imputation/a_script/a_imp4p.R          # canonical
+Rscript 02_Normalization/imputation/a_script/a_imp4p.R          # comparison
 Rscript 02_Normalization/imputation/a_script/b_mscoreutils.R    # comparison
+Rscript 02_Normalization/imputation/a_script/c_missforest.R     # canonical (figures + WGCNA)
 Rscript 03_DEP/a_non_imputed/a_script/01_run_dep.R              # PRIMARY
 Rscript 03_DEP/b_imputed/a_script/01_run_dep_imputed.R          # concordance
 # then re-run the 04_Figures/ composites against 03_DEP outputs
@@ -248,7 +248,7 @@ Rscript 03_DEP/b_imputed/a_script/01_run_dep_imputed.R          # concordance
 - `Replicate` modelled as a real random block via duplicateCorrelation.
 - Contaminant removal = keratin regex + bovine-FBS ∩ HPA-secreted serum panel
   (reference-derived, keeps real cellular biology).
-- DE test on the **non-imputed** matrix; imputation (imp4p canonical) only for
+- DE test on the **non-imputed** matrix; imputation (missForest canonical) only for
   complete-matrix methods (figures, WGCNA).
 - Π-score (Xiao 2014) for significance + effect size; BH-FDR < 0.10.
 - Rescue contrast (`PHE_Mito − PHE`) is the primary biological readout.

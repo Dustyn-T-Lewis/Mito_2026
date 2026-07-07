@@ -126,4 +126,7 @@ append_workbook(
   )
 )
 
+mirror_to_box(list.files(PNG, "^SUPP_F02_gsea_.*\\.png$", full.names = TRUE), "02_Figures/F02_Enrich_Volcanoes/supp")
+mirror_to_box(file.path(DAT, "F02_supplementary.xlsx"), "03_Supplementary")
+
 message(sprintf("F02 GSEA supplement: %d figures, %d shown pathways", length(CONTRASTS), nrow(overlap)))

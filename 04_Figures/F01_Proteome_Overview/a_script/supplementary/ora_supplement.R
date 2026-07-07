@@ -147,4 +147,7 @@ append_workbook(
   ))
 )
 
+mirror_to_box(file.path(PNG, "SUPP_F01_ora.png"), "02_Figures/F01_Proteome_Overview/supp")
+mirror_to_box(file.path(DAT, "F01_supplementary.xlsx"), "03_Supplementary")
+
 message(sprintf("F01 ORA supplement: 1 figure, %d shown pathways", nrow(overlap)))

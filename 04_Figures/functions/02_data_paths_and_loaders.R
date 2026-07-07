@@ -63,6 +63,23 @@ P05 <- list(
   imp_rds = here::here("02_Normalization", "imputation", "c_data", "DAList_imputed_missforest.rds")
 )
 
+# Mirror rendered outputs into the Box manuscript tree so a render keeps Box
+# current. No-op when Box is not mounted, so the pipeline runs on any machine.
+BOX_MANUSCRIPT <- path.expand(
+  "~/Library/CloudStorage/Box-Box/Mito_Transplant_manuscript"
+)
+
+mirror_to_box <- function(files, subdir) {
+  if (!dir.exists(BOX_MANUSCRIPT)) {
+    message("Box not mounted; skipped mirror to ", subdir)
+    return(invisible())
+  }
+  dest <- file.path(BOX_MANUSCRIPT, subdir)
+  dir.create(dest, recursive = TRUE, showWarnings = FALSE)
+  file.copy(files, dest, overwrite = TRUE)
+  invisible()
+}
+
 # The DEP table is now long (one row per protein x contrast). Figures expect the
 # old wide layout (logFC_CTLvPHE, pi_score_CTLvPHE, ...); contrast names are
 # unchanged, so widen without recoding.

@@ -15,8 +15,9 @@ scripts <- c(
 )
 
 for (s in scripts) {
-  message("\n===== ", s, " =====")
-  status <- system2("Rscript", shQuote(file.path(root, "04_Figures", s)))
-  if (status != 0L) stop("failed: ", s, call. = FALSE)
+  message("\n----- ", s, " -----")
+  if (system2("Rscript", shQuote(file.path(root, "04_Figures", s))) != 0L) {
+    stop("failed: ", s, call. = FALSE)
+  }
 }
 message("\nall figures built")

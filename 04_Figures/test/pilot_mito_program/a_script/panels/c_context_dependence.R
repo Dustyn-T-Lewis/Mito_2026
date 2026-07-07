@@ -1,29 +1,27 @@
-# Panel C: is the mitochondrial gain the same with and without stress? Plot the
-# transplant effect at baseline (Mito - Ctl) against the transplant effect under
-# stress (Phe+Mito - Phe) for mito proteins. Pure cargo delivery adds the same
-# mass either way (slope 1); a context-sensitive response bends off the diagonal.
+# Panel C: regulated, not bulk cargo. Bulk delivery adds the same mitochondrial
+# proteins regardless of stress, so the MT x PHE interaction is null; a regulated
+# response makes the mito programs behave differently under stress, so the
+# interaction is significant. Each MitoPathway is tested on the interaction
+# contrast with fry; programs right of the FDR line are context-dependent.
 
-build_context_dependence <- function(comb, mito_genes) {
-  d <- comb |>
-    dplyr::filter(toupper(gene) %in% mito_genes) |>
-    dplyr::transmute(gene, baseline = logFC_CTLvMITO, stressed = logFC_PHEvPHE_MITO)
+build_context_dependence <- function(cat_tests) {
+  d <- cat_tests |>
+    dplyr::filter(contrast == "Interaction") |>
+    dplyr::mutate(sig = fry_fdr < 0.05)
 
-  slope <- unname(stats::coef(stats::lm(stressed ~ baseline, d))[2])
-  r <- stats::cor(d$baseline, d$stressed, use = "complete.obs")
-
-  p <- ggplot2::ggplot(d, ggplot2::aes(baseline, stressed)) +
-    ggplot2::geom_abline(slope = 1, linetype = "dashed", color = "grey55", linewidth = 0.3) +
-    ggplot2::geom_hline(yintercept = 0, color = "grey85", linewidth = 0.2) +
-    ggplot2::geom_vline(xintercept = 0, color = "grey85", linewidth = 0.2) +
-    ggplot2::geom_point(color = "#009988", size = 0.6, alpha = 0.6) +
-    ggplot2::geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "#B2182B", linewidth = 0.4) +
-    ggplot2::labs(
-      title = "Context dependence",
-      subtitle = sprintf("mito gain: slope %.2f, r %.2f (slope 1 = stress-independent delivery)", slope, r),
-      x = "Transplant at baseline  (Mito − Ctl)",
-      y = "Transplant under stress  (Phe+Mito − Phe)"
+  p <- ggplot2::ggplot(d, ggplot2::aes(-log10(fry_fdr), reorder(label, -log10(fry_fdr)), color = arm)) +
+    ggplot2::geom_vline(xintercept = -log10(0.05), linetype = "dashed", color = "grey55", linewidth = 0.3) +
+    ggplot2::geom_point(size = 1.6) +
+    ggplot2::scale_color_manual(
+      values = c(structural = "#8073AC", regulatory = "#009988"), name = NULL
     ) +
-    FIG_THEME
+    ggplot2::labs(
+      title = "Stress-dependence (MT × PHE)",
+      subtitle = "interaction per program (fry); right of the line = context-dependent, not additive",
+      x = "−log10 fry FDR (interaction)", y = NULL
+    ) +
+    FIG_THEME +
+    ggplot2::theme(legend.position = "bottom")
 
-  list(plot = p, table = dplyr::arrange(d, dplyr::desc(abs(baseline - stressed))))
+  list(plot = p, table = dplyr::arrange(d, fry_fdr))
 }

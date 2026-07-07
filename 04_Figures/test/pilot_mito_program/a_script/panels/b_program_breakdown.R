@@ -1,44 +1,32 @@
-# Panel B: which mitochondrial programs change. Split MitoCarta by MitoPathways
-# top level and separate structural machinery (OXPHOS, mtDNA/translation) from
-# regulatory programs (metabolism, dynamics/mitophagy, import, transport,
-# signaling). Bulk cargo lifts structure uniformly; a regulated response also
-# moves the regulatory arms.
+# Panel B: which mitochondrial programs move, and how coordinately. Each
+# MitoPathway is tested with fry (self-contained rotation test, valid at n=6);
+# the signed statistic is the fry direction times -log10 FDR, so a point far from
+# zero is a program that moves strongly and coherently. Structural machinery
+# (OXPHOS, mtDNA/translation) is split from the regulatory programs; a regulated
+# response moves the regulatory arm, not only the structural cargo.
 
-CAT_LABELS <- c(
-  OXPHOS = "OXPHOS",
-  MITOCHONDRIAL_CENTRAL_DOGMA = "mtDNA & translation",
-  METABOLISM = "Metabolism",
-  MITOCHONDRIAL_DYNAMICS_AND_SURVEILLANCE = "Dynamics & mitophagy",
-  PROTEIN_IMPORT_SORTING_AND_HOMEOSTASIS = "Import & proteostasis",
-  SIGNALING = "Signaling",
-  SMALL_MOLECULE_TRANSPORT = "Small-molecule transport"
-)
-STRUCTURAL_CATS <- c("OXPHOS", "MITOCHONDRIAL_CENTRAL_DOGMA")
-
-build_program_breakdown <- function(comb, cat_map) {
-  d <- comb |>
-    dplyr::transmute(gene = toupper(gene), Transplant = logFC_CTLvMITO, Rescue = logFC_PHEvPHE_MITO) |>
-    dplyr::inner_join(cat_map, by = "gene") |>
-    tidyr::pivot_longer(c(Transplant, Rescue), names_to = "contrast", values_to = "logFC") |>
-    dplyr::group_by(category, contrast) |>
-    dplyr::summarise(median_logFC = median(logFC, na.rm = TRUE), n = dplyr::n_distinct(gene), .groups = "drop") |>
+build_program_breakdown <- function(cat_tests) {
+  d <- cat_tests |>
+    dplyr::filter(contrast %in% c("Transplant", "Rescue")) |>
     dplyr::mutate(
-      arm = ifelse(category %in% STRUCTURAL_CATS, "structural", "regulatory"),
-      label = dplyr::coalesce(CAT_LABELS[category], category)
+      signed = ifelse(fry_dir == "Up", 1, -1) * -log10(fry_fdr),
+      arm = factor(arm, c("regulatory", "structural")),
+      sig = fry_fdr < 0.05
     )
 
-  p <- ggplot2::ggplot(d, ggplot2::aes(median_logFC, reorder(label, median_logFC), color = contrast)) +
+  p <- ggplot2::ggplot(d, ggplot2::aes(signed, reorder(label, signed), color = contrast, shape = sig)) +
     ggplot2::geom_vline(xintercept = 0, color = "grey55", linewidth = 0.3) +
-    ggplot2::geom_point(size = 1.3) +
+    ggplot2::geom_point(size = 1.4) +
     ggplot2::facet_grid(arm ~ ., scales = "free_y", space = "free_y") +
     ggplot2::scale_color_manual(values = c(Transplant = "#4393C3", Rescue = "#4DAF4A"), name = NULL) +
+    ggplot2::scale_shape_manual(values = c(`TRUE` = 16, `FALSE` = 1), guide = "none") +
     ggplot2::labs(
-      title = "Mito program breakdown",
-      subtitle = "structural cargo vs regulatory programs (median over each program)",
-      x = "median log2FC", y = NULL
+      title = "Which programs move (fry)",
+      subtitle = "self-contained test; filled = FDR < 0.05, right = up",
+      x = "signed −log10 fry FDR", y = NULL
     ) +
     FIG_THEME +
     ggplot2::theme(legend.position = "bottom")
 
-  list(plot = p, table = dplyr::arrange(d, arm, category, contrast))
+  list(plot = p, table = dplyr::arrange(cat_tests, contrast, set))
 }

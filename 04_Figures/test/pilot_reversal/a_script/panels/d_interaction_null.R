@@ -1,6 +1,6 @@
-# Panel C: the honest cap. The formal 2x2 interaction is the strict per-protein
-# test of transplant x stress. If it carries few FDR hits, the reversal is a
-# coordinated shift toward baseline, not a significant protein-by-protein rescue.
+# Panel D: the honest cap. The formal 2x2 interaction is the strict per-protein
+# test of transplant x stress. Few FDR hits means the reversal is a coordinated
+# shift toward baseline, not a significant protein-by-protein rescue.
 
 build_interaction_null <- function(comb, fdr = H9C2_FDR_EXPLOR, pi_thresh = H9C2_PI_THRESH) {
   d <- comb |>

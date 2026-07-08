@@ -6,12 +6,14 @@ source(here::here("04_Figures", "functions", "01_style_palettes_theme.R"))
 # Brief contrast naming
 # The limma model is already fit; 03_combined_results.csv carries 5 contrasts
 # under the OLD names. Map them to the brief's names for display; algebra identical.
+# Four primary contrasts (Disease, Transplant, Rescue, Interaction) plus the
+# secondary PHE-on-transplant effect. Interaction = Rescue − Transplant.
 CONTRAST_DISPLAY_MAP <- c(
   CTLvMITO      = "Transplant", # Mito - Ctl
   CTLvPHE       = "Disease", # PHE - Ctl
   PHEvPHE_MITO  = "Rescue", # PHE_Mito - PHE
-  Interaction   = "Interaction", # orthogonal 2x2
-  MITOvPHE_MITO = "Secondary" # PHE_Mito - Mito
+  Interaction   = "Interaction", # (PHE_Mito - PHE) - (Mito - Ctl)
+  MITOvPHE_MITO = "Secondary" # PHE_Mito - Mito: PHE effect in transplanted cells
 )
 
 # Verbatim math labels (Unicode minus U+2212) keyed by OLD name, built from the
@@ -24,7 +26,7 @@ CONTRAST_MATH_BRIEF <- local({
     PHEvPHE_MITO = sprintf("%s − %s", g[["PHE_Mito"]], g[["PHE"]]),
     Interaction = sprintf(
       "(%s − %s) − (%s − %s)",
-      g[["PHE_Mito"]], g[["Mito"]], g[["PHE"]], g[["Ctl"]]
+      g[["PHE_Mito"]], g[["PHE"]], g[["Mito"]], g[["Ctl"]]
     ),
     MITOvPHE_MITO = sprintf("%s − %s", g[["PHE_Mito"]], g[["Mito"]])
   )

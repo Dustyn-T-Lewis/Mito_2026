@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # Mito PRIMARY DEP on the NON-imputed normalized matrix (limma handles per-protein NAs).
-#   ~ 0 + group + (1 | Replicate), group {Ctl, Mito, PHE, PHE_Mito}; 5 factorial contrasts + recovery.
+#   ~ 0 + group + (1 | Replicate), group {Ctl, Mito, PHE, PHE_Mito}; 5 factorial contrasts.
 #   Significance: Pi-score (Xiao 2014, Pi = P.Value^|logFC|) < 0.05 + BH-FDR.
 
 pacman::p_load(proteoDA, here, readr, dplyr, tibble, purrr)
@@ -27,9 +27,8 @@ dal <- add_contrasts(dal, contrasts_vector = c(
   "CTLvPHE       = PHE - Ctl", # Disease: PHE stress remodelling
   "CTLvMITO      = Mito - Ctl", # Intervention: transplant alone
   "PHEvPHE_MITO  = PHE_Mito - PHE", # Rescue: transplant under stress
-  "Interaction   = (PHE_Mito - PHE) - (Mito - Ctl)", # Interaction: PHE-dependence of transplant
-  "MITOvPHE_MITO = PHE_Mito - Mito", # Secondary: PHE effect in transplanted cells
-  "CTLvPHE_MITO  = PHE_Mito - Ctl" # Recovery: residual disease signature after rescue
+  "Interaction   = (PHE_Mito - PHE) - (Mito - Ctl)", # Interaction: Rescue - Transplant
+  "MITOvPHE_MITO = PHE_Mito - Mito" # Secondary: PHE effect in transplanted cells
 ))
 dal <- fit_limma_model(dal)
 dal <- extract_DA_results(dal, pval_thresh = 0.10, lfc_thresh = 0, adj_method = "BH")

@@ -29,15 +29,10 @@ universe <- unique(de$gene)
 collection <- build_harmonized_collection()
 pw_by_db <- split(names(collection), classify_database(names(collection)))
 
-# per-DB fora (each BH-corrected on its own) for one gene set
 ora_set <- function(genes) {
-  g <- intersect(genes, universe)
-  bind_rows(lapply(names(pw_by_db), function(db) {
-    dp <- collection[pw_by_db[[db]]]
-    r <- as.data.frame(fgsea::fora(dp, genes = g, universe = universe, minSize = 10, maxSize = 500))
-    r$leadingEdge <- vapply(r$overlapGenes, paste, character(1), collapse = ";")
-    transmute(r, pathway, padj, n_overlap = overlap, set_size = size, database = db, leading_edge = leadingEdge)
-  }))
+  run_fora_by_db(genes, universe, collection, pw_by_db) |>
+    mutate(leading_edge = vapply(overlapGenes, paste, character(1), collapse = ";")) |>
+    transmute(pathway, padj, n_overlap = overlap, set_size = size, database, leading_edge)
 }
 
 ora <- bind_rows(lapply(names(CONTRASTS), function(ctr) {

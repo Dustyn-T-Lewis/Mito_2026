@@ -120,15 +120,7 @@ mod_genes <- tibble(gene = w$ann$gene, module = w$module_colors) |>
 universe <- unique(w$ann$gene[is_real_symbol(w$ann$gene)])
 ora_raw <- bind_rows(lapply(mod_order, function(m) {
   g <- intersect(mod_genes$gene[mod_genes$module == m], universe)
-  res <- bind_rows(lapply(names(pw_by_db), function(db) {
-    dp <- pw_collection[pw_by_db[[db]]]
-    if (length(dp) < 2) {
-      return(NULL)
-    }
-    r <- as.data.frame(fgsea::fora(pathways = dp, genes = g, universe = universe, minSize = 10, maxSize = 500))
-    r$database <- db
-    r
-  }))
+  res <- run_fora_by_db(g, universe, pw_collection, pw_by_db)
   res <- res[!is.na(res$padj), ]
   transmute(arrange(res, padj), module = m, database, pathway, p = pval, padj, n_overlap = overlap, n_set = size)
 }))

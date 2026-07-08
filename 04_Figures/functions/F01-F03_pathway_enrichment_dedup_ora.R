@@ -147,6 +147,27 @@ classify_database <- function(pathway_names) {
   )
 }
 
+# Per-database over-representation: fora within each DB so BH is applied within a
+# database, not across it. Returns the raw fora columns (pval, padj, overlap,
+# size, overlapGenes) plus the database; callers add their own leading-edge and
+# column shaping. A DB with fewer than two sets is skipped.
+run_fora_by_db <- function(genes, universe, pw_collection, pw_by_db,
+                           min_size = 10, max_size = 500) {
+  g <- intersect(genes, universe)
+  dplyr::bind_rows(lapply(names(pw_by_db), function(db) {
+    dp <- pw_collection[pw_by_db[[db]]]
+    if (length(dp) < 2) {
+      return(NULL)
+    }
+    r <- as.data.frame(fgsea::fora(
+      pathways = dp, genes = g, universe = universe,
+      minSize = min_size, maxSize = max_size
+    ))
+    r$database <- db
+    r
+  }))
+}
+
 # Flat gene-set collection over CANONICAL_DBS for ORA. Reads the unified
 # rat_gene_sets.rds so it enriches against the same backbone as the rings.
 build_harmonized_collection <- function(

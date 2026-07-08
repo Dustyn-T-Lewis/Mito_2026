@@ -182,13 +182,13 @@ sheet_specs <- c(
     list(
       name = "pathway_counts", df = pw_counts,
       role = "Pathway count bar heights (panel F)",
-      contents = "contrast, direction, database, n (5-DB lens, padj<0.05, EnrichmentMap dedup at 0.375)"
+      contents = "contrast, direction, database, n (5-DB lens, padj<0.05, all sets, no dedup)"
     )
   ),
   Map(function(ctr, tab) {
     list(
       name = paste0(contrast_brief(ctr), "_pathways"), df = tab,
-      role = sprintf("Post-dedup significant pathways behind the %s bars", contrast_brief(ctr)),
+      role = sprintf("All significant pathways behind the %s bars", contrast_brief(ctr)),
       contents = "pathway, database, clean_label, NES, padj, size, direction, is_mito"
     )
   }, CORE, pw_tabs)

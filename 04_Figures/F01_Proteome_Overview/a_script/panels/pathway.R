@@ -57,7 +57,7 @@ build_pathway_bar_panel <- function() {
     dplyr::mutate(contrast = factor(contrast, levels = CORE))
 
   y_top <- 105
-  y_bot <- -16
+  y_bot <- -20
 
   panel_bg <- tibble::tibble(
     contrast = factor(CORE, levels = CORE),
@@ -77,21 +77,24 @@ build_pathway_bar_panel <- function() {
       width = 0.74, color = "black", linewidth = 0.2,
       position = ggplot2::position_stack(reverse = TRUE)
     ) +
-    ggplot2::geom_text(
+    shadowtext::geom_shadowtext(
       data = dplyr::filter(bar_df, n > 0),
       ggplot2::aes(contrast, y, label = n, group = database),
       position = ggplot2::position_stack(vjust = 0.5, reverse = TRUE),
-      inherit.aes = FALSE, size = 1.5, fontface = "bold", color = "grey15"
+      inherit.aes = FALSE, size = 1.3, fontface = "bold", color = "grey15",
+      bg.colour = "white", bg.r = 0.16
     ) +
     ggplot2::geom_hline(yintercept = 0, linewidth = 0.3, color = "grey35") +
-    ggplot2::geom_text(
+    shadowtext::geom_shadowtext(
       data = tot_df, ggplot2::aes(contrast, up, label = up),
-      inherit.aes = FALSE, vjust = -0.4, size = 2.2, fontface = "bold"
+      inherit.aes = FALSE, vjust = -0.4, size = 1.9, fontface = "bold",
+      color = "grey15", bg.colour = "white", bg.r = 0.16
     ) +
-    ggplot2::geom_text(
+    shadowtext::geom_shadowtext(
       data = dplyr::filter(tot_df, down > 0),
       ggplot2::aes(contrast, -down, label = down),
-      inherit.aes = FALSE, vjust = 1.3, size = 2.2, fontface = "bold"
+      inherit.aes = FALSE, vjust = 1.3, size = 1.9, fontface = "bold",
+      color = "grey15", bg.colour = "white", bg.r = 0.16
     ) +
     ggplot2::scale_fill_manual(
       values = PATHWAY_DB_COLORS, breaks = db_order, name = NULL,

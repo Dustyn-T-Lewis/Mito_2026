@@ -102,53 +102,93 @@ prot <- comb |>
     normalized = pi_score_CTLvPHE_MITO >= H9C2_PI_THRESH
   )
 
-# --- fry mountain: disease sets ranked by the Rescue t (transplant under stress) ---
-cm_r <- makeContrasts("PHE_Mito - PHE", levels = design)
-fry_rescue <- function(idx, expected) {
-  fr <- fry(expr, idx, design, contrast = cm_r[, 1], block = rep_block, correlation = set_rho)
-  tibble(dir = fr$Direction[1], fdr = fdr_col(fr, rownames(fr))[1], n = length(idx), consistent = fr$Direction[1] == expected)
-}
-fry_up <- fry_rescue(idx_sig$`disease-up`, "Down")
-fry_dn <- fry_rescue(idx_sig$`disease-down`, "Up")
-
-up_ids <- comb$uniprot_id[comb$sig_pi_CTLvPHE == 1]
-dn_ids <- comb$uniprot_id[comb$sig_pi_CTLvPHE == -1]
-t_rank <- comb |>
-  filter(!is.na(t_PHEvPHE_MITO)) |>
-  transmute(uniprot_id, gene, t_rescue = t_PHEvPHE_MITO, in_up = uniprot_id %in% up_ids, in_down = uniprot_id %in% dn_ids) |>
-  arrange(desc(t_rescue)) |>
-  mutate(rank = dplyr::row_number(), es_up = running_es(t_rescue, in_up), es_down = running_es(t_rescue, in_down))
-n_all <- nrow(t_rank)
-circ_r <- cor(comb$t_CTLvPHE, comb$t_PHEvPHE_MITO, use = "complete.obs")
-
+# --- fry mountains: a signature set (from set_old) tested with fry over the proteome
+# ranked by another contrast (rank_old); leading-edge proteins (broad Disease p<0.05)
+# feed top-5 ORA bars, n.s. shaded lighter. ORA labels deduplicated by cleaned name. ---
 pw_flat <- unlist(unname(readRDS(here::here("04_Figures", "shared", "c_data", "rat_gene_sets.rds"))), recursive = FALSE)
 universe <- unique(comb$gene[!is.na(comb$gene)])
 run_ora <- function(g) {
+  g <- unique(g[!is.na(g)])
   if (length(g) < 5) {
     return(tibble())
   }
-  fora(pathways = pw_flat, genes = unique(g), universe = universe, minSize = 10, maxSize = 500) |>
+  fora(pathways = pw_flat, genes = g, universe = universe, minSize = 10, maxSize = 500) |>
     as_tibble() |>
-    filter(padj < 0.1) |>
     arrange(padj) |>
     mutate(.key = .pretty_pw(pathway)) |>
     distinct(.key, .keep_all = TRUE) |>
-    select(-.key)
+    select(-.key) |>
+    slice_head(n = 5)
 }
-# ORA characterises the broader disease-responsive reversal (Disease p<0.05), since
-# the strict Pi signature is too small to over-represent; the fry test above keeps Pi.
-broad <- comb |> filter(P.Value_CTLvPHE < 0.05, !is.na(t_PHEvPHE_MITO))
-ora_up <- run_ora(broad$gene[broad$logFC_CTLvPHE > 0 & broad$t_PHEvPHE_MITO < 0])
-ora_dn <- run_ora(broad$gene[broad$logFC_CTLvPHE < 0 & broad$t_PHEvPHE_MITO > 0])
+make_mountain <- function(cfg) {
+  set_sig <- comb[[paste0("sig_pi_", cfg$set_old)]]
+  up_ids <- comb$uniprot_id[set_sig == 1]
+  dn_ids <- comb$uniprot_id[set_sig == -1]
+  cmx <- makeContrasts(contrasts = cfg$rank_form, levels = design)
+  fry1 <- function(ids) {
+    idx <- which(rownames(expr) %in% ids)
+    fr <- fry(expr, idx, design, contrast = cmx[, 1], block = rep_block, correlation = set_rho)
+    tibble(dir = fr$Direction[1], fdr = fdr_col(fr, rownames(fr))[1], n = length(idx))
+  }
+  fry_up <- fry1(up_ids)
+  fry_dn <- fry1(dn_ids)
+  tr <- comb |>
+    mutate(t_rank_stat = .data[[paste0("t_", cfg$rank_old)]]) |>
+    filter(!is.na(t_rank_stat)) |>
+    transmute(gene, t_rank_stat, in_up = uniprot_id %in% up_ids, in_down = uniprot_id %in% dn_ids) |>
+    arrange(desc(t_rank_stat)) |>
+    mutate(rank = row_number(), es_up = running_es(t_rank_stat, in_up), es_down = running_es(t_rank_stat, in_down))
+  n_all <- nrow(tr)
+  bp <- comb[[paste0("P.Value_", cfg$set_old)]]
+  blfc <- comb[[paste0("logFC_", cfg$set_old)]]
+  brt <- comb[[paste0("t_", cfg$rank_old)]]
+  side <- function(dir) if (dir == "Down") brt < 0 else brt > 0
+  ora_up <- run_ora(comb$gene[which(bp < 0.05 & blfc > 0 & side(fry_up$dir))])
+  ora_dn <- run_ora(comb$gene[which(bp < 0.05 & blfc < 0 & side(fry_dn$dir))])
+  cfg$rank_label <- sprintf(cfg$rank_label, n_all)
+  m <- build_mountain(tr, fry_up, fry_dn, ora_up, ora_dn, n_all, cfg)
+  ggplot2::ggsave(file.path(RPT, paste0("PILOT_fry_", cfg$id, ".png")), m,
+    width = 220, height = 150, units = "mm", dpi = 300, limitsize = FALSE
+  )
+  tibble(mountain = cfg$id, up_dir = fry_up$dir, up_fdr = fry_up$fdr, dn_dir = fry_dn$dir, dn_fdr = fry_dn$fdr)
+}
+
+MOUNTAINS <- list(
+  list(
+    id = "rescue_v_disease", rank_old = "PHEvPHE_MITO", rank_form = "PHE_Mito - PHE", set_old = "CTLvPHE",
+    rank_label = "Rank (Rescue t, n = %d)", title = "Disease signature across the Rescue axis",
+    subtitle = "rank = Rescue (Phe+Mito − Phe); set = Π disease; shares PHE, so partly circular",
+    up_title = "Disease-up set", dn_title = "Disease-down set",
+    ora_up_title = "reversed disease-up · ORA", ora_dn_title = "reversed disease-down · ORA"
+  ),
+  list(
+    id = "recovery_v_disease", rank_old = "CTLvPHE_MITO", rank_form = "PHE_Mito - Ctl", set_old = "CTLvPHE",
+    rank_label = "Rank (Recovery t, n = %d)", title = "Disease signature vs control after transplant",
+    subtitle = "rank = Recovery (Phe+Mito − Ctl); set = Π disease; shares Ctl, confound-free",
+    up_title = "Disease-up set", dn_title = "Disease-down set",
+    ora_up_title = "residual disease-up · ORA", ora_dn_title = "residual disease-down · ORA"
+  ),
+  list(
+    id = "disease_v_rescue", rank_old = "CTLvPHE", rank_form = "PHE - Ctl", set_old = "PHEvPHE_MITO",
+    rank_label = "Rank (Disease t, n = %d)", title = "Rescue signature across the disease axis (inverse)",
+    subtitle = "rank = Disease (Phe − Ctl); set = Π rescue; the reciprocal test",
+    up_title = "Rescue-up set", dn_title = "Rescue-down set",
+    ora_up_title = "rescue-up · ORA", ora_dn_title = "rescue-down · ORA"
+  ),
+  list(
+    id = "secondary_v_disease", rank_old = "MITOvPHE_MITO", rank_form = "PHE_Mito - Mito", set_old = "CTLvPHE",
+    rank_label = "Rank (PHE-on-transplant t, n = %d)", title = "Does PHE still perturb transplanted cells",
+    subtitle = "rank = Phe+Mito − Mito (PHE effect on a transplant background); set = Π disease",
+    up_title = "Disease-up set", dn_title = "Disease-down set",
+    ora_up_title = "disease-up · ORA", ora_dn_title = "disease-down · ORA"
+  )
+)
+mountain_stats <- purrr::map_dfr(MOUNTAINS, make_mountain)
 
 pa <- build_signature_reversal(set_rev)
 pb <- build_pca_trajectory(scores, centroids, var_exp, dist_stat)
 pc_panel <- build_return_key(prot)
 pd <- build_interaction_null(comb)
-mountain <- build_fry_mountain(t_rank, fry_up, fry_dn, ora_up, ora_dn, circ_r, n_all)
-ggplot2::ggsave(file.path(RPT, "PILOT_reversal_fry.png"), mountain,
-  width = 220, height = 150, units = "mm", dpi = 300, limitsize = FALSE
-)
 
 fig <- (add_tag(pa$plot, "A") | add_tag(pb$plot, "B")) /
   (add_tag(pc_panel$plot, "C") | add_tag(pd$plot, "D"))

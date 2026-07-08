@@ -1,7 +1,7 @@
 # Builder helpers shared by the gene-set and fGSEA-cache scripts in this arm.
 #   run_fgsea_cache()        fGSEA (multilevel, moderated-t ranks) for one database
 #   build_goslim_gene_sets() GO Slim Generic BP sets via GO.db + a species orgdb
-# Dedup lives in functions/03_pathway_enrichment_dedup_ora.R; these two are only the
+# Dedup lives in functions/F01-F03_pathway_enrichment_dedup_ora.R; these two are only the
 # generation helpers that engine does not carry.
 
 run_fgsea_cache <- function(dep_wide, gene_sets, db_name, contrasts,

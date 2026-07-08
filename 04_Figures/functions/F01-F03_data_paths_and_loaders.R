@@ -1,7 +1,7 @@
 # Input paths, data loaders, and the old-combined-results -> brief contrast
 # naming map. Reads existing 01-03 pipeline outputs only; never re-runs them.
 
-source(here::here("04_Figures", "functions", "01_style_palettes_theme.R"))
+source(here::here("04_Figures", "functions", "F01-F03_style_palettes_theme.R"))
 
 # Brief contrast naming
 # The limma model is already fit; 03_combined_results.csv carries 5 contrasts

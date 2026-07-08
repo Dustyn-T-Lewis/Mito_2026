@@ -10,9 +10,9 @@ suppressPackageStartupMessages({
   library(enrichVolcano)
 })
 
-source(here::here("04_Figures", "functions", "02_data_paths_and_loaders.R"))
-source(here::here("04_Figures", "functions", "03_pathway_enrichment_dedup_ora.R"))
-source(here::here("04_Figures", "functions", "06_supplementary_workbook.R"))
+source(here::here("04_Figures", "functions", "F01-F03_data_paths_and_loaders.R"))
+source(here::here("04_Figures", "functions", "F01-F03_pathway_enrichment_dedup_ora.R"))
+source(here::here("04_Figures", "functions", "F01-F03_supplementary_workbook.R"))
 
 BASE <- here::here("04_Figures", "F02_Enrich_Volcanoes")
 RPT_PNG <- file.path(BASE, "b_reports", "main", "png")

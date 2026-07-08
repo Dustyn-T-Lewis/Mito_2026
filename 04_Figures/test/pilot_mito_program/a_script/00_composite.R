@@ -7,10 +7,10 @@
 # Median log2FC is descriptive only and never the inferential claim.
 
 fns <- here::here("04_Figures", "functions")
-source(file.path(fns, "01_style_palettes_theme.R"))
-source(file.path(fns, "02_data_paths_and_loaders.R"))
-source(file.path(fns, "06_supplementary_workbook.R"))
-source(file.path(fns, "08_composite_layout.R"))
+source(file.path(fns, "F01-F03_style_palettes_theme.R"))
+source(file.path(fns, "F01-F03_data_paths_and_loaders.R"))
+source(file.path(fns, "F01-F03_supplementary_workbook.R"))
+source(file.path(fns, "F01-F03_composite_layout.R"))
 pacman::p_load(limma, dplyr, tidyr, tibble, purrr, patchwork)
 
 BASE <- here::here("04_Figures", "test", "pilot_mito_program")

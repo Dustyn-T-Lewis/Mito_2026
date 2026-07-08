@@ -9,11 +9,11 @@ suppressPackageStartupMessages({
   library(dplyr)
 })
 
-source(here::here("04_Figures", "functions", "08_composite_layout.R"))
-source(here::here("04_Figures", "functions", "02_data_paths_and_loaders.R"))
-source(here::here("04_Figures", "functions", "03_pathway_enrichment_dedup_ora.R"))
-source(here::here("04_Figures", "functions", "04_mitocarta_lens_lookup.R"))
-source(here::here("04_Figures", "functions", "06_supplementary_workbook.R"))
+source(here::here("04_Figures", "functions", "F01-F03_composite_layout.R"))
+source(here::here("04_Figures", "functions", "F01-F03_data_paths_and_loaders.R"))
+source(here::here("04_Figures", "functions", "F01-F03_pathway_enrichment_dedup_ora.R"))
+source(here::here("04_Figures", "F01_Proteome_Overview", "a_script", "helpers", "F01_mitocarta_lens_lookup.R"))
+source(here::here("04_Figures", "functions", "F01-F03_supplementary_workbook.R"))
 panels <- here::here("04_Figures", "F01_Proteome_Overview", "a_script", "panels")
 for (f in list.files(panels, full.names = TRUE)) source(f)
 

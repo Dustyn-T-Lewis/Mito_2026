@@ -1,6 +1,6 @@
 # Stitch refined standalone panels into composites. Sources nothing the panels
 # do not already provide.
-source(here::here("04_Figures", "functions", "01_style_palettes_theme.R"))
+source(here::here("04_Figures", "functions", "F01-F03_style_palettes_theme.R"))
 
 library(patchwork)
 

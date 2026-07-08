@@ -8,7 +8,7 @@ suppressPackageStartupMessages({
   library(vegan)
   library(patchwork)
 })
-source(here::here("04_Figures", "functions", "02_data_paths_and_loaders.R"))
+source(here::here("04_Figures", "functions", "F01-F03_data_paths_and_loaders.R"))
 
 build_pca_panel <- function() {
   dal_imp <- readRDS(P05$imp_rds)
@@ -48,6 +48,7 @@ build_pca_panel <- function() {
     )
     tibble(role = nm, R2 = r$R2[1], p = r$`Pr(>F)`[1])
   }))
+  pair_res$q <- p.adjust(pair_res$p, "BH")
 
   set.seed(42)
   bd_p <- permutest(betadisper(dist_mat, imp_meta$Group),
@@ -62,14 +63,18 @@ build_pca_panel <- function() {
     pair_res,
     tibble(role = "dispersion (betadisper)", R2 = NA_real_, p = bd_p)
   )
+  bd_txt <- if (is.na(bd_p)) "betadisper p = NA" else paste0("betadisper ", fmt_p(bd_p))
 
   GRP_LAB <- GROUP_LABELS
   GRP_SHP <- c(Ctl = 16, Mito = 17, PHE = 15, PHE_Mito = 18)
-  fmt_perm <- function(role, r2, p) sprintf("%s R²=%.2f, %s", role, r2, fmt_p(p))
+  fmt_perm <- function(role, r2, q) {
+    sprintf("%s R²=%.2f, %s", role, r2, sub("^p", "q", fmt_p(q)))
+  }
   stat_lines <- paste(c(
-    fmt_perm("Disease", pair_res$R2[1], pair_res$p[1]),
-    fmt_perm("Transplant", pair_res$R2[2], pair_res$p[2]),
-    fmt_perm("Rescue", pair_res$R2[3], pair_res$p[3])
+    "pairwise PERMANOVA (BH q):",
+    fmt_perm("Disease", pair_res$R2[1], pair_res$q[1]),
+    fmt_perm("Transplant", pair_res$R2[2], pair_res$q[2]),
+    fmt_perm("Rescue", pair_res$R2[3], pair_res$q[3])
   ), collapse = "\n")
 
   n <- nrow(imp_meta)
@@ -104,8 +109,8 @@ build_pca_panel <- function() {
     labs(
       title = "Sample PCA",
       subtitle = sprintf(
-        "PERMANOVA Group R²=%.2f, %s  |  n=%d, %s proteins (imputed)",
-        perm_R2, fmt_p(perm_p), n, np
+        "PERMANOVA Group R²=%.2f, %s  |  %s  |  n=%d, %s proteins (imputed)",
+        perm_R2, fmt_p(perm_p), bd_txt, n, np
       ),
       x = sprintf("PC1 (%.1f%%)", var_pct[1]),
       y = sprintf("PC2 (%.1f%%)", var_pct[2])

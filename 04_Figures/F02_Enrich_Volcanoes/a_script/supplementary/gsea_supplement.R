@@ -11,9 +11,9 @@ suppressPackageStartupMessages({
   library(patchwork)
 })
 fns <- here::here("04_Figures", "functions")
-source(file.path(fns, "02_data_paths_and_loaders.R"))
-source(file.path(fns, "03_pathway_enrichment_dedup_ora.R"))
-source(file.path(fns, "06_supplementary_workbook.R"))
+source(file.path(fns, "F01-F03_data_paths_and_loaders.R"))
+source(file.path(fns, "F01-F03_pathway_enrichment_dedup_ora.R"))
+source(file.path(fns, "F01-F03_supplementary_workbook.R"))
 
 BASE <- here::here("04_Figures", "F02_Enrich_Volcanoes")
 PNG <- file.path(BASE, "b_reports", "supplementary")

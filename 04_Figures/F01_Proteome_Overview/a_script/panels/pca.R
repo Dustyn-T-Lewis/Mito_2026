@@ -9,6 +9,7 @@ suppressPackageStartupMessages({
   library(patchwork)
 })
 source(here::here("04_Figures", "functions", "F01-F03_data_paths_and_loaders.R"))
+source(here::here("04_Figures", "F01_Proteome_Overview", "a_script", "helpers", "F01_pca_stats.R"))
 
 build_pca_panel <- function() {
   dal_imp <- readRDS(P05$imp_rds)
@@ -24,45 +25,17 @@ build_pca_panel <- function() {
     left_join(dplyr::select(imp_meta, Col_ID, Group), by = "Col_ID") |>
     mutate(Group = factor(Group, levels = H9C2_GROUP_LEVELS))
 
-  dist_mat <- dist(scale(t(imp_mat)))
-  set.seed(42)
-  perm <- adonis2(dist_mat ~ Group, data = imp_meta, permutations = 9999, by = "terms")
-  perm_R2 <- perm["Group", "R2"]
-  perm_p <- perm["Group", "Pr(>F)"]
-
   pairs_to_test <- list(
-    `Disease` = c("Ctl", "PHE"),
-    `Transplant` = c("Ctl", "Mito"),
-    `Rescue` = c("PHE", "PHE_Mito")
+    Disease = c("Ctl", "PHE"),
+    Transplant = c("Ctl", "Mito"),
+    Rescue = c("PHE", "PHE_Mito")
   )
-  pair_res <- bind_rows(lapply(names(pairs_to_test), function(nm) {
-    pr <- pairs_to_test[[nm]]
-    keep <- imp_meta$Group %in% pr
-    sm <- imp_mat[, keep]
-    smeta <- imp_meta[keep, ]
-    smeta$Group <- droplevels(smeta$Group)
-    set.seed(42)
-    r <- adonis2(dist(scale(t(sm))) ~ Group,
-      data = smeta,
-      permutations = 9999, by = "terms"
-    )
-    tibble(role = nm, R2 = r$R2[1], p = r$`Pr(>F)`[1])
-  }))
-  pair_res$q <- p.adjust(pair_res$p, "BH")
-
-  set.seed(42)
-  bd_p <- permutest(betadisper(dist_mat, imp_meta$Group),
-    permutations = 999
-  )$tab$`Pr(>F)`[1]
-  if (!is.na(bd_p) && bd_p < 0.05) {
-    warning("Heterogeneous group dispersions (betadisper p < 0.05)")
-  }
-
-  permanova_out <- bind_rows(
-    tibble(role = "Group (overall)", R2 = perm_R2, p = perm_p),
-    pair_res,
-    tibble(role = "dispersion (betadisper)", R2 = NA_real_, p = bd_p)
-  )
+  stats <- pca_group_stats(imp_mat, imp_meta$Group, pairs_to_test)
+  perm_R2 <- stats$overall_R2
+  perm_p <- stats$overall_p
+  pair_res <- stats$pairwise
+  bd_p <- stats$betadisper_p
+  permanova_out <- stats$table
   bd_txt <- if (is.na(bd_p)) "betadisper p = NA" else paste0("betadisper ", fmt_p(bd_p))
 
   GRP_LAB <- GROUP_LABELS

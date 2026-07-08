@@ -102,18 +102,7 @@ rescue_fdr <- fdr_by("Rescue")
 
 # per-module ORA: per-DB fora, BH within DB, keep every FDR<0.10 hit (full table), then
 # EnrichmentMap dedup for the displayed top terms
-go_cache <- file.path(BASE, "b_reports", "rat_go_bpccmf_sets.rds")
-go_sets <- if (file.exists(go_cache)) {
-  readRDS(go_cache)
-} else {
-  gs <- do.call(c, lapply(c("GO:BP", "GO:CC", "GO:MF"), function(sub) {
-    m5 <- msigdbr::msigdbr(species = "Rattus norvegicus", collection = "C5", subcollection = sub)
-    split(m5$gene_symbol, m5$gs_name)
-  }))
-  saveRDS(gs, go_cache)
-  gs
-}
-pw_collection <- c(build_harmonized_collection(), go_sets)
+pw_collection <- c(build_harmonized_collection(), load_go_sets())
 pw_by_db <- split(names(pw_collection), classify_database(names(pw_collection)))
 mod_genes <- tibble(gene = w$ann$gene, module = w$module_colors) |>
   filter(is_real_symbol(gene), module %in% non_grey)

@@ -1,7 +1,9 @@
 #!/usr/bin/env Rscript
 # Build every figure in dependency order. Each main script creates its figure's
 # single workbook; the supplement scripts append their sheets to it, so run them
-# after their main. Assumes shared/c_data/rat_gene_sets.rds already exists.
+# after their main. Assumes the shared gene-set caches (rat_gene_sets.rds and
+# rat_go_bpccmf_sets.rds) already exist; build them with the 01_ and 03_ fetch
+# scripts under shared/a_script.
 
 root <- rprojroot::find_root(rprojroot::has_dir("04_Figures"))
 

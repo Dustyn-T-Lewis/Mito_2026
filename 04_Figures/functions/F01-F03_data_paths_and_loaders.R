@@ -112,3 +112,9 @@ load_set_pool <- function(dbs) {
   rat_gene_sets <- readRDS(here::here("04_Figures", "shared", "c_data", "rat_gene_sets.rds"))
   do.call(c, unname(rat_gene_sets[dbs]))
 }
+
+# GO:BP/CC/MF sets the F03 module ORA adds on top of the canonical collection,
+# built by shared/a_script/03_fetch_go_sets.R.
+load_go_sets <- function() {
+  readRDS(here::here("04_Figures", "shared", "c_data", "rat_go_bpccmf_sets.rds"))
+}

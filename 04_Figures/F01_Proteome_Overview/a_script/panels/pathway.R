@@ -59,11 +59,8 @@ build_pathway_bar_panel <- function() {
     ) |>
     dplyr::mutate(contrast = factor(contrast, levels = CORE))
 
-  # Rescue dwarfs the others, so cap the up-axis just above the second-tallest
-  # stack; the tallest bar is truncated with its true total labelled.
-  cap <- ceiling(sort(tot_df$up, decreasing = TRUE)[2] / 5) * 5
-  y_top <- cap * 1.2
-  y_bot <- -(max(tot_df$down) * 1.25 + 0.5)
+  y_top <- 105
+  y_bot <- -16
 
   panel_bg <- tibble::tibble(
     contrast = factor(CORE, levels = CORE),
@@ -91,14 +88,8 @@ build_pathway_bar_panel <- function() {
     ) +
     ggplot2::geom_hline(yintercept = 0, linewidth = 0.3, color = "grey35") +
     ggplot2::geom_text(
-      data = dplyr::filter(tot_df, up <= cap),
-      ggplot2::aes(contrast, up, label = up),
+      data = tot_df, ggplot2::aes(contrast, up, label = up),
       inherit.aes = FALSE, vjust = -0.4, size = 2.2, fontface = "bold"
-    ) +
-    ggplot2::geom_text(
-      data = dplyr::filter(tot_df, up > cap),
-      ggplot2::aes(contrast, cap, label = paste0(up, " ↑")),
-      inherit.aes = FALSE, vjust = 1.4, size = 2.2, fontface = "bold", color = "grey15"
     ) +
     ggplot2::geom_text(
       data = dplyr::filter(tot_df, down > 0),
@@ -118,10 +109,10 @@ build_pathway_bar_panel <- function() {
       breaks = scales::pretty_breaks(5),
       expand = ggplot2::expansion(mult = c(0, 0))
     ) +
-    ggplot2::coord_cartesian(ylim = c(y_bot, y_top), clip = "on") +
+    ggplot2::coord_cartesian(ylim = c(y_bot, y_top), clip = "off") +
     ggplot2::labs(
       title = "Pathway enrichment by database",
-      subtitle = "fgsea padj < 0.05, all sets (no dedup) · Up above / Down below 0 · y capped",
+      subtitle = "fgsea padj < 0.05, all sets (no dedup) · Up above / Down below 0",
       x = NULL, y = "Significant pathways"
     ) +
     FIG_THEME +

@@ -50,6 +50,22 @@ idx_ext <- lapply(hall[STRESS_SETS], \(g) which(genes %in% toupper(g)))
 idx_ext <- idx_ext[vapply(idx_ext, \(i) length(i) >= 5L, logical(1))]
 
 set_rho <- duplicateCorrelation(expr, design, block = rep_block)$consensus
+
+# Recovery (Phe+Mito − Ctl) is derived, not a canonical DE contrast, so compute it
+# locally on the imputed matrix and join it in; the reported DE keeps the clean five.
+rec_fit <- eBayes(contrasts.fit(
+  lmFit(expr, design, block = rep_block, correlation = set_rho),
+  makeContrasts("PHE_Mito - Ctl", levels = design)
+))
+comb <- topTable(rec_fit, number = Inf, sort.by = "none") |>
+  as_tibble(rownames = "uniprot_id") |>
+  transmute(
+    uniprot_id,
+    logFC_CTLvPHE_MITO = logFC, t_CTLvPHE_MITO = t, P.Value_CTLvPHE_MITO = P.Value,
+    pi_score_CTLvPHE_MITO = P.Value^abs(logFC)
+  ) |>
+  right_join(comb, by = "uniprot_id")
+
 fdr_col <- function(df, rn) if ("FDR" %in% colnames(df)) df[rn, "FDR"] else df[rn, "PValue"]
 run_fry <- function(idx, type) {
   bind_rows(lapply(names(CTR), function(cn) {

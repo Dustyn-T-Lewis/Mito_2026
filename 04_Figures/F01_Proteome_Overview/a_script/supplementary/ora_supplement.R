@@ -24,7 +24,7 @@ dir.create(PNG, recursive = TRUE, showWarnings = FALSE)
 CONTRASTS <- CONTRAST_DISPLAY_MAP[c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO")]
 TOP_N <- 15L
 
-de <- readr::read_csv(P05$comb, show_col_types = FALSE) |> filter(is_real_symbol(gene))
+de <- load_dep_long() |> filter(is_real_symbol(gene))
 universe <- unique(de$gene)
 collection <- build_harmonized_collection()
 pw_by_db <- split(names(collection), classify_database(names(collection)))

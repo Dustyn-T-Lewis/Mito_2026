@@ -24,10 +24,7 @@ dir.create(PNG, recursive = TRUE, showWarnings = FALSE)
 CONTRASTS <- CONTRAST_DISPLAY_MAP[c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO", "Interaction")]
 TOP_N <- 30L
 
-gsea <- readr::read_csv(
-  here::here("04_Figures", "shared", "c_data", "fgsea_tstat_all_h9c2.csv"),
-  show_col_types = FALSE
-) |>
+gsea <- load_fgsea_cache() |>
   filter(
     contrast %in% names(CONTRASTS), database %in% CANONICAL_DBS,
     !pathway %in% MITO_DROP_SETS, !grepl(DISEASE_VIRAL_RE, pathway, ignore.case = TRUE)

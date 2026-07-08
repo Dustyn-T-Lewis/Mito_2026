@@ -11,7 +11,7 @@ THR_LEVELS <- c(
 )
 
 # Load data once at source time so both builders share it.
-comb_long <- readr::read_csv(P05$comb, show_col_types = FALSE)
+comb_long <- load_dep_long()
 dep_results <- stats::setNames(
   lapply(CORE, \(c) as.data.frame(dplyr::filter(comb_long, contrast == c))),
   CORE

@@ -82,15 +82,33 @@ mirror_to_box <- function(files, subdir) {
   invisible()
 }
 
-# The DEP table is now long (one row per protein x contrast). Figures expect the
-# old wide layout (logFC_CTLvPHE, pi_score_CTLvPHE, ...); contrast names are
-# unchanged, so widen without recoding.
+# The DEP table is long (one row per protein x contrast). load_dep_long is the
+# single reader; load_combined_wide widens it to the layout figures expect
+# (logFC_CTLvPHE, pi_score_CTLvPHE, ...), leaving the contrast names unchanged.
+load_dep_long <- function(path = P05$comb) {
+  readr::read_csv(path, show_col_types = FALSE)
+}
+
 load_combined_wide <- function(path = P05$comb) {
-  readr::read_csv(path, show_col_types = FALSE) |>
+  load_dep_long(path) |>
     tidyr::pivot_wider(
       id_cols     = c(uniprot_id, gene, protein, description),
       names_from  = contrast,
       values_from = c(logFC, t, P.Value, adj.P.Val, pi_score, sig_pi),
       names_glue  = "{.value}_{contrast}"
     )
+}
+
+# The shared fgsea cache (built once by shared/a_script/02_build_fgsea_cache.R)
+# and the flattened gene-set pool for a chosen set of databases.
+load_fgsea_cache <- function() {
+  readr::read_csv(
+    here::here("04_Figures", "shared", "c_data", "fgsea_tstat_all_h9c2.csv"),
+    show_col_types = FALSE
+  )
+}
+
+load_set_pool <- function(dbs) {
+  rat_gene_sets <- readRDS(here::here("04_Figures", "shared", "c_data", "rat_gene_sets.rds"))
+  do.call(c, unname(rat_gene_sets[dbs]))
 }

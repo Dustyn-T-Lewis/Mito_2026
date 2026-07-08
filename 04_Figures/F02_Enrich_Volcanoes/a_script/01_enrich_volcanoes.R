@@ -21,8 +21,7 @@ DAT <- file.path(BASE, "c_data")
 for (d in c(RPT_PNG, PANELS, DAT)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
 dep_df <- load_combined_wide()
-rat_gene_sets <- readRDS(here::here("04_Figures", "shared", "c_data", "rat_gene_sets.rds"))
-set_pool <- do.call(c, unname(rat_gene_sets[CANONICAL_DBS]))
+set_pool <- load_set_pool(CANONICAL_DBS)
 
 contrasts <- tibble::tribble(
   ~ctr, ~role, ~tag,
@@ -40,10 +39,7 @@ RING_N <- 12
 # fgsea over the 5-DB lens, ranked by the limma moderated t. Read from the shared
 # cache (shared/a_script/02_build_fgsea_cache.R) so the rings here, the F01 pathway
 # bars, and the supplements all trace to one computation.
-fgsea_all <- readr::read_csv(
-  here::here("04_Figures", "shared", "c_data", "fgsea_tstat_all_h9c2.csv"),
-  show_col_types = FALSE
-) |>
+fgsea_all <- load_fgsea_cache() |>
   filter(contrast %in% contrasts$ctr, database %in% CANONICAL_DBS)
 
 # Per contrast: tidy volcano (pi_score = significance) + ring terms

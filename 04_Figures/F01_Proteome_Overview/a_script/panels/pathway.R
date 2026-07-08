@@ -10,10 +10,7 @@ PATHWAY_DB_COLORS <- ORA_DB_COLORS[CANONICAL_DBS]
 build_pathway_bar_panel <- function() {
   CORE <- H9C2_CONTRAST_ORDER # Disease-first
 
-  fgsea_all <- readr::read_csv(
-    here::here("04_Figures", "shared", "c_data", "fgsea_tstat_all_h9c2.csv"),
-    show_col_types = FALSE
-  )
+  fgsea_all <- load_fgsea_cache()
 
   per_contrast <- function(ctr) {
     significant_pathways(fgsea_all, ctr) |>

@@ -20,7 +20,7 @@ build_venn_panels <- function() {
   names(SET_COLORS) <- names(SET_CONTRASTS)
 
   # load long DEP table, keep the 3 contrasts
-  comb <- read_csv(P05$comb, show_col_types = FALSE) |>
+  comb <- load_dep_long() |>
     filter(contrast %in% SET_CONTRASTS, !is.na(pi_score)) |>
     mutate(set = names(SET_CONTRASTS)[match(contrast, SET_CONTRASTS)])
 

@@ -10,7 +10,7 @@ source(file.path(fns, "01_style_palettes_theme.R"))
 source(file.path(fns, "02_data_paths_and_loaders.R"))
 source(file.path(fns, "06_supplementary_workbook.R"))
 source(file.path(fns, "08_composite_layout.R"))
-pacman::p_load(limma, dplyr, tidyr, tibble, purrr, patchwork)
+pacman::p_load(limma, fgsea, dplyr, tidyr, tibble, purrr, patchwork, scales)
 
 BASE <- here::here("04_Figures", "test", "pilot_reversal")
 for (f in list.files(file.path(BASE, "a_script", "panels"), full.names = TRUE)) source(f)
@@ -102,10 +102,53 @@ prot <- comb |>
     normalized = pi_score_CTLvPHE_MITO >= H9C2_PI_THRESH
   )
 
+# --- fry mountain: disease sets ranked by the Rescue t (transplant under stress) ---
+cm_r <- makeContrasts("PHE_Mito - PHE", levels = design)
+fry_rescue <- function(idx, expected) {
+  fr <- fry(expr, idx, design, contrast = cm_r[, 1], block = rep_block, correlation = set_rho)
+  tibble(dir = fr$Direction[1], fdr = fdr_col(fr, rownames(fr))[1], n = length(idx), consistent = fr$Direction[1] == expected)
+}
+fry_up <- fry_rescue(idx_sig$`disease-up`, "Down")
+fry_dn <- fry_rescue(idx_sig$`disease-down`, "Up")
+
+up_ids <- comb$uniprot_id[comb$sig_pi_CTLvPHE == 1]
+dn_ids <- comb$uniprot_id[comb$sig_pi_CTLvPHE == -1]
+t_rank <- comb |>
+  filter(!is.na(t_PHEvPHE_MITO)) |>
+  transmute(uniprot_id, gene, t_rescue = t_PHEvPHE_MITO, in_up = uniprot_id %in% up_ids, in_down = uniprot_id %in% dn_ids) |>
+  arrange(desc(t_rescue)) |>
+  mutate(rank = dplyr::row_number(), es_up = running_es(t_rescue, in_up), es_down = running_es(t_rescue, in_down))
+n_all <- nrow(t_rank)
+circ_r <- cor(comb$t_CTLvPHE, comb$t_PHEvPHE_MITO, use = "complete.obs")
+
+pw_flat <- unlist(unname(readRDS(here::here("04_Figures", "shared", "c_data", "rat_gene_sets.rds"))), recursive = FALSE)
+universe <- unique(comb$gene[!is.na(comb$gene)])
+run_ora <- function(g) {
+  if (length(g) < 5) {
+    return(tibble())
+  }
+  fora(pathways = pw_flat, genes = unique(g), universe = universe, minSize = 10, maxSize = 500) |>
+    as_tibble() |>
+    filter(padj < 0.1) |>
+    arrange(padj) |>
+    mutate(.key = .pretty_pw(pathway)) |>
+    distinct(.key, .keep_all = TRUE) |>
+    select(-.key)
+}
+# ORA characterises the broader disease-responsive reversal (Disease p<0.05), since
+# the strict Pi signature is too small to over-represent; the fry test above keeps Pi.
+broad <- comb |> filter(P.Value_CTLvPHE < 0.05, !is.na(t_PHEvPHE_MITO))
+ora_up <- run_ora(broad$gene[broad$logFC_CTLvPHE > 0 & broad$t_PHEvPHE_MITO < 0])
+ora_dn <- run_ora(broad$gene[broad$logFC_CTLvPHE < 0 & broad$t_PHEvPHE_MITO > 0])
+
 pa <- build_signature_reversal(set_rev)
 pb <- build_pca_trajectory(scores, centroids, var_exp, dist_stat)
 pc_panel <- build_return_key(prot)
 pd <- build_interaction_null(comb)
+mountain <- build_fry_mountain(t_rank, fry_up, fry_dn, ora_up, ora_dn, circ_r, n_all)
+ggplot2::ggsave(file.path(RPT, "PILOT_reversal_fry.png"), mountain,
+  width = 220, height = 150, units = "mm", dpi = 300, limitsize = FALSE
+)
 
 fig <- (add_tag(pa$plot, "A") | add_tag(pb$plot, "B")) /
   (add_tag(pc_panel$plot, "C") | add_tag(pd$plot, "D"))

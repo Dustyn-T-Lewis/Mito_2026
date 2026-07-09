@@ -1,13 +1,5 @@
 # PCA scores + PERMANOVA stats for F01 panel A.
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(tibble)
-  library(readr)
-  library(ggplot2)
-  library(vegan)
-  library(patchwork)
-})
+pacman::p_load(dplyr, tidyr, tibble, readr, ggplot2, vegan, patchwork)
 source(here::here("04_Figures", "functions", "F01-F03_data_paths_and_loaders.R"))
 source(here::here("04_Figures", "F01_Proteome_Overview", "a_script", "helpers", "F01_pca_stats.R"))
 

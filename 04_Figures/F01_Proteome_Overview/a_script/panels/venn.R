@@ -1,14 +1,7 @@
 # DEP-overlap Euler diagram + direction strip for F01 panels D and E.
 # build_venn_panels() returns list(venn, strip, membership, region_counts, fit_stats).
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(tibble)
-  library(readr)
-  library(ggplot2)
-  library(eulerr)
-})
+pacman::p_load(dplyr, tidyr, tibble, readr, ggplot2, eulerr)
 
 build_venn_panels <- function() {
   SET_CONTRASTS <- c(

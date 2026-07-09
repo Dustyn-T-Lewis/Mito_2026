@@ -21,7 +21,7 @@ execute:
 ```{r}
 #| label: setup
 #| include: false
-library(here)
+pacman::p_load(here)
 knitr::opts_knit$set(root.dir = here::here())
 ```
 
@@ -41,18 +41,21 @@ supplies the four-level `Group` factor; `Replicate` is a fully-crossed block
 
 ```{r}
 #| label: load
-library(proteoDA); library(readxl); library(readr); library(dplyr)
-library(tidyr); library(stringr)
+pacman::p_load(proteoDA, readxl, readr, dplyr, tidyr, stringr)
 
-group_levels   <- c("Ctl", "Mito", "PHE", "PHE_Mito")
-annot_cols_raw <- c("Protein.Group", "Protein.Names", "Genes",
-                    "First.Protein.Description", "N.Sequences", "N.Proteotypic.Sequences")
+group_levels <- c("Ctl", "Mito", "PHE", "PHE_Mito")
+annot_cols_raw <- c(
+  "Protein.Group", "Protein.Names", "Genes",
+  "First.Protein.Description", "N.Sequences", "N.Proteotypic.Sequences"
+)
 
 raw <- read_excel(here("00_input", "H9c2_raw.xlsx"))
 annotation <- raw[, annot_cols_raw] |>
-  rename(uniprot_id = `Protein.Group`, protein = `Protein.Names`, gene = `Genes`,
-         description = `First.Protein.Description`, n_seq = `N.Sequences`,
-         n_proteotypic = `N.Proteotypic.Sequences`)
+  rename(
+    uniprot_id = `Protein.Group`, protein = `Protein.Names`, gene = `Genes`,
+    description = `First.Protein.Description`, n_seq = `N.Sequences`,
+    n_proteotypic = `N.Proteotypic.Sequences`
+  )
 na_gene <- is.na(annotation$gene) | annotation$gene == ""
 annotation$gene[na_gene] <- annotation$uniprot_id[na_gene]
 intensity <- raw[, setdiff(names(raw), annot_cols_raw)]
@@ -67,8 +70,8 @@ intensity <- intensity[, metadata$Col_ID]
 n_raw <- nrow(annotation)
 
 c(proteins = n_raw, samples = ncol(intensity))
-table(metadata$group)                         # 2x2 design, six per group
-table(metadata$group, metadata$Replicate)     # every replicate appears once in every group
+table(metadata$group) # 2x2 design, six per group
+table(metadata$group, metadata$Replicate) # every replicate appears once in every group
 ```
 
 # Step 1: remove culture contaminants {#sec-contaminants}
@@ -81,19 +84,20 @@ proteins that match real H9c2 orthologues (actin, GAPDH, tubulin):
 
 ```{r}
 #| label: classifier
-hao_hdr  <- grep("^>", readLines(here("00_input", "hao_cellculture_contaminants.fasta"), warn = FALSE), value = TRUE)
-bovine   <- toupper(na.omit(str_match(hao_hdr, "GN=([^ ]+)")[, 2][
-              grepl("Bos taurus", str_match(hao_hdr, "OS=(.*?) OX=")[, 2])]))
+hao_hdr <- grep("^>", readLines(here("00_input", "hao_cellculture_contaminants.fasta"), warn = FALSE), value = TRUE)
+bovine <- toupper(na.omit(str_match(hao_hdr, "GN=([^ ]+)")[, 2][
+  grepl("Bos taurus", str_match(hao_hdr, "OS=(.*?) OX=")[, 2])
+]))
 secreted <- toupper(readLines(here("00_input", "hpa_secreted_to_blood.txt"), warn = FALSE))
-serum    <- sort(intersect(unique(bovine), secreted))
+serum <- sort(intersect(unique(bovine), secreted))
 
 is_keratin <- grepl("^Krt[0-9]|^Krtap", annotation$gene, ignore.case = TRUE) |
-              grepl("^Keratin", annotation$description, ignore.case = TRUE)
-is_serum   <- toupper(annotation$gene) %in% serum & !is_keratin
-reason     <- ifelse(is_keratin, "keratin", ifelse(is_serum, "FBS serum (bovine plasma)", NA_character_))
+  grepl("^Keratin", annotation$description, ignore.case = TRUE)
+is_serum <- toupper(annotation$gene) %in% serum & !is_keratin
+reason <- ifelse(is_keratin, "keratin", ifelse(is_serum, "FBS serum (bovine plasma)", NA_character_))
 is_contaminant <- is_keratin | is_serum
 
-table(reason)                                 # keratin vs FBS serum flagged
+table(reason) # keratin vs FBS serum flagged
 ```
 
 Removal is plain subsetting, applied to `annotation` and `intensity` together so
@@ -102,11 +106,14 @@ they stay aligned. Each step is logged:
 ```{r}
 #| label: apply-contaminants
 flog <- tibble(step = "Raw input", n_after = n_raw, n_removed = NA_integer_)
-flog <- bind_rows(flog, tibble(step = "Contaminant removal (keratin + FBS serum)",
-                               n_after = sum(!is_contaminant), n_removed = sum(is_contaminant)))
+flog <- bind_rows(flog, tibble(
+  step = "Contaminant removal (keratin + FBS serum)",
+  n_after = sum(!is_contaminant), n_removed = sum(is_contaminant)
+))
 removed_contam <- annotation[is_contaminant, c("uniprot_id", "gene", "description")] |>
   mutate(reason = reason[is_contaminant])
-annotation <- annotation[!is_contaminant, ]; intensity <- intensity[!is_contaminant, ]
+annotation <- annotation[!is_contaminant, ]
+intensity <- intensity[!is_contaminant, ]
 
 head(removed_contam, 8)
 ```
@@ -122,15 +129,18 @@ since DIA-NN protein groups are already unique:
 
 ```{r}
 #| label: build-dalist
-int_mat  <- as.data.frame(data.matrix(intensity)); rownames(int_mat) <- annotation$uniprot_id
-annot_df <- as.data.frame(annotation);             rownames(annot_df) <- annotation$uniprot_id
-meta_df  <- as.data.frame(metadata);               rownames(meta_df)  <- metadata$Col_ID
+int_mat <- as.data.frame(data.matrix(intensity))
+rownames(int_mat) <- annotation$uniprot_id
+annot_df <- as.data.frame(annotation)
+rownames(annot_df) <- annotation$uniprot_id
+meta_df <- as.data.frame(metadata)
+rownames(meta_df) <- metadata$Col_ID
 
 dal <- zero_to_missing(DAList(data = int_mat, annotation = annot_df, metadata = meta_df))
 
-identical(rownames(dal$data), rownames(dal$annotation))   # proteins aligned
-identical(colnames(dal$data), rownames(dal$metadata))     # samples aligned
-round(100 * mean(is.na(dal$data)), 1)                      # percent missing after zero -> NA
+identical(rownames(dal$data), rownames(dal$annotation)) # proteins aligned
+identical(colnames(dal$data), rownames(dal$metadata)) # samples aligned
+round(100 * mean(is.na(dal$data)), 1) # percent missing after zero -> NA
 ```
 
 # Step 2: drop barely-detected proteins {#sec-missingness}
@@ -143,10 +153,12 @@ present somewhere, even if absent elsewhere:
 #| label: missingness
 n0 <- nrow(dal$data)
 dal <- filter_proteins_by_group(dal, min_reps = 4, min_groups = 1, grouping_column = "group")
-flog <- bind_rows(flog, tibble(step = "Missingness (>=4 in >=1 group)",
-                               n_after = nrow(dal$data), n_removed = n0 - nrow(dal$data)))
+flog <- bind_rows(flog, tibble(
+  step = "Missingness (>=4 in >=1 group)",
+  n_after = nrow(dal$data), n_removed = n0 - nrow(dal$data)
+))
 flog <- flog |> mutate(pct_of_raw = round(n_after / n_raw * 100, 1))
-flog                                          # full cascade; Mito has far less missingness than a biopsy
+flog # full cascade; Mito has far less missingness than a biopsy
 ```
 
 # Step 3: detect outlier samples {#sec-outliers}
@@ -158,21 +170,23 @@ agreement. With a balanced 6-per-group design, none are flagged:
 ```{r}
 #| label: outliers
 pct_missing <- colMeans(is.na(dal$data)) * 100
-miss_flag <- pct_missing > quantile(pct_missing, 0.75) + 1.5 * IQR(pct_missing)   # Tukey upper fence
+miss_flag <- pct_missing > quantile(pct_missing, 0.75) + 1.5 * IQR(pct_missing) # Tukey upper fence
 sm <- apply(log2(dal$data), 2, median, na.rm = TRUE)
-mad_flag <- abs(sm - median(sm)) > 3 * mad(sm)                                    # Hampel 3xMAD
+mad_flag <- abs(sm - median(sm)) > 3 * mad(sm) # Hampel 3xMAD
 pc3 <- prcomp(t(log2(dal$data[rowSums(is.na(dal$data)) == 0, ])), center = TRUE, scale. = TRUE)$x[, 1:3]
-pca_flag <- mahalanobis(pc3, colMeans(pc3), cov(pc3)) > qchisq(0.99, df = 3)      # chi-sq tail on PC1-3
+pca_flag <- mahalanobis(pc3, colMeans(pc3), cov(pc3)) > qchisq(0.99, df = 3) # chi-sq tail on PC1-3
 cmx <- cor(log2(dal$data), use = "pairwise.complete.obs")
-mc  <- apply(cmx, 2, function(x) median(x[x < 1], na.rm = TRUE))                  # x<1 drops self-correlation
+mc <- apply(cmx, 2, function(x) median(x[x < 1], na.rm = TRUE)) # x<1 drops self-correlation
 cor_flag <- mc < median(mc) - 3 * mad(mc)
-outlier_diag <- tibble(Col_ID = colnames(dal$data), miss_flag = miss_flag[Col_ID], mad_flag = mad_flag[Col_ID],
-                       pca_flag = pca_flag[Col_ID], cor_flag = cor_flag[Col_ID]) |>
+outlier_diag <- tibble(
+  Col_ID = colnames(dal$data), miss_flag = miss_flag[Col_ID], mad_flag = mad_flag[Col_ID],
+  pca_flag = pca_flag[Col_ID], cor_flag = cor_flag[Col_ID]
+) |>
   mutate(n_flags = miss_flag + mad_flag + pca_flag + cor_flag, consensus_outlier = n_flags >= 3)
 outlier_ids <- outlier_diag$Col_ID[outlier_diag$consensus_outlier]
 
 head(outlier_diag[order(-outlier_diag$n_flags), ], 6)
-outlier_ids                                   # character(0) — none flagged
+outlier_ids # character(0) — none flagged
 ```
 
 ```{r}
@@ -193,9 +207,11 @@ names(dal$tags)
 dim(dal$data)
 
 committed <- readRDS(here("01_Filtering", "c_data", "DAList_filtered.rds"))
-c(same_dim      = identical(dim(dal$data), dim(committed$data)),
+c(
+  same_dim = identical(dim(dal$data), dim(committed$data)),
   same_proteins = identical(sort(rownames(dal$data)), sort(rownames(committed$data))),
-  same_samples  = identical(sort(colnames(dal$data)), sort(colnames(committed$data))))
+  same_samples = identical(sort(colnames(dal$data)), sort(colnames(committed$data)))
+)
 ```
 
 The side-effecting script additionally writes `filtering_report.xlsx` (filter

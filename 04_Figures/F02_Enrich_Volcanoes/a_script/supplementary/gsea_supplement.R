@@ -4,12 +4,7 @@
 # databases sit back to back, named inside their bars with FDR at each tip. The
 # leading-edge genes behind every shown pathway append to the F02 workbook.
 
-library(here)
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(ggplot2)
-  library(patchwork)
-})
+pacman::p_load(here, dplyr, ggplot2, patchwork)
 fns <- here::here("04_Figures", "functions")
 source(file.path(fns, "F01-F03_data_paths_and_loaders.R"))
 source(file.path(fns, "F01-F03_pathway_enrichment_dedup_ora.R"))
@@ -123,7 +118,8 @@ append_workbook(
   )
 )
 
+message(sprintf("F02 GSEA supplement: %d figures, %d shown pathways", length(CONTRASTS), nrow(overlap)))
+
+# Optional local Box mirror (author's machine only; no-ops elsewhere).
 mirror_to_box(list.files(PNG, "^SUPP_F02_gsea_.*\\.png$", full.names = TRUE), "02_Figures/F02_Enrich_Volcanoes/supp")
 mirror_to_box(file.path(DAT, "F02_supplementary.xlsx"), "03_Supplementary")
-
-message(sprintf("F02 GSEA supplement: %d figures, %d shown pathways", length(CONTRASTS), nrow(overlap)))

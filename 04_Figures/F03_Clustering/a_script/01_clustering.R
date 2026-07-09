@@ -10,14 +10,7 @@
 # At n=6/group only a few eigengenes clear FDR; WGCNA is the descriptive scaffold and
 # confirmatory significance is carried at the protein level (F02).
 
-library(here)
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(tibble)
-  library(ggplot2)
-  library(patchwork)
-})
+pacman::p_load(here, dplyr, tidyr, tibble, ggplot2, patchwork)
 fns <- here::here("04_Figures", "functions")
 source(file.path(fns, "F01-F03_style_palettes_theme.R"))
 source(file.path(fns, "F01-F03_data_paths_and_loaders.R"))
@@ -237,11 +230,12 @@ build_workbook(
   )
 )
 
-mirror_to_box(file.path(MAIN_PNG, "MAIN_F03_clustering.png"), "02_Figures/F03_Clustering")
-mirror_to_box(list.files(SUPP_PNG, "^SUPP_F03_.*\\.png$", full.names = TRUE), "02_Figures/F03_Clustering/supp")
-mirror_to_box(file.path(DAT, "F03_supplementary.xlsx"), "03_Supplementary")
-
 message(sprintf("F03 built | responsive modules: %s", paste(responsive_modules, collapse = ", ")))
 print(mod_stats |>
   filter(module %in% responsive_modules, contrast %in% c("Disease", "Transplant", "Rescue")) |>
   arrange(module, contrast))
+
+# Optional local Box mirror (author's machine only; no-ops elsewhere).
+mirror_to_box(file.path(MAIN_PNG, "MAIN_F03_clustering.png"), "02_Figures/F03_Clustering")
+mirror_to_box(list.files(SUPP_PNG, "^SUPP_F03_.*\\.png$", full.names = TRUE), "02_Figures/F03_Clustering/supp")
+mirror_to_box(file.path(DAT, "F03_supplementary.xlsx"), "03_Supplementary")

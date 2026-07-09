@@ -5,11 +5,7 @@
 #   Input : 03_DEP/a_non_imputed/c_data/combined_results_pi.csv, shared/c_data/rat_gene_sets.rds
 #   Output: 04_Figures/shared/c_data/fgsea_tstat_all_h9c2.csv
 
-suppressPackageStartupMessages({
-  library(readr)
-  library(dplyr)
-  library(tidyr)
-})
+pacman::p_load(readr, dplyr, tidyr)
 source(here::here("04_Figures", "shared", "a_script", "00_gene_set_helpers.R"))
 
 CONTRASTS <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO", "Interaction", "MITOvPHE_MITO")

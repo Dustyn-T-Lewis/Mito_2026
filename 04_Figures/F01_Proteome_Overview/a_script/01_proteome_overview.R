@@ -4,10 +4,7 @@
 # the 6-panel composite, and writes one supplementary workbook holding the data
 # behind every panel (PCA scores, DE tables, overlap membership, pathway counts).
 
-suppressPackageStartupMessages({
-  library(here)
-  library(dplyr)
-})
+pacman::p_load(here, dplyr)
 
 source(here::here("04_Figures", "functions", "F01-F03_composite_layout.R"))
 source(here::here("04_Figures", "functions", "F01-F03_data_paths_and_loaders.R"))
@@ -112,7 +109,6 @@ fig <- pca + dep + eff + venn_gg + strip + pw +
   )
 
 composite <- save_composite(fig, BASE, "MAIN_F01_proteome_overview", width_mm = PANEL_MD, height_mm = 150)
-mirror_to_box(composite, "02_Figures/F01_Proteome_Overview")
 
 # Supplementary workbook — the data behind each panel, one sheet group per panel.
 CORE <- H9C2_CONTRAST_ORDER
@@ -201,3 +197,6 @@ build_workbook(
 )
 
 message("F01 proteome overview built")
+
+# Optional local Box mirror (author's machine only; no-ops elsewhere).
+mirror_to_box(composite, "02_Figures/F01_Proteome_Overview")

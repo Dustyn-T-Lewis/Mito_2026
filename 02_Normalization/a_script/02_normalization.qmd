@@ -21,7 +21,7 @@ execute:
 ```{r}
 #| label: setup
 #| include: false
-library(here)
+pacman::p_load(here)
 knitr::opts_knit$set(root.dir = here::here())
 ```
 
@@ -37,7 +37,7 @@ Stage 01 hands off a filtered, un-normalized object that still carries its
 
 ```{r}
 #| label: load
-library(proteoDA)
+pacman::p_load(proteoDA)
 dal <- readRDS(here("01_Filtering", "c_data", "DAList_filtered.rds"))
 miss_before <- round(100 * mean(is.na(dal$data)), 1)
 dim(dal$data)
@@ -108,7 +108,7 @@ the seed is fixed:
 ```{r}
 #| label: imp4p
 #| cache: true
-library(imp4p)
+pacman::p_load(imp4p)
 set.seed(42)
 mat <- as.matrix(dal$data)
 cond <- factor(dal$metadata$group[match(colnames(mat), dal$metadata$Col_ID)])
@@ -132,8 +132,7 @@ to a left-censored QRILC draw:
 
 ```{r}
 #| label: mscoreutils
-library(MsCoreUtils)
-library(imputeLCMD)
+pacman::p_load(MsCoreUtils, imputeLCMD)
 set.seed(42)
 randna <- as.logical(model.Selector(mat)[[1]]) # TRUE = MAR feature
 ms_mat <- impute_matrix(mat, method = "mixed", randna = randna, mar = "knn", mnar = "QRILC")

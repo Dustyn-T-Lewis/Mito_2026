@@ -5,11 +5,7 @@
 # inside the bars with FDR at each tip; the overlap genes behind every shown pathway go to
 # the supplementary workbook.
 
-library(here)
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(ggplot2)
-})
+pacman::p_load(here, dplyr, ggplot2)
 fns <- here::here("04_Figures", "functions")
 source(file.path(fns, "F01-F03_data_paths_and_loaders.R"))
 source(file.path(fns, "F01-F03_pathway_enrichment_dedup_ora.R"))
@@ -142,7 +138,8 @@ append_workbook(
   ))
 )
 
+message(sprintf("F01 ORA supplement: 1 figure, %d shown pathways", nrow(overlap)))
+
+# Optional local Box mirror (author's machine only; no-ops elsewhere).
 mirror_to_box(file.path(PNG, "SUPP_F01_ora.png"), "02_Figures/F01_Proteome_Overview/supp")
 mirror_to_box(file.path(DAT, "F01_supplementary.xlsx"), "03_Supplementary")
-
-message(sprintf("F01 ORA supplement: 1 figure, %d shown pathways", nrow(overlap)))

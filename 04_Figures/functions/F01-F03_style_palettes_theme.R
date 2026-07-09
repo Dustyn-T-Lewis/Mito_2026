@@ -1,9 +1,7 @@
 # Palettes, theme, and sizing helpers. Groups, contrasts, and thresholds live
 # here as the figure stage's source of truth; the 00-03 scripts carry their own.
 
-library(ggplot2)
-library(scales)
-library(grid)
+pacman::p_load(ggplot2, scales, grid)
 
 # Groups, contrasts, palettes, thresholds (match the 00-03 scripts).
 H9C2_GROUP_LEVELS <- c("Ctl", "Mito", "PHE", "PHE_Mito")

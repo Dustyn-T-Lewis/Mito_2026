@@ -109,7 +109,6 @@ fig <- pca + dep + eff + venn_gg + strip + pw +
   )
 
 composite <- save_composite(fig, BASE, "MAIN_F01_proteome_overview", width_mm = PANEL_MD, height_mm = 150)
-mirror_to_box(composite, "02_Figures/F01_Proteome_Overview")
 
 # Supplementary workbook — the data behind each panel, one sheet group per panel.
 CORE <- H9C2_CONTRAST_ORDER
@@ -198,3 +197,6 @@ build_workbook(
 )
 
 message("F01 proteome overview built")
+
+# Optional local Box mirror (author's machine only; no-ops elsewhere).
+mirror_to_box(composite, "02_Figures/F01_Proteome_Overview")

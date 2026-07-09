@@ -230,11 +230,12 @@ build_workbook(
   )
 )
 
-mirror_to_box(file.path(MAIN_PNG, "MAIN_F03_clustering.png"), "02_Figures/F03_Clustering")
-mirror_to_box(list.files(SUPP_PNG, "^SUPP_F03_.*\\.png$", full.names = TRUE), "02_Figures/F03_Clustering/supp")
-mirror_to_box(file.path(DAT, "F03_supplementary.xlsx"), "03_Supplementary")
-
 message(sprintf("F03 built | responsive modules: %s", paste(responsive_modules, collapse = ", ")))
 print(mod_stats |>
   filter(module %in% responsive_modules, contrast %in% c("Disease", "Transplant", "Rescue")) |>
   arrange(module, contrast))
+
+# Optional local Box mirror (author's machine only; no-ops elsewhere).
+mirror_to_box(file.path(MAIN_PNG, "MAIN_F03_clustering.png"), "02_Figures/F03_Clustering")
+mirror_to_box(list.files(SUPP_PNG, "^SUPP_F03_.*\\.png$", full.names = TRUE), "02_Figures/F03_Clustering/supp")
+mirror_to_box(file.path(DAT, "F03_supplementary.xlsx"), "03_Supplementary")

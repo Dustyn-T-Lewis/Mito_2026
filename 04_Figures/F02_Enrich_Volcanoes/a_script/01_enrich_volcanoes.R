@@ -189,6 +189,7 @@ build_workbook(
   )
 )
 
-mirror_to_box(file.path(RPT_PNG, "MAIN_F02_enrich_volcanoes.png"), "02_Figures/F02_Enrich_Volcanoes")
-
 message(sprintf("F02: %d ring panels + composite -> b_reports", nrow(contrasts)))
+
+# Optional local Box mirror (author's machine only; no-ops elsewhere).
+mirror_to_box(file.path(RPT_PNG, "MAIN_F02_enrich_volcanoes.png"), "02_Figures/F02_Enrich_Volcanoes")

@@ -18,8 +18,6 @@ clear_dir <- function(d) {
 clear_dir(data_dir)
 clear_dir(report_dir)
 
-#### Load matrix + metadata ####
-
 raw <- read_excel(here("00_input", "H9c2_raw.xlsx"))
 annotation <- raw[, annot_cols_raw] |>
   rename(
@@ -40,8 +38,6 @@ rownames(metadata) <- metadata$Col_ID
 stopifnot(setequal(colnames(intensity), metadata$Col_ID))
 intensity <- intensity[, metadata$Col_ID]
 n_raw <- nrow(annotation)
-
-#### Contaminant removal ####
 
 # FBS serum panel is reference-derived, not hand-typed: bovine entries in the Hao
 # cell-culture FASTA (Frankenfield 2022) intersected with HPA "Secreted to blood".
@@ -71,8 +67,6 @@ annotation <- annotation[!is_contaminant, ]
 intensity <- intensity[!is_contaminant, ]
 cat(sprintf("Contaminants removed: %d keratin + %d FBS serum\n", sum(is_keratin), sum(is_serum)))
 
-#### Dedup + build DAList ####
-
 if (any(duplicated(annotation$uniprot_id))) { # guard only; DIA-NN protein groups are unique
   rm_mean <- rowMeans(data.matrix(intensity), na.rm = TRUE)
   keep_idx <- tibble(i = seq_along(rm_mean), id = annotation$uniprot_id, m = rm_mean) |>
@@ -91,8 +85,6 @@ meta_df <- as.data.frame(metadata)
 rownames(meta_df) <- metadata$Col_ID
 dal <- zero_to_missing(DAList(data = int_mat, annotation = annot_df, metadata = meta_df)) # DIA-NN 0 = non-detection
 
-#### Missingness filter ####
-
 n0 <- nrow(dal$data)
 # keep a protein quantified in >= 4 of 6 reps in at least one group (detectable somewhere)
 dal <- filter_proteins_by_group(dal, min_reps = 4, min_groups = 1, grouping_column = "group")
@@ -101,8 +93,6 @@ flog <- bind_rows(flog, tibble(
   n_after = nrow(dal$data), n_removed = n0 - nrow(dal$data)
 ))
 flog <- flog |> mutate(pct_of_raw = round(n_after / n_raw * 100, 1))
-
-#### Outlier consensus ####
 
 # Four independent QC heuristics; a sample is dropped only on >= 3/4 agreement.
 pct_missing <- colMeans(is.na(dal$data)) * 100
@@ -122,8 +112,6 @@ outlier_diag <- tibble(
 outlier_ids <- outlier_diag$Col_ID[outlier_diag$consensus_outlier]
 cat(sprintf("Outliers (>=3/4): %s\n", if (length(outlier_ids)) paste(outlier_ids, collapse = ", ") else "none"))
 if (length(outlier_ids)) dal <- filter_samples(dal, !(Col_ID %in% outlier_ids))
-
-#### Export ####
 
 saveRDS(dal, file.path(data_dir, "DAList_filtered.rds")) # un-normalized handoff to Stage 02
 write.xlsx(

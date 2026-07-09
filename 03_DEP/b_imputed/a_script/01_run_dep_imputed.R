@@ -18,7 +18,6 @@ methods <- c(
   missforest = "DAList_imputed_missforest.rds"
 )
 
-#### DEP per imputed matrix ####
 # Identical limma workflow to the primary arm, run once per imputed matrix.
 
 runs <- imap(methods, function(rds, m) {
@@ -72,7 +71,6 @@ runs <- imap(methods, function(rds, m) {
   res
 })
 
-#### logFC concordance vs non-imputed ####
 # Spearman per contrast against the primary fit; high rho = imputation didn't distort effects.
 
 ni_file <- here("03_DEP", "a_non_imputed", "c_data", "combined_results_pi.csv")
@@ -94,7 +92,6 @@ if (file.exists(ni_file)) {
   print(as.data.frame(cmp))
 }
 
-#### DEP membership overlap vs non-imputed ####
 # Per method x contrast: Pi-DEP count, overlap with the non-imputed (reported) DEPs, Jaccard,
 # and the median pre-imputation missingness of the DEPs each method adds beyond non-imputed.
 # A high added-DEP missingness fraction flags imputation-manufactured (artifact) calls.

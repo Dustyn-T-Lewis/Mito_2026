@@ -4,12 +4,7 @@
 # databases sit back to back, named inside their bars with FDR at each tip. The
 # leading-edge genes behind every shown pathway append to the F02 workbook.
 
-library(here)
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(ggplot2)
-  library(patchwork)
-})
+pacman::p_load(here, dplyr, ggplot2, patchwork)
 fns <- here::here("04_Figures", "functions")
 source(file.path(fns, "F01-F03_data_paths_and_loaders.R"))
 source(file.path(fns, "F01-F03_pathway_enrichment_dedup_ora.R"))

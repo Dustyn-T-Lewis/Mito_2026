@@ -4,10 +4,7 @@
 # figure, and what its rows/columns contain. Result tables live only in the
 # workbook (no redundant loose CSVs). This builder never deletes anything.
 
-suppressPackageStartupMessages({
-  library(openxlsx)
-  library(readr)
-})
+pacman::p_load(openxlsx, readr)
 
 `%||%` <- function(a, b) if (is.null(a) || length(a) == 0 || (length(a) == 1 && is.na(a))) b else a
 

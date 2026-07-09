@@ -2,11 +2,7 @@
 # right-to-left protein-count bar, its four 2x2 contrast effects (eigengene shift in SD
 # units, FDR/nominal significance), the member-protein z trajectory, and its top-5 ORA
 # pathways on an independent -log10 FDR axis. panel_module_card assembles the row.
-suppressPackageStartupMessages({
-  library(ggplot2)
-  library(dplyr)
-  library(patchwork)
-})
+pacman::p_load(ggplot2, dplyr, patchwork)
 
 HEAT_CONTRASTS <- c("Disease", "Transplant", "Rescue", "Interaction")
 

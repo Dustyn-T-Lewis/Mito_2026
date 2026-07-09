@@ -13,12 +13,7 @@
 #   - single block (maxBlockSize > n proteins): global, deterministic module detection.
 # Preservation (Zsummary) of the full-cohort modules is tested in each condition against
 # the control reference (Langfelder 2011): the n=6-robust rescue statistic, also cached.
-suppressPackageStartupMessages({
-  library(WGCNA)
-  library(dplyr)
-  library(tibble)
-  library(here)
-})
+pacman::p_load(WGCNA, dplyr, tibble, here)
 WGCNA::disableWGCNAThreads() # single-threaded for a reproducible result
 set.seed(42)
 RSQ_CUT <- 0.85

@@ -11,12 +11,7 @@
 #     Reported for completeness only; competitive tests are anti-conservative on large
 #     co-expression modules (the "background" is itself structured), so fry is the gate.
 # At n=6/group these are exploratory; confirmatory signal is the protein DE in a_/b_.
-suppressPackageStartupMessages({
-  library(here)
-  library(limma)
-  library(dplyr)
-  library(tibble)
-})
+pacman::p_load(here, limma, dplyr, tibble)
 
 GROUP_LEVELS <- c("Ctl", "Mito", "PHE", "PHE_Mito")
 CONTRASTS <- c(

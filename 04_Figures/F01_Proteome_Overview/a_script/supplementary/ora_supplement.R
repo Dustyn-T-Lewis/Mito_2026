@@ -5,11 +5,7 @@
 # inside the bars with FDR at each tip; the overlap genes behind every shown pathway go to
 # the supplementary workbook.
 
-library(here)
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(ggplot2)
-})
+pacman::p_load(here, dplyr, ggplot2)
 fns <- here::here("04_Figures", "functions")
 source(file.path(fns, "F01-F03_data_paths_and_loaders.R"))
 source(file.path(fns, "F01-F03_pathway_enrichment_dedup_ora.R"))

@@ -1,10 +1,7 @@
 # Supplementary S1: network construction diagnostics. The scale-free fit justifies the
 # soft power (lowest power clearing R^2 >= 0.85), shown beside mean connectivity; the gene
 # dendrogram with the merged module colours shows the clustering the modules come from.
-suppressPackageStartupMessages({
-  library(ggplot2)
-  library(dplyr)
-})
+pacman::p_load(ggplot2, dplyr)
 
 panel_scale_free <- function(sft_df, chosen_power, rsq_cut = 0.85) {
   d <- sft_df |>

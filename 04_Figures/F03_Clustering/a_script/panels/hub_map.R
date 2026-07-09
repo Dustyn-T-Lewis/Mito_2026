@@ -1,11 +1,7 @@
 # Module hub map: every member placed by kME (hubness) vs peak-contrast log2FC.
 # No cutoff decides what shows; leading hubs are labelled. module_hub_nodes feeds
 # the workbook's top-hub table.
-suppressPackageStartupMessages({
-  library(ggplot2)
-  library(dplyr)
-  library(tibble)
-})
+pacman::p_load(ggplot2, dplyr, tibble)
 
 # Top hubs by kME (real rat symbols); feeds the workbook top-hub table.
 module_hub_nodes <- function(m, w, n_hub = 7L) {

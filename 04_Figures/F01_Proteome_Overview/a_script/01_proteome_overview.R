@@ -4,10 +4,7 @@
 # the 6-panel composite, and writes one supplementary workbook holding the data
 # behind every panel (PCA scores, DE tables, overlap membership, pathway counts).
 
-suppressPackageStartupMessages({
-  library(here)
-  library(dplyr)
-})
+pacman::p_load(here, dplyr)
 
 source(here::here("04_Figures", "functions", "F01-F03_composite_layout.R"))
 source(here::here("04_Figures", "functions", "F01-F03_data_paths_and_loaders.R"))

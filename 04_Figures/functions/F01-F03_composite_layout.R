@@ -2,7 +2,7 @@
 # do not already provide.
 source(here::here("04_Figures", "functions", "F01-F03_style_palettes_theme.R"))
 
-library(patchwork)
+pacman::p_load(patchwork)
 
 # Panel letter is baked into the title (constant gap to the title text, so all
 # panels read uniformly) rather than a free-floating tag whose offset tracks

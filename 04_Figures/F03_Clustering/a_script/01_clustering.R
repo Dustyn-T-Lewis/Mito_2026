@@ -10,14 +10,7 @@
 # At n=6/group only a few eigengenes clear FDR; WGCNA is the descriptive scaffold and
 # confirmatory significance is carried at the protein level (F02).
 
-library(here)
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(tibble)
-  library(ggplot2)
-  library(patchwork)
-})
+pacman::p_load(here, dplyr, tidyr, tibble, ggplot2, patchwork)
 fns <- here::here("04_Figures", "functions")
 source(file.path(fns, "F01-F03_style_palettes_theme.R"))
 source(file.path(fns, "F01-F03_data_paths_and_loaders.R"))

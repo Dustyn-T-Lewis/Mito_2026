@@ -2,10 +2,7 @@
 # faceted by condition. A module that drops under PHE and climbs back under PHE+MitoTx is
 # the rescue signature. Z=10 (strong) and Z=2 (weak) guides; size is shown because small
 # modules score low by power alone (Langfelder 2011). Featured modules are labelled.
-suppressPackageStartupMessages({
-  library(ggplot2)
-  library(dplyr)
-})
+pacman::p_load(ggplot2, dplyr)
 
 panel_preservation <- function(preservation, featured) {
   pres <- preservation |>

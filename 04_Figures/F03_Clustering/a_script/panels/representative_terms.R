@@ -2,9 +2,7 @@
 # dedup; modules with nothing under FDR<0.10 get no term rather than a weak filler. A few
 # modules read better with a curated theme than their single top set (turquoise is
 # OXPHOS/energetics, not the lowest-scoring nucleobase-metabolism term).
-suppressPackageStartupMessages({
-  library(dplyr)
-})
+pacman::p_load(dplyr)
 
 MODULE_TERM_OVERRIDE <- c(turquoise = "OXPHOS / energy metabolism")
 

@@ -4,11 +4,7 @@
 # cache (NES arcs, deduped across the 5-DB lens). Individual rings go to
 # b_reports/panels; the four-ring composite to b_reports/main/png.
 
-suppressPackageStartupMessages({
-  library(here)
-  library(dplyr)
-  library(enrichVolcano)
-})
+pacman::p_load(here, dplyr, enrichVolcano)
 
 source(here::here("04_Figures", "functions", "F01-F03_data_paths_and_loaders.R"))
 source(here::here("04_Figures", "functions", "F01-F03_pathway_enrichment_dedup_ora.R"))

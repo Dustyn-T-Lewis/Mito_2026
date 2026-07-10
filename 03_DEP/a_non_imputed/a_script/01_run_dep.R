@@ -26,6 +26,7 @@ dal <- add_contrasts(dal, contrasts_vector = c(
   "CTLvPHE       = PHE - Ctl", # Disease: PHE stress remodelling
   "CTLvMITO      = Mito - Ctl", # Intervention: transplant alone
   "PHEvPHE_MITO  = PHE_Mito - PHE", # Rescue: transplant under stress
+  "CTLvPHE_MITO  = PHE_Mito - Ctl", # Recovery: confound-free reversal axis (residual disease vs Ctl)
   "Interaction   = (PHE_Mito - PHE) - (Mito - Ctl)", # Interaction: Rescue - Transplant
   "MITOvPHE_MITO = PHE_Mito - Mito" # Secondary: PHE effect in transplanted cells
 ))

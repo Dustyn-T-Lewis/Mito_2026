@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
-# F03 clustering figure. The WGCNA network and module statistics are built upstream in
-# 03_DEP/c_modules (00_build_wgcna.R + 01_module_stats.R); this script reads them and
+# F04 WGCNA figure. The network and module statistics are built by 00_build_wgcna.R and
+# 01_module_stats.R in this figure's a_script; this script reads their cache and
 # renders. Each module is a card: its 2x2 contrast effects (Disease/Transplant/Rescue/
 # Interaction eigengene shift in SD units, FDR and nominal significance) beside its top
 # ORA pathways. Design-responsive modules (nominal eigengene p <= 0.10 on Disease/
@@ -17,11 +17,11 @@ source(file.path(fns, "F01-F03_data_paths_and_loaders.R"))
 source(file.path(fns, "F01-F03_pathway_enrichment_dedup_ora.R"))
 source(file.path(fns, "F01-F03_supplementary_workbook.R"))
 source(file.path(fns, "F01-F03_composite_layout.R"))
-panels <- here::here("04_Figures", "F03_Clustering", "a_script", "panels")
+panels <- here::here("04_Figures", "F04_WGCNA", "a_script", "panels")
 for (f in list.files(panels, full.names = TRUE)) source(f)
 
-BASE <- here::here("04_Figures", "F03_Clustering")
-MOD <- here::here("03_DEP", "c_modules", "c_data")
+BASE <- here::here("04_Figures", "F04_WGCNA")
+MOD <- here::here("04_Figures", "F04_WGCNA", "c_data")
 MAIN_PNG <- file.path(BASE, "b_reports", "main", "png")
 SUPP_PNG <- file.path(BASE, "b_reports", "supp", "png")
 DAT <- file.path(BASE, "c_data")
@@ -32,7 +32,7 @@ PRIMARY_CONTRASTS <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO")
 cache <- file.path(MOD, "wgcna_network.rds")
 stats_cache <- file.path(MOD, "module_stats.rds")
 if (!file.exists(cache) || !file.exists(stats_cache)) {
-  stop("run 03_DEP/c_modules 00_build_wgcna.R then 01_module_stats.R first")
+  stop("run 00_build_wgcna.R then 01_module_stats.R (this figure's a_script) first")
 }
 w <- readRDS(cache)
 ms <- readRDS(stats_cache)
@@ -44,7 +44,7 @@ meta <- as_tibble(readRDS(P05$imp_rds)$metadata)
 expr <- as.matrix(readRDS(P05$imp_rds)$data)
 non_grey <- setdiff(sub("^ME", "", colnames(w$MEs)), "grey")
 
-# eigengene matrix kept for the group-mean trajectories (the tests live in c_modules)
+# eigengene matrix kept for the group-mean trajectories (the tests live in 01_module_stats.R)
 me <- as.matrix(w$MEs[, paste0("ME", non_grey), drop = FALSE])
 colnames(me) <- non_grey
 
@@ -136,13 +136,13 @@ module_figure <- function(mods, title) {
 fig <- module_figure(responsive_modules, sprintf(
   "Design-responsive modules  (min eigengene p ≤ %.2f over Disease/Transplant/Rescue)", P_NOMINAL
 ))
-ggsave(file.path(MAIN_PNG, "MAIN_F03_clustering.png"), fig,
+ggsave(file.path(MAIN_PNG, "MAIN_F04_wgcna.png"), fig,
   width = 290, height = 220, units = "mm", dpi = 300, limitsize = FALSE
 )
 
 # supplements: unresponsive modules, construction, preservation, hub map
 s_other <- module_figure(other_modules, "Modules without an eigengene response")
-ggsave(file.path(SUPP_PNG, "SUPP_F03_modules_other.png"), s_other,
+ggsave(file.path(SUPP_PNG, "SUPP_F04_modules_other.png"), s_other,
   width = 290, height = 205, units = "mm", dpi = 300, limitsize = FALSE
 )
 s_construction <- (panel_scale_free(w$sft_df, w$chosen_power) / panel_dendro(w$net) +
@@ -151,22 +151,22 @@ s_construction <- (panel_scale_free(w$sft_df, w$chosen_power) / panel_dendro(w$n
     title = "WGCNA network construction",
     theme = theme(plot.title = element_text(face = "bold", size = FIG_TITLE_SIZE, hjust = 0))
   )
-ggsave(file.path(SUPP_PNG, "SUPP_F03_construction.png"), s_construction,
+ggsave(file.path(SUPP_PNG, "SUPP_F04_construction.png"), s_construction,
   width = PANEL_MD, height = 150, units = "mm", dpi = 300
 )
 s_preservation <- panel_preservation(w$preservation, responsive_modules)
-ggsave(file.path(SUPP_PNG, "SUPP_F03_preservation.png"), s_preservation,
+ggsave(file.path(SUPP_PNG, "SUPP_F04_preservation.png"), s_preservation,
   width = PANEL_MD, height = 120, units = "mm", dpi = 300, limitsize = FALSE
 )
 s_hub_map <- panel_hub_map(responsive_modules, w, ab)
-ggsave(file.path(SUPP_PNG, "SUPP_F03_hub_map.png"), s_hub_map,
+ggsave(file.path(SUPP_PNG, "SUPP_F04_hub_map.png"), s_hub_map,
   width = PANEL_MD, height = 135, units = "mm", dpi = 300, limitsize = FALSE
 )
 
-# supplementary workbook: one sheet per figure component (set tests stay upstream in c_modules)
+# supplementary workbook: one sheet per figure component (set tests from 01_module_stats.R)
 build_workbook(
   file.path(DAT, "F03_supplementary.xlsx"),
-  figure_title = "F03: WGCNA module clustering and the mitochondrial-transplant rescue",
+  figure_title = "F04: WGCNA module clustering and the mitochondrial-transplant rescue",
   sheet_specs = list(
     list(
       name = "module_summary",
@@ -184,7 +184,7 @@ build_workbook(
       name = "eigengene_limma",
       df = transmute(mod_stats, module, contrast, delta_eig_sd = round(logFC, 3), p = signif(p, 3), fdr = signif(fdr, 3)),
       role = "Panels A / C eigengene response",
-      contents = "module x contrast eigengene shift in SD units, p, FDR (limma on eigengenes, paired Replicate block; from 03_DEP/c_modules)"
+      contents = "module x contrast eigengene shift in SD units, p, FDR (limma on eigengenes, paired Replicate block; from 01_module_stats.R)"
     ),
     list(
       name = "preservation",
@@ -230,12 +230,12 @@ build_workbook(
   )
 )
 
-message(sprintf("F03 built | responsive modules: %s", paste(responsive_modules, collapse = ", ")))
+message(sprintf("F04 built | responsive modules: %s", paste(responsive_modules, collapse = ", ")))
 print(mod_stats |>
   filter(module %in% responsive_modules, contrast %in% c("Disease", "Transplant", "Rescue")) |>
   arrange(module, contrast))
 
 # Optional local Box mirror (author's machine only; no-ops elsewhere).
-mirror_to_box(file.path(MAIN_PNG, "MAIN_F03_clustering.png"), "02_Figures/F03_Clustering")
-mirror_to_box(list.files(SUPP_PNG, "^SUPP_F03_.*\\.png$", full.names = TRUE), "02_Figures/F03_Clustering/supp")
+mirror_to_box(file.path(MAIN_PNG, "MAIN_F04_wgcna.png"), "02_Figures/F04_WGCNA")
+mirror_to_box(list.files(SUPP_PNG, "^SUPP_F04_.*\\.png$", full.names = TRUE), "02_Figures/F04_WGCNA/supp")
 mirror_to_box(file.path(DAT, "F03_supplementary.xlsx"), "03_Supplementary")

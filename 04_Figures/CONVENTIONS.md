@@ -4,6 +4,27 @@ One page. The point is that any figure script reads the same way: load upstream
 data with a canonical reader, transform with clearly-named objects, hand panels
 to a composite. Keep it parsimonious.
 
+## Directory map
+
+```
+04_Figures/
+  functions/   shared CODE — the engine every figure sources (README inside)
+  shared/      shared DATA — gene-set collections + fGSEA cache, built once (README inside)
+  F01_Proteome_Overview/   overview
+  F02_Enrich_Volcanoes/    enrichVolcano rings
+  F03_pilot/               exploratory figures (reversal/concordance) until validated
+  F04_WGCNA/               WGCNA modules — LAST figure, builds its own network in a_script
+```
+
+- Stages `00_input`–`03_DEP` are the canonical pipeline (filter → normalize → DE)
+  and hold only that. Anything beyond canonical characterisation (WGCNA) lives
+  with its figure, not in a pipeline stage.
+- Every figure is a uniform `a_/b_/c_`: `a_script/` (panels + a stitch script,
+  plus `supplementary/`), `b_reports/` (`main/`, `panels/`, `supp/`), `c_data/`
+  (lean supplementary tables). Pilots follow the same shape as `F0x_pilot`.
+- `F04_WGCNA` is self-contained: `a_script/00_build_wgcna.R` → `01_module_stats.R`
+  → `02_clustering.R`, outputs cached in its own `c_data/`.
+
 ## Script layout
 
 - One panel builder per file under a figure's `a_script/panels/`.

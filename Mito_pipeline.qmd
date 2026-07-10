@@ -105,16 +105,17 @@ biology:
 ```{r}
 #| label: contaminant-filter
 # FBS serum panel = bovine Hao FASTA entries intersected with HPA "Secreted to blood"
-hao_hdr  <- grep("^>", readLines(here::here("00_input", "hao_cellculture_contaminants.fasta"), warn = FALSE), value = TRUE)
-bovine   <- toupper(na.omit(stringr::str_match(hao_hdr, "GN=([^ ]+)")[, 2][
-              grepl("Bos taurus", stringr::str_match(hao_hdr, "OS=(.*?) OX=")[, 2])]))
+hao_hdr <- grep("^>", readLines(here::here("00_input", "hao_cellculture_contaminants.fasta"), warn = FALSE), value = TRUE)
+bovine <- toupper(na.omit(stringr::str_match(hao_hdr, "GN=([^ ]+)")[, 2][
+  grepl("Bos taurus", stringr::str_match(hao_hdr, "OS=(.*?) OX=")[, 2])
+]))
 secreted <- toupper(readLines(here::here("00_input", "hpa_secreted_to_blood.txt"), warn = FALSE))
-serum    <- sort(intersect(unique(bovine), secreted))
+serum <- sort(intersect(unique(bovine), secreted))
 
 is_keratin <- grepl("^Krt[0-9]|^Krtap", annotation$gene, ignore.case = TRUE) |
-              grepl("^Keratin", annotation$description, ignore.case = TRUE)
-is_serum   <- toupper(annotation$gene) %in% serum & !is_keratin
-annotation <- annotation[!(is_keratin | is_serum), ]   # keratin + FBS serum removed
+  grepl("^Keratin", annotation$description, ignore.case = TRUE)
+is_serum <- toupper(annotation$gene) %in% serum & !is_keratin
+annotation <- annotation[!(is_keratin | is_serum), ] # keratin + FBS serum removed
 ```
 
 ## Missingness + outliers {#sec-missing-outliers}
@@ -125,8 +126,10 @@ Mahalanobis, correlation; drop at ≥3/4) is applied.
 
 ```{r}
 #| label: missingness
-dal <- filter_proteins_by_group(dal, min_reps = 4, min_groups = 1,
-                                grouping_column = "group")
+dal <- filter_proteins_by_group(dal,
+  min_reps = 4, min_groups = 1,
+  grouping_column = "group"
+)
 ```
 
 **Frozen filtering log:**
@@ -165,11 +168,12 @@ saveRDS(dal, file.path(data_dir, "DAList_normalized.rds"))
 #| label: dep-model
 dal <- add_design(dal, "~ 0 + group + (1 | Replicate)")
 dal <- add_contrasts(dal, contrasts_vector = c(
-  "CTLvPHE       = PHE - Ctl",                        # Disease
-  "CTLvMITO      = Mito - Ctl",                        # Intervention
-  "PHEvPHE_MITO  = PHE_Mito - PHE",                    # Rescue
-  "Interaction   = (PHE_Mito - PHE) - (Mito - Ctl)",  # Interaction
-  "MITOvPHE_MITO = PHE_Mito - Mito"))                  # Secondary
+  "CTLvPHE       = PHE - Ctl", # Disease
+  "CTLvMITO      = Mito - Ctl", # Intervention
+  "PHEvPHE_MITO  = PHE_Mito - PHE", # Rescue
+  "Interaction   = (PHE_Mito - PHE) - (Mito - Ctl)", # Interaction
+  "MITOvPHE_MITO = PHE_Mito - Mito"
+)) # Secondary
 dal <- fit_limma_model(dal)
 dal <- extract_DA_results(dal, pval_thresh = 0.10, lfc_thresh = 0, adj_method = "BH")
 ```
@@ -220,7 +224,7 @@ A consolidated figure stage builds publication composites from the DEP outputs:
 |---|---|
 | `F01_Proteome_Overview` | PCA, DEP counts, effect size, overlap, direction, pathway ORA |
 | `F02_Enrich_Volcanoes` | per-contrast volcano-in-ring enrichment landscape |
-| `F03_Clustering` | WGCNA co-expression modules (eigengene LMM with `(1\|Replicate)`) |
+| `F04_WGCNA` | WGCNA co-expression modules (eigengene LMM with `(1\|Replicate)`); built and rendered in the figure's own `a_script`, last figure |
 
 ![Proteome overview composite — `04_Figures/F01_Proteome_Overview/b_reports/main/png/MAIN_F01_proteome_overview.png`](04_Figures/F01_Proteome_Overview/b_reports/main/png/MAIN_F01_proteome_overview.png)
 
@@ -239,7 +243,8 @@ Rscript 02_Normalization/imputation/a_script/b_mscoreutils.R    # comparison
 Rscript 02_Normalization/imputation/a_script/c_missforest.R     # canonical (figures + WGCNA)
 Rscript 03_DEP/a_non_imputed/a_script/01_run_dep.R              # PRIMARY
 Rscript 03_DEP/b_imputed/a_script/01_run_dep_imputed.R          # concordance
-# then re-run the 04_Figures/ composites against 03_DEP outputs
+# then build the 04_Figures/ composites against the 03_DEP outputs;
+# F04_WGCNA builds its own network first (a_script: 00_build_wgcna.R, 01_module_stats.R, 02_clustering.R)
 ```
 
 **Key design decisions, in one place:**

@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # Module analysis step 00: build the signed WGCNA co-abundance network the module
-# statistics and the F03 figure consume, into this arm's c_data (regenerated every run;
+# statistics and the F04 render consume, into this figure's c_data (regenerated every run;
 # the .rds is just a cache).
 # Best-practice settings (WGCNA package docs + Horvath-lab FAQ), tuned for proteomics:
 #   - signed network + signed TOM: direction-coherent modules (Horvath recommendation).
@@ -18,7 +18,7 @@ WGCNA::disableWGCNAThreads() # single-threaded for a reproducible result
 set.seed(42)
 RSQ_CUT <- 0.85
 PRESERVATION_PERMS <- 200L
-out_dir <- here::here("03_DEP", "c_modules", "c_data")
+out_dir <- here::here("04_Figures", "F04_WGCNA", "c_data")
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 dal <- readRDS(here::here("02_Normalization", "imputation", "c_data", "DAList_imputed_missforest.rds"))

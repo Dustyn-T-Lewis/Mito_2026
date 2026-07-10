@@ -21,7 +21,7 @@ CONTRASTS <- c(
   Interaction = "(PHE_Mito - PHE) - (Mito - Ctl)"
 )
 
-dat <- here("03_DEP", "c_modules", "c_data")
+dat <- here("04_Figures", "F04_WGCNA", "c_data")
 net_cache <- file.path(dat, "wgcna_network.rds")
 if (!file.exists(net_cache)) stop("run 00_build_wgcna.R first; missing ", net_cache)
 w <- readRDS(net_cache)

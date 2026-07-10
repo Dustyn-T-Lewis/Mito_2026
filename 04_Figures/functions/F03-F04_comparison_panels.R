@@ -377,3 +377,149 @@ build_fry_barcode <- function(comb, expr, design, rep_block, ctr_x, ctr_y,
 
   list(plot = plot, table = table)
 }
+
+# Panel A quadrant tint + label: mirrors nes_quadrant_tints()'s reversal
+# (ref_slope < 0: diagonal = exacerbated, off-diagonal = reversed) versus
+# concordance (ref_slope >= 0: diagonal = concordant, off-diagonal untinted)
+# scheme, but keyed by the discrete quadrant name instead of continuous NES.
+.ora_quadrant_style <- function(quadrant, ref_slope) {
+  diagonal <- quadrant %in% c("x_up_y_up", "x_dn_y_dn")
+  if (ref_slope < 0) {
+    label <- ifelse(diagonal, "Exacerbated", "Reversed")
+    fill <- ifelse(diagonal, "#D6604D", "#4393C3")
+  } else {
+    label <- ifelse(diagonal, "Concordant", "Discordant")
+    fill <- ifelse(diagonal, "#4DAF4A", "white")
+  }
+  list(label = label, tint = scales::alpha(fill, 0.15))
+}
+
+# Horizontal ORA bar for one quadrant: top hits by padj, bars colored by
+# database (ORA_DB_COLORS), on a background tinted by the quadrant's
+# reversal/concordance meaning. Adapted from the pilot reversal mountain's
+# .ora_bars() (04_Figures/test/pilot_reversal/a_script/panels/e_fry_mountain.R,
+# git f50b3ee), simplified to a single DB-colored fill instead of a fixed
+# up/down color and given a quadrant background tint.
+.ora_bars <- function(ora_df, title, tint, n_genes, max_hits = 5) {
+  full_title <- sprintf("%s (n = %d)", title, n_genes)
+  tinted <- ggplot2::theme(
+    panel.background = ggplot2::element_rect(fill = tint, color = NA),
+    plot.title = ggplot2::element_text(size = FIG_SUBTITLE_SIZE, face = "bold")
+  )
+
+  if (is.null(ora_df) || nrow(ora_df) == 0) {
+    return(
+      ggplot2::ggplot() +
+        ggplot2::annotate(
+          "text",
+          x = 0.5, y = 0.5, label = "no enrichment", size = 2.4,
+          color = "grey50"
+        ) +
+        ggplot2::labs(title = full_title) +
+        ggplot2::theme_void() +
+        tinted
+    )
+  }
+
+  bars <- ora_df |>
+    dplyr::slice_min(padj, n = max_hits, with_ties = FALSE) |>
+    dplyr::mutate(
+      nlp = -log10(pmax(padj, 1e-20)),
+      y = rev(dplyr::row_number()),
+      label = clean_display_label(pathway)
+    )
+  xmax <- max(bars$nlp, na.rm = TRUE)
+
+  ggplot2::ggplot(bars, ggplot2::aes(y = y)) +
+    ggplot2::geom_rect(
+      ggplot2::aes(
+        xmin = 0, xmax = nlp, ymin = y - 0.42, ymax = y + 0.42, fill = database
+      ),
+      color = "black", linewidth = 0.25
+    ) +
+    ggplot2::geom_text(
+      ggplot2::aes(x = xmax * 0.03, label = label),
+      hjust = 0, size = 1.7, fontface = "bold", color = "black",
+      lineheight = 0.85
+    ) +
+    ggplot2::scale_fill_manual(values = ORA_DB_COLORS, guide = "none") +
+    ggplot2::labs(
+      title = full_title, x = expression(-log[10](italic(padj))), y = NULL
+    ) +
+    ggplot2::scale_x_continuous(
+      limits = c(0, xmax * 1.18), breaks = scales::pretty_breaks(3),
+      expand = ggplot2::expansion(0)
+    ) +
+    ggplot2::scale_y_continuous(
+      limits = c(0.4, nrow(bars) + 0.6), expand = c(0, 0)
+    ) +
+    FIG_THEME +
+    ggplot2::theme(
+      panel.grid = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank()
+    ) +
+    tinted
+}
+
+# Panel A: per-quadrant over-representation. classify_quadrant() splits the
+# contrast pair into its four sign quadrants; each non-"ns" quadrant's
+# real-symbol genes are tested against the harmonized pathway collection with
+# run_fora_by_db(), then rendered as a 2x2 .ora_bars() grid mirroring the
+# NES-scatter layout (top-left = x_dn_y_up, top-right = x_up_y_up,
+# bottom-left = x_dn_y_dn, bottom-right = x_up_y_dn).
+build_quadrant_ora <- function(comb, ctr_x, ctr_y, universe = NULL,
+                               pw_collection = NULL, pw_by_db = NULL,
+                               ref_slope = -1) {
+  quad <- classify_quadrant(comb, ctr_x, ctr_y)
+  quad <- quad[is_real_symbol(quad$gene), ]
+
+  if (is.null(universe)) {
+    universe <- quad$gene
+  }
+  if (is.null(pw_collection)) {
+    pw_collection <- build_harmonized_collection()
+  }
+  if (is.null(pw_by_db)) {
+    pw_names <- names(pw_collection)
+    pw_by_db <- split(pw_names, classify_database(pw_names))
+  }
+
+  quadrants <- c("x_dn_y_up", "x_up_y_up", "x_dn_y_dn", "x_up_y_dn")
+  ora_by_quadrant <- sapply(quadrants, function(q) {
+    genes <- quad$gene[quad$quadrant == q]
+    if (length(genes) == 0) {
+      return(NULL)
+    }
+    res <- run_fora_by_db(genes, universe, pw_collection, pw_by_db)
+    if (is.null(res) || nrow(res) == 0) {
+      return(NULL)
+    }
+    res$quadrant <- q
+    res[order(res$padj), ]
+  }, simplify = FALSE)
+
+  n_genes <- vapply(quadrants, function(q) sum(quad$quadrant == q), integer(1))
+
+  cells <- lapply(quadrants, function(q) {
+    style <- .ora_quadrant_style(q, ref_slope)
+    .ora_bars(ora_by_quadrant[[q]], style$label, style$tint, n_genes[[q]])
+  })
+
+  plot <- patchwork::wrap_plots(
+    cells[[1]], cells[[2]], cells[[3]], cells[[4]],
+    ncol = 2
+  ) +
+    patchwork::plot_annotation(
+      title = sprintf(
+        "Quadrant ORA: %s x %s", contrast_brief(ctr_x), contrast_brief(ctr_y)
+      ),
+      theme = ggplot2::theme(
+        plot.title = ggplot2::element_text(size = FIG_TITLE_SIZE, face = "bold")
+      )
+    )
+
+  table <- dplyr::bind_rows(ora_by_quadrant)
+
+  list(plot = plot, table = table)
+}

@@ -148,15 +148,16 @@ classify_database <- function(pathway_names) {
 }
 
 # Per-database over-representation: fora within each DB so BH is applied within a
-# database, not across it. Returns the raw fora columns (pval, padj, overlap,
+# database, not across it (valid even for a single-pathway DB, where BH just
+# returns the raw p-value). Returns the raw fora columns (pval, padj, overlap,
 # size, overlapGenes) plus the database; callers add their own leading-edge and
-# column shaping. A DB with fewer than two sets is skipped.
+# column shaping. A DB with no eligible sets is skipped.
 run_fora_by_db <- function(genes, universe, pw_collection, pw_by_db,
                            min_size = 10, max_size = 500) {
   g <- intersect(genes, universe)
   dplyr::bind_rows(lapply(names(pw_by_db), function(db) {
     dp <- pw_collection[pw_by_db[[db]]]
-    if (length(dp) < 2) {
+    if (length(dp) < 1) {
       return(NULL)
     }
     r <- as.data.frame(fgsea::fora(

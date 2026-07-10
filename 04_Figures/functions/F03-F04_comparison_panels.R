@@ -198,10 +198,17 @@ build_nes_scatter <- function(fgsea_cache, ctr_x, ctr_y, ref_slope = -1) {
       alpha = 0.7
     ) +
     ggplot2::scale_color_manual(values = ORA_DB_COLORS) +
-    ggrepel::geom_text_repel(
-      data = callouts, ggplot2::aes(label = label),
-      size = 2, max.overlaps = Inf, segment.size = 0.2
-    ) +
+    (if (requireNamespace("ggrepel", quietly = TRUE)) {
+      ggrepel::geom_text_repel(
+        data = callouts, ggplot2::aes(label = label),
+        size = 2, max.overlaps = Inf, segment.size = 0.2
+      )
+    } else {
+      ggplot2::geom_text(
+        data = callouts, ggplot2::aes(label = label),
+        size = 2
+      )
+    }) +
     ggplot2::labs(
       x = sprintf("%s NES", ctr_x), y = sprintf("%s NES", ctr_y),
       size = expression(-log[10](italic(padj))),

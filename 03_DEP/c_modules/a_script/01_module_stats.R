@@ -42,6 +42,7 @@ rownames(me) <- non_grey
 
 # eigengene limma with the paired Replicate block, matching the protein DE
 eig_rho <- limma::duplicateCorrelation(me, design, block = rep_block)$consensus
+eig_rho <- max(eig_rho, 0) # negative consensus is not a valid GLS correlation (matches proteoDA)
 eig_fit <- limma::lmFit(me, design, block = rep_block, correlation = eig_rho)
 eig_fit <- limma::eBayes(limma::contrasts.fit(eig_fit, cm))
 mod_stats <- bind_rows(lapply(names(CONTRASTS), function(cn) {
@@ -64,6 +65,7 @@ omnibus <- tibble(
 mc <- w$module_colors[rownames(expr)]
 idx <- split(seq_len(nrow(expr)), mc)[non_grey]
 set_rho <- limma::duplicateCorrelation(expr, design, block = rep_block)$consensus
+set_rho <- max(set_rho, 0) # negative consensus is not a valid GLS correlation (matches proteoDA)
 settests <- bind_rows(lapply(names(CONTRASTS), function(cn) {
   fr <- limma::fry(expr, idx, design, contrast = cm[, cn], block = rep_block, correlation = set_rho)
   ca <- limma::camera(expr, idx, design, contrast = cm[, cn])

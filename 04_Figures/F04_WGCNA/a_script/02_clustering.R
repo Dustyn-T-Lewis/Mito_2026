@@ -165,7 +165,7 @@ ggsave(file.path(SUPP_PNG, "SUPP_F04_hub_map.png"), s_hub_map,
 
 # supplementary workbook: one sheet per figure component (set tests from 01_module_stats.R)
 build_workbook(
-  file.path(DAT, "F03_supplementary.xlsx"),
+  file.path(DAT, "F04_supplementary.xlsx"),
   figure_title = "F04: WGCNA module clustering and the mitochondrial-transplant rescue",
   sheet_specs = list(
     list(
@@ -238,4 +238,4 @@ print(mod_stats |>
 # Optional local Box mirror (author's machine only; no-ops elsewhere).
 mirror_to_box(file.path(MAIN_PNG, "MAIN_F04_wgcna.png"), "02_Figures/F04_WGCNA")
 mirror_to_box(list.files(SUPP_PNG, "^SUPP_F04_.*\\.png$", full.names = TRUE), "02_Figures/F04_WGCNA/supp")
-mirror_to_box(file.path(DAT, "F03_supplementary.xlsx"), "03_Supplementary")
+mirror_to_box(file.path(DAT, "F04_supplementary.xlsx"), "03_Supplementary")

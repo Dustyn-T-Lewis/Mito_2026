@@ -22,54 +22,68 @@ classify_quadrant <- function(comb, ctr_x, ctr_y, pi_thresh = H9C2_PI_THRESH) {
   )
 }
 
-build_rrho2 <- function(comb, ctr_x, ctr_y, labels = c(ctr_x, ctr_y)) {
-  col_x <- paste0("t_", ctr_x)
-  col_y <- paste0("t_", ctr_y)
-  d <- comb[!is.na(comb[[col_x]]) & !is.na(comb[[col_y]]), ]
-  l1 <- data.frame(Genes = d$uniprot_id, score = d[[col_x]])
-  l2 <- data.frame(Genes = d$uniprot_id, score = d[[col_y]])
-
-  obj <- RRHO2::RRHO2_initialize(l1, l2, labels = labels, log10.ind = TRUE)
+# RRHO2::RRHO2_initialize splits hypermat on the sign-based boundary
+# (count of positive scores at each step index) plus an asymmetric NA strip
+# (lenStrip = round(len * boundary)), not on the index midpoint. Re-derive
+# the same boundary here so quadrant corners line up with RRHO2's own.
+rrho2_quadrant_table <- function(obj, l1, l2) {
   hypermat <- obj$hypermat
-  n_row <- nrow(hypermat)
-  n_col <- ncol(hypermat)
-  mid_row <- n_row %/% 2
-  mid_col <- n_col %/% 2
+  n1 <- nrow(l1)
+  n2 <- nrow(l2)
+  stepsize <- ceiling(min(sqrt(c(n1, n2))))
+  score1 <- sort(l1$score, decreasing = TRUE)
+  score2 <- sort(l2$score, decreasing = TRUE)
+  step1 <- seq(1, n1, stepsize)
+  step2 <- seq(1, n2, stepsize)
+  len1 <- length(step1)
+  len2 <- length(step2)
+  boundary1 <- sum(score1[step1] > 0)
+  boundary2 <- sum(score2[step2] > 0)
+  strip1 <- round(len1 * 0.1)
+  strip2 <- round(len2 * 0.1)
 
-  corner_max <- function(rows, cols) max(hypermat[rows, cols], na.rm = TRUE)
-  top_rows <- seq_len(mid_row)
-  bot_rows <- (mid_row + 1):n_row
-  top_cols <- seq_len(mid_col)
-  bot_cols <- (mid_col + 1):n_col
+  safe_seq <- function(from, to) if (from > to) integer(0) else seq(from, to)
+  corner_max <- function(rows, cols) {
+    if (length(rows) == 0 || length(cols) == 0) {
+      return(NA_real_)
+    }
+    block <- hypermat[rows, cols]
+    if (all(is.na(block))) {
+      return(NA_real_) # all-NA corner (empty quadrant): no cell to report
+    }
+    max(block, na.rm = TRUE)
+  }
 
-  ord1 <- l1$Genes[order(l1$score, decreasing = TRUE)]
-  ord2 <- l2$Genes[order(l2$score, decreasing = TRUE)]
-  n_shared_genes <- nrow(l1)
-  mid_genes <- n_shared_genes %/% 2
-  up1 <- ord1[seq_len(mid_genes)]
-  dn1 <- ord1[(mid_genes + 1):n_shared_genes]
-  up2 <- ord2[seq_len(mid_genes)]
-  dn2 <- ord2[(mid_genes + 1):n_shared_genes]
+  up_rows <- safe_seq(1, boundary1)
+  up_cols <- safe_seq(1, boundary2)
+  dn_rows <- strip1 + safe_seq(boundary1 + 1, len1)
+  dn_cols <- strip2 + safe_seq(boundary2 + 1, len2)
 
-  table <- tibble::tibble(
+  tibble::tibble(
     quadrant = c("uu", "ud", "du", "dd"),
     max_neglog10p = c(
-      corner_max(top_rows, top_cols), corner_max(top_rows, bot_cols),
-      corner_max(bot_rows, top_cols), corner_max(bot_rows, bot_cols)
+      corner_max(up_rows, up_cols), corner_max(up_rows, dn_cols),
+      corner_max(dn_rows, up_cols), corner_max(dn_rows, dn_cols)
     ),
     n_shared = c(
-      length(intersect(up1, up2)), length(intersect(up1, dn2)),
-      length(intersect(dn1, up2)), length(intersect(dn1, dn2))
+      length(obj$genelist_uu$gene_list_overlap_uu),
+      length(obj$genelist_ud$gene_list_overlap_ud),
+      length(obj$genelist_du$gene_list_overlap_du),
+      length(obj$genelist_dd$gene_list_overlap_dd)
     )
   )
+}
 
+rrho2_render_plot <- function(hypermat, labels, n_total) {
+  n_row <- nrow(hypermat)
+  n_col <- ncol(hypermat)
   hyper_long <- tibble::tibble(
     row = rep(seq_len(n_row), times = n_col),
     col = rep(seq_len(n_col), each = n_row),
     value = as.vector(hypermat)
   )
 
-  plot <- ggplot2::ggplot(hyper_long, ggplot2::aes(col, row, fill = value)) +
+  ggplot2::ggplot(hyper_long, ggplot2::aes(col, row, fill = value)) +
     ggplot2::geom_raster() +
     ggplot2::scale_fill_gradientn(
       colours = c("#2166AC", "white", "#B2182B"), na.value = "grey90",
@@ -92,7 +106,7 @@ build_rrho2 <- function(comb, ctr_x, ctr_y, labels = c(ctr_x, ctr_y)) {
           "%d shared proteins · warm off-diagonal = transplant reverses ",
           "disease · No MTC (Cahill 2018)"
         ),
-        n_shared_genes
+        n_total
       )
     ) +
     ggplot2::coord_equal() +
@@ -102,6 +116,18 @@ build_rrho2 <- function(comb, ctr_x, ctr_y, labels = c(ctr_x, ctr_y)) {
       axis.text = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank()
     )
+}
 
-  list(plot = plot, table = table)
+build_rrho2 <- function(comb, ctr_x, ctr_y, labels = c(ctr_x, ctr_y)) {
+  col_x <- paste0("t_", ctr_x)
+  col_y <- paste0("t_", ctr_y)
+  d <- comb[!is.na(comb[[col_x]]) & !is.na(comb[[col_y]]), ]
+  l1 <- data.frame(Genes = d$uniprot_id, score = d[[col_x]])
+  l2 <- data.frame(Genes = d$uniprot_id, score = d[[col_y]])
+
+  obj <- RRHO2::RRHO2_initialize(l1, l2, labels = labels, log10.ind = TRUE)
+  quad_table <- rrho2_quadrant_table(obj, l1, l2)
+  plot <- rrho2_render_plot(obj$hypermat, labels, nrow(l1))
+
+  list(plot = plot, table = quad_table)
 }

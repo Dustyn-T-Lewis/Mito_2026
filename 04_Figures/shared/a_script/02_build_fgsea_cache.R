@@ -8,7 +8,7 @@
 pacman::p_load(readr, dplyr, tidyr)
 source(here::here("04_Figures", "shared", "a_script", "00_gene_set_helpers.R"))
 
-CONTRASTS <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO", "Interaction", "MITOvPHE_MITO")
+CONTRASTS <- c("CTLvPHE", "CTLvMITO", "PHEvPHE_MITO", "CTLvPHE_MITO", "Interaction", "MITOvPHE_MITO")
 OUT <- here::here("04_Figures", "shared", "c_data", "fgsea_tstat_all_h9c2.csv")
 SETS <- readRDS(here::here("04_Figures", "shared", "c_data", "rat_gene_sets.rds"))
 DEP <- read_csv(

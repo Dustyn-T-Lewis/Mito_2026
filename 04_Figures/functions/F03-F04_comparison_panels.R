@@ -475,7 +475,7 @@ build_quadrant_ora <- function(comb, ctr_x, ctr_y, universe = NULL,
   quad <- quad[is_real_symbol(quad$gene), ]
 
   if (is.null(universe)) {
-    universe <- quad$gene
+    universe <- unique(quad$gene)
   }
   if (is.null(pw_collection)) {
     pw_collection <- build_harmonized_collection()

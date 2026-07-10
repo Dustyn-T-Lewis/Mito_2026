@@ -131,3 +131,86 @@ build_rrho2 <- function(comb, ctr_x, ctr_y, labels = c(ctr_x, ctr_y)) {
 
   list(plot = plot, table = quad_table)
 }
+
+# Quadrant background tints for the NES scatter: reversal (ref_slope = -1)
+# warms the off-diagonal (blue, disease reversed by transplant) and the
+# diagonal (red, exacerbated); concordance (ref_slope = +1) warms only the
+# diagonal (green, concordant).
+nes_quadrant_tints <- function(ref_slope) {
+  diag_fill <- if (ref_slope < 0) "#D6604D" else "#4DAF4A"
+  quadrants <- tibble::tibble(
+    xmin = c(0, -Inf, -Inf, 0),
+    xmax = c(Inf, 0, 0, Inf),
+    ymin = c(0, 0, -Inf, -Inf),
+    ymax = c(Inf, Inf, 0, 0),
+    fill = c(diag_fill, "#4393C3", diag_fill, "#4393C3")
+  )
+  if (ref_slope < 0) {
+    return(quadrants)
+  }
+  quadrants[c(1, 3), ]
+}
+
+build_nes_scatter <- function(fgsea_cache, ctr_x, ctr_y, ref_slope = -1) {
+  wide <- fgsea_cache |>
+    dplyr::filter(contrast %in% c(ctr_x, ctr_y), database %in% CANONICAL_DBS) |>
+    dplyr::select(pathway, database, contrast, NES, padj) |>
+    tidyr::pivot_wider(names_from = contrast, values_from = c(NES, padj)) |>
+    dplyr::rename(
+      NES_x = !!paste0("NES_", ctr_x), NES_y = !!paste0("NES_", ctr_y),
+      padj_x = !!paste0("padj_", ctr_x), padj_y = !!paste0("padj_", ctr_y)
+    ) |>
+    tidyr::drop_na(NES_x, NES_y)
+
+  attr(wide, "spearman_rho") <- stats::cor(
+    wide$NES_x, wide$NES_y,
+    method = "spearman"
+  )
+
+  min_padj <- pmin(wide$padj_x, wide$padj_y, na.rm = TRUE)
+  sig <- !is.na(min_padj) & min_padj < 0.05
+  off_diagonal <- (wide$NES_x * wide$NES_y) < 0
+  pct_reversed <- if (any(sig)) 100 * mean(off_diagonal[sig]) else NA_real_
+
+  callouts <- wide |>
+    dplyr::mutate(
+      diff = abs(NES_x - NES_y),
+      label = clean_display_label(pathway)
+    ) |>
+    dplyr::slice_max(diff, n = 8, with_ties = FALSE)
+
+  plot <- ggplot2::ggplot(wide, ggplot2::aes(NES_x, NES_y)) +
+    ggplot2::geom_rect(
+      data = nes_quadrant_tints(ref_slope),
+      ggplot2::aes(
+        xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, fill = fill
+      ),
+      inherit.aes = FALSE, alpha = 0.15
+    ) +
+    ggplot2::scale_fill_identity() +
+    ggplot2::geom_hline(yintercept = 0) +
+    ggplot2::geom_vline(xintercept = 0) +
+    ggplot2::geom_abline(
+      slope = ref_slope, intercept = 0, linetype = "dashed", color = "grey40"
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(color = database, size = -log10(pmin(padj_x, padj_y))),
+      alpha = 0.7
+    ) +
+    ggplot2::scale_color_manual(values = ORA_DB_COLORS) +
+    ggrepel::geom_text_repel(
+      data = callouts, ggplot2::aes(label = label),
+      size = 2, max.overlaps = Inf, segment.size = 0.2
+    ) +
+    ggplot2::labs(
+      x = sprintf("%s NES", ctr_x), y = sprintf("%s NES", ctr_y),
+      size = expression(-log[10](italic(padj))),
+      subtitle = sprintf(
+        "ρ = %.2f · %.0f%% reversed",
+        attr(wide, "spearman_rho"), pct_reversed
+      )
+    ) +
+    FIG_THEME
+
+  list(plot = plot, table = wide)
+}

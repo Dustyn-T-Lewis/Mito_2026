@@ -33,6 +33,7 @@ runs <- imap(methods, function(rds, m) {
     "CTLvPHE       = PHE - Ctl",
     "CTLvMITO      = Mito - Ctl",
     "PHEvPHE_MITO  = PHE_Mito - PHE",
+    "CTLvPHE_MITO  = PHE_Mito - Ctl",
     "Interaction   = (PHE_Mito - PHE) - (Mito - Ctl)",
     "MITOvPHE_MITO = PHE_Mito - Mito"
   ))

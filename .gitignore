@@ -1,0 +1,60 @@
+# macOS
+.DS_Store
+
+# Office lock files
+~$*
+
+# R session state / IDE
+.Rhistory
+.RData
+.Rdata
+*.RData
+.Rproj.user/
+.Renviron
+.httr-oauth
+Rplots.pdf
+
+# R package build artifacts
+*.tar.gz
+*.Rcheck/
+
+# Rendered pipeline outputs — each stage recreates its own dir when it runs
+**/b_reports/
+
+# Frozen pipeline data artifacts — regenerate by running stages 01-05
+**/c_data/
+
+# Root-level duplicates of 00_input/ files (canonical copies live in 00_input/)
+/DAP_lists.xlsx
+/Proteomics of PE with mito transfer*.xlsx
+
+# Operational working notes (not project documentation)
+/*_PROMPT.md
+
+# Writeup / documentation deliverables (live locally; README.md is the only
+# tracked doc for repo orientation)
+**/*.docx
+**/*.pdf
+**/*.pptx
+**/RESULTS_INTERPRETATION.*
+**/METHODS*.md
+**/MANUSCRIPT*.md
+**/AUDIT*.md
+**/NOTES*.md
+
+# rendered quarto docs (source .qmd is tracked, .html is regenerated)
+Mito_pipeline.html
+tutorials/*.html
+*_cache/
+
+# Process scratch — briefs, audits, checksums; deletable at project completion
+docs/
+**/*manuscript*.md
+
+# Rendered supplementary bundle — regenerate from the stage outputs
+/Supplementary/
+/Supplementary.zip
+
+# python
+__pycache__/
+*.pyc

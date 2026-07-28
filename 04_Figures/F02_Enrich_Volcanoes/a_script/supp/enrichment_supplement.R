@@ -72,7 +72,7 @@ bar_cols <- function(d) {
       sig = factor(padj < FDR, levels = c(TRUE, FALSE))
     ) |>
     mutate(
-      display = if_else(n_distinct(pathway) > 1, paste0(display, " (", database, ")"), display),
+      display = if (n_distinct(pathway) > 1) paste0(display, " (", database, ")") else display,
       .by = display
     )
 }

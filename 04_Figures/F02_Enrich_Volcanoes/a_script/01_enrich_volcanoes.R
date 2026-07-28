@@ -151,7 +151,9 @@ ggplot2::ggsave(
   width = 260, height = 240, units = "mm", dpi = 300, bg = "white", limitsize = FALSE
 )
 
-# Supplementary workbook: contrast key + every tested pathway per contrast.
+# Supplementary workbook: contrast key + every pathway tested in the 5-DB lens
+# per contrast (disease/viral name filter applied, as on the rings and in F01;
+# the removed sets are logged in the excluded sheet).
 contrast_map <- contrasts |>
   mutate(
     brief = vapply(ctr, contrast_brief, character(1)),
@@ -163,7 +165,8 @@ pathway_sheets <- lapply(seq_len(nrow(contrasts)), function(i) {
   ctr <- contrasts$ctr[i]
   full <- fgsea_all |>
     filter(
-      contrast == ctr, database %in% CANONICAL_DBS, !pathway %in% MITO_DROP_SETS
+      contrast == ctr, database %in% CANONICAL_DBS, !pathway %in% MITO_DROP_SETS,
+      !grepl(DISEASE_VIRAL_RE, pathway, ignore.case = TRUE)
     ) |>
     transmute(pathway, database, padj, pval, NES, size,
       shown = pathway %in% prep[[i]]$enrich$pathway

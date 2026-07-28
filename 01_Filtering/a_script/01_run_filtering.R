@@ -71,15 +71,7 @@ annotation <- annotation[!is_contaminant, ]
 intensity <- intensity[!is_contaminant, ]
 cat(sprintf("Contaminants removed: %d keratin + %d FBS serum\n", sum(is_keratin), sum(is_serum)))
 
-if (any(duplicated(annotation$uniprot_id))) { # guard only; DIA-NN protein groups are unique
-  rm_mean <- rowMeans(data.matrix(intensity), na.rm = TRUE)
-  keep_idx <- tibble(i = seq_along(rm_mean), id = annotation$uniprot_id, m = rm_mean) |>
-    group_by(id) |>
-    slice_max(m, n = 1, with_ties = FALSE) |>
-    pull(i)
-  annotation <- annotation[keep_idx, ]
-  intensity <- intensity[keep_idx, ]
-}
+stopifnot(!anyDuplicated(annotation$uniprot_id)) # DIA-NN protein groups are unique; rows are keyed on it below
 
 int_mat <- as.data.frame(data.matrix(intensity))
 rownames(int_mat) <- annotation$uniprot_id

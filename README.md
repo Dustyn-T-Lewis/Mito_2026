@@ -94,8 +94,8 @@ alternatives; run them only for the imputed-DEP concordance comparison.
 
 ```sh
 Rscript 04_Figures/shared/a_script/01_fetch_rat_gene_sets.R   # once; builds gene-set cache
-Rscript 04_Figures/shared/a_script/03_fetch_go_sets.R         # once; GO sets
 Rscript 04_Figures/shared/a_script/02_build_fgsea_cache.R     # once; fgsea cache
+Rscript 04_Figures/shared/a_script/03_fetch_go_sets.R         # once; GO sets
 
 # each figure is self-contained; run its composite from the project root
 Rscript 04_Figures/F01_Proteome_Overview/a_script/01_proteome_overview.R

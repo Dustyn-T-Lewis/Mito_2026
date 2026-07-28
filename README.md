@@ -9,8 +9,8 @@ transplantation (`Mito`), n = 6 per group:
 - `PHE`: phenylephrine stress
 - `PHE_Mito`: phenylephrine stress with mitochondrial transplant
 
-The design carries a paired `Replicate` block (plate/day/passage) across the four
-groups, handled as a repeated-measures term in the differential-abundance fit.
+The `Replicate` field indexes the six within-group replicates and is carried into
+the differential-abundance fit as a `duplicateCorrelation` block.
 
 ## Design and Contrasts
 
@@ -43,7 +43,7 @@ as a blocked generalized-least-squares term rather than dropped.
 | `01` | `01_Filtering/` | Contaminant and HPA secreted-to-blood removal, missingness filter -> `DAList_filtered.rds` |
 | `02` | `02_Normalization/` | `cycloess` normalization of the filtered matrix; `imputation/` holds three arms (`imp4p`, MsCoreUtils hybrid, `missForest`), each writing a method-tagged `DAList_imputed_<method>.rds`. `missForest` is the arm the figures and WGCNA read |
 | `03` | `03_DEP/` | `a_non_imputed/`: primary `limma + duplicateCorrelation`, six factorial contrasts, Pi-score. `b_imputed/`: robustness DEP on the imputed matrices |
-| `04` | `04_Figures/` | F01 proteome overview; F02 enrichment ring-volcanoes (builds the shared fgsea cache); F03 WGCNA modules |
+| `04` | `04_Figures/` | F01 proteome overview; F02 enrichment ring-volcanoes (reads the shared fgsea cache); F03 WGCNA modules |
 
 Stages `00`–`03` are the canonical pipeline (filter → normalize → DE) and hold
 only that. Anything beyond canonical characterisation — WGCNA, single-sample
@@ -166,7 +166,7 @@ against the prior cache before adopting a rebuild.
 - stochastic steps use `set.seed(42)`
 - primary DEP uses the non-imputed normalized matrix; imputation feeds only
   figures and the WGCNA modules
-- repeated-measures blocking uses the paired `Replicate` metadata
+- the fit blocks on the `Replicate` metadata via duplicateCorrelation (low consensus rho)
 - species is *Rattus norvegicus*; gene sets are the rat collections cached under
   `04_Figures/shared/`
 - packages install into the system library via `Rscript setup.R`; each script

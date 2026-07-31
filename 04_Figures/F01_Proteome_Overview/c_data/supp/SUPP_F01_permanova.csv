@@ -1,0 +1,9 @@
+model,term,R2,p,q
+factorial,Phe (disease),0.0526,0.1075,NA
+factorial,Mito (transplant),0.129,1e-4,NA
+factorial,Phe x Mito (rescue),0.0376,0.4459,NA
+pairwise,Disease,0.0948,0.39,0.39
+pairwise,Transplant,0.183,0.0056,0.0084
+pairwise,Rescue,0.1651,0.004,0.0084
+transplant,Transplant vs none,0.129,1e-4,NA
+dispersion,betadisper,NA,0.38,NA

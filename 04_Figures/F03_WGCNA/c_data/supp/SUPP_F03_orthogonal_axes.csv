@@ -1,0 +1,5 @@
+key,question,coupling,contrast_a,contrast_b,observed,null_median,null_q25,null_q75,perm_p
+one_program,The transplant runs one program,Orthogonal,PHE_Mito - PHE,Mito - Ctl,0.7967522948638083,-0.035125083788613135,-0.23279386284294037,0.1954392449487201,0
+opposes,That program opposes the disease,"Shares Ctl, same sign",Mito - Ctl,PHE - Ctl,-0.2322800890490202,0.5042693879461095,0.34765568675449476,0.6641544569590949,0.0033333333333333335
+persists,The disease keeps acting,Orthogonal,PHE_Mito - Mito,PHE - Ctl,0.3624980804772934,-0.023965642017341533,-0.21029847583552178,0.16538444300498692,0.09666666666666666
+trap,The pair that cannot be read,"Shares PHE, opposite sign",PHE_Mito - PHE,PHE - Ctl,-0.53821629619356,-0.5031716369610626,-0.6674624996109317,-0.3377797770962832,0.45

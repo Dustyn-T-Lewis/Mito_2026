@@ -1,0 +1,43 @@
+R version 4.6.0 (2026-04-24)
+Platform: aarch64-apple-darwin23
+Recorded: 2026-07-31
+
+AnnotationDbi    1.74.0
+dplyr            1.2.1
+enrichVolcano    0.3.0.9000 (d6a229e)
+eulerr           7.1.0
+fgsea            1.38.0
+forcats          1.0.1
+ggfittext        0.10.4
+ggnewscale       0.5.2
+ggplot2          4.0.3
+ggplotify        0.1.3
+ggrepel          0.9.8
+ggtext           0.1.2
+GO.db            3.23.1
+here             1.0.2
+imp4p            1.2
+impute           1.86.0
+imputeLCMD       2.1
+jsonlite         2.0.0
+limma            3.68.1
+missForest       1.6.1
+MsCoreUtils      1.24.0
+msigdbr          26.1.0
+openxlsx         4.2.8.1
+org.Rn.eg.db     3.23.0
+pacman           0.5.1
+patchwork        1.3.2
+proteoDA         2.0.0 (ba99c77)
+purrr            1.2.2
+ragg             1.5.2
+readr            2.2.0
+readxl           1.4.5
+scales           1.4.0
+shadowtext       0.1.6
+stringr          1.6.0
+testthat         3.3.2
+tibble           3.3.1
+tidyr            1.3.2
+vegan            2.7.3
+WGCNA            1.74

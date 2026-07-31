@@ -18,12 +18,6 @@ Rplots.pdf
 *.tar.gz
 *.Rcheck/
 
-# Rendered pipeline outputs — each stage recreates its own dir when it runs
-**/b_reports/
-
-# Frozen pipeline data artifacts — regenerate by running stages 01-05
-**/c_data/
-
 # Root-level duplicates of 00_input/ files (canonical copies live in 00_input/)
 /DAP_lists.xlsx
 /Proteomics of PE with mito transfer*.xlsx
@@ -41,6 +35,16 @@ Rplots.pdf
 **/MANUSCRIPT*.md
 **/AUDIT*.md
 **/NOTES*.md
+
+# but the stage outputs are tracked, minus PDF and xlsx: both restamp an internal
+# clock every run, so git stores a fresh copy even when no number changed. The plots
+# survive as PNG and the tables as CSV.
+!**/b_reports/**
+!**/c_data/**
+**/b_reports/**/*.pdf
+**/c_data/**/*.pdf
+**/b_reports/**/*.xlsx
+**/c_data/**/*.xlsx
 
 # rendered quarto docs (source .qmd is tracked, .html is regenerated)
 Mito_pipeline.html

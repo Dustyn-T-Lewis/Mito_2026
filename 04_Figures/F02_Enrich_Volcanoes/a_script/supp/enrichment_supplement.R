@@ -5,7 +5,7 @@
 #   enrichment_by_contrast : top themed sets in Disease / Transplant / Rescue
 #   disease_specificity    : the three interaction reads (main beside interaction)
 #   reversal               : one fixed set list read across the three contrasts
-# The earlier aim / claim / themed panels are kept under supp/archive.
+# This replaced the earlier aim / claim / themed panels; see git history for those.
 
 pacman::p_load(here, dplyr, tidyr, stringr, forcats, purrr, readr, ggplot2, patchwork)
 fns <- here::here("04_Figures", "functions")
@@ -23,7 +23,7 @@ FDR <- H9C2_FDR_STD
 TOP_N <- 8L
 
 # Pre-specified biological themes; a set is eligible if its name matches one. The
-# regexes are the union the archived aim/claim/themed panels used, kept in one place.
+# regexes are the union the earlier aim/claim/themed panels used, kept in one place.
 THEME_RE <- c(
   Respiration = paste0(
     "OXIDATIVE_PHOSPHOR|OXPHOS|AEROBIC_RESPIRATION|RESPIRATORY_ELECTRON|CRISTAE|",

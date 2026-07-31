@@ -1,0 +1,33 @@
+universe,pc,side,comp,n,frac
+top 500,PC1,+,Cytoskeleton,44,0.1512
+top 500,PC1,+,Mitochondrion,77,0.2646
+top 500,PC1,+,Nucleus,63,0.2165
+top 500,PC1,+,Other,107,0.3677
+top 500,PC1,−,Cytoskeleton,46,0.2201
+top 500,PC1,−,Mitochondrion,19,0.0909
+top 500,PC1,−,Nucleus,42,0.201
+top 500,PC1,−,Other,102,0.488
+top 500,PC2,+,Cytoskeleton,21,0.083
+top 500,PC2,+,Mitochondrion,35,0.1383
+top 500,PC2,+,Nucleus,73,0.2885
+top 500,PC2,+,Other,124,0.4901
+top 500,PC2,−,Cytoskeleton,37,0.1498
+top 500,PC2,−,Mitochondrion,51,0.2065
+top 500,PC2,−,Nucleus,57,0.2308
+top 500,PC2,−,Other,102,0.413
+whole,PC1,+,Cytoskeleton,265,0.1142
+whole,PC1,+,Mitochondrion,489,0.2107
+whole,PC1,+,Nucleus,609,0.2624
+whole,PC1,+,Other,958,0.4128
+whole,PC1,−,Cytoskeleton,397,0.1598
+whole,PC1,−,Mitochondrion,349,0.1404
+whole,PC1,−,Nucleus,634,0.2551
+whole,PC1,−,Other,1105,0.4447
+whole,PC2,+,Cytoskeleton,330,0.1347
+whole,PC2,+,Mitochondrion,378,0.1543
+whole,PC2,+,Nucleus,644,0.2629
+whole,PC2,+,Other,1098,0.4482
+whole,PC2,−,Cytoskeleton,332,0.1409
+whole,PC2,−,Mitochondrion,460,0.1952
+whole,PC2,−,Nucleus,599,0.2542
+whole,PC2,−,Other,965,0.4096

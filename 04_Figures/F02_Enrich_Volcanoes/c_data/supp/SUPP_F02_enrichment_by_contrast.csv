@@ -1,0 +1,25 @@
+figure,panel,pathway,database,theme,contrast,NES,pval,padj,size,sig
+enrichment_by_contrast,Disease,HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION,Hallmark,ECM / fibrosis,CTLvPHE,1.749,6.57e-4,0.0158,94,TRUE
+enrichment_by_contrast,Disease,REACTOME_EXTRACELLULAR_MATRIX_ORGANIZATION,Reactome,ECM / fibrosis,CTLvPHE,1.821,1.37e-4,0.0161,92,TRUE
+enrichment_by_contrast,Disease,HALLMARK_MYOGENESIS,Hallmark,Hypertrophic,CTLvPHE,1.67,0.00187,0.0225,96,TRUE
+enrichment_by_contrast,Disease,KEGG_DILATED_CARDIOMYOPATHY,KEGG,Hypertrophic,CTLvPHE,1.937,0.00112,0.0558,27,FALSE
+enrichment_by_contrast,Disease,GOSLIM_TELOMERE_ORGANIZATION,GO Slim,Proliferation,CTLvPHE,-1.917,1.47e-4,0.00191,63,TRUE
+enrichment_by_contrast,Disease,REACTOME_CELL_CYCLE,Reactome,Proliferation,CTLvPHE,-1.736,9.16e-5,0.0161,163,TRUE
+enrichment_by_contrast,Disease,HALLMARK_MYC_TARGETS_V1,Hallmark,Proliferation,CTLvPHE,-1.719,4.68e-5,0.00225,177,TRUE
+enrichment_by_contrast,Disease,HALLMARK_E2F_TARGETS,Hallmark,Proliferation,CTLvPHE,-1.605,0.00171,0.0225,104,TRUE
+enrichment_by_contrast,Transplant,REACTOME_COLLAGEN_CHAIN_TRIMERIZATION,Reactome,ECM / fibrosis,CTLvMITO,-1.939,0.00212,0.0808,12,FALSE
+enrichment_by_contrast,Transplant,REACTOME_CLATHRIN_MEDIATED_ENDOCYTOSIS,Reactome,Endocytic,CTLvMITO,-1.813,0.00131,0.0662,45,FALSE
+enrichment_by_contrast,Transplant,HALLMARK_MYC_TARGETS_V1,Hallmark,Proliferation,CTLvMITO,1.541,0.00118,0.0113,177,TRUE
+enrichment_by_contrast,Transplant,REACTOME_MITOTIC_METAPHASE_AND_ANAPHASE,Reactome,Proliferation,CTLvMITO,1.705,0.00217,0.0808,63,FALSE
+enrichment_by_contrast,Transplant,HALLMARK_FATTY_ACID_METABOLISM,Hallmark,Respiration,CTLvMITO,1.786,4.61e-4,0.00554,97,TRUE
+enrichment_by_contrast,Transplant,MITOCARTA_SMALL_MOLECULE_TRANSPORT__SLC25A_FAMILY,MitoCarta,Respiration,CTLvMITO,1.822,0.00307,0.0164,14,TRUE
+enrichment_by_contrast,Transplant,MITOCARTA_MITOCHONDRIAL_CENTRAL_DOGMA__TRANSLATION__MITOCHONDRIAL_RIBOSOME,MitoCarta,Respiration,CTLvMITO,1.996,9.43e-5,0.00151,55,TRUE
+enrichment_by_contrast,Transplant,HALLMARK_OXIDATIVE_PHOSPHORYLATION,Hallmark,Respiration,CTLvMITO,2.077,3.22e-8,1.55e-6,161,TRUE
+enrichment_by_contrast,Rescue,REACTOME_COLLAGEN_CHAIN_TRIMERIZATION,Reactome,ECM / fibrosis,PHEvPHE_MITO,-2.242,1.93e-5,0.00114,12,TRUE
+enrichment_by_contrast,Rescue,REACTOME_APC_C_MEDIATED_DEGRADATION_OF_CELL_CYCLE_PROTEINS,Reactome,Proliferation,PHEvPHE_MITO,1.982,4.77e-4,0.00543,29,TRUE
+enrichment_by_contrast,Rescue,REACTOME_FATTY_ACID_METABOLISM,Reactome,Respiration,PHEvPHE_MITO,1.805,0.00288,0.0199,51,TRUE
+enrichment_by_contrast,Rescue,MITOCARTA_MITOCHONDRIAL_CENTRAL_DOGMA__TRANSLATION__MITOCHONDRIAL_RIBOSOME,MitoCarta,Respiration,PHEvPHE_MITO,1.94,1.83e-4,7.54e-4,55,TRUE
+enrichment_by_contrast,Rescue,MITOCARTA_SMALL_MOLECULE_TRANSPORT__SLC25A_FAMILY,MitoCarta,Respiration,PHEvPHE_MITO,2.022,6.4e-4,0.00225,14,TRUE
+enrichment_by_contrast,Rescue,MITOCARTA_METABOLISM__LIPID_METABOLISM__FATTY_ACID_OXIDATION,MitoCarta,Respiration,PHEvPHE_MITO,2.166,4.7e-5,2.21e-4,32,TRUE
+enrichment_by_contrast,Rescue,HALLMARK_FATTY_ACID_METABOLISM,Hallmark,Respiration,PHEvPHE_MITO,2.382,1.1e-9,2.65e-8,97,TRUE
+enrichment_by_contrast,Rescue,HALLMARK_OXIDATIVE_PHOSPHORYLATION,Hallmark,Respiration,PHEvPHE_MITO,2.762,3.49e-18,1.67e-16,161,TRUE

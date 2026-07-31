@@ -1,0 +1,1015 @@
+contrast,database,pathway,label,NES,pval,padj,size,dedup_kept,leadingEdge
+PC1,Hallmark,HALLMARK_ADIPOGENESIS,Adipogenesis,1.705,7.84e-4,0.00627,119,TRUE,Uqcr10;Prdx3;Idh3g;Atp1b3;Samm50;Aldoa;Mdh2;Cs;Aldh2;Mtarc2;Taldo1;Acadm;Por;Dhcr7;Echs1;Gpx4;Slc25a1;Atp5po;Etfb;Dbt;Hibch;Dhrs7;Ndufs3;Acaa2;Uqcrq;Uqcrc1;Esyt1;Rtn3;Ywhag;Lpcat3;Uck1;Cd151;Slc25a10;Idh3a;Ech1;Cyc1;Ptcd3;Pgm1;Cpt2;Mtch2;Decr1;Qdpr;Acads;Ndufa5
+PC1,Hallmark,HALLMARK_ALLOGRAFT_REJECTION,Allograft Rejection,-1.393,0.0598,0.156,42,TRUE,Flna;Capg;Eif3j;Tgfb2;Stat1;Icam1;Eif5a;Ccnd2;Rps3a;Cd47;Csk;Tpd52;Npm1;Eif3d;Degs1;Map3k7
+PC1,Hallmark,HALLMARK_ANDROGEN_RESPONSE,Androgen Response,1.089,0.33,0.495,43,TRUE,Idi1;Actn1;Plpp1;Ccnd1;Acsl3;Sms;Cdk6;Gnai3;Ccnd3;Gpd1l;Rrp12;Stk39;Spcs3
+PC1,Hallmark,HALLMARK_ANGIOGENESIS,Angiogenesis,-1.736,0.0095,0.0388,16,TRUE,Col3a1;Lrpap1;Col5a2;Fstl1;Ccnd2;Itgav
+PC1,Hallmark,HALLMARK_APICAL_JUNCTION,Apical Junction,-1.105,0.273,0.436,80,TRUE,Cdh15;Flnc;Epb41l2;Inppl1;Sorbs3;Cnn2;Ikbkg;Zyx;Icam1;Tjp1;Hadh;Nectin2;Pcdh1;Cdh11;Wasl;Vasp;Msn;Stx4
+PC1,Hallmark,HALLMARK_APICAL_SURFACE,Apical Surface,0.652,0.913,0.952,10,TRUE,Gstm5;Thy1;Ephb4
+PC1,Hallmark,HALLMARK_APOPTOSIS,Apoptosis,-1.366,0.0618,0.156,68,TRUE,Pea15;Hmgb2;Sptan1;Tgfb2;Ppp3r1;Sod1;Add1;Mgmt;Bcap31;Cdkn1b;Ccnd2;Eno2;Bid;Cd44;Rock1;Bax;Avpr1a;Hspb1;Sqstm1;Gpx1;Dnaja1;Dap
+PC1,Hallmark,HALLMARK_BILE_ACID_METABOLISM,Bile Acid Metabolism,1.273,0.146,0.315,34,TRUE,Slc35b2;Idi1;Aldh9a1;Abcd3;Acsl5;Acsl1;Pex13;Slc29a1;Idh2
+PC1,Hallmark,HALLMARK_CHOLESTEROL_HOMEOSTASIS,Cholesterol Homeostasis,1.419,0.0541,0.156,43,TRUE,Acat2;Idi1;Nsdhl;Anxa5;Fasn;Lgals3;Sqle;Dhcr7;Ctnnb1;Fdft1;Fdps;Ech1;Fads2
+PC1,Hallmark,HALLMARK_COAGULATION,Coagulation,1.017,0.422,0.563,33,TRUE,Lta4h;Prep;Arf4;Anxa1;Gnb2;Rac1;Sirt2;Pef1;Mmp14
+PC1,Hallmark,HALLMARK_COMPLEMENT,Complement,1.612,0.00768,0.0368,63,TRUE,Pfn1;Lap3;Lta4h;Prep;Ppp4c;Src;Anxa5;Ppp2cb;Ctsd;Gnb2;Lgals3;Gnai2;Gnai3;Casp3;Ehd1;F5;Cblb;Lipa;Usp15;Mmp14;Usp14
+PC1,Hallmark,HALLMARK_DNA_REPAIR,DNA Repair,1.623,0.00509,0.0305,75,TRUE,Sec61a1;Vps28;Aprt;Nudt21;Rbx1;Pnp;Umps;Ddb1;Ncbp2;Hprt1;Nt5c3a;Gpx4;Tmed2;Ssrp1;Sdcbp;Impdh2;Rala;Rfc5;Dad1;Rfc3;Polr2g;Rfc4;Nme1;Polr1c;Eloa;Rnmt;Itpa;Mpc2
+PC1,Hallmark,HALLMARK_E2F_TARGETS,E2F Targets,-0.973,0.56,0.689,104,TRUE,Ranbp1;Srsf2;Paics;Hmgb2;Psip1;Anp32e;Nasp;Stmn1;Dnmt1;Lbr;Gspt1;Cdkn1b;Jpt1;Hnrnpd;Cbx5;Rrm2;Smc1a;Nap1l1;Smc3;Ak2;Dut;Spc24;Nbn;Trip13;H2ax
+PC1,Hallmark,HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION,EMT,-1.82,3.04e-4,0.00292,94,FALSE,Flna;Col3a1;Gpx7;Sparc;Col1a1;Capg;Calu;Mylk;Col1a2;Col5a2;Colgalt1;Cald1;Col5a1;Itga5;Sdc1;Fstl1;Eno2;Gpc1;Tpm4;Tpm1;Fbln1;Itgav;Cap2;Cdh11;Col12a1;Pdlim4;Cd44;Lrp1
+PC1,Hallmark,HALLMARK_ESTROGEN_RESPONSE_EARLY,Estrogen Response Early,-0.908,0.632,0.74,48,FALSE,Slc1a4;Farp1;Gab2;Bag1;Fkbp4;Amfr;Flnb;Cd44;Retreg1;Fhl2;Rab31;Dynlt3;Ncor2;Papss2
+PC1,Hallmark,HALLMARK_ESTROGEN_RESPONSE_LATE,Estrogen Response Late,1.048,0.385,0.529,49,TRUE,Ugdh;Gale;Ccnd1;Gfus;Blvrb;Hprt1;Dhcr7;Slc29a1;Etfb;Fdft1;Idh2
+PC1,Hallmark,HALLMARK_FATTY_ACID_METABOLISM,FA Metabolism,2.173,7.38e-7,1.77e-5,97,TRUE,Idh3g;Acat2;Idi1;Metap1;Aldoa;Nsdhl;Ugdh;Aldh9a1;Dlst;Mdh2;Eci2;Acsl5;Blvra;Acsl1;Ldha;Acadm;Fasn;Adsl;Ywhah;Suclg2;Sms;Hsdl2;Fh;Echs1;Pdhb;Hibch;Alad;Hsph1;Acaa2;Cpox;Auh;Aldh3a2;Eno3;Ech1;Urod;Cpt2;Aldh3a1;Sucla2;Decr1;Rdh11;Cpt1a;Acads;Sdha;Hadhb;Bphl;Hsd17b10;Mdh1;Gstz1;Cbr3;Acox1;Dhcr24;Hmgcl
+PC1,Hallmark,HALLMARK_G2M_CHECKPOINT,G2M Checkpoint,-1.062,0.322,0.495,95,TRUE,Srsf2;Kif5b;Slc7a1;Upf1;Marcks;Nasp;Slc12a2;Stmn1;Lbr;Gspt1;Cdkn1b;Hspa8;Cbx1;Jpt1;Hnrnpd;Smc1a;Tle3;Sfpq;Chmp1a;Ewsr1;H2ax;Srsf10;G3bp1;Dtymk;Abl1;Ddx39a;Lig3;Hnrnpu;Kif15;Dmd;Srsf1;Notch2
+PC1,Hallmark,HALLMARK_GLYCOLYSIS,Glycolysis,1.588,0.0031,0.0213,102,TRUE,Psmc4;Prps1;Eno1;Aldh7a1;Got2;Aldoa;Gfpt1;Nsdhl;Akr1a1;Aldh9a1;Rars1;Mdh2;Taldo1;Ppp2cb;Ldha;Gale;Pygb;Gfus;Ugp2;Pgk1;P4ha1;Me2;Mpi;Glrx;Hk2;Cdk1;Slc25a10;Fam162a;Ndufv3;Srd5a3;B4galt7;Pgam1;Gne;Ero1a;Agl;Tpi1;Gpc4;Bpnt1
+PC1,Hallmark,HALLMARK_HEDGEHOG_SIGNALING,Hedgehog Signaling,1.498,0.055,0.156,13,TRUE,Rasa1;Cdk6;Adgrg1;Pml;Rtn1;Dpysl2;Thy1
+PC1,Hallmark,HALLMARK_HEME_METABOLISM,Heme Metabolism,0.988,0.479,0.605,77,TRUE,Prdx2;Nek7;Gmps;Blvra;Ypel5;Blvrb;Aldh6a1;Alad;Htatip2;Ccnd3;Cpox;Xpo7;Sdcbp;Mark3;Nudt4;Urod;Usp15;Ranbp10
+PC1,Hallmark,HALLMARK_HYPOXIA,Hypoxia,1.145,0.189,0.347,85,TRUE,Eno1;Anxa2;Aldoa;Nagk;Lxn;Ldha;Ugp2;Gpi;Hexa;Slc25a1;Pgk1;P4ha1;Gapdh;Glrx;Hk2;Eno3;Pygm;Fam162a;Csrp2;Pgm1
+PC1,Hallmark,HALLMARK_IL2_STAT5_SIGNALING,IL2 STAT5 Signaling,1.113,0.25,0.414,64,TRUE,Uck2;Pnp;Dcps;Plpp1;Umps;Snx9;Wls;Adam19;Gpx4;P4ha1;Gsto1;Casp3;Ccnd3;Rhob;Hk2;Eno3;Anxa4;Eef1akmt1;Igf2r;Rnh1;Glipr2
+PC1,Hallmark,HALLMARK_IL6_JAK_STAT3_SIGNALING,IL6 JAK STAT3 Signaling,-0.677,0.905,0.952,19,TRUE,Stam2;Stat1;Cd44;Cbl;Il6st;Hax1;Ptpn11;Ltbr;Jun;Fas
+PC1,Hallmark,HALLMARK_INFLAMMATORY_RESPONSE,Inflammatory Response,-0.982,0.472,0.605,34,TRUE,Slc7a1;Itga5;Icam1;Ldlr;Adrm1;Eif2ak2;Pvr;Atp2b1;Ripk2;Raf1;Tpbg;Rela
+PC1,Hallmark,HALLMARK_INTERFERON_ALPHA_RESPONSE,Interferon Alpha Response,-0.835,0.719,0.821,27,FALSE,Ogfr;Psme1;Cd47;Ifi35;Eif2ak2;Ripk2;Tdrd7;Gbp2;Wars1;Ncoa7;Rnf31;Pnpt1
+PC1,Hallmark,HALLMARK_INTERFERON_GAMMA_RESPONSE,Interferon Gamma Response,1.068,0.354,0.515,48,FALSE,Psma3;Psmb2;Lap3;Psma2;Pnp;Stat3;Casp3;Nfkb1;Mthfd2;Psme2;Pml
+PC1,Hallmark,HALLMARK_KRAS_SIGNALING_DN,KRAS Signaling Dn,-0.744,0.818,0.892,14,TRUE,Tgfb2;Synpo;Itih3;Sphk2;Gprc5c
+PC1,Hallmark,HALLMARK_KRAS_SIGNALING_UP,KRAS Signaling Up,-0.795,0.78,0.87,30,TRUE,Epb41l3;Akap12;Ccnd2;Peg3;Gypc;Strn;Adgra2;Cbl
+PC1,Hallmark,HALLMARK_MITOTIC_SPINDLE,Mitotic Spindle,-1.477,0.0105,0.0388,114,TRUE,Flna;Cdc42ep4;Cttn;Sptan1;Clip1;Bin1;Kif5b;Hdac6;Klc1;Epb41l2;Farp1;Ezr;Marcks;Sorbs2;Arhgef2;Flnb;Hook3;Cdc42ep1;Wasl;Ckap5;Smc1a;Ranbp9;Pxn;Rock1;Synpo;Cd2ap;Shroom1;Rabgap1;Smc3;Ppp4r2;Akap13;Anln;Stau1;Katnb1;Abl1;Arhgef12;Arhgap29;Clip2
+PC1,Hallmark,HALLMARK_MTORC1_SIGNALING,MTORC1 Signaling,1.877,1.88e-5,3e-4,135,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Eno1;Tuba4a;Bcat1;Idi1;Psph;Aldoa;Lta4h;Psma4;Atp2a2;Gmps;Pnp;Dhfr;Ube2d3;Ldha;Actr3;Gpi;Acsl3;Cacybp;Prdx1;Ppa1;Hprt1;Uchl5;Acaca;Psmd12;Sqle;Dhcr7;Pgk1;Nupr1;P4ha1;Serpinh1;Nup205;Shmt2;Mthfd2;Gapdh;Glrx;Tomm40;Hk2;Rpn1;Tubg1;Psmc6;Sec11a;Fads2;Pgm1;Rpa1;Psmd14;Qdpr;Rdh11;Hsp90b1;Ero1a;Tpi1;Slc7a5;Mcm2
+PC1,Hallmark,HALLMARK_MYC_TARGETS_V1,MYC Targets V1,1.724,1.37e-4,0.00164,178,TRUE,Cdk4;Snrpd3;Prdx3;Psmc4;Rack1;Xpo1;Psmb2;Phb1;Got2;Psmb3;Psma6;Psma4;Slc25a3;Cct7;Psma2;Cct2;U2af1;Kpnb1;Aimp2;Rplp0;Cad;Ldha;Vdac3;Cct3;Psma7;Cdk2;Tomm70;Ncbp2;Pcbp1;Hprt1;Cct5;Ywhae;Vdac1;Psmd8;Eif2s1;Eif4a1;Bub3;Pgk1;Prdx4;Iars1;Psma1;Tcp1;Mcm7;Impdh2;Phb2;Cul1;Mrps18b;Trim28;Psmc6;Cyc1;Dek;Dhx15;Rps2;Rpl22;Eif1ax;Psmd14;Mcm6;Hsp90ab1;Ruvbl2;Rps5;Rfc4;Ncbp1;Ran;Nme1;Mcm2;Sf3b3;Mad2l1;Rps10
+PC1,Hallmark,HALLMARK_MYC_TARGETS_V2,MYC Targets V2,1.169,0.24,0.411,29,TRUE,Cdk4;Phb1;Aimp2;Grwd1;Hk2;Rrp12;Bysl;Las1l;Prmt3;Tbrg4;Pa2g4
+PC1,Hallmark,HALLMARK_MYOGENESIS,Myogenesis,-1.33,0.0556,0.156,96,FALSE,Col3a1;Sparc;Col1a1;Sptan1;Bin1;Mylk;Sorbs3;Cdh13;Ldb3;Smtn;Myh4;Fabp3;Bag1;Cnn3;Pdlim7;Ncam1;Ak1;Pfkm;Tnnc2;Igfbp7;Fst;Tpm3;Gaa;Mapre3;Tnnc1;Ctf1
+PC1,Hallmark,HALLMARK_OXIDATIVE_PHOSPHORYLATION,OXPHOS,2.215,3.01e-9,1.44e-7,161,TRUE,Uqcr10;Prdx3;Ldhb;Idh3g;Etfa;Slc25a12;Ndufa6;Atp5mg;Got2;Lrpprc;Slc25a3;Dlst;Mdh2;Vdac2;Cyb5r3;Cs;Uqcrc2;Oat;Ldha;Vdac3;Pmpca;Acadm;Atp5pb;Glud1;Tomm70;Oxa1l;Gpi;Slc25a11;Por;Vdac1;Ndufs2;Pdhx;Fh;Echs1;Gpx4;Atp5po;Aldh6a1;Rhot1;Atp6v1c1;Etfb;Idh2;Pdhb;Ndufb5;Ndufs3;Acaa2;Uqcrq;Slc25a20;Atp5mf;Uqcrc1;Atp5f1e;Atp5me;Phb2;Slc25a4;Atp6v0c;Atp5f1b;Idh3a;Ech1;Timm50;Cyc1;Tcirg1;Sucla2;Timm10;Nnt;Decr1;Slc25a5;Cpt1a;Atp5f1c;Ndufa5;Ndufs1;Sdha;Ndufa9;Uqcr11;Hadhb;Mrps30;Ogdh;Hsd17b10;Mdh1;Ndufa8;Cox7b
+PC1,Hallmark,HALLMARK_P53_PATHWAY,p53 Pathway,0.733,0.935,0.955,66,TRUE,Sec61a1;Ldhb;Rack1;Ctsd;Bak1;Nupr1;Ccnd3;Pmm1;Fam162a;Rps27l;Elp1;F2r;Vwa5a;Apaf1;Epha2;Fuca1;Baiap2;Cyfip2;Abhd4;Stom;Dgka;Rap2b;Cdkn1a
+PC1,Hallmark,HALLMARK_PEROXISOME,Peroxisome,1.57,0.0105,0.0388,53,TRUE,Slc35b2;Idi1;Aldh9a1;Abcd3;Eci2;Fis1;Acsl5;Acsl1;Pex13;Ywhah;Prdx1;Nudt19;Idh2;Fdps;Ctbp1;Slc25a4;Ech1
+PC1,Hallmark,HALLMARK_PI3K_AKT_MTOR_SIGNALING,PI3K AKT mTOR Signaling,1.247,0.125,0.285,57,TRUE,Cdk4;Pfn1;Ppp1ca;Cab39;Cltc;Ube2d3;Cdk2;Actr3;Ywhab;Acaca;Dusp3;Ube2n;Rac1;Cdk1;Hsp90b1;Ecsit;Nck1;Prkar2a;Cab39l;Prkag1;Pten;Plcg1;Stat2;Arhgdia;Cdkn1a;Grb2;Pikfyve;Slc2a1
+PC1,Hallmark,HALLMARK_PROTEIN_SECRETION,Protein Secretion,-1.242,0.103,0.248,76,TRUE,Vamp3;Arfgap3;Scamp1;Stam;Scrn1;Golga4;Uso1;Ap3s1;Sod1;Anp32e;Stx12;Stx7;Rab2a;Clta;Lman1;Vps4b;Cav2;Napg;Tpd52;M6pr;Snap23;Rab14;Arfip1
+PC1,Hallmark,HALLMARK_REACTIVE_OXYGEN_SPECIES_PATHWAY,Reactive Oxygen Species Pathway,1.244,0.179,0.344,30,TRUE,Prdx2;Ndufa6;Ptpa;Nqo1;Prdx1;Ndufs2;Gpx4;Prdx4;Glrx
+PC1,Hallmark,HALLMARK_SPERMATOGENESIS,Spermatogenesis,1.217,0.195,0.347,26,TRUE,Hspa2;Tsn;Gstm5;Taldo1;Vdac3;Tuba3a;Cdk1;Rfc4;Prkar2a
+PC1,Hallmark,HALLMARK_TGF_BETA_SIGNALING,TGF Beta Signaling,1.056,0.376,0.529,24,TRUE,Ppp1ca;Smurf1;Fnta;Ube2d3;Ctnnb1
+PC1,Hallmark,HALLMARK_TNFA_SIGNALING_VIA_NFKB,TNFA Signaling Via NF-kB,-1.222,0.151,0.315,44,TRUE,Eif1;Marcks;Icam1;Ldlr;Tsc22d1;Cd44;Trip10;Sqstm1;Slc2a3;Litaf;Tubb2a;Ccn1;Atp2b1;Ripk2;Dnajb4;Rela;Tank;Il6st;Tnfaip8;Jag1;Nfkb2;Rel;Jun;F3;Fosl2
+PC1,Hallmark,HALLMARK_UNFOLDED_PROTEIN_RESPONSE,UPR,-1.177,0.161,0.321,71,FALSE,Khsrp;Bag3;Arfgap1;Eif4ebp1;Slc1a4;Kif5b;Hyou1;Preb;Hspa9;Edc4;Eif4g1;Asns;Banf1;Npm1;Calr;Dnaja4;Cnot2;H2ax;Hspa5;Ssr1;Tubb2a;Atp6v0d1;Fus;Dctn1
+PC1,Hallmark,HALLMARK_UV_RESPONSE_DN,UV Response Dn,-1.59,0.00599,0.032,69,TRUE,Col3a1;Col1a1;Map1b;Col1a2;Col5a2;Adgrl2;Slc7a1;Tjp1;Rbpms;Mgmt;Ldlr;Cdkn1b;Ddah1;Cap2;Sdc2;Pex14;Atxn1;Col11a1;Fhl2;Fzd2;Ccn1;Dab2;Prkce;Prkar2b;Atp2b1;Mrps31;Nr3c1;Notch2;Nfib;Runx1;Mta1
+PC1,Hallmark,HALLMARK_UV_RESPONSE_UP,UV Response Up,0.923,0.621,0.74,75,TRUE,Hspa2;Tuba4a;Aldoa;Bak1;Cdk2;Sigmar1;Atp6v1c1;Casp3;Ccnd3;Rhob;Cyb5r1;Slc25a4;Rpn1;Spr;Urod;Mmp14;Tmbim6
+PC1,Hallmark,HALLMARK_WNT_BETA_CATENIN_SIGNALING,WNT Beta Catenin Signaling,0.453,0.996,0.996,12,TRUE,Ctnnb1;Cul1
+PC1,Hallmark,HALLMARK_XENOBIOTIC_METABOLISM,Xenobiotic Metabolism,1.514,0.0178,0.0609,77,TRUE,Pycr1;Bcat1;Atp2a2;Ugdh;Aldh9a1;Aldh2;Nqo1;Sar1b;Blvrb;Hprt1;Por;Gart;Lonp1;Dhrs7;Gsto1;Shmt2;Comt;Mccc2;Pmm1;Ech1;Tmbim6;Nfs1;Aldh3a1;Tkfc;Bphl;Epha2;Acox1;Slc35b1;Fah;Ahcy;Vtn;Cyfip2;Maoa;Acp1;Gss;Plg
+PC2,Hallmark,HALLMARK_ADIPOGENESIS,Adipogenesis,1.166,0.16,0.736,119,TRUE,Jagn1;Bckdha;Tkt;Cyc1;Mtch2;Rtn3;Retsat;Idh1;Coq9;Sdhb;Me1;Ndufa5;Sqor;Decr1;Cox7b;Hspb8;Araf;Idh3a;Rab34
+PC2,Hallmark,HALLMARK_ALLOGRAFT_REJECTION,Allograft Rejection,0.774,0.825,0.886,42,TRUE,Dars1;Nme1;Csk;Npm1;Mrpl3;Galnt1;F2;Aars1;F2r;Ube2n;Gbp2;Abce1
+PC2,Hallmark,HALLMARK_ANDROGEN_RESPONSE,Androgen Response,0.928,0.565,0.847,43,TRUE,Ube2i;Rps6ka3;Elovl5;Pdlim5;Srp19;Gnai3;Plpp1;Slc38a2;Pgm3;Hmgcs1;Ube2j1;Idi1;Acsl3;Adrm1;Vapa;Fads1;Cdk6;Pa2g4;Uap1;Rrp12;Xrcc6;Tnfaip8
+PC2,Hallmark,HALLMARK_ANGIOGENESIS,Angiogenesis,0.684,0.886,0.886,16,TRUE,Fstl1;Nrp1;Lpl;Col3a1;Vcan;App;Col5a2;Vtn;Lrpap1
+PC2,Hallmark,HALLMARK_APICAL_JUNCTION,Apical Junction,-1.014,0.444,0.736,80,TRUE,Pten;Nf2;Arhgef6;Tsc1;Ctnnd1;Actn4;Exoc4;Crat;Jam3;Cap1;Pals1;Tubg1;Itga3;Tjp1;Parva;Cdh11;Rsu1;Ywhah;Icam1;Thy1;Slit2;Dlg1;Dhx16
+PC2,Hallmark,HALLMARK_APICAL_SURFACE,Apical Surface,0.854,0.651,0.858,10,TRUE,Plaur;Afap1l2;Ephb4;Srpx
+PC2,Hallmark,HALLMARK_APOPTOSIS,Apoptosis,-1.113,0.276,0.736,68,TRUE,Timp2;Ppt1;Ppp2r5b;Hspb1;Pak1;Dnajc3;Rock1;Xiap;Cdkn1a;Plat;Jun;Ppp3r1;Casp3;Dnm1l;Ccnd2;Gsr;Bax;Lgals3;Casp7;Bid
+PC2,Hallmark,HALLMARK_BILE_ACID_METABOLISM,Bile Acid Metabolism,-0.764,0.857,0.886,34,TRUE,Abca9;Prdx5;Paox;Gclm;Cat;Lonp2;Nedd4
+PC2,Hallmark,HALLMARK_CHOLESTEROL_HOMEOSTASIS,Cholesterol Homeostasis,1.058,0.364,0.736,43,TRUE,Plaur;Acss2;Anxa5;Niban1;Ldlr;Dhcr7;Fbxo6;Hmgcs1;Lgmn;Gpx8;Idi1;Lpl;Ctnnb1;S100a11;Fasn;Mvk;Alcam;Pmvk;Adh5;Fabp5;Ebp
+PC2,Hallmark,HALLMARK_COAGULATION,Coagulation,1.281,0.129,0.736,33,TRUE,Adam9;Pef1;Lrp1;Crip2;Wdr1;Rabif;F2;Bmp1;Gng12;Ctsl;Prep;Lgmn;Gnb2
+PC2,Hallmark,HALLMARK_COMPLEMENT,Complement,1.131,0.23,0.736,63,TRUE,Rhog;Pdp1;Adam9;Raf1;Col4a2;Plaur;Me1;Kif2a;Cd59;Lrp1;Anxa5;Psen1;Rabif;Grb2;F2;Gnai3;Ctsl;Gpd2;Prep;Ppp4c;Lgmn
+PC2,Hallmark,HALLMARK_DNA_REPAIR,DNA Repair,-0.893,0.68,0.858,75,FALSE,Polr1c;Guk1;Rfc2;Sdcbp;Ssrp1;Zwint;Rala;Rfc3;Lig1;Ak3;Tsg101;Nelfe;Rnmt;Tmed2;Pold1;Eloa;Polr2e;Nelfb
+PC2,Hallmark,HALLMARK_E2F_TARGETS,E2F Targets,-1.051,0.352,0.736,104,TRUE,Rad50;Ccne1;Mcm3;Smc4;Rfc2;Mcm2;Exosc8;Ssrp1;Asf1a;Rfc3;Lig1;Cdkn1a;Smc3;Shmt1;Anp32e;Hmga1;Msh2;Tubg1;Tfrc;Lyar;Gspt1;Mre11;Mcm6;Ilf3;Pold1;Nup153
+PC2,Hallmark,HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION,EMT,1.271,0.0828,0.664,94,FALSE,Plod1;Tagln;Efemp2;Emp3;Col4a2;Plaur;Fstl1;Fbln1;Col11a1;Cadm1;Bgn;Cd59;Plod3;Copa;Lrp1;Pcolce;Fbln5;Tpm2;Notch2;Itgb5;Fuca1;Fermt2;Col5a1;Bmp1;Eno2
+PC2,Hallmark,HALLMARK_ESTROGEN_RESPONSE_EARLY,Estrogen Response Early,1.545,0.0225,0.461,48,TRUE,Fhl2;Wfs1;Elovl5;Dynlt3;Hspb8;Arl3;Papss2;Slc39a6;Myof;Dhcr7;Bag1;Gab2;Med24;Inpp5f;Mybbp1a;Rab31;Slc1a4;Slc7a5;Retreg1;Blvrb;Plaat3;Gja1;Cd44;Rhobtb3;Deptor;Fasn;Tpbg
+PC2,Hallmark,HALLMARK_ESTROGEN_RESPONSE_LATE,Estrogen Response Late,0.84,0.739,0.858,49,FALSE,Wfs1;Elovl5;Dynlt3;Prkar2b;Hspb8;Arl3;Papss2;Myof;Dhcr7;Bag1;Rab31;Slc1a4;Slc7a5
+PC2,Hallmark,HALLMARK_FATTY_ACID_METABOLISM,FA Metabolism,0.797,0.88,0.886,97,FALSE,Hsd17b10;Cbr3;Retsat;Cryz;Elovl5;Idh1;Gcdh;Etfdh;Me1;Decr1;Bphl;Eci2;Bckdhb
+PC2,Hallmark,HALLMARK_G2M_CHECKPOINT,G2M Checkpoint,1.013,0.435,0.736,95,TRUE,Ewsr1;Cul5;Snrpd1;Srsf1;Pafah1b1;Cul1;Pola2;Prmt5;Prim2;Pds5b;Mcm5;Cdkn2c;Ddx39a;Rbm14;Notch2;Lig3;Chmp1a;Slc7a5;Tra2b;Slc7a1;Hnrnpu;Ncl;Sfpq;Slc25a3;G3bp1;Ctcf;Uck2;Smc1a;Tle3;Rasal2;H2ax;Jpt1;Xpo1;Nolc1;Cbx1;Kif4a;Rpa2;Numa1;Srsf10;Map3k20
+PC2,Hallmark,HALLMARK_GLYCOLYSIS,Glycolysis,0.878,0.738,0.858,102,TRUE,Plod1;Copb2;Galk1;Idh1;Galk2;B4galt7;Vldlr;Me1;Kif2a;Gys1;Sdc2;Pgam1;Gmppa;Bpnt1;Pgam2;Fut8;Ugp2;Col5a1;Med24;Eno2;Glce;Pc;Aldoa;Ecd
+PC2,Hallmark,HALLMARK_HEDGEHOG_SIGNALING,Hedgehog Signaling,0.69,0.872,0.886,13,TRUE,Vldlr;Nrp1;Rtn1;Plg;Tle3;Adgrg1;Cdk6
+PC2,Hallmark,HALLMARK_HEME_METABOLISM,Heme Metabolism,-1.117,0.268,0.736,77,TRUE,Ppp2r5b;Tns1;Sdcbp;Usp15;Gclc;Slc30a1;Bsg;Nnt;Rad23a;Daam1;Agpat4;Ppox;Picalm;Gclm;Cat;Tfrc;Hebp1;Arhgef12;Synj1;Myl4;Gde1
+PC2,Hallmark,HALLMARK_HYPOXIA,Hypoxia,-0.781,0.885,0.886,85,TRUE,Gpc4;Prdx5;Plin2;Gapdh;Hspa5;Glrx;Cdkn1a;Tpd52;Pdk3;Jun;Tpst2;Pfkl;Fosl2;Cavin3;Pgk1;Hdlbp;Pkp1;Pgm1;Pgm2;P4ha1;Slc2a3;Ero1a;Hk2;Ldha
+PC2,Hallmark,HALLMARK_IL2_STAT5_SIGNALING,IL2 STAT5 Signaling,-1.292,0.083,0.664,64,TRUE,Ccne1;Ahnak;Cdc42se2;Slc1a5;Plin2;Ahr;Ncs1;Huwe1;Casp3;Cd48;Itgav;Galm;Ccnd2;P4ha1;Ptrh2;Slc2a3;Plec;Myo1e;Ckap4;Hk2;Rhob;Serpinc1;Eef1akmt1
+PC2,Hallmark,HALLMARK_IL6_JAK_STAT3_SIGNALING,IL6 JAK STAT3 Signaling,0.835,0.677,0.858,19,TRUE,Ptpn1;Grb2;Bak1;Ltbr;Hmox1;Cd44;Fas;Stat3
+PC2,Hallmark,HALLMARK_INFLAMMATORY_RESPONSE,Inflammatory Response,-1.071,0.344,0.736,34,TRUE,Pvr;Nampt;Cd82;Ahr;Mmp14;Selenos;Abi1;Cdkn1a;Icoslg;Cd48;Atp2b1;Icam1;Eif2ak2
+PC2,Hallmark,HALLMARK_INTERFERON_ALPHA_RESPONSE,Interferon Alpha Response,-1.069,0.369,0.736,27,TRUE,Mvb12a;Cd47;Trafd1;Eif2ak2;Wars1;Gmpr;Pnpt1;Ifi35;Stat2
+PC2,Hallmark,HALLMARK_INTERFERON_GAMMA_RESPONSE,Interferon Gamma Response,-1.017,0.431,0.736,48,FALSE,Nampt;Pla2g4a;Ptgs2;Cdkn1a;Tor1b;Casp3;Trafd1;Vamp8;Icam1;Eif2ak2;Wars1;Casp7;Pnpt1;Pml;Mvp;Ifi35;Stat2;Stat1;Myd88
+PC2,Hallmark,HALLMARK_KRAS_SIGNALING_DN,KRAS Signaling Dn,1.023,0.434,0.736,14,TRUE,Ckm;Itih3;Vps50;Myh7;Gamt
+PC2,Hallmark,HALLMARK_KRAS_SIGNALING_UP,KRAS Signaling Up,-1.036,0.386,0.736,30,TRUE,Strn;Adgra2;Eng;Ptgs2;Glrx;Prrx1;Vwa5a;Plat
+PC2,Hallmark,HALLMARK_MITOTIC_SPINDLE,Mitotic Spindle,-1.367,0.0283,0.461,114,TRUE,Ccdc88a;Arhgap10;Sptbn1;Clip2;Nck2;Dst;Stau1;Smc4;Flnb;Katnb1;Cdc42;Wasf2;Rock1;Hook3;Tsc1;Akap13;Actn4;Abi1;Arfgef1;Ezr;Smc3;Abl1;Kif15;Abr;Ckap5;Arhgef12;Clasp1;Pxn;Arhgdia;Myo9b;Myo1e;Shroom1;Septin9;Dlg1;Clip1;Pcm1;Tubgcp3;Cd2ap;Arf6
+PC2,Hallmark,HALLMARK_MTORC1_SIGNALING,MTORC1 Signaling,-1.025,0.4,0.736,135,TRUE,Ykt6;Nampt;Slc1a5;Pitpnb;Gapdh;Gclc;Hspa5;Psat1;Tbk1;Hsp90b1;Mcm2;Fkbp2;Glrx;Cops5;Actr2;Hspe1;Cdkn1a;Plod2;Gla;Hspa4;Qdpr;Pfkl;Tubg1;Sord;Tfrc;Pgk1;Ssr1;Acly;Pgm1;Immt;P4ha1;Gsr;Slc2a3;Wars1;Lta4h;Ero1a;Hk2;Psmd14;Ldha
+PC2,Hallmark,HALLMARK_MYC_TARGETS_V1,MYC Targets V1,1.114,0.217,0.736,178,TRUE,Ywhaq;Hddc2;Hdac2;Snrpa;Cyc1;Rpl18;Erh;Serbp1;Snrpd1;Srsf1;Nop16;Cul1;Nme1;Hnrnpa3;Snrpd2;Psmd1;Ran;Npm1;Hnrnpa1;Nap1l1;Rpl14;Mcm5;Mcm4;Pcna;Rrm1;Dhx15;Canx;Eif4a1;Psmc6;Ctps1;Hnrnpa2b1;Snrpb2;Cnbp;Srsf3;Lsm2;Lsm7;Hnrnpr;Tcp1;Sf3b3;Cad;Fam120a;Tra2b;Iars1;Abce1;Rack1;Hnrnpu;Mcm7;Cct7;Slc25a3;Rnps1;Snrpg;Rsl1d1;Eif1a;G3bp1;Set;Eif4g2;Rps5;Psmc4;Nhp2;Xpo1;Nolc1;Hnrnpc;Ddx21;Xpot
+PC2,Hallmark,HALLMARK_MYC_TARGETS_V2,MYC Targets V2,0.86,0.668,0.858,29,TRUE,Nop16;Npm1;Mcm5;Mcm4;Grwd1;Mybbp1a;Tbrg4;Rabepk;Nolc1;Pa2g4;Pes1;Rrp12;Hspd1;Nop2;Nop56
+PC2,Hallmark,HALLMARK_MYOGENESIS,Myogenesis,1.203,0.139,0.736,96,TRUE,Tagln;Mb;Fhl1;Pygm;Col4a2;Myog;Ckm;Hspb8;Pdlim7;Sorbs3;Cav3;Prnp;Tpm2;Itgb5;Pgam2;Bag1;Tsc2;Eif4a2;Dennd2b;Mybph;Akt2;Myh7;Cryab;Pc;Gabarapl2;Gnao1;Sorbs1;Atp2a1;Cnn3;Pfkm;Sptan1;Sgca;Lsp1;Col15a1;Bin1;Mylk;Acsl1;Eno3;Col3a1;Ldb3;Mapre3;Col1a1;Pkia;Csrp3;Wwtr1;App;Smtn
+PC2,Hallmark,HALLMARK_OXIDATIVE_PHOSPHORYLATION,OXPHOS,-1.014,0.416,0.736,161,FALSE,Dlat;Acat1;Atp5f1a;Cox7a2;Cox5a;Acadvl;Dld;Ndufs4;Atp5f1b;Suclg1;Opa1;Mdh1;Timm13;Cyb5a;Cox4i1;Ndufv1;Etfb;Aco2;Ndufs1;Nnt;Phb2;Oat;Ndufa9;Atp1b1;Timm8b;Mdh2;Bdh2;Eci1;Supv3l1;Vdac1;Immt;Glud1;Uqcrb;Bax;Slc25a11;Hadhb;Casp7;Cox7a2l;Ldha;Uqcrc2;Ndufa2;Atp5f1d;Htra2;Timm10;Uqcrh;Idh2;Ndufv2;Mrps22;Rhot1;Idh3g;Hccs;Atp5mf;Ndufs3;Atp5me
+PC2,Hallmark,HALLMARK_P53_PATHWAY,p53 Pathway,1.114,0.26,0.736,66,TRUE,Rps12;Prkab1;Ei24;Rpl18;Retsat;Steap3;Sp1;Pcna;Cd81;Bak1;Dgka;Fuca1;S100a10;Nupr1;Elp1;F2r
+PC2,Hallmark,HALLMARK_PEROXISOME,Peroxisome,0.944,0.554,0.847,53,TRUE,Retsat;Elovl5;Idh1;Cadm1;Eci2;Ide;Prdx1;Slc25a4;Ctps1;Cnbp;Fis1
+PC2,Hallmark,HALLMARK_PI3K_AKT_MTOR_SIGNALING,PI3K AKT mTOR Signaling,0.868,0.732,0.858,57,TRUE,Raf1;Irak4;Rps6ka3;Sqstm1;Ap2m1;Calr;Csnk2b;Cltc;Grb2;Map2k3;Plcg1;Tsc2;Ube2n;Gna14
+PC2,Hallmark,HALLMARK_PROTEIN_SECRETION,Protein Secretion,-1.21,0.126,0.736,76,FALSE,Ykt6;Atp1a1;Ppt1;Snx2;Dst;Arfgef2;Snap23;Rab2a;Bet1;Tsg101;Arfgef1;Yipf6;Gla;Tpd52;Anp32e;Stx12;Mapk1;Tmed2;Dnm1l;Sec22b
+PC2,Hallmark,HALLMARK_REACTIVE_OXYGEN_SPECIES_PATHWAY,Reactive Oxygen Species Pathway,-1.017,0.422,0.736,30,TRUE,Gclc;Selenos;Glrx;Atox1;Gclm;Oxsr1;Cat;Gsr;Prdx6
+PC2,Hallmark,HALLMARK_SPERMATOGENESIS,Spermatogenesis,-1.05,0.371,0.736,26,TRUE,Ncaph;Cct6b;Nf2;Csnk2a2;Jam3;Slc12a2
+PC2,Hallmark,HALLMARK_TGF_BETA_SIGNALING,TGF Beta Signaling,-0.933,0.54,0.847,24,TRUE,Sptbn1;Trim33;Xiap;Eng;Tjp1;Ncor2
+PC2,Hallmark,HALLMARK_TNFA_SIGNALING_VIA_NFKB,TNFA Signaling Via NF-kB,-0.861,0.712,0.858,44,TRUE,Nampt;Ptgs2;Cdkn1a;Jun;Dnajb4;Icoslg;Fosl2;Atp2b1;Icam1;Tnc;Slc2a3;B4galt5;Smad3;Rhob;Yrdc
+PC2,Hallmark,HALLMARK_UNFOLDED_PROTEIN_RESPONSE,UPR,1.433,0.0288,0.461,71,TRUE,Yif1a;Ywhaz;Fkbp14;Wfs1;Dnaja4;Eif4a3;Parn;Asns;Calr;Fus;Eef2;Banf1;Npm1;Aldh18a1;Eif4a1;Atp6v0d1;Tars1;Gosr2;Eif4a2;Mthfd2;Mtrex;Slc1a4;Slc7a5
+PC2,Hallmark,HALLMARK_UV_RESPONSE_DN,UV Response Dn,1.336,0.0795,0.664,69,TRUE,Fhl2;Fzd2;Vldlr;Col11a1;Prkar2b;Prkce;Nfkb1;Bckdhb;Igfbp5;Sdc2;Fbln5;Prkca;Mrps31;Pdlim5;Atrn;Notch2;Ldlr;Mgmt;Dyrk1a
+PC2,Hallmark,HALLMARK_UV_RESPONSE_UP,UV Response Up,0.916,0.632,0.858,75,TRUE,Cyb5r1;Eif5;Sqstm1;Nup58;Asns;Dnaja1;Ago2;Cdc34;Ptprd;Slc25a4;Stk25;Tars1;Bak1;Sigmar1;Rab27a;Ap2s1;Eno2;Cdkn2b;Ctsl;Tmbim6
+PC2,Hallmark,HALLMARK_WNT_BETA_CATENIN_SIGNALING,WNT Beta Catenin Signaling,0.784,0.751,0.858,12,TRUE,Hdac2;Cul1
+PC2,Hallmark,HALLMARK_XENOBIOTIC_METABOLISM,Xenobiotic Metabolism,1.047,0.346,0.736,77,TRUE,Jup;Retsat;Ssr3;Elovl5;Idh1;Fbln1;Etfdh;Comt;Bphl;Mthfd1;Mccc2;Pdlim5;Papss2;Slc12a4;Fah;Tmbim6;Cndp2;Pc;Ahcy;Sar1b;Bcar1;Slc6a6;Aldh2;Blvrb;Pgrmc1;Hmox1;Plg;Gart
+PC1,Reactome,REACTOME_ABC_FAMILY_PROTEINS_MEDIATED_TRANSPORT,Abc Family Proteins Mediated Transport,2.156,1.95e-4,0.00197,27,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Abcd3;Psma2;Psma7;Psmd12;Psmd8;Eif2s1
+PC1,Reactome,REACTOME_ACTIVATION_OF_ANTERIOR_HOX_GENES_IN_HINDBRAIN_DEVELOPMENT_DURING_EARLY_EMBRYOGENESIS,Activation Of Anterior Hox Genes In Hindbrain Development During Early Embryogenesis,-0.643,0.935,0.972,13,TRUE,Polr2i;H2ax;Jun;Cnot9;Ctcf;Polr2k
+PC1,Reactome,REACTOME_ACTIVATION_OF_ATR_IN_RESPONSE_TO_REPLICATION_STRESS,Activation Of Atr In Resp. to Replication Stress,1.855,0.0037200000000000002,0.0182,13,FALSE,Cdk2;Mcm7;Rfc5;Rfc3;Rpa1;Mcm6;Rfc4;Mcm2
+PC1,Reactome,REACTOME_ACTIVATION_OF_BAD_AND_TRANSLOCATION_TO_MITOCHONDRIA,Activation Of Bad & Translocation To Mitochondria,1.243,0.197,0.351,10,FALSE,Ywhah;Ywhae;Ywhab;Ywhag
+PC1,Reactome,REACTOME_ACTIVATION_OF_NF_KAPPAB_IN_B_CELLS,Activation Of Nf Kappab In B Cells,2.086,1.13e-4,0.00129,30,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8;Nfkb1;Psma1;Ikbkb;Cul1;Psmc6
+PC1,Reactome,REACTOME_ACTIVATION_OF_NMDA_RECEPTORS_AND_POSTSYNAPTIC_EVENTS,Activation Of Nmda Receptors & Postsynaptic Events,1.253,0.167,0.316,16,FALSE,Tuba4a;Src;Tuba3a;Rac1;Prkar2a;Prkag1;Arhgef7
+PC1,Reactome,REACTOME_ADAPTIVE_IMMUNE_SYSTEM,Adaptive Immune System,1.556,0.00153,0.00914,155,FALSE,Cdk4;Sec61a1;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Tuba4a;Dync1h1;Smurf1;Ap2b1;Psmb3;Psma6;Psma4;Cltc;Src;Rbx1;Psma2;Sec31a;Ube2d3;Sec22b;Ppp2cb;Ctsd;Stat3;Ccnd1;Psma7;Sar1b;Ywhab;Psmd12;Psmd8;Ctnnb1;Ube2n;Tuba3a;Nfkb1;Rac1;Psma1;Ywhag;Ikbkb;Cblb;Rpn1;Ap1g1;Dad1;Cul1;Psmc6;Psme2;Fbxo4;Itga4;Psmd14;Cul3;Kifap3
+PC1,Reactome,REACTOME_ADIPOGENESIS,Adipogenesis,0.999,0.456,0.639,13,TRUE,Cdk4;Nfkb1;Ccnd3
+PC1,Reactome,REACTOME_AEROBIC_RESPIRATION_AND_RESPIRATORY_ELECTRON_TRANSPORT,Aerobic Resp. + ETC,1.989,1.36e-5,3.34e-4,108,FALSE,Uqcr10;Ldhb;Idh3g;Etfa;Slc25a12;Ndufa6;Atp5mg;Got2;Dlst;Mdh2;Cs;Uqcrc2;Ldha;Atp5pb;Suclg2;Oxa1l;Slc25a11;Vdac1;Ndufs2;Pdhx;Fh;Atp5po;Etfb;Idh2;Pdhb;Ndufb5;Ndufs3;Me2;Uqcrq;Atp5mf;Uqcrc1;Atp5f1e;Atp5me;Slc25a4;Atp5f1b;Idh3a;Cyc1;Ndufv3;Nfs1;Sucla2;Nnt;Atp5f1c;Ndufa5;Ndufs1;Ecsit;Sdha;Ndufa9;Uqcr11;Mpc2;Ogdh;Mdh1;Ndufa8;Gstz1;Cox7b
+PC1,Reactome,REACTOME_AMINO_ACIDS_REGULATE_MTORC1,AAs Regulate MTORC1,-0.929,0.54,0.692,11,FALSE,Lamtor5;Atp6v1f;Atp6v1d;Atp6v1g1;Atp6v0d1
+PC1,Reactome,REACTOME_ANTIGEN_PROCESSING_CROSS_PRESENTATION,Antigen Processing Cross Presentation,1.802,0.00292,0.0147,37,TRUE,Sec61a1;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Sec22b;Psma7;Psmd12;Psmd8;Psma1;Ikbkb;Psmc6;Psme2;Psmd14
+PC1,Reactome,REACTOME_ANTIGEN_PROCESSING_UB_ATP_INDEPENDENT_PROTEASOMAL_DEGRADATION,Antigen Processing Ub ATP Independent Proteas. Degradation,2.108,3.72e-4,0.00299,11,FALSE,Psmb5;Psma3;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psma1;Psme2
+PC1,Reactome,REACTOME_APC_C_MEDIATED_DEGRADATION_OF_CELL_CYCLE_PROTEINS,Apc C Mediated Degradation Of Cell Cycle Proteins,2.302,1.05e-5,3.09e-4,29,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Cdk2;Psmd12;Psmd8;Bub3;Psma1;Cdk1;Cul1;Psmc6
+PC1,Reactome,REACTOME_APOPTOTIC_EXECUTION_PHASE,Apoptotic Execution Phase,-1.186,0.224,0.38,21,FALSE,Hmgb2;Sptan1;Plec;Tjp1;Add1;Bcap31
+PC1,Reactome,REACTOME_ARACHIDONATE_METABOLISM,Arachidonate Metabolism,1.249,0.197,0.351,10,FALSE,Ptgis;Lta4h;Gpx4
+PC1,Reactome,REACTOME_ASPARAGINE_N_LINKED_GLYCOSYLATION,Asparagine N Linked Glycosylation,1.665,0.00475,0.0227,63,TRUE,Tmed10;Tuba4a;Dync1h1;Gfpt1;Nagk;Arf4;Sec31a;Dcps;Sec22b;Sar1b;Gfus;Tmed2;Tuba3a;Mpi;Cope;Napa;Gbf1;F5;Rpn1;Pmm1;Dad1;Arcn1;B4galt5;Srd5a3;Copb1;Gne
+PC1,Reactome,REACTOME_AUTOPHAGY,Autophagy,1.709,0.00568,0.0257,41,FALSE,Tuba4a;Dync1h1;Vps28;Src;Vdac2;Ube2d3;Vdac3;Tomm70;Vdac1;Atg4b;Ube2n;Tuba3a;Gabarapl2;Tomm40
+PC1,Reactome,REACTOME_BASE_EXCISION_REPAIR,Base Excision Repair,0.674,0.912,0.961,15,FALSE,Rfc5;Rfc3;Rpa1;Rfc4
+PC1,Reactome,REACTOME_BASIGIN_INTERACTIONS,Basigin Interactions,-0.665,0.885,0.941,10,FALSE,Slc3a2;Bsg;Slc16a1;Itga6;Itgb1;Cav1
+PC1,Reactome,REACTOME_BINDING_AND_UPTAKE_OF_LIGANDS_BY_SCAVENGER_RECEPTORS,Binding & Uptake Of Ligands By Scavenger Receptors,-1.499,0.0611,0.157,13,TRUE,Col3a1;Sparc;Col1a1;Hyou1;Col1a2
+PC1,Reactome,REACTOME_BIOLOGICAL_OXIDATIONS,Biological Oxidations,1.982,8.06e-4,0.00537,33,TRUE,Ptgis;Akr1a1;Ugdh;Cyb5r3;Aldh2;Gstm5;Mtarc2;Ugp2;Por;Gsto1;Comt;Aldh3a1;Hsp90ab1;Bpnt1;Bphl;Gstz1;Cbr3;Gclm;Ahcy;Acss2;Maoa;Gss
+PC1,Reactome,REACTOME_BIOSYNTHESIS_OF_THE_N_GLYCAN_PRECURSOR_DOLICHOL_LIPID_LINKED_OLIGOSACCHARIDE_LLO_AND_TRANSFER_TO_A_NASCENT_PROTEIN,Biosynthesis Of The N Glycan Precursor Dolichol Lipid Linked Oligosaccharide Llo & Transfer To A Nascent Protein,1.661,0.0267,0.089,14,FALSE,Gfpt1;Nagk;Dcps;Gfus;Mpi;Pmm1;Srd5a3;Gne
+PC1,Reactome,REACTOME_BRANCHED_CHAIN_AMINO_ACID_CATABOLISM,Branched Chain AA Catabolism,1.869,0.00645,0.0288,14,FALSE,Bcat1;Echs1;Aldh6a1;Dbt;Hibch;Mccc2;Auh
+PC1,Reactome,REACTOME_CA2_PATHWAY,Ca2 Pathway,-0.756,0.783,0.869,11,TRUE,Ppp3r1;Map3k7;Fzd2;Ago2;Tnrc6b
+PC1,Reactome,REACTOME_CARDIAC_CONDUCTION,Cardiac Conduction,1.357,0.125,0.261,13,TRUE,Atp1b3;Atp2a2;Casq2;Clic2;Atp1a1;Atp2b4;Atp2a1;Wwtr1
+PC1,Reactome,REACTOME_CARGO_TRAFFICKING_TO_THE_PERICILIARY_MEMBRANE,Cargo Trafficking To The Periciliary Membrane,1.811,0.0109,0.0426,14,FALSE,Tuba4a;Arf4;Cct2;Cct3;Cct5;Tuba3a;Tcp1;Gbf1
+PC1,Reactome,REACTOME_CELLULAR_RESPONSES_TO_MECHANICAL_STIMULI,Cellular Responses To Mechanical Stimuli,0.946,0.552,0.701,26,FALSE,Anxa2;Gnb2;Ctnnb1;Gnas;Nfkb1;Ikbkb;Mmp14
+PC1,Reactome,REACTOME_CELLULAR_RESPONSES_TO_STIMULI,Cellular Responses To Stimuli,1.328,0.022,0.0761,240,FALSE,Cdk4;Prdx3;Prdx2;Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Hspa2;Psmb2;Tuba4a;Dync1h1;Anxa2;Gfpt1;Psmb3;Psma6;Psma4;Rbx1;Psma2;Sec31a;Blvra;Ube2d3;Rplp0;Taldo1;Stat3;Pdia5;Psma7;Cdk2;Nqo1;Gnb2;Prdx1;Blvrb;Ywhae;Psmd12;Psmd8;Eif2s1;Ctnnb1;Lonp1;Gnas;Atp6v1c1;Cryab;Cdk6;Tuba3a;Hsph1;Nfkb1;Serpinh1;Nup205;Asf1a;Psma1;Mapk14;Ikbkb;Phb2;Atp6v0c;Cul1;Psmc6;Mmp14;Tcirg1;Rpa1;Rps27l;Rps2;Rpl22;Psmd14;Cul3;Hsp90ab1;Rps5;Hsp90b1;Ero1a
+PC1,Reactome,REACTOME_CELLULAR_RESPONSE_TO_CHEMICAL_STRESS,Cellular Resp. to Chemical Stress,1.73,0.00225,0.013,78,TRUE,Prdx3;Prdx2;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rbx1;Psma2;Blvra;Taldo1;Stat3;Psma7;Nqo1;Prdx1;Blvrb;Psmd12;Psmd8
+PC1,Reactome,REACTOME_CELLULAR_RESPONSE_TO_HEAT_STRESS,Cellular Resp. to Heat Stress,-1.238,0.148,0.288,37,TRUE,Bag3;Ptges3;Hdac6;Hspa4;Hspa9;Bag1;Fkbp4;Hspa8;Gsk3b;Hspa1l;Hspb1
+PC1,Reactome,REACTOME_CELLULAR_RESPONSE_TO_HYPOXIA,Cellular Resp. to Hypoxia,2.364,6.63e-6,2.91e-4,24,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rbx1;Psma2;Ube2d3;Psma7;Psmd12;Psmd8
+PC1,Reactome,REACTOME_CELLULAR_RESPONSE_TO_STARVATION,Cellular Resp. to Starvation,0.994,0.451,0.639,30,TRUE,Rplp0;Eif2s1;Atp6v1c1;Atp6v0c;Tcirg1;Rps27l;Rps2;Rpl22;Rps5;Rps10;Rps3;Mtor;Eif2s2
+PC1,Reactome,REACTOME_CELLULAR_SENESCENCE,Cellular Senescence,1.171,0.209,0.362,31,FALSE,Cdk4;Stat3;Cdk2;Cdk6;Nfkb1;Asf1a;Mapk14
+PC1,Reactome,REACTOME_CELL_CELL_COMMUNICATION,Cell Communication,1.445,0.0311,0.1,88,TRUE,Psmb5;Psma3;Psmc4;Rack1;Psmd13;Psmb2;Actb;Psmb3;Psma6;Psma4;Src;Actn1;Psma2;Psma7;Psmd12;Psmd8;Adam19;Ctnnb1;Rsu1;Psma1;Ctbp1;Rpn1;Cd151;Dad1;Psmc6;Sec11a;Nck2
+PC1,Reactome,REACTOME_CELL_CYCLE,Cell Cycle,1.95,2.18e-6,1.54e-4,164,FALSE,Cdk4;Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Hspa2;Psmb2;Tuba4a;Dync1h1;Zw10;Psmb3;Psma6;Psma4;Nek7;Slc25a3;Src;Rbx1;Psma2;Kpnb1;Dhfr;Ppp2cb;Ccnd1;Psma7;Ywhah;Cdk2;Ywhae;Ywhab;Psmd12;Psmd8;Bub3;Cdk6;Ube2n;Tuba3a;Nup205;Ccnd3;Sirt2;Psma1;Mcm7;Ywhag;Mapk14;Rfc5;Pafah1b1;Tubg1;Cdk1;Cul1;Psmc6;Rfc3;Rpa1;Dyrk1a;Psmd14;Mcm6;Hsp90ab1;Ruvbl2;Polr2g;Rfc4;Tubb5;Ran;Mcm2;Mad2l1;Mapre1
+PC1,Reactome,REACTOME_CELL_CYCLE_CHECKPOINTS,Cell Cycle Checkpoints,2.242,4.36e-7,5.14e-5,76,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Psmb2;Dync1h1;Zw10;Psmb3;Psma6;Psma4;Rbx1;Psma2;Ppp2cb;Psma7;Ywhah;Cdk2;Ywhae;Ywhab;Psmd12;Psmd8;Bub3;Ube2n;Psma1;Mcm7;Ywhag;Mapk14;Rfc5;Pafah1b1;Cdk1;Cul1;Psmc6;Rfc3;Rpa1;Psmd14;Mcm6;Rfc4;Mcm2;Mad2l1;Mapre1
+PC1,Reactome,REACTOME_CELL_DEATH_SIGNALLING_VIA_NRAGE_NRIF_AND_NADE,Cell Death Signalling Via Nrage Nrif & Nade,0.791,0.79,0.874,17,TRUE,Ywhae;Casp3;Rac1
+PC1,Reactome,REACTOME_CELL_EXTRACELLULAR_MATRIX_INTERACTIONS,Cell ECM Interactions,-0.857,0.665,0.81,12,FALSE,Flna;Flnc;Vasp;Pxn
+PC1,Reactome,REACTOME_CELL_SURFACE_INTERACTIONS_AT_THE_VASCULAR_WALL,Cell Surface Interactions At The Vascular Wall,-1.644,0.00968,0.0393,33,TRUE,Col1a1;Col1a2;Mif;Slc3a2;Itga5;Sdc1;Gpc1;Itgav;Sdc2;Bsg;Cd47;Cd44
+PC1,Reactome,REACTOME_CHOLESTEROL_BIOSYNTHESIS,Cholesterol Biosynthesis,1.964,0.00237,0.0133,16,FALSE,Acat2;Idi1;Nsdhl;Sqle;Dhcr7;Fdft1;Fdps
+PC1,Reactome,REACTOME_CHROMATIN_ORGANIZATION,Chromatin Org.,1.313,0.119,0.254,22,TRUE,Cdk4;Actb;Ccnd1;Nfkb1;Elp1;Rps2;Ruvbl2;Prmt3
+PC1,Reactome,REACTOME_CHROMOSOME_MAINTENANCE,Chromosome Maintenance,0.957,0.53,0.688,27,TRUE,Cdk2;Rfc5;Rfc3;Rpa1;Ruvbl2;Polr2g;Rfc4;Polr2e;Rfc1;Dkc1;Rpa2;Nhp2
+PC1,Reactome,REACTOME_CIRCADIAN_CLOCK,Circadian Clock,2.259,2.07e-5,3.85e-4,29,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Ppp1ca;Psmb3;Psma6;Psma4;Rbx1;Psma2;Psma7;Psmd12;Psmd8;Psma1;Cul1;Psmc6;Psmd14;Cpt1a
+PC1,Reactome,REACTOME_CITRIC_ACID_CYCLE_TCA_CYCLE,TCA Cycle,1.93,0.00257,0.0137,20,FALSE,Idh3g;Dlst;Mdh2;Cs;Suclg2;Fh;Idh2;Idh3a;Nfs1;Sucla2;Nnt;Sdha;Ogdh
+PC1,Reactome,REACTOME_CLASS_I_MHC_MEDIATED_ANTIGEN_PROCESSING_PRESENTATION,Class I Mhc Mediated Antigen Processing Presentation,1.917,2.4e-4,0.00219,64,FALSE,Sec61a1;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Smurf1;Psmb3;Psma6;Psma4;Rbx1;Psma2;Sec31a;Ube2d3;Sec22b;Psma7;Sar1b;Psmd12;Psmd8;Ube2n;Psma1;Ikbkb;Cblb;Cul1;Psmc6;Psme2;Fbxo4;Psmd14;Cul3
+PC1,Reactome,REACTOME_CLATHRIN_MEDIATED_ENDOCYTOSIS,Clathrin Mediated Endocytosis,-1.606,0.00902,0.0379,45,TRUE,Cltb;Arfgap1;Vamp3;Cttn;Bin1;Stam;Ubqln1;Picalm;Grk2;Stam2;Ldlr;Clta;Hspa8;Agfg1;Wasl;Trip10;M6pr;Vamp8
+PC1,Reactome,REACTOME_COLLAGEN_CHAIN_TRIMERIZATION,Collagen Trimerization,-1.811,0.00816,0.0347,12,FALSE,Col3a1;Col1a1;Col1a2;Col5a2;Col5a1;Col12a1;Col11a1;Col5a3
+PC1,Reactome,REACTOME_COLLAGEN_FORMATION,Collagen Formation,-1.339,0.0797,0.185,30,FALSE,Col3a1;Col1a1;Col1a2;Col5a2;Colgalt1;Plec;Col5a1;Col12a1;Ctsl
+PC1,Reactome,REACTOME_COMPLEX_III_ASSEMBLY,Complex Iii Assembly,1.266,0.164,0.311,12,FALSE,Uqcr10;Uqcrc2;Uqcrq;Uqcrc1;Cyc1;Nfs1;Uqcr11
+PC1,Reactome,REACTOME_COMPLEX_IV_ASSEMBLY,Complex Iv Assembly,-1.113,0.315,0.505,11,FALSE,Cox5b;Cox17;Cox7a2l;Cox4i1;Cox5a
+PC1,Reactome,REACTOME_COMPLEX_I_BIOGENESIS,Complex I Biogenesis,1.068,0.361,0.544,24,FALSE,Ndufa6;Oxa1l;Ndufs2;Ndufb5;Ndufs3;Ndufv3;Ndufa5;Ndufs1;Ecsit;Ndufa9;Ndufa8
+PC1,Reactome,REACTOME_COOPERATION_OF_PDCL_PHLP1_AND_TRIC_CCT_IN_G_PROTEIN_BETA_FOLDING,Cooperation Of Pdcl Phlp1 & Tric Cct In G Protein Beta Folding,1.898,0.00252,0.0137,13,FALSE,Cct7;Cct2;Cct3;Gnb2;Cct5;Tcp1
+PC1,Reactome,REACTOME_COOPERATION_OF_PREFOLDIN_AND_TRIC_CCT_IN_ACTIN_AND_TUBULIN_FOLDING,Cooperation Of Prefoldin & Tric Cct In Actin & Tubulin Folding,2.141,1.18e-4,0.0013,12,TRUE,Actb;Tuba4a;Cct7;Cct2;Cct3;Cct5;Tuba3a;Tcp1
+PC1,Reactome,REACTOME_COPII_MEDIATED_VESICLE_TRANSPORT,Copii Mediated Vesicle Transport,1.391,0.0914,0.207,16,FALSE,Tmed10;Sec31a;Sec22b;Sar1b;Tmed2;Napa;F5
+PC1,Reactome,REACTOME_COPI_INDEPENDENT_GOLGI_TO_ER_RETROGRADE_TRAFFIC,Copi Independent Golgi To Er Retrograde Traffic,1.217,0.211,0.362,13,FALSE,Tuba4a;Dync1h1;Tuba3a;Pafah1b1
+PC1,Reactome,REACTOME_COPI_MEDIATED_ANTEROGRADE_TRANSPORT,Copi Mediated Anterograde Transport,1.166,0.211,0.362,31,FALSE,Tmed10;Tuba4a;Dync1h1;Arf4;Tmed2;Tuba3a;Cope;Napa;Gbf1;Arcn1;Copb1
+PC1,Reactome,REACTOME_CO_STIMULATION_BY_CD28,Co Stimulation By Cd28,1.36,0.123,0.26,11,FALSE,Src;Ppp2cb;Rac1;Mtor;Ppp2r5b;Grb2
+PC1,Reactome,REACTOME_CRISTAE_FORMATION,Cristae Formation,1.491,0.0584,0.155,16,FALSE,Samm50;Atp5mg;Atp5pb;Atp5po;Atp5mf;Atp5f1e;Atp5me;Atp5f1b;Atp5f1c
+PC1,Reactome,REACTOME_CYCLIN_D_ASSOCIATED_EVENTS_IN_G1,Cyclin D Associated Events In G1,1.475,0.0584,0.155,17,TRUE,Cdk4;Src;Ppp2cb;Ccnd1;Cdk2;Cdk6;Ccnd3;Cul1
+PC1,Reactome,REACTOME_CYTOKINE_SIGNALING_IN_IMMUNE_SYSTEM,Cytokine Signaling In Immune System,1.523,0.00275,0.0143,178,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Hspa2;Psmb2;Actb;Tuba4a;Anxa2;Psmb3;Psma6;Psma4;Src;Rbx1;Psma2;Anxa1;Kpnb1;Eif4g3;Fnta;Ube2d3;Vamp7;Rplp0;Taldo1;Ppp2cb;Stat3;Ccnd1;Psma7;Psmd12;Psmd8;Eif2s1;Eif4a1;Dusp3;Ube2n;Tuba3a;Gsto1;Casp3;Nfkb1;Nup205;Psma1;Tcp1;Mapk14;Rala;Ikbkb;Mcl1;Cdk1;Cul1;Psmc6;Psme2;Pml;Usp14;Mid1
+PC1,Reactome,REACTOME_CYTOPROTECTION_BY_HMOX1,Cytoprotection By Hmox1,0.925,0.566,0.716,16,FALSE,Blvra;Stat3;Blvrb
+PC1,Reactome,REACTOME_CYTOSOLIC_SENSORS_OF_PATHOGEN_ASSOCIATED_DNA,Cytosolic Sensors Of Pathogen Associated DNA,0.828,0.732,0.838,16,TRUE,Ctnnb1;Nfkb1;Ikbkb;Polr1c;Polr2e;Mre11;Tbk1;Myd88;Polr2h
+PC1,Reactome,REACTOME_CYTOSOLIC_TRNA_AMINOACYLATION,Cytosolic tRNA Aminoacylation,1.386,0.102,0.224,10,FALSE,Rars1;Aimp2;Ppa1;Iars1
+PC1,Reactome,REACTOME_DDX58_IFIH1_MEDIATED_INDUCTION_OF_INTERFERON_ALPHA_BETA,Ddx58 Ifih1 Mediated Induction Of Interferon Alpha Beta,1.029,0.377,0.562,18,TRUE,Ube2d3;Tomm70;Nfkb1;Ikbkb;Hsp90ab1;Tkfc
+PC1,Reactome,REACTOME_DEADENYLATION_DEPENDENT_MRNA_DECAY,Deadenylation Dependent mRNA Decay,0.836,0.709,0.828,22,TRUE,Skic3;Dcps;Eif4a1;Paip1
+PC1,Reactome,REACTOME_DEADENYLATION_OF_MRNA,Deadenylation Of mRNA,0.62,0.93,0.971,11,FALSE,Eif4a1;Paip1
+PC1,Reactome,REACTOME_DEATH_RECEPTOR_SIGNALING,Death Receptor Signaling,0.839,0.726,0.838,42,FALSE,Rack1;Ube2d3;Ywhae;Casp3;Nfkb1;Rac1;Ikbkb
+PC1,Reactome,REACTOME_DEGRADATION_OF_BETA_CATENIN_BY_THE_DESTRUCTION_COMPLEX,Degradation Of Beta Catenin By The Destruction Complex,2.2,8.6700000000000007e-05,0.00106,31,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rbx1;Psma2;Ppp2cb;Psma7;Psmd12;Psmd8;Ctnnb1;Psma1;Ctbp1;Cul1;Psmc6
+PC1,Reactome,REACTOME_DEGRADATION_OF_THE_EXTRACELLULAR_MATRIX,Degradation Of The ECM,-1.56,0.0216,0.0754,33,FALSE,Col3a1;Col1a1;Col1a2;Col5a2;Col5a1;Cast;Bsg;Col12a1;Ctsl;Cd44;Col11a1;Adamts1
+PC1,Reactome,REACTOME_DETOXIFICATION_OF_REACTIVE_OXYGEN_SPECIES,Detoxification Of Reactive Oxygen Species,-1.056,0.383,0.568,17,FALSE,Gpx7;Cycs;Sod1;Prdx6;Atox1
+PC1,Reactome,REACTOME_DEUBIQUITINATION,Deubiquitination,2.01,1.24e-4,0.00133,51,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Actb;Psmb3;Psma6;Psma4;Psma2;Vdac2;Vdac3;Psma7;Tomm70;Uchl5;Psmd12;Vdac1;Psmd8;Rhot1;Psma1;Cdk1;Psmc6;Usp15;Usp14;Psmd14
+PC1,Reactome,REACTOME_DEVELOPMENTAL_CELL_LINEAGES,Developmental Cell Lineages,-1.433,0.063,0.157,20,FALSE,Col3a1;Col1a1;Col1a2;Col5a2;Col5a1;Fabp5;Cd44;Col11a1;Vim;Col5a3
+PC1,Reactome,REACTOME_DEVELOPMENTAL_LINEAGE_OF_PANCREATIC_DUCTAL_CELLS,Developmental Lineage Of Pancreatic Ductal Cells,-1.473,0.0697,0.167,12,FALSE,Col3a1;Col1a1;Col1a2;Col5a2;Col5a1
+PC1,Reactome,REACTOME_DISORDERS_OF_TRANSMEMBRANE_TRANSPORTERS,Disorders Of Transmembrane Transporters,1.902,0.00135,0.00838,37,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8;Nup205;Psma1
+PC1,Reactome,REACTOME_DNA_DAMAGE_BYPASS,DNA Damage Bypass,1.908,0.00234,0.0133,13,TRUE,Rbx1;Ddb1;Cul4a;Rfc5;Rfc3;Rpa1;Rfc4
+PC1,Reactome,REACTOME_DNA_DAMAGE_TELOMERE_STRESS_INDUCED_SENESCENCE,DNA Damage Telomere Stress Induced Senescence,0.526,0.984,0.993,11,TRUE,Cdk2;Asf1a;Hmga1;Cdkn1a;Mre11
+PC1,Reactome,REACTOME_DNA_REPAIR,DNA Repair,1.085,0.333,0.515,47,FALSE,Actb;Ppp4c;Rbx1;Ddb1;Cdk2;Cul4a;Ube2n;Rfc5;Rfc3;Rpa1;Polr2g;Rfc4
+PC1,Reactome,REACTOME_DNA_REPLICATION_PRE_INITIATION,DNA Replication Pre Initiation,2.299,1.47e-5,3.34e-4,36,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Kpnb1;Psma7;Cdk2;Psmd12;Psmd8;Psma1;Mcm7;Psmc6;Rpa1;Psmd14;Mcm6
+PC1,Reactome,REACTOME_DNA_STRAND_ELONGATION,DNA Strand Elongation,1.252,0.163,0.311,19,FALSE,Mcm7;Rfc5;Rfc3;Rpa1;Mcm6;Rfc4;Mcm2
+PC1,Reactome,REACTOME_DRUG_ADME,Drug Adme,1.74,0.0164,0.058,14,TRUE,Gmps;Pnp;Hprt1;Slc29a1;Rac1;Impdh2;Nme1;Itpa
+PC1,Reactome,REACTOME_ECM_PROTEOGLYCANS,Ecm Proteoglycans,-2.028,6.29e-4,0.00444,24,FALSE,Col3a1;Sparc;Col1a1;Tgfb2;Col1a2;Col5a2;Col5a1;Itgav;Ncam1
+PC1,Reactome,REACTOME_ELASTIC_FIBRE_FORMATION,Elastic Fibre Formation,-1.205,0.211,0.362,16,TRUE,Tgfb2;Itga5;Fbln1;Itgav
+PC1,Reactome,REACTOME_EPHB_MEDIATED_FORWARD_SIGNALING,Ephb Mediated Forward Signaling,1.057,0.367,0.551,22,FALSE,Actb;Src;Actr3;Rasa1;Rac1;Arpc2
+PC1,Reactome,REACTOME_EPH_EPHRIN_SIGNALING,Eph Ephrin Signaling,1.106,0.304,0.491,40,TRUE,Actb;Ap2b1;Cltc;Src;Actr3;Rasa1;Rac1;Sdcbp;Arpc2;Nck2
+PC1,Reactome,REACTOME_EPIGENETIC_REGULATION_BY_WDR5_CONTAINING_HISTONE_MODIFYING_COMPLEXES,Epigenetic Regulation By Wdr5 Containing Histone Modifying Complexes,-0.996,0.437,0.626,10,TRUE,Psip1;H2ax;Ncor2;Abl1;Dr1;Elovl5;Med24
+PC1,Reactome,REACTOME_EPIGENETIC_REGULATION_OF_GENE_EXPRESSION,Epigenetic Reg. Gene Expression,-0.625,0.969,0.99,31,FALSE,Psip1;Dnmt1;Cbx5;Gsk3b;H2ax;Ncor2;Abl1;Ube2i;Mta1;Dr1;Mtrex;Elovl5;Med24
+PC1,Reactome,REACTOME_ESTROGEN_DEPENDENT_GENE_EXPRESSION,Estrogen Dependent Gene Expression,-1.112,0.281,0.459,30,TRUE,Ptges3;Polr2i;Fkbp4;Smc1a;Tle3;Smc3;H2ax;Gtf2f1;Runx1;Ago2;Tnrc6b;Sp1
+PC1,Reactome,REACTOME_EUKARYOTIC_TRANSLATION_INITIATION,Eukaryotic Translation Initiation,-0.967,0.497,0.657,32,FALSE,Eif3j;Eif4ebp1;Rpl6;Eif4h;Eif3b;Eif4g1;Rps3a;Eif3d;Pabpc1
+PC1,Reactome,REACTOME_EXTRACELLULAR_MATRIX_ORGANIZATION,ECM Org.,-1.385,0.0247,0.0835,92,FALSE,Col3a1;Sparc;Col1a1;Tgfb2;Col1a2;Col5a2;Colgalt1;Plec;Col5a1;Cast;Itga5;Sdc1;Icam1;Fbln1;Itgav;Sdc2;Bsg;Col12a1;Ncam1;Ctsl;Cd47;Cd44
+PC1,Reactome,REACTOME_EXTRA_NUCLEAR_ESTROGEN_SIGNALING,Extra Nuclear Estrogen Signaling,1.376,0.0932,0.208,20,TRUE,Xpo1;Src;Ccnd1;Gnb2;Gnai2;Gnai3
+PC1,Reactome,REACTOME_FACTORS_INVOLVED_IN_MEGAKARYOCYTE_DEVELOPMENT_AND_PLATELET_PRODUCTION,Factors Involved In Megakaryocyte Development & Platelet Production,0.97,0.488,0.654,32,TRUE,Actb;Tuba4a;Cdk2;Tuba3a;Rac1;Ehd1
+PC1,Reactome,REACTOME_FATTY_ACID_METABOLISM,FA Metabolism,1.57,0.0155,0.0555,51,TRUE,Ptgis;Lta4h;Eci2;Acsl5;Acsl1;Acadm;Fasn;Acsl3;Acaca;Echs1;Gpx4;Nudt19;Acaa2;Slc25a20;Aldh3a2;Fads2;Cpt2;Decr1;Cpt1a;Acads
+PC1,Reactome,REACTOME_FCERI_MEDIATED_MAPK_ACTIVATION,Fceri Mediated MAPK Activation,0.831,0.693,0.825,10,FALSE,Rac1;Plcg1;Grb2;Vav2;Mapk1
+PC1,Reactome,REACTOME_FCGAMMA_RECEPTOR_FCGR_DEPENDENT_PHAGOCYTOSIS,Fcgamma Receptor Fcgr Dependent Phagocytosis,1.039,0.373,0.558,32,FALSE,Actb;Src;Actr3;Rac1;Arpc2;Hsp90ab1;Nck1;Baiap2;Cyfip2;Plcg1;Myo1c;Abi1;Grb2;Vav2
+PC1,Reactome,REACTOME_FC_EPSILON_RECEPTOR_FCERI_SIGNALING,Fc Epsilon Receptor Fceri Signaling,1.906,0.00148,0.00898,43,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8;Ube2n;Nfkb1;Rac1;Psma1;Ikbkb;Cul1;Psmc6
+PC1,Reactome,REACTOME_FGFR2_MUTANT_RECEPTOR_ACTIVATION,Fgfr2 Mutant Receptor Activation,0.825,0.707,0.828,10,FALSE,Ncbp2;Polr2g;Ncbp1;Polr2e
+PC1,Reactome,REACTOME_FIBRONECTIN_MATRIX_FORMATION,Fibronectin Matrix Formation,-2.094,2.04e-4,0.002,11,TRUE,Col3a1;Col1a1;Col1a2;Col5a2;Col5a1;Itga5
+PC1,Reactome,REACTOME_FLT3_SIGNALING,Flt3 Signaling,-1.499,0.0749,0.177,10,TRUE,Gab2;Cdkn1b;Csk;Cbl;Hras;Ptpn11
+PC1,Reactome,REACTOME_FORMATION_OF_INCISION_COMPLEX_IN_GG_NER,Formation Of Incision Complex In Gg Ner,1.432,0.078,0.182,11,TRUE,Rbx1;Ddb1;Cul4a;Ube2n;Rpa1
+PC1,Reactome,REACTOME_FORMATION_OF_THE_DYSTROPHIN_GLYCOPROTEIN_COMPLEX_DGC,Formation Of The Dystrophin Glycoprotein Complex DGC,0.96,0.51,0.669,12,TRUE,Actb;Sgce;Sgcb;Acta1;Acta2;Sntb1;Sgca
+PC1,Reactome,REACTOME_FOXO_MEDIATED_TRANSCRIPTION,Foxo Mediated Transcription,0.634,0.936,0.972,16,TRUE,Ywhab;Ywhag;Ywhaq;Cdkn1a;Hdac1;Hdac2
+PC1,Reactome,REACTOME_G1_S_DNA_DAMAGE_CHECKPOINTS,G1 S DNA Damage Checkpoints,2.143,4.97e-5,6.86e-4,30,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rbx1;Psma2;Psma7;Cdk2;Psmd12;Psmd8;Psma1;Mapk14;Cul1;Psmc6
+PC1,Reactome,REACTOME_G2_M_DNA_DAMAGE_CHECKPOINT,G2 M DNA Damage Checkpoint,1.759,0.0095,0.0391,18,TRUE,Ywhah;Ywhae;Ywhab;Ube2n;Ywhag;Rfc5;Cdk1;Rfc3;Rpa1;Rfc4
+PC1,Reactome,REACTOME_GAP_JUNCTION_TRAFFICKING_AND_REGULATION,Gap Junction Trafficking & Regulation,1.246,0.188,0.344,13,FALSE,Actb;Tuba4a;Cltc;Src;Tuba3a
+PC1,Reactome,REACTOME_GASTRULATION,Gastrulation,2.264,2.73e-5,4.81e-4,26,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8;Ctnnb1;Psma1;Psmc6;Psmd14
+PC1,Reactome,REACTOME_GENE_SILENCING_BY_RNA,Gene Silencing By RNA,0.574,0.968,0.99,14,FALSE,Tsn;Polr2g;Ran
+PC1,Reactome,REACTOME_GLUCONEOGENESIS,Gluconeogenesis,1.764,0.0124,0.0476,11,FALSE,Eno1;Aldoa;Gpi;Pgk1;Gapdh;Eno3;Pgam1;Tpi1
+PC1,Reactome,REACTOME_GLUCOSE_METABOLISM,Glucose Metabolism,1.675,0.0106,0.0421,29,FALSE,Eno1;Aldoa;Ppp2cb;Gpi;Pgk1;Nup205;Gapdh;Hk2;Eno3;Pgam1;Tpi1;Nup93;Pkm;Gnpda1
+PC1,Reactome,REACTOME_GLYCOSAMINOGLYCAN_METABOLISM,Glycosaminoglycan Metabolism,-0.824,0.724,0.838,22,TRUE,Sdc1;Gpc1;Sdc2;Ctsl;Cd44;Chpf;Chpf2;Papss2
+PC1,Reactome,REACTOME_GPER1_SIGNALING,Gper1 Signaling,1.429,0.092,0.207,12,FALSE,Src;Gnb2;Gnas;Gnai2;Gnai3
+PC1,Reactome,REACTOME_G_ALPHA_12_13_SIGNALLING_EVENTS,G Alpha 12 13 Signalling Events,-0.822,0.705,0.828,16,FALSE,Rhoa;Arhgef2;Rock1;Akap13;Arhgef12
+PC1,Reactome,REACTOME_G_ALPHA_I_SIGNALLING_EVENTS,G Alpha I Signalling Events,1.669,0.0113,0.0439,25,TRUE,Ppp1ca;Src;Anxa1;Ppp2cb;Gnb2;Gnas;Gnai2;Gnai3
+PC1,Reactome,REACTOME_G_ALPHA_Q_SIGNALLING_EVENTS,G Alpha Q Signalling Events,0.607,0.975,0.99,21,TRUE,Anxa1;Gnb2
+PC1,Reactome,REACTOME_G_ALPHA_S_SIGNALLING_EVENTS,G Alpha S Signalling Events,1.289,0.16,0.308,13,TRUE,Src;Gnb2;Gnas;Gnai2;Gnai3
+PC1,Reactome,REACTOME_HEMOSTASIS,Hemostasis,0.863,0.774,0.869,133,FALSE,Pfn1;Atp1b3;Actb;Tuba4a;Anxa2;Aldoa;Atp2a2;Src;Actn1;Anxa5;Ppp2cb;Cdk2;Gnb2;Gnas;Gnai2;Gnai3;Tuba3a;Rac1;Ehd1;Rhob;Mapk14;Cyb5r1;F5
+PC1,Reactome,REACTOME_HOMOLOGY_DIRECTED_REPAIR,Homology Directed Repair,0.982,0.479,0.65,21,FALSE,Ppp4c;Cdk2;Ube2n;Rfc5;Rfc3;Rpa1;Rfc4
+PC1,Reactome,REACTOME_HSF1_ACTIVATION,Hsf1 Activation,-0.8,0.743,0.845,12,FALSE,Ptges3;Hdac6;Fkbp4;Hspb1
+PC1,Reactome,REACTOME_HSF1_DEPENDENT_TRANSACTIVATION,Hsf1 Dependent Transactivation,-0.782,0.779,0.869,15,FALSE,Ptges3;Fkbp4;Hspa8;Hspa1l;Hspb1
+PC1,Reactome,REACTOME_HSP90_CHAPERONE_CYCLE_FOR_STEROID_HORMONE_RECEPTORS_SHR_IN_THE_PRESENCE_OF_LIGAND,Hsp90 Chaperone Cycle For Steroid Hormone Receptors Shr In The Presence Of Ligand,-1.112,0.305,0.491,20,TRUE,Stip1;Ptges3;Fkbp4;Hspa8;Dctn4;Hspa1l;Dnaja1;Dnaja4;Tubb2a;Dctn1;Nr3c1
+PC1,Reactome,REACTOME_IMMUNOREGULATORY_INTERACTIONS_BETWEEN_A_LYMPHOID_AND_A_NON_LYMPHOID_CELL,Lymphoid Cell Interactions,-1.881,0.00443,0.0214,10,TRUE,Col3a1;Col1a1;Col1a2;Cd81;Icam1;Nectin2;Pvr
+PC1,Reactome,REACTOME_INNATE_IMMUNE_SYSTEM,Innate Immune System,1.437,0.00772,0.0332,220,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Actb;Dync1h1;Cab39;Anxa2;Aprt;Aldoa;Psmb3;Psma6;Lta4h;Psma4;Src;Psma2;Pnp;Cct2;Cyb5r3;Kpnb1;Ube2d3;Ppp2cb;Ctsd;Ypel5;Psma7;Actr3;Pygb;Tomm70;Gpi;Lgals3;Psmd12;Psmd8;Arl8a;Ctnnb1;Dusp3;Atp6v1c1;Prdx4;Ube2n;Alad;Casp3;Nfkb1;Rac1;Psma1;Sdcbp;Impdh2;Mapk14;Arpc2;Ikbkb;Atp6v0c;Cul1;Psmc6;Pgm1;Tcirg1;Usp14;Pgam1;Copb1;Psmd14;Hsp90ab1;Igf2r;Hsp90b1;Tubb5;Mvp;Ecsit;Agl;Polr1c;Nck1;Apaf1
+PC1,Reactome,REACTOME_INTEGRATION_OF_ENERGY_METABOLISM,Integration Of Energy Metabolism,1.752,0.00704,0.0307,21,TRUE,Taldo1;Ppp2cb;Fasn;Gnb2;Acsl3;Acaca;Gnas;Gnai2
+PC1,Reactome,REACTOME_INTEGRIN_CELL_SURFACE_INTERACTIONS,Integrin Cell Surface Interactions,-2.015,3.29e-4,0.00283,27,FALSE,Col3a1;Col1a1;Col1a2;Col5a2;Col5a1;Itga5;Icam1;Itgav;Bsg;Cd47;Cd44
+PC1,Reactome,REACTOME_INTERACTIONS_OF_REV_WITH_HOST_CELLULAR_PROTEINS,Interactions Of Rev With Host Cellular Proteins,0.984,0.491,0.657,14,FALSE,Xpo1;Kpnb1;Nup205;Ran;Nup93
+PC1,Reactome,REACTOME_INTERCONVERSION_OF_NUCLEOTIDE_DI_AND_TRIPHOSPHATES,Interconversion Of Nucleotide Di & Triphosphates,-1.313,0.141,0.281,13,FALSE,Cmpk1;Rrm2;Ak1;Ak2;Dut;Dtymk
+PC1,Reactome,REACTOME_INTERFERON_ALPHA_BETA_SIGNALING,Interferon Alpha Beta Signaling,-0.672,0.888,0.941,11,TRUE,Stat1;Ifi35;Eif2ak2
+PC1,Reactome,REACTOME_INTERFERON_GAMMA_SIGNALING,Interferon Gamma Signaling,-1.147,0.273,0.45,16,TRUE,Stat1;Icam1;Ncam1;Cd44;Raf1;Prkcd;Gbp2;Ptpn11
+PC1,Reactome,REACTOME_INTERFERON_SIGNALING,Interferon Signaling,0.955,0.541,0.692,73,FALSE,Hspa2;Actb;Tuba4a;Kpnb1;Eif4g3;Fnta;Ppp2cb;Stat3;Eif2s1;Eif4a1;Ube2n;Tuba3a;Nup205;Ikbkb;Cdk1;Pml;Mid1
+PC1,Reactome,REACTOME_INTERLEUKIN_12_FAMILY_SIGNALING,Interleukin 12 Family Signaling,1.163,0.238,0.4,24,TRUE,Anxa2;Vamp7;Rplp0;Taldo1;Stat3;Gsto1;Tcp1;Rala;Psme2
+PC1,Reactome,REACTOME_INTERLEUKIN_17_SIGNALING,Interleukin 17 Signaling,1.337,0.106,0.231,19,TRUE,Ppp2cb;Dusp3;Ube2n;Nfkb1;Mapk14;Ikbkb;Cul1
+PC1,Reactome,REACTOME_INTERLEUKIN_1_FAMILY_SIGNALING,Interleukin 1 Family Signaling,2.098,5.06e-5,6.86e-4,45,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rbx1;Psma2;Stat3;Psma7;Psmd12;Psmd8;Ube2n;Nfkb1;Psma1;Ikbkb;Cul1;Psmc6;Usp14;Psmd14
+PC1,Reactome,REACTOME_INTERLEUKIN_4_AND_INTERLEUKIN_13_SIGNALING,Interleukin 4 & Interleukin 13 Signaling,0.841,0.717,0.832,20,TRUE,Anxa1;Stat3;Ccnd1;Mcl1;Hsp90b1;Jak1;Ptgs2;Maoa;Fscn1;Cdkn1a
+PC1,Reactome,REACTOME_INTRACELLULAR_SIGNALING_BY_SECOND_MESSENGERS,Intracell. Signaling By Second Messengers,1.436,0.0312,0.1,67,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Src;Psma2;Ppp2cb;Psma7;Psmd12;Psmd8
+PC1,Reactome,REACTOME_INTRA_GOLGI_AND_RETROGRADE_GOLGI_TO_ER_TRAFFIC,Intra Golgi & Retrograde Golgi To Er Traffic,1.179,0.193,0.351,54,TRUE,Tmed10;Tuba4a;Dync1h1;Zw10;Arf4;Sec22b;Tmed2;Tuba3a;Arfip2;Cope;Napa;Gbf1;Pafah1b1;Arcn1;Copb1;Kifap3;Igf2r
+PC1,Reactome,REACTOME_INTRINSIC_PATHWAY_FOR_APOPTOSIS,Intrinsic Pathway For Apoptosis,1.099,0.322,0.507,24,FALSE,Stat3;Bak1;Ywhah;Ywhae;Ywhab;Casp3;Ywhag
+PC1,Reactome,REACTOME_ION_CHANNEL_TRANSPORT,Ion Channel Transport,1.069,0.352,0.536,26,FALSE,Atp1b3;Atp2a2;Atp6v1c1;Casq2;Atp6v0c;Tcirg1;Atp2c1;Clic2;Nedd4l;Atp1a1;Stom;Atp2b4
+PC1,Reactome,REACTOME_ION_TRANSPORT_BY_P_TYPE_ATPASES,Ion Transport By P Type Atpases,1.154,0.272,0.45,10,FALSE,Atp1b3;Atp2a2;Atp2c1;Atp1a1;Atp2b4
+PC1,Reactome,REACTOME_IRON_UPTAKE_AND_TRANSPORT,Iron Uptake & Transport,-0.701,0.864,0.933,18,FALSE,Atp6v1f;Skp1;Atp6v1d;Atp6v1g1
+PC1,Reactome,REACTOME_KINESINS,Kinesins,-0.798,0.747,0.845,12,FALSE,Kif5b;Klc1
+PC1,Reactome,REACTOME_L1CAM_INTERACTIONS,L1cam Interactions,0.984,0.495,0.657,38,FALSE,Actb;Tuba4a;Ap2b1;Cltc;Src;Tuba3a;Rac1;Sdcbp
+PC1,Reactome,REACTOME_MAPK6_MAPK4_SIGNALING,MAPK6 MAPK4 Signaling,2.209,5.71e-5,7.39e-4,36,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8;Rac1;Ccnd3;Psma1;Cdk1;Psmc6
+PC1,Reactome,REACTOME_MAPK_FAMILY_SIGNALING_CASCADES,MAPK Family Signaling Cascades,1.974,3.92e-5,6.09e-4,71,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Psmb2;Actb;Phb1;Psmb3;Psma6;Psma4;Src;Rbx1;Psma2;Fnta;Ppp2cb;Psma7;Ywhab;Psmd12;Psmd8;Rasa1;Rasal2;Rac1;Ccnd3;Psma1;Mark3;Cdk1;Psmc6
+PC1,Reactome,REACTOME_MATERNAL_TO_ZYGOTIC_TRANSITION_MZT,Maternal To Zygotic Transition Mzt,-0.672,0.925,0.969,14,TRUE,Eif4g1;Cnot2;H2ax;Pabpc1;Srpk1;Ago2;Cnot4;Cnot9;Eif4e
+PC1,Reactome,REACTOME_MEIOTIC_SYNAPSIS,Meiotic Synapsis,-1.019,0.393,0.575,10,FALSE,Smc1a;Smc3;H2ax;Ube2i
+PC1,Reactome,REACTOME_METABOLISM_OF_AMINO_ACIDS_AND_DERIVATIVES,Metabolism Of AAs & Derivatives,2.307,2.32e-8,8.2e-6,97,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Aldh7a1;Slc25a12;Pycr1;Bcat1;Got2;Psph;Psmb3;Psma6;Psma4;Aldh9a1;Rars1;Dlst;Psma2;Oat;Aimp2;Rplp0;Glud1;Psma7;Nqo1;Sms;Psmd12;Psmd8;Echs1;Aldh6a1;Aldh18a1;Dbt;Hibch;Iars1;Mccc2;Auh;Psma1;Slc25a10;Psmc6;Rps27l;Rps2;Rpl22;Psmd14;Qdpr;Rps5;Slc7a5;Rps10;Ogdh;Hsd17b10;Gstz1;Psat1;Txnrd1;Got1;Rps3;Eef1e1;Fah;Ahcy
+PC1,Reactome,REACTOME_METABOLISM_OF_CARBOHYDRATES_AND_CARBOHYDRATE_DERIVATIVES,Metabolism Of Carbohydrates & Carbohydrate Derivatives,1.509,0.0134,0.0502,75,FALSE,Prps1;Eno1;Slc35b2;Aldoa;Akr1a1;Dcps;Taldo1;Ppp2cb;Gale;Pygb;Ugp2;Gpi;Hexa;Pgk1;Nup205;Gapdh;Hk2;Eno3;Pygm;Pgm1;B4galt5;B4galt7;Pgam1;Agl;Tpi1;Gpc4;Tkfc
+PC1,Reactome,REACTOME_METABOLISM_OF_FAT_SOLUBLE_VITAMINS,Metabolism Of Fat Soluble Vitamins,-1.55,0.0547,0.149,10,FALSE,Sdc1;Ldlr;Gpc1;Sdc2;Lrp1
+PC1,Reactome,REACTOME_METABOLISM_OF_LIPIDS,Metabolism Of Lipids,1.317,0.0512,0.144,128,FALSE,Ptgis;Acat2;Ppp1ca;Idi1;Lta4h;Nsdhl;Eci2;Kpnb1;Acsl5;Plpp1;Acsl1;Acadm;Fasn;Sar1b;Acsl3;Acaca;Sqle;Dhcr7;Hexa;Echs1;Gpx4;Nudt19;Fdft1;Fdps;Acaa2;Gpd1l;Slc25a20;Aldh3a2;Lpcat3;Fads2;Cpt2;B4galt5;Srd5a3;Decr1;Cpt1a;Acads;Ran
+PC1,Reactome,REACTOME_METABOLISM_OF_NUCLEOTIDES,Metabolism Of Nucleotides,1.684,0.013,0.0492,33,TRUE,Aprt;Gmps;Uck2;Pnp;Cad;Umps;Adsl;Hprt1;Nt5c3a;Gart;Glrx;Impdh2;Uck1
+PC1,Reactome,REACTOME_METABOLISM_OF_PORPHYRINS,Metabolism Of Porphyrins,1.541,0.0637,0.157,11,TRUE,Blvra;Blvrb;Alad;Cpox;Urod
+PC1,Reactome,REACTOME_METABOLISM_OF_RNA,Metabolism Of RNA,1.299,0.048,0.138,165,FALSE,Snrpd3;Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Psmb2;Ppp1ca;Psmb3;Psma6;Psma4;Lrpprc;Nudt21;Skic3;Psma2;U2af1;Dcps;Rplp0;Psma7;Ncbp2;Pcbp1;Ywhab;Psmd12;Psmd8;Eif4a1;Paip1;Nup205;Psma1;Mapk14;Psmc6;Dhx15;Rps27l;Bysl;Rps2;Rpl22;Psmd14;Rps5;Polr2g;Ncbp1;Ran;Las1l;Sf3b3;Rnmt;Rps10;Lsm1;Tbrg4;Xpot;Hsd17b10;Prpf31;Nup93;Lsm2;Prpf3
+PC1,Reactome,REACTOME_METABOLISM_OF_STEROIDS,Metabolism Of Steroids,1.826,0.00525,0.0244,31,FALSE,Acat2;Idi1;Nsdhl;Kpnb1;Fasn;Sar1b;Acaca;Sqle;Dhcr7;Fdft1;Fdps
+PC1,Reactome,REACTOME_METABOLISM_OF_VITAMINS_AND_COFACTORS,Metabolism Of Vitamins & Cofactors,1.234,0.169,0.316,36,TRUE,Cyb5r3;Dhfr;Fasn;Acaca;Gsto1;Shmt2;Mccc2;Mthfd2;Spr;Nfs1;Rdh11;Gpc4
+PC1,Reactome,REACTOME_MET_ACTIVATES_PTK2_SIGNALING,Met Activates PTK2 Signaling,-1.654,0.0156,0.0555,13,FALSE,Col3a1;Col1a1;Col1a2;Col5a2;Col5a1;Col11a1;Ptk2;Col5a3
+PC1,Reactome,REACTOME_MHC_CLASS_II_ANTIGEN_PRESENTATION,Mhc Class Ii Antigen Presentation,1.292,0.127,0.261,28,TRUE,Tuba4a;Dync1h1;Ap2b1;Cltc;Sec31a;Ctsd;Sar1b;Tuba3a
+PC1,Reactome,REACTOME_MITF_M_REGULATED_MELANOCYTE_DEVELOPMENT,Mitf M Regulated Melanocyte Development,1.82,0.00133,0.00838,44,FALSE,Xpo1;Actb;Rars1;Aimp2;Ccnd1;Ywhah;Cdk2;Ywhae;Ywhab;Ctnnb1;Atp6v1c1;Iars1;Mark3;Ywhag;Mapk14;Atp6v0c
+PC1,Reactome,REACTOME_MITOCHONDRIAL_BIOGENESIS,Mito. Biogenesis,1.521,0.0474,0.138,24,TRUE,Samm50;Atp5mg;Atp5pb;Glud1;Atp5po;Idh2;Atp5mf;Atp5f1e;Mapk14;Atp5me;Atp5f1b
+PC1,Reactome,REACTOME_MITOCHONDRIAL_FATTY_ACID_BETA_OXIDATION,Mito. FA Beta Oxidation,-0.816,0.738,0.843,15,FALSE,Dbi;Hadh;Acadl;Ndufab1;Acot2;Eci1
+PC1,Reactome,REACTOME_MITOCHONDRIAL_PROTEIN_DEGRADATION,Mito. Protein Degradation,1.85,0.00124,0.00793,57,FALSE,Atp5mg;Mdh2;Cs;Aldh2;Uqcrc2;Pmpca;Glud1;Suclg2;Fh;Atp5po;Lonp1;Aldh18a1;Idh2;Pdhb;Dbt;Ndufs3;Me2;Shmt2;Uqcrq;Atp5f1b;Idh3a;Ech1;Ndufv3;Timm10;Slc25a5;Atp5f1c;Ndufs1
+PC1,Reactome,REACTOME_MITOCHONDRIAL_PROTEIN_IMPORT,Mito. Protein Import,1.683,0.0152,0.0552,27,FALSE,Idh3g;Slc25a12;Samm50;Cs;Pmpca;Tomm70;Vdac1;Tomm40;Slc25a4;Atp5f1b;Timm50;Cyc1;Timm10
+PC1,Reactome,REACTOME_MITOCHONDRIAL_TRANSLATION,Mito. Translation,1.137,0.284,0.462,14,FALSE,Oxa1l;Mrps18b;Ptcd3;Dap3;Mrps30;Mrpl23;Mrps22
+PC1,Reactome,REACTOME_MITOPHAGY,Mitophagy,2.086,5.56e-4,0.00409,16,TRUE,Src;Vdac2;Ube2d3;Vdac3;Tomm70;Vdac1;Ube2n;Tomm40
+PC1,Reactome,REACTOME_MITOTIC_G2_G2_M_PHASES,Mitotic G2 M Phases,2.378,2.09e-7,3.69e-5,52,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Psmb2;Tuba4a;Dync1h1;Psmb3;Psma6;Psma4;Rbx1;Psma2;Ppp2cb;Psma7;Cdk2;Ywhae;Psmd12;Psmd8;Tuba3a;Psma1;Ywhag;Pafah1b1;Tubg1;Cdk1;Cul1;Psmc6;Psmd14;Hsp90ab1;Tubb5
+PC1,Reactome,REACTOME_MITOTIC_METAPHASE_AND_ANAPHASE,Mitotic Metaphase & Anaphase,2.141,7.96e-6,2.91e-4,64,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Psmb2;Tuba4a;Dync1h1;Zw10;Psmb3;Psma6;Psma4;Slc25a3;Psma2;Kpnb1;Ppp2cb;Psma7;Psmd12;Psmd8;Bub3;Tuba3a;Nup205;Sirt2;Psma1;Pafah1b1;Cdk1;Psmc6
+PC1,Reactome,REACTOME_MITOTIC_PROMETAPHASE,Mitotic Prometaphase,1.43,0.0301,0.0982,48,FALSE,Xpo1;Tuba4a;Dync1h1;Zw10;Nek7;Ppp2cb;Ywhae;Bub3;Tuba3a;Ywhag;Pafah1b1;Tubg1;Cdk1
+PC1,Reactome,REACTOME_MITOTIC_PROPHASE,Mitotic Prophase,0.924,0.599,0.749,25,TRUE,Nek7;Slc25a3;Ppp2cb;Nup205;Cdk1
+PC1,Reactome,REACTOME_MRNA_SPLICING_MINOR_PATHWAY,mRNA Splicing Minor Pathway,-0.851,0.694,0.825,19,FALSE,Srsf2;Srsf7;Polr2i;Srsf6
+PC1,Reactome,REACTOME_MTOR_SIGNALLING,mTOR Signalling,-0.698,0.875,0.941,17,FALSE,Eif4ebp1;Lamtor5;Eif4g1;Fkbp1a;Akt1s1;Tsc2;Prkab1;Ppm1a;Tsc1;Eif4e
+PC1,Reactome,REACTOME_MUSCLE_CONTRACTION,Muscle Contraction,0.846,0.71,0.828,42,FALSE,Atp1b3;Anxa2;Atp2a2;Anxa1;Aldh2
+PC1,Reactome,REACTOME_NCAM_SIGNALING_FOR_NEURITE_OUT_GROWTH,Ncam Signaling For Neurite Out Growth,-1.469,0.0549,0.149,19,TRUE,Col3a1;Sptan1;Col5a2;Col5a1;Ncam1;Ptk2;Col5a3;Hras
+PC1,Reactome,REACTOME_NEDDYLATION,Neddylation,2.32,2.03e-6,1.54e-4,39,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rbx1;Psma2;Ube2d3;Ddb1;Psma7;Cul4a;Psmd12;Psmd8;Psma1;Cul1;Psmc6;Fbxo4;Psmd14;Cul3
+PC1,Reactome,REACTOME_NERVOUS_SYSTEM_DEVELOPMENT,Nervous System Development,1.27,0.0625,0.157,157,FALSE,Rras;Pfn1;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Actb;Tuba4a;Ap2b1;Psmb3;Psma6;Psma4;Cltc;Src;Rbx1;Psma2;Rplp0;Psma7;Actr3;Ncbp2;Psmd12;Psmd8;Pfn2;Rasa1;Tuba3a;Rac1;Rhob;Psma1;Sdcbp;Arpc2;Psmc6;Nck2;Rps27l;Dpysl2;Rps2;Rpl22;Psmd14;Hsp90ab1;Rps5;Ncbp1;Nck1;Prkar2a;Ephb3
+PC1,Reactome,REACTOME_NETRIN_1_SIGNALING,Netrin 1 Signaling,0.54,0.979,0.99,11,FALSE,Src;Rac1;Nck1;Plcg1;Slit2;Trio
+PC1,Reactome,REACTOME_NEURONAL_SYSTEM,Neuronal System,1.473,0.0548,0.149,39,TRUE,Tuba4a;Ap2b1;Src;Aldh2;Gnb2;Gnai2;Gnai3;Tuba3a;Rac1;Comt;Rtn3
+PC1,Reactome,REACTOME_NEUTROPHIL_DEGRANULATION,Neutrophil Degranulation,1.285,0.0679,0.164,114,TRUE,Psmd13;Dync1h1;Cab39;Anxa2;Aprt;Aldoa;Lta4h;Psma2;Pnp;Cct2;Cyb5r3;Kpnb1;Ctsd;Ypel5;Pygb;Gpi;Lgals3;Psmd12;Arl8a;Prdx4;Alad;Nfkb1;Rac1;Sdcbp;Impdh2;Mapk14;Atp6v0c;Pgm1;Tcirg1;Pgam1;Copb1;Psmd14;Hsp90ab1;Igf2r;Tubb5;Mvp;Agl;Apaf1
+PC1,Reactome,REACTOME_NON_INTEGRIN_MEMBRANE_ECM_INTERACTIONS,Non Integrin Membrane Ecm Interactions,-1.318,0.0996,0.22,33,FALSE,Col3a1;Col1a1;Col1a2;Col5a2;Col5a1;Sdc1;Itgav;Sdc2
+PC1,Reactome,REACTOME_NUCLEAR_ENVELOPE_NE_REASSEMBLY,Nuclear Envelope Ne Reassembly,1.504,0.0418,0.127,19,FALSE,Tuba4a;Slc25a3;Kpnb1;Tuba3a;Nup205;Sirt2;Cdk1;Ran;Nup93
+PC1,Reactome,REACTOME_NUCLEAR_EVENTS_KINASE_AND_TRANSCRIPTION_FACTOR_ACTIVATION,Nuclear Events Kinase & Transcription Factor Activation,1.355,0.127,0.261,11,FALSE,Ppp2cb;Dusp3;Mapk14
+PC1,Reactome,REACTOME_NUCLEOTIDE_BINDING_DOMAIN_LEUCINE_RICH_REPEAT_CONTAINING_RECEPTOR_NLR_SIGNALING_PATHWAYS,Nucleotide Binding Domain Leucine Rich Repeat Containing Receptor Nlr Signalings,0.982,0.477,0.65,16,TRUE,Ube2n;Nfkb1;Mapk14;Ikbkb;Hsp90ab1
+PC1,Reactome,REACTOME_NUCLEOTIDE_EXCISION_REPAIR,Nucleotide Excision Repair,1.478,0.049,0.139,30,FALSE,Actb;Rbx1;Ddb1;Cul4a;Ube2n;Rfc5;Rfc3;Rpa1;Polr2g;Rfc4
+PC1,Reactome,REACTOME_ONCOGENIC_MAPK_SIGNALING,Oncogenic MAPK Signaling,1.227,0.183,0.337,15,FALSE,Actb;Phb1;Src;Ywhab;Mark3
+PC1,Reactome,REACTOME_OPIOID_SIGNALLING,Opioid Signalling,1.34,0.112,0.241,18,FALSE,Ppp1ca;Ppp2cb;Gnb2;Gnai2;Gnai3
+PC1,Reactome,REACTOME_ORGANELLE_BIOGENESIS_AND_MAINTENANCE,Organelle Biogenesis & Maintenance,1.941,5.15e-4,0.00387,57,FALSE,Tuba4a;Dync1h1;Samm50;Atp5mg;Arf4;Cct2;Atp5pb;Glud1;Cct3;Cct5;Ywhae;Atp5po;Idh2;Tuba3a;Atp5mf;Atp5f1e;Tcp1;Ywhag;Mapk14;Gbf1;Atp5me;Pafah1b1;Atp5f1b;Tubg1;Cdk1
+PC1,Reactome,REACTOME_PCP_CE_PATHWAY,Pcp Ce Pathway,2.192,3.97e-5,6.09e-4,37,FALSE,Pfn1;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Smurf1;Ap2b1;Psmb3;Psma6;Psma4;Cltc;Psma2;Psma7;Psmd12;Psmd8;Rac1;Psma1
+PC1,Reactome,REACTOME_PEPTIDE_HORMONE_METABOLISM,Peptide Hormone Metabolism,1.065,0.349,0.536,11,TRUE,Ctsd;Ctnnb1;Sec11a;Spcs3
+PC1,Reactome,REACTOME_PERK_REGULATES_GENE_EXPRESSION,Perk Regulates Gene Expression,-0.831,0.679,0.821,11,FALSE,Khsrp;Asns;Hspa5;Eif2s3
+PC1,Reactome,REACTOME_PEROXISOMAL_LIPID_METABOLISM,Peroxisomal Lipid Metabolism,0.901,0.6,0.749,11,FALSE,Eci2;Nudt19;Aldh3a2;Acox1;Amacr
+PC1,Reactome,REACTOME_PHASE_II_CONJUGATION_OF_COMPOUNDS,Phase Ii Conjugation Of Compounds,1.803,0.0104,0.0417,15,FALSE,Akr1a1;Ugdh;Gstm5;Ugp2;Gsto1;Comt;Bpnt1;Gstz1;Gclm;Ahcy;Gss
+PC1,Reactome,REACTOME_PHOSPHOLIPID_METABOLISM,Phospholipid Metabolism,0.619,0.966,0.99,30,FALSE,Gpd1l;Lpcat3;Hadhb;Gde1;Pten;Plaat3;Abhd4;Rab4a;Lclat1;Pikfyve;Gpd2;Synj2;Stard7;Agpat3
+PC1,Reactome,REACTOME_PI_METABOLISM,Pi Metabolism,-0.865,0.653,0.799,12,TRUE,Inppl1;Rab14;Pitpnb;Rab5a;Tnfaip8
+PC1,Reactome,REACTOME_PKR_MEDIATED_SIGNALING,Pkr Mediated Signaling,1.191,0.2,0.354,26,TRUE,Hspa2;Tuba4a;Ppp2cb;Stat3;Eif2s1;Tuba3a;Ikbkb;Cdk1
+PC1,Reactome,REACTOME_PLASMA_LIPOPROTEIN_ASSEMBLY_REMODELING_AND_CLEARANCE,Plasma Lipoprotein Assembly Remodeling & Clearance,1.16,0.26,0.434,14,FALSE,Ap2b1;Cltc;Sar1b;Lipa
+PC1,Reactome,REACTOME_PLATELET_ACTIVATION_SIGNALING_AND_AGGREGATION,Platelet Activation Signaling & Aggregation,1.076,0.318,0.507,62,TRUE,Pfn1;Tuba4a;Aldoa;Src;Actn1;Anxa5;Gnb2;Gnai2;Gnai3;Rac1;Rhob;Mapk14;Cyb5r1;F5
+PC1,Reactome,REACTOME_PLATELET_AGGREGATION_PLUG_FORMATION,Platelet Aggregation Plug Formation,-1.086,0.319,0.507,12,FALSE,Col1a1;Col1a2;Csk;Ptk2
+PC1,Reactome,REACTOME_PLATELET_HOMEOSTASIS,Platelet Homeostasis,1.574,0.0425,0.127,13,TRUE,Atp2a2;Ppp2cb;Gnb2;Gnas;Mapk14;Gng12;P2rx4;Ppp2r5b;Atp2b4
+PC1,Reactome,REACTOME_POSITIVE_EPIGENETIC_REGULATION_OF_RRNA_EXPRESSION,Positive Epigenetic Reg. Rrna Expression,0.842,0.704,0.828,15,TRUE,Actb;Dek;Polr1c;Polr2e;Myo1c;Hdac1;Hdac2;Rbbp7;Polr2h;Mybbp1a
+PC1,Reactome,REACTOME_POST_TRANSLATIONAL_PROTEIN_MODIFICATION,Post Translational Protein Mod.,1.623,3.88e-4,0.00305,232,FALSE,Psmb5;Psma3;Psmc4;Tmed10;Psmd13;Psmb2;Actb;Tuba4a;Dync1h1;Gfpt1;Psmb3;Psma6;Psma4;Nagk;Dlst;Arf4;Rbx1;Psma2;Vdac2;Sec31a;Dcps;Ube2d3;Sec22b;Pex13;Vdac3;Ddb1;Psma7;Sar1b;Tomm70;Gfus;Cul4a;Uchl5;Psmd12;Vdac1;Psmd8;Rhot1;Etfb;Ube2n;Dbt;Tmed2;Tuba3a;Mpi;Nup205;Cope;Psma1;Napa;Gbf1;F5;Ctbp1;Rpn1;Pmm1;Cdk1;Dad1;Cul1;Trim28;Psmc6;Usp15;Arcn1;B4galt5;Psme2;Rpa1;Pml;Fbxo4;Usp14;Srd5a3;Eef1akmt1;Rps2;Copb1;Psmd14;Cul3;Gne;Hsp90b1
+PC1,Reactome,REACTOME_PRE_NOTCH_EXPRESSION_AND_PROCESSING,Pre Notch Expression & Processing,1.362,0.119,0.254,13,TRUE,Atp2a2;Dcps;Ccnd1;Tmed2
+PC1,Reactome,REACTOME_PROCESSING_OF_CAPPED_INTRON_CONTAINING_PRE_MRNA,Pre-mRNA Processing,-0.823,0.834,0.904,71,FALSE,Srsf2;Lsm7;Srsf7;Cstf2;Polr2i;Hspa8;Hnrnpd;Srsf6;Srsf3;Alyref;Sympk;Srsf10;Ddx39a;Gtf2f1;Fus;Snrpa1;Hnrnpu;Upf3b;Srsf1;Rnps1;Rae1;Snrpb2;Cdc5l;Cstf3;Rbm5;Mtrex;Snrpa;Snrpd1
+PC1,Reactome,REACTOME_PROGRAMMED_CELL_DEATH,Programmed Cell Death,1.8,6.75e-4,0.00458,70,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Kpnb1;Fnta;Stat3;Bak1;Psma7;Ywhah;Ywhae;Ywhab;Psmd12;Psmd8;Ctnnb1;Casp3;Dnm1l;Psma1;Sdcbp;Ywhag
+PC1,Reactome,REACTOME_PROTEIN_FOLDING,Protein Folding,2.044,3.37e-4,0.00283,25,FALSE,Actb;Tuba4a;Cct7;Cct2;Stat3;Cct3;Gnb2;Cct5;Tuba3a;Tcp1;Fbxo4
+PC1,Reactome,REACTOME_PROTEIN_LOCALIZATION,Protein Localization,1.549,0.0151,0.0552,60,FALSE,Idh3g;Slc25a12;Samm50;Abcd3;Eci2;Cs;Fis1;Ube2d3;Pex13;Pmpca;Tomm70;Vdac1;Nudt19;Aldh3a2;Tomm40;Slc25a4;Atp5f1b;Ech1;Timm50;Cyc1
+PC1,Reactome,REACTOME_PROTEIN_UBIQUITINATION,Protein Ubiquitination,1.499,0.0565,0.152,11,TRUE,Ube2d3;Pex13;Ube2n
+PC1,Reactome,REACTOME_PTEN_REGULATION,Pten Regulation,1.757,0.00482,0.0227,40,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8
+PC1,Reactome,REACTOME_PYRUVATE_METABOLISM,Pyruvate Metabolism,1.619,0.0388,0.121,20,FALSE,Ldhb;Ldha;Vdac1;Pdhx;Pdhb;Me2;Mpc2;Gstz1;Pkm;Dld;Mpc1;Dlat;Pc
+PC1,Reactome,REACTOME_RAB_REGULATION_OF_TRAFFICKING,Rab Reg. Trafficking,0.721,0.883,0.941,21,TRUE,Arf6;Ywhae;Gabarapl2
+PC1,Reactome,REACTOME_RAC1_GTPASE_CYCLE,Rac1 GTPase Cycle,-0.989,0.465,0.639,43,FALSE,Vamp3;Cdc42ep4;Farp1;Pak4;Lbr;Cdc42ep1;Wasl;Snap23;Arhgap29;Swap70;Pak3;Wipf1;Wasf2
+PC1,Reactome,REACTOME_RAC2_GTPASE_CYCLE,Rac2 GTPase Cycle,-1.271,0.146,0.287,24,FALSE,Vamp3;Cdc42ep4;Pak4;Stbd1;Lbr;Lman1;Cdc42ep1
+PC1,Reactome,REACTOME_RECYCLING_PATHWAY_OF_L1,Recycling Pathway Of L1,1.453,0.0625,0.157,19,TRUE,Actb;Tuba4a;Ap2b1;Cltc;Src;Tuba3a
+PC1,Reactome,REACTOME_REGULATED_NECROSIS,Regulated Necrosis,0.986,0.464,0.639,11,FALSE,Bak1;Casp3;Sdcbp
+PC1,Reactome,REACTOME_REGULATION_OF_CDH1_FUNCTION,Reg. Cdh1 Function,2.409,4.39e-6,2.21e-4,33,FALSE,Psmb5;Psma3;Psmc4;Rack1;Psmd13;Psmb2;Actb;Psmb3;Psma6;Psma4;Src;Psma2;Psma7;Psmd12;Psmd8;Ctnnb1
+PC1,Reactome,REACTOME_REGULATION_OF_CDH1_POSTTRANSLATIONAL_PROCESSING_AND_TRAFFICKING_TO_PLASMA_MEMBRANE,Reg. Cdh1 Posttranslational Processing & Trafficking To Plasma Membrane,1.593,0.0456,0.135,11,FALSE,Ctnnb1;Rpn1;Dad1;Sec11a;Spcs3
+PC1,Reactome,REACTOME_REGULATION_OF_CHOLESTEROL_BIOSYNTHESIS_BY_SREBP_SREBF,Reg. Cholesterol Biosynthesis By Srebp Srebf,2.199,1e-4,0.00118,17,TRUE,Idi1;Kpnb1;Fasn;Sar1b;Acaca;Sqle;Dhcr7;Fdft1;Fdps
+PC1,Reactome,REACTOME_REGULATION_OF_ENDOGENOUS_RETROELEMENTS,Reg. Endogenous Retroelements,0.552,0.973,0.99,11,FALSE,Actb
+PC1,Reactome,REACTOME_REGULATION_OF_EXPRESSION_AND_FUNCTION_OF_TYPE_II_CLASSICAL_CADHERINS,Reg. Expression & Function Of Type Ii Classical Cadherins,0.972,0.483,0.654,11,FALSE,Adam19;Ctnnb1
+PC1,Reactome,REACTOME_REGULATION_OF_INSULIN_LIKE_GROWTH_FACTOR_IGF_TRANSPORT_AND_UPTAKE_BY_INSULIN_LIKE_GROWTH_FACTOR_BINDING_PROTEINS_IGFBPS,Reg. Insulin Like Growth Factor Igf Transport & Uptake By Insulin Like Growth Factor Binding Proteins Igfbps,-1.35,0.0858,0.197,25,TRUE,Calu;Ckap4;Fstl1;Sdc2;Igfbp7;Serpinc1;Ccn1;Fbn1;Ltbp1;Aplp2;Vcan;Lamc1;Cp;Dnajc3;App
+PC1,Reactome,REACTOME_REGULATION_OF_LIPID_METABOLISM_BY_PPARALPHA,Reg. Lipid Metabolism By Pparalpha,1.245,0.168,0.316,18,TRUE,Acsl1;Acadm;Fdft1;Cpt2;Cpt1a;Txnrd1;Acox1
+PC1,Reactome,REACTOME_REGULATION_OF_MRNA_STABILITY_BY_PROTEINS_THAT_BIND_AU_RICH_ELEMENTS,Reg. mRNA Stability By Proteins That Bind Au Rich Elements,1.809,0.0029,0.0147,42,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Ywhab;Psmd12;Psmd8
+PC1,Reactome,REACTOME_REGULATION_OF_PD_L1_CD274_POST_TRANSLATIONAL_MODIFICATION,Reg. Pd L1 Cd274 Post Translational Mod.,2.281,1.51e-5,3.34e-4,38,FALSE,Cdk4;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rbx1;Psma2;Ccnd1;Psma7;Psmd12;Psmd8;Psma1;Ywhag;Rpn1;Dad1;Cul1;Psmc6;Psmd14;Cul3
+PC1,Reactome,REACTOME_REGULATION_OF_PD_L1_CD274_TRANSCRIPTION,Reg. Pd L1 Cd274 Transcription,1.002,0.451,0.639,10,TRUE,Stat3;Ctnnb1;Nfkb1
+PC1,Reactome,REACTOME_REGULATION_OF_PLK1_ACTIVITY_AT_G2_M_TRANSITION,Reg. Plk1 Activity At G2 M Transition,1.555,0.0608,0.157,20,FALSE,Tuba4a;Dync1h1;Ywhae;Ywhag;Pafah1b1;Tubg1;Cdk1;Cul1;Tubb5;Mapre1
+PC1,Reactome,REACTOME_REGULATION_OF_RUNX1_EXPRESSION_AND_ACTIVITY,Reg. Runx1 Expression & Activity,1.3,0.152,0.293,11,FALSE,Src;Ccnd1;Cdk6;Ccnd3;Pml
+PC1,Reactome,REACTOME_REGULATION_OF_TP53_ACTIVITY,Reg. Tp53 Activity,1.467,0.0595,0.157,28,FALSE,Ppp2cb;Cdk2;Ssrp1;Mapk14;Rfc5;Cdk1;Rfc3;Rpa1;Pml;Rfc4;Prkag1;Mtor;Mre11;Hdac1;Rpa2;Hdac2
+PC1,Reactome,REACTOME_REGULATION_OF_T_CELL_ACTIVATION_BY_CD28_FAMILY,Reg. T Cell Activation By Cd28 Family,2.126,8.24e-6,2.91e-4,65,FALSE,Cdk4;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Src;Rbx1;Psma2;Ppp2cb;Stat3;Ccnd1;Psma7;Psmd12;Psmd8;Ctnnb1;Nfkb1;Rac1;Psma1;Ywhag;Rpn1;Dad1;Cul1;Psmc6;Psmd14;Cul3
+PC1,Reactome,REACTOME_REPRODUCTION,Reproduction,1.063,0.352,0.536,17,TRUE,Cdk4;Hspa2;Cdk2
+PC1,Reactome,REACTOME_RETROGRADE_TRANSPORT_AT_THE_TRANS_GOLGI_NETWORK,Retrograde Transport At The Trans Golgi Network,-0.924,0.534,0.69,13,FALSE,Vamp3;Golga4;Napg;M6pr;Vamp4
+PC1,Reactome,REACTOME_RET_SIGNALING,Ret Signaling,-0.876,0.609,0.755,10,FALSE,Gab2;Pdlim7
+PC1,Reactome,REACTOME_RHOA_GTPASE_CYCLE,RhoA GTPase Cycle,-1.678,0.00952,0.0391,38,TRUE,Vamp3;Rhoa;Farp1;C1qbp;Stbd1;Bcap31;Lbr;Lman1;Arhgef2;Rock1;Snap23;Akap13;Anln;Arhgef12;Arhgap29
+PC1,Reactome,REACTOME_RHOBTB_GTPASE_CYCLE,Rhobtb GTPase Cycle,1.322,0.14,0.281,12,TRUE,Cct7;Actn1;Cct2;Cul3;Hsp90ab1
+PC1,Reactome,REACTOME_RHOD_GTPASE_CYCLE,Rhod GTPase Cycle,-1.306,0.141,0.281,14,TRUE,Vamp3;Akap12;Stbd1;Lbr;Lman1
+PC1,Reactome,REACTOME_RHOF_GTPASE_CYCLE,Rhof GTPase Cycle,0.937,0.546,0.696,15,FALSE,Actb;Slc25a3;Actn1
+PC1,Reactome,REACTOME_RHOG_GTPASE_CYCLE,Rhog GTPase Cycle,-1.352,0.0777,0.182,27,FALSE,Vamp3;Arfgap3;Pak4;Stbd1;Lbr;Lman1;Hspe1;Cdc42ep1
+PC1,Reactome,REACTOME_RHOH_GTPASE_CYCLE,Rhoh GTPase Cycle,-1.274,0.171,0.318,12,TRUE,Vamp3;Pak4;Rock1;Csk
+PC1,Reactome,REACTOME_RHOQ_GTPASE_CYCLE,Rhoq GTPase Cycle,-1.774,0.00705,0.0307,20,TRUE,Vamp3;Cdc42ep4;Pak4;Cdc42ep1;Wasl;Trip10;Snap23
+PC1,Reactome,REACTOME_RHOU_GTPASE_CYCLE,Rhou GTPase Cycle,-1.021,0.422,0.611,17,TRUE,Sptan1;Stam;Stam2;Pak4
+PC1,Reactome,REACTOME_RHO_GTPASES_ACTIVATE_FORMINS,Rho Gtpases Activate Formins,1.787,0.00339,0.0169,37,FALSE,Pfn1;Xpo1;Actb;Tuba4a;Dync1h1;Zw10;Src;Ppp2cb;Pfn2;Bub3;Tuba3a;Rac1;Rhob;Pafah1b1
+PC1,Reactome,REACTOME_RHO_GTPASES_ACTIVATE_IQGAPS,Rho Gtpases Activate Iqgaps,1.55,0.0421,0.127,10,FALSE,Actb;Tuba4a;Ctnnb1;Tuba3a;Rac1
+PC1,Reactome,REACTOME_RHO_GTPASES_ACTIVATE_PAKS,Rho Gtpases Activate Paks,-1.516,0.0613,0.157,11,FALSE,Flna;Cttn;Mylk
+PC1,Reactome,REACTOME_RHO_GTPASES_ACTIVATE_PKNS,Rho Gtpases Activate Pkns,1.572,0.0474,0.138,14,FALSE,Ywhah;Ywhae;Ywhab;Rac1;Rhob;Ywhag
+PC1,Reactome,REACTOME_RHO_GTPASES_ACTIVATE_WASPS_AND_WAVES,Rho Gtpases Activate Wasps & Waves,0.958,0.496,0.657,19,FALSE,Actb;Actr3;Rac1;Arpc2;Nck1;Baiap2;Cyfip2;Abi1;Grb2
+PC1,Reactome,REACTOME_RHO_GTPASE_EFFECTORS,Rho GTPase Effectors,1.373,0.0408,0.126,81,TRUE,Pfn1;Xpo1;Actb;Tuba4a;Dync1h1;Zw10;Src;Ppp2cb;Ywhah;Actr3;Ywhae;Ywhab;Pfn2;Ctnnb1;Bub3;Tuba3a;Rac1;Rhob;Ywhag;Mapk14;Arpc2;Pafah1b1
+PC1,Reactome,REACTOME_RIBOSOME_ASSOCIATED_QUALITY_CONTROL,Ribosome Associated Quality Control,2.227,9.73e-6,3.09e-4,39,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rbx1;Psma2;Ube2d3;Rplp0;Psma7;Psmd12;Psmd8;Psma1;Psmc6;Rps27l;Rps2;Rpl22;Psmd14;Rps5
+PC1,Reactome,REACTOME_RNA_POLYMERASE_II_TRANSCRIBES_SNRNA_GENES,RNA Polymerase Ii Transcribes Snrna Genes,0.545,0.979,0.99,17,FALSE,Ncbp2;Polr2g;Ncbp1
+PC1,Reactome,REACTOME_RNA_POLYMERASE_II_TRANSCRIPTION,RNA Polymerase Ii Transcription,1.316,0.034,0.108,202,FALSE,Cdk4;Snrpd3;Prdx2;Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Psmb2;Smurf1;Psmb3;Psma6;Psma4;Nudt21;Src;Rbx1;Psma2;U2af1;Ube2d3;Ppp2cb;Ccnd1;Psma7;Ywhah;Cdk2;Gpi;Ncbp2;Lgals3;Prdx1;Ywhae;Ywhab;Psmd12;Psmd8;Ctnnb1;Cdk6;Nfkb1;Ccnd3;Ssrp1;Psma1;Ywhag;Mapk14;Rfc5;Cdk1;Cul1;Trim28;Psmc6;Rfc3;Dek;Rpa1;Pml
+PC1,Reactome,REACTOME_RNA_POLYMERASE_II_TRANSCRIPTION_TERMINATION,RNA Polymerase Ii Transcription Termination,-1.107,0.327,0.511,19,FALSE,Srsf2;Srsf7;Cstf2;Srsf6;Srsf3;Alyref;Sympk;Ddx39a;Upf3b;Srsf1;Rnps1
+PC1,Reactome,REACTOME_RND1_GTPASE_CYCLE,Rnd1 GTPase Cycle,-0.662,0.891,0.941,10,FALSE,Stip1
+PC1,Reactome,REACTOME_RND3_GTPASE_CYCLE,Rnd3 GTPase Cycle,-0.846,0.654,0.799,11,TRUE,Picalm;Ckap4;Rock1
+PC1,Reactome,REACTOME_ROS_AND_RNS_PRODUCTION_IN_PHAGOCYTES,ROS & Rns Production In Phagocytes,-0.761,0.781,0.869,10,FALSE,Atp6v1f;Atp6v1d;Atp6v1g1;Atp6v0d1
+PC1,Reactome,REACTOME_RRNA_PROCESSING,Rrna Processing,1.308,0.124,0.26,32,TRUE,Rplp0;Rps27l;Bysl;Rps2;Rpl22;Rps5;Las1l;Rps10;Hsd17b10;Rps3;Riok3;Dkc1;Exosc1;Nhp2;Pes1;Exosc8;Nop56
+PC1,Reactome,REACTOME_RUNX1_REGULATES_TRANSCRIPTION_OF_GENES_INVOLVED_IN_DIFFERENTIATION_OF_HSCS,Runx1 Regulates Transcription Of Genes Involved In Differentiation Of Hscs,2.075,2.32e-4,0.00219,25,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8
+PC1,Reactome,REACTOME_SELENOAMINO_ACID_METABOLISM,Selenoamino Acid Metabolism,1.356,0.0942,0.209,26,FALSE,Rars1;Aimp2;Rplp0;Iars1;Rps27l;Rps2;Rpl22;Rps5;Rps10;Txnrd1;Rps3;Eef1e1;Ahcy
+PC1,Reactome,REACTOME_SEMAPHORIN_INTERACTIONS,Semaphorin Interactions,0.796,0.805,0.885,19,TRUE,Rras;Rac1;Rhob;Dpysl2;Hsp90ab1
+PC1,Reactome,REACTOME_SENESCENCE_ASSOCIATED_SECRETORY_PHENOTYPE_SASP,Senescence Associated Secretory Phenotype Sasp,1.322,0.126,0.261,17,TRUE,Cdk4;Stat3;Cdk2;Cdk6;Nfkb1
+PC1,Reactome,REACTOME_SENSORY_PERCEPTION,Sensory Perception,-1.552,0.0227,0.0778,25,TRUE,Epb41l3;Sptan1;Ezr;Sdc1;Nmt1;Ldlr;Gpc1;Sdc2;Msn;Lrp1
+PC1,Reactome,REACTOME_SENSORY_PROCESSING_OF_SOUND,Sensory Processing Of Sound,-1.226,0.196,0.351,11,FALSE,Epb41l3;Sptan1;Ezr;Msn
+PC1,Reactome,REACTOME_SIGNALING_BY_CSF1_M_CSF_IN_MYELOID_CELLS,Signaling By Csf1 M Csf In Myeloid Cells,-1.008,0.413,0.6,10,TRUE,Inppl1;Stat1;Gab2
+PC1,Reactome,REACTOME_SIGNALING_BY_EGFR,Signaling By Egfr,-0.921,0.586,0.736,17,TRUE,Stam;Stam2;Pxn;Csk;Cbl;Hras
+PC1,Reactome,REACTOME_SIGNALING_BY_ERBB2,Signaling By Erbb2,-0.755,0.826,0.9,15,FALSE,Rhoa;Usp8;Prkce;Hras;Prkcd
+PC1,Reactome,REACTOME_SIGNALING_BY_ERBB4,Signaling By Erbb4,-1.085,0.323,0.507,12,TRUE,Sparc;Stmn1;Nedd4
+PC1,Reactome,REACTOME_SIGNALING_BY_FGFR,Signaling By Fgfr,1.007,0.434,0.625,22,TRUE,Src;Ppp2cb;Ncbp2;Polr2g;Ncbp1;Plcg1;Tial1;Polr2e;Grb2;Mapk1;Hnrnpa1
+PC1,Reactome,REACTOME_SIGNALING_BY_FGFR4,Signaling By Fgfr4,1.04,0.4,0.583,10,FALSE,Src;Ppp2cb
+PC1,Reactome,REACTOME_SIGNALING_BY_GPCR,Signaling By Gpcr,0.87,0.692,0.825,57,FALSE,Ppp1ca;Src;Anxa1;Ppp2cb;Gnb2;Gnas;Gnai2;Gnai3;Rhob
+PC1,Reactome,REACTOME_SIGNALING_BY_HEDGEHOG,Signaling By Hedgehog,2.167,5.86e-5,7.39e-4,37,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Tuba4a;Smurf1;Psmb3;Psma6;Psma4;Rbx1;Psma2;Psma7;Psmd12;Psmd8;Gnas;Tuba3a;Psma1;Cul1;Psmc6;Psmd14;Cul3;Prkar2a
+PC1,Reactome,REACTOME_SIGNALING_BY_INSULIN_RECEPTOR,Signaling By Insulin Receptor,-0.678,0.923,0.969,22,TRUE,Atp6v1f;Gab2;Atp6v1d;Atp6v1g1;Atp6v0d1;Hras;Ptpn11;Atp6ap1;Shc1
+PC1,Reactome,REACTOME_SIGNALING_BY_MET,Signaling By Met,-1.426,0.0664,0.162,30,FALSE,Col3a1;Col1a1;Stam;Col1a2;Col5a2;Col5a1;Stam2;Ranbp9;Col11a1;Usp8;Ptk2;Cbl;Col5a3;Hras
+PC1,Reactome,REACTOME_SIGNALING_BY_NOTCH,Signaling By Notch,1.888,6.56e-4,0.00454,54,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Atp2a2;Rbx1;Psma2;Dcps;Ccnd1;Psma7;Psmd12;Psmd8;Tmed2;Psma1;Cul1;Psmc6
+PC1,Reactome,REACTOME_SIGNALING_BY_NOTCH1,Signaling By Notch1,-0.769,0.796,0.878,15,TRUE,Hdac6;Skp1;Tle3;Ncor2
+PC1,Reactome,REACTOME_SIGNALING_BY_NOTCH4,Signaling By Notch4,2.201,4.39e-5,6.46e-4,34,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rbx1;Psma2;Psma7;Psmd12;Psmd8;Psma1;Cul1;Psmc6
+PC1,Reactome,REACTOME_SIGNALING_BY_NTRKS,Signaling By Ntrks,1.617,0.0248,0.0835,32,TRUE,Ap2b1;Cltc;Src;Ppp2cb;Stat3;Ywhab;Dusp3;Rac1;Mapk14;Rala
+PC1,Reactome,REACTOME_SIGNALING_BY_NUCLEAR_RECEPTORS,Signaling By Nuclear Receptors,0.992,0.459,0.639,59,FALSE,Xpo1;Src;Ctsd;Fasn;Ccnd1;Gnb2;Pdhx;Gnai2;Gnai3;Pdhb
+PC1,Reactome,REACTOME_SIGNALING_BY_PDGF,Signaling By Pdgf,-0.896,0.635,0.784,23,TRUE,Col3a1;Col5a2;Col5a1;Stat1
+PC1,Reactome,REACTOME_SIGNALING_BY_PTK6,Signaling By PTK6,1.28,0.148,0.288,17,TRUE,Cdk4;Stat3;Ccnd1;Cdk2;Rasa1;Rac1
+PC1,Reactome,REACTOME_SIGNALING_BY_RECEPTOR_TYROSINE_KINASES,Signaling By Receptor Tyrosine Kinases,-0.998,0.465,0.639,137,FALSE,Col3a1;Sparc;Col1a1;Stam;Rhoa;Col1a2;Col5a2;Col5a1;Stam2;Stat1;Atp6v1f;Gab2;Stmn1;Polr2i;Dnmt1;Nedd4;Clta;Itgav;Atp6v1d;Ralb;Ranbp9;Pxn;Rock1;Bax;Csk
+PC1,Reactome,REACTOME_SIGNALING_BY_RHO_GTPASES_MIRO_GTPASES_AND_RHOBTB3,Signaling By Rho Gtpases Miro Gtpases & Rhobtb3,1.049,0.341,0.526,180,FALSE,Pfn1;Xpo1;Actb;Tuba4a;Dync1h1;Samm50;Zw10;Cltc;Slc25a3;Src;Cct7;Actn1;Abcd3;Cct2;Ppp2cb;Ywhah;Actr3;Ywhae;Ywhab;Pfn2;Ctnnb1;Rhot1;Bub3;Dbt;Rasal2;Ndufs3;Tuba3a;Rac1;Shmt2;Rhob;Esyt1;Aldh3a2;Ywhag;Mapk14;Arpc2;Rnd3;Pafah1b1
+PC1,Reactome,REACTOME_SIGNALING_BY_ROBO_RECEPTORS,Signaling By Robo Receptors,1.849,4.7e-4,0.0036,72,FALSE,Pfn1;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Src;Rbx1;Psma2;Rplp0;Psma7;Ncbp2;Psmd12;Psmd8;Pfn2;Rac1;Psma1;Psmc6;Nck2;Rps27l;Rps2;Rpl22;Psmd14;Rps5;Ncbp1;Nck1;Prkar2a;Rps10
+PC1,Reactome,REACTOME_SIGNALING_BY_SCF_KIT,Signaling By Scf Kit,0.952,0.526,0.686,11,FALSE,Src;Stat3;Rac1
+PC1,Reactome,REACTOME_SIGNALING_BY_TGFBR3,Signaling By Tgfbr3,-0.859,0.638,0.785,11,TRUE,Tgfb2;Ago2;Tnrc6b;Sp1
+PC1,Reactome,REACTOME_SIGNALING_BY_TGFB_FAMILY_MEMBERS,Signaling By Tgfb Family Members,-0.859,0.71,0.828,44,FALSE,Tgfb2;Rhoa;Col1a2;Stat1;Fstl1;Itgav;Cdkn2b;Fst;Fkbp1a;Ncor2;Cbl;Ltbp2;Ago2;Tnrc6b;Sp1;Fbn1;Ltbp1;Smad2;Ppm1a;Itgb1
+PC1,Reactome,REACTOME_SIGNALING_BY_VEGF,Signaling By Vegf,0.793,0.808,0.886,41,FALSE,Actb;Src;Ctnnb1;Rasa1;Rac1;Mapk14;Nck2;Nck1;Mtor;Baiap2;Cyfip2;Plcg1;Abi1
+PC1,Reactome,REACTOME_SIGNALING_BY_WNT,Signaling By WNT,2.001,3.95e-5,6.09e-4,67,FALSE,Pfn1;Psmb5;Psma3;Psmc4;Psmd13;Xpo1;Psmb2;Smurf1;Ap2b1;Psmb3;Psma6;Psma4;Cltc;Rbx1;Psma2;Ppp2cb;Psma7;Wls;Gnb2;Psmd12;Psmd8;Ctnnb1;Rac1;Psma1;Ctbp1;Cul1;Psmc6
+PC1,Reactome,REACTOME_SIGNALLING_TO_ERKS,Signalling To Erks,1.328,0.138,0.281,11,FALSE,Src;Ywhab;Mapk14;Rala
+PC1,Reactome,REACTOME_SIGNAL_TRANSDUCTION_BY_L1,Signal Transduction By L1,-1.059,0.387,0.571,11,TRUE,Itga5;Itgav;Ncam1;Csnk2b
+PC1,Reactome,REACTOME_SLC_MEDIATED_TRANSMEMBRANE_TRANSPORT,Slc Mediated Transmembrane Transport,0.728,0.89,0.941,28,FALSE,Slc35b2;Slc25a11;Slc25a1;Slc29a1;Slc25a4;Slc25a10;Slc25a5;Slc7a5
+PC1,Reactome,REACTOME_SMOOTH_MUSCLE_CONTRACTION,Smooth Muscle Contraction,-1.182,0.228,0.385,19,TRUE,Mylk;Sorbs3;Cald1;Tpm4;Tpm1;Pxn;Tpm3
+PC1,Reactome,REACTOME_SNRNP_ASSEMBLY,Snrnp Assembly,1.08,0.331,0.514,17,FALSE,Snrpd3;Ncbp2;Nup205;Ncbp1;Nup93
+PC1,Reactome,REACTOME_SPHINGOLIPID_METABOLISM,Sphingolipid Metabolism,-0.93,0.54,0.692,11,TRUE,Vapa;Gm2a;Cyb5b;M6pr;Degs1
+PC1,Reactome,REACTOME_SRP_DEPENDENT_COTRANSLATIONAL_PROTEIN_TARGETING_TO_MEMBRANE,Srp Dependent Cotranslational Protein Targeting To Membrane,1.411,0.0741,0.177,27,FALSE,Sec61a1;Rplp0;Rpn1;Sec11a;Rps27l;Spcs3;Rps2;Rpl22;Rps5;Rps10
+PC1,Reactome,REACTOME_STRIATED_MUSCLE_CONTRACTION,Striated Muscle Contraction,-1.579,0.0505,0.143,14,TRUE,Tpm4;Tpm1;Tnnc2;Tpm3;Tnnc1;Vim;Tpm2;Dmd
+PC1,Reactome,REACTOME_SUMOYLATION,Sumoylation,-1.188,0.214,0.366,36,TRUE,Ikbkg;Dnmt1;Cbx5;Smc1a;Smc3;Npm1;Eif2ak2;Ncor2;Nr3c1;Ube2i;Rae1;Rela;Cetn2;Mta1
+PC1,Reactome,REACTOME_SUMOYLATION_OF_CHROMATIN_ORGANIZATION_PROTEINS,Sumoylation Of Chromatin Org. Proteins,0.429,1,1,13,FALSE,Nup205;Nup93;Hdac1;Hdac2;Nup107
+PC1,Reactome,REACTOME_SUMOYLATION_OF_DNA_DAMAGE_RESPONSE_AND_REPAIR_PROTEINS,Sumoylation Of DNA Damage Response & Repair Proteins,0.572,0.965,0.99,16,FALSE,Nup205;Rpa1;Pml;Nup93
+PC1,Reactome,REACTOME_SUMOYLATION_OF_DNA_REPLICATION_PROTEINS,Sumoylation Of DNA Replication Proteins,0.745,0.83,0.901,13,FALSE,Nup205;Nup93;Nup107;Nup98;Pom121;Top1;Nup58;Nup153;Pcna;Top2a;Nup50;Rae1;Ube2i
+PC1,Reactome,REACTOME_SYNDECAN_INTERACTIONS,Syndecan Interactions,-1.885,0.00246,0.0135,17,FALSE,Col3a1;Col1a1;Col1a2;Col5a2;Col5a1;Sdc1;Itgav;Sdc2
+PC1,Reactome,REACTOME_S_PHASE,S Phase,2.058,2.06e-5,3.85e-4,59,FALSE,Cdk4;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rbx1;Psma2;Ccnd1;Psma7;Cdk2;Psmd12;Psmd8;Psma1;Mcm7;Rfc5;Cul1;Psmc6;Rfc3;Rpa1;Psmd14;Mcm6;Rfc4;Mcm2
+PC1,Reactome,REACTOME_TAK1_DEPENDENT_IKK_AND_NF_KAPPA_B_ACTIVATION,Tak1 Dependent Ikk & Nf Kappa B Activation,0.913,0.576,0.726,12,FALSE,Ube2n;Nfkb1;Ikbkb;Usp14
+PC1,Reactome,REACTOME_TCR_SIGNALING,Tcr Signaling,1.843,0.00192,0.0113,40,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8;Ube2n;Nfkb1;Psma1;Ikbkb;Cul1;Psmc6
+PC1,Reactome,REACTOME_TGF_BETA_RECEPTOR_SIGNALING_ACTIVATES_SMADS,TGF Beta Receptor Signaling Activates Smads,1.076,0.323,0.507,18,TRUE,Xpo1;Ppp1ca;Smurf1;Uchl5
+PC1,Reactome,REACTOME_THE_ROLE_OF_GTSE1_IN_G2_M_PROGRESSION_AFTER_G2_CHECKPOINT,The Role Of Gtse1 In G2 M Progression After G2 Checkpoint,2.276,1.5e-5,3.34e-4,29,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Tuba4a;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8;Tuba3a;Psma1;Cdk1;Psmc6;Psmd14;Hsp90ab1
+PC1,Reactome,REACTOME_TNFR2_NON_CANONICAL_NF_KB_PATHWAY,Tnfr2 Non Canonical Nf Kb Pathway,2.127,1.89e-4,0.00196,26,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8;Psma1;Cul1;Psmc6;Psmd14
+PC1,Reactome,REACTOME_TNF_SIGNALING,Tnf Signaling,0.904,0.609,0.755,16,TRUE,Rack1;Ube2d3;Ikbkb
+PC1,Reactome,REACTOME_TOLL_LIKE_RECEPTOR_CASCADES,Toll Like Receptor Cascades,1.064,0.36,0.544,36,FALSE,Ube2d3;Ppp2cb;Dusp3;Ube2n;Nfkb1;Mapk14;Ikbkb;Cul1;Usp14;Hsp90b1;Ecsit
+PC1,Reactome,REACTOME_TP53_REGULATES_METABOLIC_GENES,Tp53 Regulates Metabolic Genes,1.036,0.391,0.575,35,TRUE,Prdx2;Ywhah;Gpi;Prdx1;Ywhae;Ywhab
+PC1,Reactome,REACTOME_TP53_REGULATES_TRANSCRIPTION_OF_CELL_CYCLE_GENES,Tp53 Regulates Transcription Of Cell Cycle Genes,-0.835,0.673,0.816,11,TRUE,Cdkn1b;Bax;Npm1;Cnot2
+PC1,Reactome,REACTOME_TP53_REGULATES_TRANSCRIPTION_OF_DNA_REPAIR_GENES,Tp53 Regulates Transcription Of DNA Repair Genes,-0.432,1,1,21,FALSE,Polr2i;Supt5h;Gtf2f1;Msh2;Tcea1
+PC1,Reactome,REACTOME_TRANSCRIPTIONAL_ACTIVITY_OF_SMAD2_SMAD3_SMAD4_HETEROTRIMER,Transcriptional Activity Of Smad2 Smad3 Smad4 Heterotrimer,-0.834,0.684,0.825,17,TRUE,Col1a2;Stat1;Cdkn2b;Ncor2;Sp1;Smad2;Ppm1a
+PC1,Reactome,REACTOME_TRANSCRIPTIONAL_AND_POST_TRANSLATIONAL_REGULATION_OF_MITF_M_EXPRESSION_AND_ACTIVITY,MITF-M Regulation,1.969,0.00122,0.00793,18,TRUE,Xpo1;Rars1;Aimp2;Ywhah;Ywhae;Ywhab;Ctnnb1;Iars1;Mark3;Ywhag
+PC1,Reactome,REACTOME_TRANSCRIPTIONAL_REGULATION_BY_MECP2,Transcriptional Regulation By Mecp2,-1.137,0.279,0.458,12,TRUE,Lbr;Slc2a3;Ncor2;Ago2;Tnrc6b
+PC1,Reactome,REACTOME_TRANSCRIPTIONAL_REGULATION_BY_RUNX1,Transcriptional Regulation By Runx1,1.963,2.42e-4,0.00219,44,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Src;Psma2;Ccnd1;Psma7;Lgals3;Psmd12;Psmd8;Cdk6;Ccnd3;Psma1;Psmc6;Pml;Psmd14
+PC1,Reactome,REACTOME_TRANSCRIPTIONAL_REGULATION_BY_RUNX2,Transcriptional Regulation By Runx2,1.957,3.46e-4,0.00284,46,FALSE,Cdk4;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Smurf1;Psmb3;Psma6;Psma4;Src;Rbx1;Psma2;Ccnd1;Psma7;Lgals3;Psmd12;Psmd8
+PC1,Reactome,REACTOME_TRANSCRIPTIONAL_REGULATION_BY_RUNX3,Transcriptional Regulation By Runx3,2.42,3.59e-6,2.11e-4,33,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Smurf1;Psmb3;Psma6;Psma4;Src;Psma2;Ccnd1;Psma7;Psmd12;Psmd8;Ctnnb1;Psma1;Psmc6;Itga4;Psmd14
+PC1,Reactome,REACTOME_TRANSCRIPTIONAL_REGULATION_BY_TP53,Transcriptional Regulation By Tp53,0.873,0.728,0.838,91,FALSE,Prdx2;Ppp2cb;Ywhah;Cdk2;Gpi;Prdx1;Ywhae;Ywhab;Ssrp1;Ywhag;Mapk14;Rfc5;Cdk1;Rfc3;Rpa1;Pml;Polr2g;Rfc4;Apaf1;Eloa;Cox7b;Txnrd1;Prkag1;Mtor;Pten;Nelfb;Polr2e;Ywhaq;Cdkn1a;Mre11;Hdac1;Rpa2;Gls
+PC1,Reactome,REACTOME_TRANSLATION,Translation,1.791,2.77e-4,0.00244,96,TRUE,Sec61a1;Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Rars1;Rbx1;Psma2;Aimp2;Ube2d3;Rplp0;Psma7;Oxa1l;Ppa1;Psmd12;Psmd8;Eif2s1;Eif4a1;Iars1;Psma1;Rpn1;Mrps18b;Psmc6;Ptcd3;Sec11a;Rps27l;Spcs3;Rps2;Rpl22;Eif1ax;Psmd14;Dap3;Rps5;Aars1
+PC1,Reactome,REACTOME_TRANSLOCATION_OF_SLC2A4_GLUT4_TO_THE_PLASMA_MEMBRANE,Translocation Of Slc2a4 Glut4 To The Plasma Membrane,1.559,0.0375,0.118,27,TRUE,Actb;Tuba4a;Ywhah;Ywhae;Ywhab;Tuba3a;Rac1;Ywhag;Rala;Kifap3;Prkag1;Exoc2;Rab4a;Myo1c;Ywhaq
+PC1,Reactome,REACTOME_TRANSPORT_OF_MATURE_TRANSCRIPT_TO_CYTOPLASM,Transport Of Mature Transcript To Cytoplasm,-1.19,0.21,0.362,24,TRUE,Srsf2;Srsf7;Srsf6;Srsf3;Alyref;Sympk;Ddx39a;Upf3b;Srsf1;Rnps1;Rae1
+PC1,Reactome,REACTOME_TRANSPORT_OF_SMALL_MOLECULES,Transport Of Small Molecules,1.913,2e-5,3.85e-4,118,TRUE,Psmb5;Psma3;Psmc4;Psmd13;Atp1b3;Slc35b2;Psmb2;Phb1;Ap2b1;Psmb3;Psma6;Psma4;Atp2a2;Cltc;Abcd3;Psma2;Vdac2;Vdac3;Pmpca;Psma7;Sar1b;Gnb2;Slc25a11;Psmd12;Vdac1;Psmd8;Eif2s1;Slc25a1;Slc29a1;Gnas;Atp6v1c1;Casq2;Esyt1;Psma1;Cyb5r1;Phb2;Slc25a4;Atp6v0c;Slc25a10;Lipa;Cul1;Psmc6
+PC1,Reactome,REACTOME_TRANS_GOLGI_NETWORK_VESICLE_BUDDING,Trans Golgi Network Vesicle Budding,-1.156,0.259,0.433,22,TRUE,Cltb;Ap3s1;Picalm;Clta;Hspa8;Stx4;Tpd52;M6pr;Snap23;Vamp8
+PC1,Reactome,REACTOME_TRNA_PROCESSING,tRNA Processing,1.001,0.454,0.639,15,TRUE,Nup205;Ran;Xpot;Hsd17b10;Nup93
+PC1,Reactome,REACTOME_TURBULENT_OSCILLATORY_DISTURBED_FLOW_SHEAR_STRESS_ACTIVATES_SIGNALING_BY_PIEZO1_AND_INTEGRINS_IN_ENDOTHELIAL_CELLS,Turbulent Oscillatory Disturbed Flow Shear Stress Activates Signaling By Piezo1 & Integrins In Endothelial Cells,-0.968,0.487,0.654,15,TRUE,Itga5;Ikbkg;Stat1;Itgav;Abl1;Ptk2
+PC1,Reactome,REACTOME_UNFOLDED_PROTEIN_RESPONSE_UPR,UPR,-1.244,0.142,0.281,37,TRUE,Khsrp;Hdgf;Arfgap1;Hyou1;Preb;Add1;Asns;Calr;Hspa5;Ssr1;Atp6v0d1;Dctn1;Eif2s3;Yif1a
+PC1,Reactome,REACTOME_VEGFR2_MEDIATED_VASCULAR_PERMEABILITY,Vegfr2 Mediated Vascular Permeability,1.016,0.438,0.626,13,TRUE,Ctnnb1;Rac1
+PC1,Reactome,REACTOME_VESICLE_MEDIATED_TRANSPORT,Vesicle Mediated Transport,-1.198,0.108,0.233,162,FALSE,Cltb;Col3a1;Sparc;Col1a1;Arfgap1;Vamp3;Arfgap3;Cttn;Sptan1;Bin1;Kif5b;Hyou1;Stam;Preb;Golga4;Klc1;Col1a2;Uso1;Ubqln1;Ap3s1;Picalm;Grk2;Stam2;Tjp1;Ldlr;Clta;Lman1;Hspa8;Vps4b;Agfg1;Wasl;Dctn4;Napg;Lrp1;Stx4;Trip10;Rabgap1;Tpd52;M6pr;Snap23;Vamp8;Rab14;Calr
+PC2,Reactome,REACTOME_ABC_FAMILY_PROTEINS_MEDIATED_TRANSPORT,Abc Family Proteins Mediated Transport,-0.722,0.897,1,27,FALSE,Abca9;Psmd7;Psma1;Psmd8;Psmd14;Psma4;Psmd3;Psmd13;Psma7;Eif2s1;Psmb2
+PC2,Reactome,REACTOME_ACTIVATION_OF_ANTERIOR_HOX_GENES_IN_HINDBRAIN_DEVELOPMENT_DURING_EARLY_EMBRYOGENESIS,Activation Of Anterior Hox Genes In Hindbrain Development During Early Embryogenesis,0.695,0.876,1,13,TRUE,Rbbp7;Polr2k;Ctcf;H2ax;Polr2h
+PC2,Reactome,REACTOME_ACTIVATION_OF_ATR_IN_RESPONSE_TO_REPLICATION_STRESS,Activation Of Atr In Resp. to Replication Stress,-1.003,0.438,0.922,13,FALSE,Mcm3;Rfc2;Mcm2;Rfc3
+PC2,Reactome,REACTOME_ACTIVATION_OF_BAD_AND_TRANSLOCATION_TO_MITOCHONDRIA,Activation Of Bad & Translocation To Mitochondria,1.023,0.424,0.922,10,FALSE,Ywhaq;Ywhaz
+PC2,Reactome,REACTOME_ACTIVATION_OF_NF_KAPPAB_IN_B_CELLS,Activation Of Nf Kappab In B Cells,0.566,0.982,1,30,FALSE,Cul1;Psmd1;Nfkb1
+PC2,Reactome,REACTOME_ACTIVATION_OF_NMDA_RECEPTORS_AND_POSTSYNAPTIC_EVENTS,Activation Of Nmda Receptors & Postsynaptic Events,1.158,0.25,0.771,16,FALSE,Prkab1;Rps6ka3;Prkar2b
+PC2,Reactome,REACTOME_ADAPTIVE_IMMUNE_SYSTEM,Adaptive Immune System,1.174,0.134,0.624,155,FALSE,Prkab1;Rbbp7;Cul5;Ywhaz;Raf1;Dynll2;Cul1;Csk;Nedd4l;Kif2a;Ap2m1;Calr;Psmd1;Kifap3;Nfkb1;Dad1;Ubac1;Ago2;Cdc34;Csnk2b;Evl;Cd81;Ostc;Cltc;Canx;Sos1;Grb2;Psmc6;Itgb5;Plcg1;Fbxo6;Ube2n;Ap2s1;Akt2;Ctsl;Ube2j1;Vhl;Capzb;Dync1h1;Lgmn;Sar1b;Kif3b;Smurf1;Tuba3a;Adrm1;Ctnnb1;Src;Psmd12;Psmc4;Nck1;Dctn4;Vamp3;H2ax;Sec61a1;Psmc3;Tubb2a;Kif4a;Klc1;Tnrc6b;Bcap31;Psme2;Ikbkb;Prkag1;Col3a1
+PC2,Reactome,REACTOME_ADIPOGENESIS,Adipogenesis,1.708,0.0207,0.492,13,TRUE,Hdac2;Rbbp7;Hdac1;Nfkb1;Med24;Hnrnpu;Mta1;Lpl
+PC2,Reactome,REACTOME_AEROBIC_RESPIRATION_AND_RESPIRATORY_ELECTRON_TRANSPORT,Aerobic Resp. + ETC,-1.08,0.301,0.844,108,FALSE,Dlat;Acat1;Atp5f1a;Cox7a2;Cox5a;Dld;Ndufs4;Atp5f1b;Suclg1;Nfs1;Mdh1;Cox4i1;Ndufv1;Etfb;Aco2;Ndufs1;Nnt
+PC2,Reactome,REACTOME_AMINO_ACIDS_REGULATE_MTORC1,AAs Regulate MTORC1,1.402,0.101,0.606,11,FALSE,Atp6v0c;Atp6v0d1;Lamtor5;Tcirg1;Atp6v1g1
+PC2,Reactome,REACTOME_ANTIGEN_PROCESSING_CROSS_PRESENTATION,Antigen Processing Cross Presentation,-0.583,0.992,1,37,TRUE,Snap23;Psmd7;Psma1;Vamp8;Itgav;Psmd8;Sec22b
+PC2,Reactome,REACTOME_ANTIGEN_PROCESSING_UB_ATP_INDEPENDENT_PROTEASOMAL_DEGRADATION,Antigen Processing Ub ATP Independent Proteas. Degradation,-0.888,0.61,0.984,11,FALSE,Psma1;Psma4;Psma7;Psmb2;Psmb3
+PC2,Reactome,REACTOME_APC_C_MEDIATED_DEGRADATION_OF_CELL_CYCLE_PROTEINS,Apc C Mediated Degradation Of Cell Cycle Proteins,-0.551,0.992,1,29,FALSE,Psmd7;Psma1;Psmd8;Psmd14;Skp1;Psma4;Psmd3;Cdk1;Psmd13;Cdk2;Psma7;Psmb2
+PC2,Reactome,REACTOME_APOPTOTIC_EXECUTION_PHASE,Apoptotic Execution Phase,-1.058,0.377,0.888,21,FALSE,Rock1;Tjp1;Casp3;Pkp1;Dnm1l;Plec;Casp7;Kpnb1;Vim
+PC2,Reactome,REACTOME_ARACHIDONATE_METABOLISM,Arachidonate Metabolism,-0.874,0.615,0.984,10,TRUE,Pla2g4a;Ptgs2;Lta4h
+PC2,Reactome,REACTOME_ASPARAGINE_N_LINKED_GLYCOSYLATION,Asparagine N Linked Glycosylation,1.245,0.119,0.624,63,TRUE,Copb2;Arcn1;Dynll2;Calr;Cd59;Dad1;Copa;Ostc;Canx;Nagk;Gmppa;Fuca1;Fut8;Gosr2;Pgm3;Capzb;Dync1h1;Gbf1;Sar1b;Tuba3a;Napa;Sptan1;Cog2;Dctn4;Tubb2a;Gfpt1
+PC2,Reactome,REACTOME_AUTOPHAGY,Autophagy,0.901,0.649,0.99,41,FALSE,Prkab1;Sqstm1;Dynll2;Tomm22;Mfn2;Csnk2b;Tsc2;Ube2n;Lamtor5;Dync1h1;Gabarapl2;Tuba3a;Src;Optn;Tubb2a;Wipi1;Hdac6;Vps28;Prkag1;Hsp90ab1
+PC2,Reactome,REACTOME_BASE_EXCISION_REPAIR,Base Excision Repair,-0.988,0.482,0.948,15,FALSE,Rfc2;Apex1;Rfc3;Lig1
+PC2,Reactome,REACTOME_BASIGIN_INTERACTIONS,Basigin Interactions,-1.154,0.276,0.805,10,TRUE,Bsg;Atp1b1;Itga3;Slc16a1
+PC2,Reactome,REACTOME_BINDING_AND_UPTAKE_OF_LIGANDS_BY_SCAVENGER_RECEPTORS,Binding & Uptake Of Ligands By Scavenger Receptors,1.116,0.314,0.852,13,TRUE,Col4a2;Calr;Lrp1;Prdx1
+PC2,Reactome,REACTOME_BIOLOGICAL_OXIDATIONS,Biological Oxidations,0.831,0.735,0.99,33,FALSE,Cbr3;Comt;Bphl;Cyb5r3;Acss2;Bpnt1;Ugp2;Cndp2;Ahcy;Mtrr
+PC2,Reactome,REACTOME_BIOSYNTHESIS_OF_THE_N_GLYCAN_PRECURSOR_DOLICHOL_LIPID_LINKED_OLIGOSACCHARIDE_LLO_AND_TRANSFER_TO_A_NASCENT_PROTEIN,Biosynthesis Of The N Glycan Precursor Dolichol Lipid Linked Oligosaccharide Llo & Transfer To A Nascent Protein,0.844,0.678,0.99,14,FALSE,Nagk;Gmppa;Pgm3;Gfpt1;Uap1;Mpi
+PC2,Reactome,REACTOME_BRANCHED_CHAIN_AMINO_ACID_CATABOLISM,Branched Chain AA Catabolism,1.014,0.452,0.922,14,FALSE,Bckdha;Hsd17b10;Bckdhb;Mccc2
+PC2,Reactome,REACTOME_CA2_PATHWAY,Ca2 Pathway,1.478,0.0611,0.558,11,TRUE,Fzd2;Ago2;Prkca;Gng12;Gnao1;Gnb2;Ctnnb1;Tnrc6b
+PC2,Reactome,REACTOME_CARDIAC_CONDUCTION,Cardiac Conduction,-1.266,0.17,0.689,13,TRUE,Atp1a1;Dmpk;Atp1b1;Prkaca;Atp2b1;Casq2;Atp2a2
+PC2,Reactome,REACTOME_CARGO_TRAFFICKING_TO_THE_PERICILIARY_MEMBRANE,Cargo Trafficking To The Periciliary Membrane,-0.636,0.951,1,14,FALSE,Cct4;Exoc4;Cct2;Cct3
+PC2,Reactome,REACTOME_CELLULAR_RESPONSES_TO_MECHANICAL_STIMULI,Cellular Responses To Mechanical Stimuli,0.655,0.951,1,26,FALSE,Ptpn1;Prkar2b;Nfkb1
+PC2,Reactome,REACTOME_CELLULAR_RESPONSES_TO_STIMULI,Cellular Responses To Stimuli,-0.923,0.676,0.99,240,FALSE,Rad50;Cox7a2;Cox5a;Hsp90aa1;Srprb;Ppp2r5b;Ccne1;Hspb1;Acadvl;Hspa13;Prdx5;Dnajc3;Akt1s1;Gclc;Hspa5;Mmp14;Rpl22;Nup50;Cox4i1;Hsp90b1;Dnajb1;Exosc8;Psmd7;Rps27l;Pdia6;Akt1;Asf1a;Phb2;Lonp1;Hspe1;Cdkn1a;Atox1;Psma1;Hspa4;Csnk2a2;Jun;Hmga1;Gclm;Mapk1;Abl1;Cat;Prkaca;Rps14;Ncor2;Mre11;Itgav;Psmd8;Ssr1;Nup153;Srpra;Gsr;Igfbp7;Prdx6
+PC2,Reactome,REACTOME_CELLULAR_RESPONSE_TO_CHEMICAL_STRESS,Cellular Resp. to Chemical Stress,0.84,0.796,0.999,78,FALSE,Tkt;Sqstm1;Idh1;Sp1;Cul1;Me1;Cox7b;Psmd1;Nfkb1;Csnk2b;Cox7c;Prdx1
+PC2,Reactome,REACTOME_CELLULAR_RESPONSE_TO_HEAT_STRESS,Cellular Resp. to Heat Stress,-1.179,0.204,0.731,37,FALSE,Hsp90aa1;Hspb1;Hspa13;Akt1s1;Hspa5;Nup50;Dnajb1;Hspa4;Mapk1
+PC2,Reactome,REACTOME_CELLULAR_RESPONSE_TO_HYPOXIA,Cellular Resp. to Hypoxia,-0.473,1,1,24,FALSE,Psmd7;Psma1;Psmd8;Psmd14;Psma4;Psmd3;Psmd13;Psma7;Psmb2
+PC2,Reactome,REACTOME_CELLULAR_RESPONSE_TO_STARVATION,Cellular Resp. to Starvation,1.053,0.352,0.874,30,TRUE,Rps12;Rpl18;Asns;Rpl14;Atp6v0c;Atp6v0d1;Lamtor5;Tcirg1;Atp6v1g1;Rps5;Eif2s3;Rps2;Rps3
+PC2,Reactome,REACTOME_CELLULAR_SENESCENCE,Cellular Senescence,0.844,0.764,0.991,31,FALSE,Rbbp7;Rps6ka3;Sp1;Mapkapk2;Nfkb1;Cdkn2c;Map2k3
+PC2,Reactome,REACTOME_CELL_CELL_COMMUNICATION,Cell Communication,-0.775,0.899,1,88,FALSE,Pvr;Sptbn1;Nck2;Dst;Cd47;Arhgef6;Psmd7;Ctnnd1;Actn4;Psma1;Csnk2a2;Pals1;Mapk1;Parva;Psmd8;Cdh11;Rsu1;Ilf3;Pxn
+PC2,Reactome,REACTOME_CELL_CYCLE,Cell Cycle,0.908,0.698,0.99,164,FALSE,Ywhaq;Rbbp7;Ywhaz;Ube2i;Rae1;Pafah1b1;Dynll2;Hdac1;Cul1;Nup58;Pola2;Rpa1;Kif2a;Prkar2b;Mapre1;Psmd1;Ran;Csnk2b;Banf1;Npm1;Prim2;Pds5b;Mcm5;Mcm4;Pcna;Prkca;Cdkn2c
+PC2,Reactome,REACTOME_CELL_CYCLE_CHECKPOINTS,Cell Cycle Checkpoints,-0.882,0.718,0.99,76,FALSE,Rad50;Ppp2r5b;Ccne1;Mcm3;Rfc2;Mcm2;Psmd7;Zwint;Rfc3;Cdkn1a;Psma1;Ckap5;Mre11;Mcm6;Psmd8;Ywhah;Clasp1;Ywhag;Psmd14;Clip1;Skp1;Mapk14;Psma4
+PC2,Reactome,REACTOME_CELL_DEATH_SIGNALLING_VIA_NRAGE_NRIF_AND_NADE,Cell Death Signalling Via Nrage Nrif & Nade,-1.102,0.339,0.874,17,FALSE,Arhgef6;Akap13;Ncstn;Abr;Casp3;Arhgef12
+PC2,Reactome,REACTOME_CELL_EXTRACELLULAR_MATRIX_INTERACTIONS,Cell ECM Interactions,-1.124,0.304,0.844,12,FALSE,Arhgef6;Parva;Rsu1;Pxn
+PC2,Reactome,REACTOME_CELL_SURFACE_INTERACTIONS_AT_THE_VASCULAR_WALL,Cell Surface Interactions At The Vascular Wall,-0.755,0.86,1,33,FALSE,Cd47;Bsg;Jam3;Atp1b1;Itga3;Cd48;Itgav
+PC2,Reactome,REACTOME_CHOLESTEROL_BIOSYNTHESIS,Cholesterol Biosynthesis,0.516,0.994,1,16,FALSE,Dhcr7;Hmgcs1;Idi1;Mvk;Pmvk;Ebp;Sqle;Lss;Fdps
+PC2,Reactome,REACTOME_CHROMATIN_ORGANIZATION,Chromatin Org.,1.504,0.0507,0.558,22,FALSE,Hdac2;Rbbp7;Hdac1;Prmt5;Nfkb1;Jmjd6;Elp1
+PC2,Reactome,REACTOME_CHROMOSOME_MAINTENANCE,Chromosome Maintenance,1.063,0.354,0.874,27,TRUE,Rbbp7;Pola2;Rpa1;Npm1;Prim2;Pcna;Polr2k
+PC2,Reactome,REACTOME_CIRCADIAN_CLOCK,Circadian Clock,-0.686,0.935,1,29,FALSE,Nampt;Psmd7;Psma1;Csnk2a2;Psmd8;Psmd14;Skp1;Psma4;Psmd3
+PC2,Reactome,REACTOME_CITRIC_ACID_CYCLE_TCA_CYCLE,TCA Cycle,-1.32,0.127,0.624,20,TRUE,Acat1;Dld;Suclg1;Nfs1;Aco2;Nnt;Mdh2
+PC2,Reactome,REACTOME_CLASS_I_MHC_MEDIATED_ANTIGEN_PROCESSING_PRESENTATION,Class I Mhc Mediated Antigen Processing Presentation,0.996,0.448,0.922,64,FALSE,Cul5;Cul1;Nedd4l;Calr;Psmd1;Ubac1;Cdc34;Canx;Psmc6;Itgb5;Fbxo6;Ube2n;Ctsl;Ube2j1;Vhl;Sar1b;Smurf1;Adrm1;Psmd12;Psmc4;Vamp3;Sec61a1;Psmc3;Bcap31;Psme2;Ikbkb;Psmc2
+PC2,Reactome,REACTOME_CLATHRIN_MEDIATED_ENDOCYTOSIS,Clathrin Mediated Endocytosis,-0.576,0.998,1,45,TRUE,Dvl2;Cops5;Actr2;Tor1b;Picalm;Tfrc;Vamp8;Synj1
+PC2,Reactome,REACTOME_COLLAGEN_CHAIN_TRIMERIZATION,Collagen Trimerization,1.508,0.0545,0.558,12,TRUE,Col4a2;Col11a1;Col5a1;Col4a1;Col15a1;Col3a1;Col5a3;Col1a1;Col5a2
+PC2,Reactome,REACTOME_COLLAGEN_FORMATION,Collagen Formation,1.233,0.155,0.663,30,FALSE,Plod1;Col4a2;Col11a1;Plod3;Pcolce;Col5a1;Bmp1;Ctsl;Ppib;Col4a1
+PC2,Reactome,REACTOME_COMPLEX_III_ASSEMBLY,Complex Iii Assembly,0.88,0.614,0.984,12,TRUE,Cyc1;Uqcrfs1;Uqcrc1
+PC2,Reactome,REACTOME_COMPLEX_IV_ASSEMBLY,Complex Iv Assembly,-1.15,0.285,0.817,11,FALSE,Cox7a2;Cox5a;Cox4i1
+PC2,Reactome,REACTOME_COMPLEX_I_BIOGENESIS,Complex I Biogenesis,-0.781,0.808,0.999,24,FALSE,Ndufs4;Ndufv1;Ndufs1;Ndufa9
+PC2,Reactome,REACTOME_COOPERATION_OF_PDCL_PHLP1_AND_TRIC_CCT_IN_G_PROTEIN_BETA_FOLDING,Cooperation Of Pdcl Phlp1 & Tric Cct In G Protein Beta Folding,0.796,0.722,0.99,13,FALSE,Csnk2b;Cct6a;Gng12;Gna14;Tcp1;Cct7;Gnb2
+PC2,Reactome,REACTOME_COOPERATION_OF_PREFOLDIN_AND_TRIC_CCT_IN_ACTIN_AND_TUBULIN_FOLDING,Cooperation Of Prefoldin & Tric Cct In Actin & Tubulin Folding,-0.998,0.428,0.922,12,FALSE,Cct6b;Cct4
+PC2,Reactome,REACTOME_COPII_MEDIATED_VESICLE_TRANSPORT,Copii Mediated Vesicle Transport,-1.05,0.391,0.896,16,FALSE,Ykt6;Bet1;Tmed2;Sec22b;Stx5;Napg
+PC2,Reactome,REACTOME_COPI_INDEPENDENT_GOLGI_TO_ER_RETROGRADE_TRAFFIC,Copi Independent Golgi To Er Retrograde Traffic,1.405,0.0966,0.606,13,FALSE,Pafah1b1;Dynll2;Galnt1;Capzb;Dync1h1;Tuba3a;Dctn4;Rab3gap1;Tubb2a
+PC2,Reactome,REACTOME_COPI_MEDIATED_ANTEROGRADE_TRANSPORT,Copi Mediated Anterograde Transport,1.144,0.234,0.765,31,FALSE,Copb2;Arcn1;Dynll2;Cd59;Copa;Gosr2;Capzb;Dync1h1;Gbf1;Tuba3a;Napa;Sptan1;Cog2;Dctn4;Tubb2a
+PC2,Reactome,REACTOME_CO_STIMULATION_BY_CD28,Co Stimulation By Cd28,-1.591,0.0209,0.492,11,TRUE,Ppp2r5b;Pak1;Cdc42;Akt1
+PC2,Reactome,REACTOME_CRISTAE_FORMATION,Cristae Formation,-1.005,0.454,0.922,16,FALSE,Atp5f1a;Atp5f1b;Immt;Atp5f1d;Atp5mf;Atp5me;Atp5po
+PC2,Reactome,REACTOME_CYCLIN_D_ASSOCIATED_EVENTS_IN_G1,Cyclin D Associated Events In G1,-0.676,0.887,1,17,FALSE,Ccne1;Cdkn1a;Abl1;Ccnd2;Skp1;Cdkn1b
+PC2,Reactome,REACTOME_CYTOKINE_SIGNALING_IN_IMMUNE_SYSTEM,Cytokine Signaling In Immune System,1.022,0.411,0.92,178,FALSE,Fscn1;Cul5;Ptpn1;Ywhaz;Raf1;Ube2i;Rae1;Irak4;Rps6ka3;Sqstm1;Eif4a3;Cul1;Nup58;Mapkapk2;Csk;Psmd1;Nfkb1;Npm1;Casp8;Samhd1;Canx;Cnn2;Sos1;Grb2;Eif4a1;Map2k3;Psmc6;Fnta;Msn;Hnrnpa2b1;Plcg1;Eif4a2;Lcp1;Ube2n;Nup93;Gab2
+PC2,Reactome,REACTOME_CYTOPROTECTION_BY_HMOX1,Cytoprotection By Hmox1,-0.931,0.554,0.975,16,FALSE,Cox7a2;Cox5a;Cox4i1
+PC2,Reactome,REACTOME_CYTOSOLIC_SENSORS_OF_PATHOGEN_ASSOCIATED_DNA,Cytosolic Sensors Of Pathogen Associated DNA,-0.73,0.834,1,16,TRUE,Polr1c;Tbk1;Mre11;Polr2e
+PC2,Reactome,REACTOME_CYTOSOLIC_TRNA_AMINOACYLATION,Cytosolic tRNA Aminoacylation,1.104,0.309,0.852,10,FALSE,Dars1;Eef1e1;Tars1;Aars1;Iars1
+PC2,Reactome,REACTOME_DDX58_IFIH1_MEDIATED_INDUCTION_OF_INTERFERON_ALPHA_BETA,Ddx58 Ifih1 Mediated Induction Of Interferon Alpha Beta,-0.812,0.734,0.99,18,TRUE,Hsp90aa1;Tbk1;Pin1
+PC2,Reactome,REACTOME_DEADENYLATION_DEPENDENT_MRNA_DECAY,Deadenylation Dependent mRNA Decay,0.933,0.564,0.975,22,FALSE,Eif4a3;Parn;Eif4a1;Eif4a2;Lsm2;Lsm7;Exosc9
+PC2,Reactome,REACTOME_DEADENYLATION_OF_MRNA,Deadenylation Of mRNA,1.337,0.132,0.624,11,FALSE,Eif4a3;Parn;Eif4a1;Eif4a2
+PC2,Reactome,REACTOME_DEATH_RECEPTOR_SIGNALING,Death Receptor Signaling,0.937,0.591,0.984,42,FALSE,Hdac2;Sqstm1;Hdac1;Mapkapk2;Nfkb1;Casp8;Psen1;Sos1
+PC2,Reactome,REACTOME_DEGRADATION_OF_BETA_CATENIN_BY_THE_DESTRUCTION_COMPLEX,Degradation Of Beta Catenin By The Destruction Complex,0.628,0.973,1,31,FALSE,Hdac1;Cul1;Psmd1;Psmc6;Adrm1;Ctnnb1;Psmd12;Psmc4;Tle3;Psmc3;Ctbp1
+PC2,Reactome,REACTOME_DEGRADATION_OF_THE_EXTRACELLULAR_MATRIX,Degradation Of The ECM,0.83,0.737,0.99,33,FALSE,Adam9;Col4a2;Col11a1;Psen1;Col5a1;Bmp1;Ctsl;Col4a1;Adam17;Plg;Lamc1;Cd44;Col15a1;Col3a1;Col5a3;Col1a1;Col5a2
+PC2,Reactome,REACTOME_DETOXIFICATION_OF_REACTIVE_OXYGEN_SPECIES,Detoxification Of Reactive Oxygen Species,-1.056,0.391,0.896,17,TRUE,Prdx5;Atox1;Cat;Gsr;Prdx6;Ero1a
+PC2,Reactome,REACTOME_DEUBIQUITINATION,Deubiquitination,-1.309,0.11,0.606,51,TRUE,Vcpip1;Pten;Usp15;Usp8;Psmd7;Rad23a;Psma1;Rad23b;Psmd8;Vdac1;Ptrh2;Usp14;Smad3;Psmd14;Psma4;Rhot1;Psmd3;Cdk1;Psmd13;Cyld;Psma7;Ikbkg;Vdac3;Psmb2
+PC2,Reactome,REACTOME_DEVELOPMENTAL_CELL_LINEAGES,Developmental Cell Lineages,0.891,0.614,0.984,20,FALSE,Col11a1;Col5a1;Lamc1;Cd44;Col3a1;Col5a3;Col1a1;Col5a2;Fabp5;Vtn;Col1a2;Numb
+PC2,Reactome,REACTOME_DEVELOPMENTAL_LINEAGE_OF_PANCREATIC_DUCTAL_CELLS,Developmental Lineage Of Pancreatic Ductal Cells,1.244,0.188,0.71,12,TRUE,Col11a1;Col5a1;Lamc1;Col3a1;Col5a3;Col1a1;Col5a2;Vtn;Col1a2
+PC2,Reactome,REACTOME_DISORDERS_OF_TRANSMEMBRANE_TRANSPORTERS,Disorders Of Transmembrane Transporters,-0.61,0.981,1,37,TRUE,Nup50;Psmd7;Bsg;Psma1;Psmd8;Nup153;Psmd14;Psma4;Slc16a1;Psmd3
+PC2,Reactome,REACTOME_DNA_DAMAGE_BYPASS,DNA Damage Bypass,-0.572,0.958,1,13,TRUE,Rfc2;Rfc3;Pold1
+PC2,Reactome,REACTOME_DNA_DAMAGE_TELOMERE_STRESS_INDUCED_SENESCENCE,DNA Damage Telomere Stress Induced Senescence,-1.645,0.0137,0.492,11,TRUE,Rad50;Ccne1;Asf1a;Cdkn1a;Hmga1;Mre11
+PC2,Reactome,REACTOME_DNA_REPAIR,DNA Repair,-1.021,0.423,0.922,47,FALSE,Rad50;Rfc2;Apex1;Rfc3;Lig1;Cops5;Rad23a;Msh2;Abl1;Rad23b;Mre11;Pold1;Polr2e
+PC2,Reactome,REACTOME_DNA_REPLICATION_PRE_INITIATION,DNA Replication Pre Initiation,0.746,0.896,1,36,FALSE,Pola2;Rpa1;Psmd1;Prim2;Mcm5;Mcm4;Psmc6
+PC2,Reactome,REACTOME_DNA_STRAND_ELONGATION,DNA Strand Elongation,-0.896,0.626,0.984,19,FALSE,Mcm3;Rfc2;Mcm2;Rfc3;Lig1;Mcm6;Pold1
+PC2,Reactome,REACTOME_DRUG_ADME,Drug Adme,-0.809,0.748,0.99,14,TRUE,Guk1;Bsg
+PC2,Reactome,REACTOME_ECM_PROTEOGLYCANS,Ecm Proteoglycans,0.908,0.617,0.984,24,FALSE,Col4a2;Bgn;Itgb5;Col5a1;Col4a1;Lamc1;Tgfb3;Col3a1;Vcan;Col5a3;Col1a1;App;Col5a2
+PC2,Reactome,REACTOME_ELASTIC_FIBRE_FORMATION,Elastic Fibre Formation,1.442,0.0707,0.577,16,TRUE,Efemp2;Fbln1;Fbln5;Ltbp2;Itgb5
+PC2,Reactome,REACTOME_EPHB_MEDIATED_FORWARD_SIGNALING,Ephb Mediated Forward Signaling,-0.961,0.527,0.975,22,FALSE,Pak1;Cdc42;Rock1;Actr2
+PC2,Reactome,REACTOME_EPH_EPHRIN_SIGNALING,Eph Ephrin Signaling,-1.02,0.435,0.922,40,FALSE,Nck2;Pak1;Cdc42;Rock1;Sdcbp;Actr2;Ncstn
+PC2,Reactome,REACTOME_EPIGENETIC_REGULATION_BY_WDR5_CONTAINING_HISTONE_MODIFYING_COMPLEXES,Epigenetic Regulation By Wdr5 Containing Histone Modifying Complexes,-0.921,0.548,0.975,10,TRUE,Plin2;Dr1;Abl1;Ncor2
+PC2,Reactome,REACTOME_EPIGENETIC_REGULATION_OF_GENE_EXPRESSION,Epigenetic Reg. Gene Expression,1.232,0.164,0.679,31,FALSE,Hdac2;Rbbp7;Ube2i;Elovl5;Hdac1;Polr2k;Mtrex;Med24;Mybbp1a;Cbx5;Mta1;Lpl;Dnmt1;H2ax;Ddx21;Acsl1;Polr2h
+PC2,Reactome,REACTOME_ESTROGEN_DEPENDENT_GENE_EXPRESSION,Estrogen Dependent Gene Expression,-0.684,0.939,1,30,FALSE,Hsp90aa1;Ccnt1;Smc3;Jun;Cxcl12;Runx1;Polr2e
+PC2,Reactome,REACTOME_EUKARYOTIC_TRANSLATION_INITIATION,Eukaryotic Translation Initiation,0.775,0.85,1,32,FALSE,Rps12;Rpl18;Eif5;Rpl14;Eif4a1;Eif4a2
+PC2,Reactome,REACTOME_EXTRACELLULAR_MATRIX_ORGANIZATION,ECM Org.,0.735,0.962,1,92,FALSE,Plod1;Efemp2;Adam9;Col4a2;Fbln1;Col11a1;Bgn;Plod3;Pcolce;Sdc2;Fbln5;Prkca;Psen1;Ltbp2;Itgb5
+PC2,Reactome,REACTOME_EXTRA_NUCLEAR_ESTROGEN_SIGNALING,Extra Nuclear Estrogen Signaling,-1.103,0.32,0.856,20,FALSE,Hsp90aa1;Hspb1;Strn;Akt1;Mapk1
+PC2,Reactome,REACTOME_FACTORS_INVOLVED_IN_MEGAKARYOCYTE_DEVELOPMENT_AND_PLATELET_PRODUCTION,Factors Involved In Megakaryocyte Development & Platelet Production,1.345,0.106,0.606,32,TRUE,Hdac2;Hdac1;Rab5a;Mfn2;Kif2a;Prkar2b;Kifap3;Kif1b;Capzb;Cbx5;Kif3b;Tuba3a;Kif13b;Rbsn;Tubb2a;Vps45;Kif4a;Klc1
+PC2,Reactome,REACTOME_FATTY_ACID_METABOLISM,FA Metabolism,-1.066,0.328,0.856,51,FALSE,Ppt1;Acadvl;Pla2g4a;Acads;Ptgs2;Crat;Acsl4;Mcee;Eci1;Acly;Cpt2;Lta4h;Hadhb;Dbi;Aldh3a2;Acox1;Gpx4;Mlycd;Acot8;Hadh;Acaa1a;Ndufab1
+PC2,Reactome,REACTOME_FCERI_MEDIATED_MAPK_ACTIVATION,Fceri Mediated MAPK Activation,-0.871,0.621,0.984,10,FALSE,Pak1;Jun;Mapk1
+PC2,Reactome,REACTOME_FCGAMMA_RECEPTOR_FCGR_DEPENDENT_PHAGOCYTOSIS,Fcgamma Receptor Fcgr Dependent Phagocytosis,-1.313,0.111,0.606,32,TRUE,Hsp90aa1;Pak1;Cdc42;Wasf2;Nf2;Abi1;Actr2;Mapk1;Abl1;Myo9b;Arpc3;Wipf1
+PC2,Reactome,REACTOME_FC_EPSILON_RECEPTOR_FCERI_SIGNALING,Fc Epsilon Receptor Fceri Signaling,0.846,0.758,0.99,43,FALSE,Cul1;Psmd1;Nfkb1;Cdc34;Sos1;Grb2;Psmc6;Plcg1;Ube2n;Gab2
+PC2,Reactome,REACTOME_FGFR2_MUTANT_RECEPTOR_ACTIVATION,Fgfr2 Mutant Receptor Activation,-0.656,0.903,1,10,FALSE,Polr2e;Polr2g;Ncbp1;Polr2a;Ncbp2;Polr2i;Polr2c
+PC2,Reactome,REACTOME_FIBRONECTIN_MATRIX_FORMATION,Fibronectin Matrix Formation,1.3,0.156,0.663,11,FALSE,Col4a2;Col5a1;Col4a1;Col3a1;Col5a3;Col1a1;Col5a2
+PC2,Reactome,REACTOME_FLT3_SIGNALING,Flt3 Signaling,1.197,0.231,0.762,10,FALSE,Csk;Sos1;Grb2;Gab2;Akt2
+PC2,Reactome,REACTOME_FORMATION_OF_INCISION_COMPLEX_IN_GG_NER,Formation Of Incision Complex In Gg Ner,0.894,0.611,0.984,11,TRUE,Ube2i;Rpa1;Ube2n;Ddb1;Rpa2
+PC2,Reactome,REACTOME_FORMATION_OF_THE_DYSTROPHIN_GLYCOPROTEIN_COMPLEX_DGC,Formation Of The Dystrophin Glycoprotein Complex DGC,-0.96,0.511,0.975,12,TRUE,Sgcb;Agrn;Sgcd;Sntb1;Actg1;Dmd
+PC2,Reactome,REACTOME_FOXO_MEDIATED_TRANSCRIPTION,Foxo Mediated Transcription,1.411,0.0845,0.598,16,TRUE,Ywhaq;Hdac2;Ywhaz;Hdac1
+PC2,Reactome,REACTOME_G1_S_DNA_DAMAGE_CHECKPOINTS,G1 S DNA Damage Checkpoints,-0.976,0.483,0.948,30,FALSE,Ccne1;Psmd7;Cdkn1a;Psma1;Psmd8;Psmd14;Skp1;Mapk14;Psma4;Psmd3;Cdkn1b;Psmd13;Cdk2;Psma7
+PC2,Reactome,REACTOME_G2_M_DNA_DAMAGE_CHECKPOINT,G2 M DNA Damage Checkpoint,0.77,0.828,1,18,FALSE,Ywhaq;Ywhaz;Rpa1
+PC2,Reactome,REACTOME_GAP_JUNCTION_TRAFFICKING_AND_REGULATION,Gap Junction Trafficking & Regulation,1.154,0.282,0.816,13,TRUE,Ap2m1;Cltc;Tuba3a;Src;Gja1;Tubb2a;Dab2;Actb;Cltb;Clta
+PC2,Reactome,REACTOME_GASTRULATION,Gastrulation,-0.782,0.8,0.999,26,TRUE,Trim33;Psmd7;Psma1;Psmd8;Smad3;Psmd14;Psma4;Psmd3
+PC2,Reactome,REACTOME_GENE_SILENCING_BY_RNA,Gene Silencing By RNA,0.675,0.9,1,14,FALSE,Ran;Ago2;Polr2k
+PC2,Reactome,REACTOME_GLUCONEOGENESIS,Gluconeogenesis,0.902,0.602,0.984,11,FALSE,Pgam1;Pgam2;Eno2;Pc;Aldoa;Tpi1;Eno3
+PC2,Reactome,REACTOME_GLUCOSE_METABOLISM,Glucose Metabolism,0.755,0.881,1,29,FALSE,Rae1;Nup58;Pgam1;Pgam2;Nup93;Eno2;Pc;Aldoa
+PC2,Reactome,REACTOME_GLYCOSAMINOGLYCAN_METABOLISM,Glycosaminoglycan Metabolism,0.87,0.665,0.99,22,FALSE,B4galt7;Bgn;Sdc2;Papss2;Ctsl;Glce
+PC2,Reactome,REACTOME_GPER1_SIGNALING,Gper1 Signaling,1.346,0.129,0.624,12,FALSE,Prkar2b;Gnai3;Gng12;Gnb2;Src;Gnas
+PC2,Reactome,REACTOME_G_ALPHA_12_13_SIGNALLING_EVENTS,G Alpha 12 13 Signalling Events,-1.143,0.264,0.794,16,TRUE,Rock1;Arhgef6;Akap13;Abr;Arhgef12;Rhob;Kalrn
+PC2,Reactome,REACTOME_G_ALPHA_I_SIGNALLING_EVENTS,G Alpha I Signalling Events,-0.742,0.863,1,25,TRUE,Pla2g4a;Cxcl12;Mapk1;Ppp3r1;Prkaca;Hebp1
+PC2,Reactome,REACTOME_G_ALPHA_Q_SIGNALLING_EVENTS,G Alpha Q Signalling Events,1.721,0.016,0.492,21,TRUE,Rps6ka3;Prkce;Prkca;Sos1;Grb2;Dgka;F2;F2r;Gng12;Gna14
+PC2,Reactome,REACTOME_G_ALPHA_S_SIGNALLING_EVENTS,G Alpha S Signalling Events,1.334,0.136,0.624,13,TRUE,Prkar2b;Gnai3;Gng12;Gnb2;Src;Gnas
+PC2,Reactome,REACTOME_HEMOSTASIS,Hemostasis,1.267,0.0725,0.577,133,FALSE,Hdac2;Ptpn1;Ywhaz;Rhog;Cyb5r1;Raf1;Plaur;Hdac1;Rab5a;Mfn2;Csk;Kif2a;Prkar2b;Prkce;Kifap3;Sdc2;Itih3;Anxa5;Prkca;Wdr1;Kif1b;Sos1;Grb2;Dgka;F2;Plcg1;Gnai3;S100a10;F2r;Gng12;Slc7a5;Gna14;Aldoa;Capzb;Cbx5;Bcar1;Gnb2;Atp2a1;Kif3b;Tuba3a;Kif13b;Src;Plg;Rbsn;Gnas;Gpc1;Cd63;Tgfb3;Cd44;Tubb2a;Vps45;Cfl1;Kif4a;Klc1;Prcp;Atp2b4
+PC2,Reactome,REACTOME_HOMOLOGY_DIRECTED_REPAIR,Homology Directed Repair,-0.747,0.831,1,21,FALSE,Rad50;Rfc2;Rfc3;Abl1;Mre11;Pold1
+PC2,Reactome,REACTOME_HSF1_ACTIVATION,Hsf1 Activation,-1.234,0.205,0.731,12,FALSE,Hsp90aa1;Hspb1;Dnajb1
+PC2,Reactome,REACTOME_HSF1_DEPENDENT_TRANSACTIVATION,Hsf1 Dependent Transactivation,-1.447,0.0752,0.577,15,TRUE,Hsp90aa1;Hspb1;Akt1s1;Dnajb1
+PC2,Reactome,REACTOME_HSP90_CHAPERONE_CYCLE_FOR_STEROID_HORMONE_RECEPTORS_SHR_IN_THE_PRESENCE_OF_LIGAND,Hsp90 Chaperone Cycle For Steroid Hormone Receptors Shr In The Presence Of Ligand,0.834,0.713,0.99,20,TRUE,Dynll2;Dnaja4;Dnaja1;Capzb;Dync1h1;Tuba3a;Dctn4;Tubb2a;Hsp90ab1
+PC2,Reactome,REACTOME_IMMUNOREGULATORY_INTERACTIONS_BETWEEN_A_LYMPHOID_AND_A_NON_LYMPHOID_CELL,Lymphoid Cell Interactions,-0.753,0.792,0.999,10,TRUE,Pvr;Icam1;Itga4
+PC2,Reactome,REACTOME_INNATE_IMMUNE_SYSTEM,Innate Immune System,-0.895,0.763,0.991,220,FALSE,Timp2;Polr1c;Hsp90aa1;Snap23;Pak1;Cdc42;Wasf2;Dnajc3;Rock1;Sdcbp;Cd47;Nf2;Tbk1;Hsp90b1;Psmd7;Pin1;Stom;Abi1;Actr2;Atox1;Gla;Psma1;Ncstn;Jun;Cap1;Pfkl;Mapk1;Abl1;Huwe1;Ppp3r1;Casp3;Cat;Prkaca;Vamp8;Tkfc;Srp14;Mre11;Itgav;Pkp1;Psmd8;Acly;Pgm1;Cct2;Pgm2;Prdx6;Slc2a3;Polr2e;Rab14;Myo9b;Lta4h;Ckap4;Lgals3;Arpc3;Usp14;Psmd14;Apaf1;Ilf2;Wipf1
+PC2,Reactome,REACTOME_INTEGRATION_OF_ENERGY_METABOLISM,Integration Of Energy Metabolism,1.315,0.112,0.606,21,TRUE,Tkt;Prkar2b;Prkca;Adipor1;Gng12;Gna14;Gnb2;Acsl3;Gnas;Fasn;Acaca
+PC2,Reactome,REACTOME_INTEGRIN_CELL_SURFACE_INTERACTIONS,Integrin Cell Surface Interactions,-1.098,0.323,0.856,27,FALSE,Cd47;Bsg;Jam3;Itga7;Itga3;Itgav;Icam1;Tnc;Agrn;Itga4
+PC2,Reactome,REACTOME_INTERACTIONS_OF_REV_WITH_HOST_CELLULAR_PROTEINS,Interactions Of Rev With Host Cellular Proteins,1.332,0.136,0.624,14,FALSE,Rae1;Nup58;Ran;Npm1
+PC2,Reactome,REACTOME_INTERCONVERSION_OF_NUCLEOTIDE_DI_AND_TRIPHOSPHATES,Interconversion Of Nucleotide Di & Triphosphates,0.654,0.925,1,13,FALSE,Nme1;Rrm1;Ctps1
+PC2,Reactome,REACTOME_INTERFERON_ALPHA_BETA_SIGNALING,Interferon Alpha Beta Signaling,0.85,0.659,0.99,11,TRUE,Ptpn1;Samhd1;Gbp2;Abce1
+PC2,Reactome,REACTOME_INTERFERON_GAMMA_SIGNALING,Interferon Gamma Signaling,0.884,0.646,0.99,16,TRUE,Ptpn1;Raf1
+PC2,Reactome,REACTOME_INTERFERON_SIGNALING,Interferon Signaling,0.814,0.843,1,73,FALSE,Ptpn1;Raf1;Ube2i;Rae1;Eif4a3;Nup58;Npm1;Samhd1;Eif4a1;Fnta;Plcg1;Eif4a2;Ube2n;Nup93
+PC2,Reactome,REACTOME_INTERLEUKIN_12_FAMILY_SIGNALING,Interleukin 12 Family Signaling,0.665,0.938,1,24,TRUE,Canx;Cnn2;Msn;Hnrnpa2b1;Lcp1;Tcp1
+PC2,Reactome,REACTOME_INTERLEUKIN_17_SIGNALING,Interleukin 17 Signaling,1.309,0.132,0.624,19,TRUE,Rps6ka3;Cul1;Mapkapk2;Nfkb1;Map2k3;Ube2n
+PC2,Reactome,REACTOME_INTERLEUKIN_1_FAMILY_SIGNALING,Interleukin 1 Family Signaling,0.811,0.802,0.999,45,TRUE,Irak4;Sqstm1;Cul1;Psmd1;Nfkb1;Casp8;Psmc6
+PC2,Reactome,REACTOME_INTERLEUKIN_4_AND_INTERLEUKIN_13_SIGNALING,Interleukin 4 & Interleukin 13 Signaling,-1.242,0.179,0.709,20,TRUE,Hsp90aa1;Hsp90b1;Akt1;Ptgs2;Cdkn1a;Icam1;Jak1;Vim;Stat1
+PC2,Reactome,REACTOME_INTRACELLULAR_SIGNALING_BY_SECOND_MESSENGERS,Intracell. Signaling By Second Messengers,1.048,0.374,0.888,67,FALSE,Hdac2;Rbbp7;Rhog;Irak4;Hdac1;Prkar2b;Prkce;Psmd1;Ago2;Csnk2b;Prkca;Grb2;Psmc6;Plcg1;Tsc2;Gab2;Akt2;Lamtor5
+PC2,Reactome,REACTOME_INTRA_GOLGI_AND_RETROGRADE_GOLGI_TO_ER_TRAFFIC,Intra Golgi & Retrograde Golgi To Er Traffic,1.696,0.00666,0.392,54,TRUE,Copb2;Arcn1;Pafah1b1;Dynll2;Kif2a;Kifap3;Copa;Kif1b;Galnt1;Gosr2;M6pr;Cyth2;Capzb;Dync1h1;Gbf1;Arfip2;Kif3b;Tuba3a;Rabepk;Napa;Kif13b;Cog2;Dctn4;Rab3gap1;Vamp3;Rhobtb3;Tubb2a;Vps45;Igf2r;Kif4a;Klc1
+PC2,Reactome,REACTOME_INTRINSIC_PATHWAY_FOR_APOPTOSIS,Intrinsic Pathway For Apoptosis,-0.929,0.565,0.975,24,FALSE,Xiap;Akt1;Mapk1;Ppp3r1;Casp3;Ywhah;Bax;Ywhag;Casp7;Bid;Apaf1;C1qbp
+PC2,Reactome,REACTOME_ION_CHANNEL_TRANSPORT,Ion Channel Transport,0.901,0.626,0.984,26,TRUE,Raf1;Atp6v0a1;Nedd4l;Atp6v0c;Atp6v0d1;Clic2;Tcirg1;Atp6v1g1;Atp2a1
+PC2,Reactome,REACTOME_ION_TRANSPORT_BY_P_TYPE_ATPASES,Ion Transport By P Type Atpases,-1.09,0.327,0.856,10,FALSE,Atp1a1;Atp1b1;Atp2b1
+PC2,Reactome,REACTOME_IRON_UPTAKE_AND_TRANSPORT,Iron Uptake & Transport,1.404,0.0812,0.597,18,FALSE,Steap3;Atp6v0a1;Cul1;Atp6v0c;Atp6v0d1;Tcirg1;Atp6v1g1;Hmox2;Hmox1
+PC2,Reactome,REACTOME_KINESINS,Kinesins,1.505,0.0566,0.558,12,FALSE,Kif2a;Kifap3;Kif1b;Kif3b;Tuba3a;Kif13b;Tubb2a;Kif4a;Klc1
+PC2,Reactome,REACTOME_L1CAM_INTERACTIONS,L1cam Interactions,-0.989,0.47,0.937,38,FALSE,Sptbn1;Dpysl2;Pak1;Sdcbp;Ezr;Csnk2a2;Mapk1;Itgav;Nrp2;Ncam1;Dlg1
+PC2,Reactome,REACTOME_MAPK6_MAPK4_SIGNALING,MAPK6 MAPK4 Signaling,-1.218,0.188,0.71,36,TRUE,Hspb1;Pak1;Cdc42;Dnajb1;Psmd7;Psma1;Jun;Prkaca;Psmd8;Psmd14;Psma4;Psmd3;Kalrn;Cdk1
+PC2,Reactome,REACTOME_MAPK_FAMILY_SIGNALING_CASCADES,MAPK Family Signaling Cascades,-0.846,0.781,0.999,71,FALSE,Sptbn1;Ppp2r5b;Hspb1;Pak1;Cdc42;Dnajb1;Psmd7;Psma1;Jun;Mapk1;Prkaca;Psmd8;Ncam1;Dlg1;Psmd14;Jak1;Cul3;Psma4;Psmd3;Kalrn
+PC2,Reactome,REACTOME_MATERNAL_TO_ZYGOTIC_TRANSITION_MZT,Maternal To Zygotic Transition Mzt,0.936,0.554,0.975,14,FALSE,Eif4a3;Ago2;Eif4a1;Eif4a2
+PC2,Reactome,REACTOME_MEIOTIC_SYNAPSIS,Meiotic Synapsis,0.926,0.558,0.975,10,TRUE,Ube2i;Sun2;Smc1a;H2ax;Rad21
+PC2,Reactome,REACTOME_METABOLISM_OF_AMINO_ACIDS_AND_DERIVATIVES,Metabolism Of AAs & Derivatives,1.005,0.446,0.922,97,FALSE,Rps12;Bckdha;Hsd17b10;Rpl18;Dars1;Ckm;Gcdh;Asns;Eef1e1;Sqor;Psmd1;Rpl14;Bckdhb;Ogdh;Mccc2;Aldh18a1;Phgdh;Papss2;Psmc6
+PC2,Reactome,REACTOME_METABOLISM_OF_CARBOHYDRATES_AND_CARBOHYDRATE_DERIVATIVES,Metabolism Of Carbohydrates & Carbohydrate Derivatives,1,0.445,0.922,75,FALSE,Tkt;Pygm;Rae1;Galk1;B4galt7;Nup58;Bgn;Gys1;Sdc2;Pgam1;Papss2;Pgam2;Ugp2;Nup93;Eno2;Ctsl;Glce;Pc;Aldoa
+PC2,Reactome,REACTOME_METABOLISM_OF_FAT_SOLUBLE_VITAMINS,Metabolism Of Fat Soluble Vitamins,1.152,0.269,0.798,10,FALSE,Retsat;Lrp1;Sdc2;Ldlr;Lpl;Gpc1
+PC2,Reactome,REACTOME_METABOLISM_OF_LIPIDS,Metabolism Of Lipids,-0.973,0.517,0.975,128,FALSE,Acat1;Ppt1;Acadvl;Pten;Plin2;Pitpnb;Ahr;Pla2g4a;Acads;Ptgs2;Hsd17b7;Crat;Gla;Agpat4;Csnk2a2;Bdh2;Acsl4;Mcee;Prkaca;Ncor2;Eci1;Acly;Cpt2;Synj1;Rab4a;Fabp3;Gde1;Pikfyve;Rab14;Lta4h;Hadhb;B4galt5;Dbi;Kpnb1;Aldh3a2;Acat2;Lbr;Acox1;Gpat4;Synj2;Inppl1;Pcyt2;Gpx4;Cyb5b;Mlycd;Acot8
+PC2,Reactome,REACTOME_METABOLISM_OF_NUCLEOTIDES,Metabolism Of Nucleotides,0.797,0.802,0.999,33,FALSE,Gmpr2;Nme1;Rrm1;Samhd1;Ctps1;Cad;Gmps;Uck2;Gart
+PC2,Reactome,REACTOME_METABOLISM_OF_PORPHYRINS,Metabolism Of Porphyrins,0.861,0.653,0.99,11,FALSE,Urod;Hmox2;Blvrb;Hmox1;Hmbs
+PC2,Reactome,REACTOME_METABOLISM_OF_RNA,Metabolism Of RNA,1.192,0.119,0.624,165,FALSE,Rps12;Snrpa;Hsd17b10;Ywhaz;Rpl18;Snrpd1;Srsf1;Rae1;Eif4a3;Parn;Nup58;Prmt5;Mapkapk2;Hnrnpa3;Snrpd2;Psmd1;Ran;Fus;Hnrnpa1;Rpl14;Rbm5;Alyref;Dhx15;Prkca;Ddx39a;Eif4a1;Psmc6;Polr2k;Hnrnpa2b1;Snrpb2;Supt5h;Srsf3;Eif4a2;Nup93;Mtrex;Lsm2;Srsf6;Lsm7;Hnrnpr;Sf3b3;Tbrg4;Tra2b
+PC2,Reactome,REACTOME_METABOLISM_OF_STEROIDS,Metabolism Of Steroids,1.149,0.228,0.762,31,FALSE,Ube2i;Sp1;Ran;Dhcr7;Hmgcs1;Lgmn;Sar1b;Idi1;Scp2;Fasn;Nfyc;Acaca;Mvk;Pmvk
+PC2,Reactome,REACTOME_METABOLISM_OF_VITAMINS_AND_COFACTORS,Metabolism Of Vitamins & Cofactors,0.962,0.517,0.975,36,TRUE,Retsat;Idh1;Coq9;Lrp1;Mthfd1;Cyb5r3;Sdc2;Mccc2;Enpp1;Ldlr;Mthfd2;Pc;Mtrr
+PC2,Reactome,REACTOME_MET_ACTIVATES_PTK2_SIGNALING,Met Activates PTK2 Signaling,1.01,0.442,0.922,13,FALSE,Col11a1;Col5a1;Src;Lamc1;Col3a1;Col5a3;Col1a1;Col5a2
+PC2,Reactome,REACTOME_MHC_CLASS_II_ANTIGEN_PRESENTATION,Mhc Class Ii Antigen Presentation,1.83,0.00464,0.392,28,TRUE,Dynll2;Kif2a;Ap2m1;Kifap3;Cltc;Canx;Ap2s1;Ctsl;Capzb;Dync1h1;Lgmn;Sar1b;Kif3b;Tuba3a;Dctn4;Tubb2a;Kif4a;Klc1
+PC2,Reactome,REACTOME_MITF_M_REGULATED_MELANOCYTE_DEVELOPMENT,Mitf M Regulated Melanocyte Development,1.283,0.104,0.606,44,FALSE,Ywhaz;Mark3;Ube2i;Atp6v0a1;Dars1;Hdac1;Eef1e1;Ago2;Mcm5;Atp6v0c;Atp6v0d1
+PC2,Reactome,REACTOME_MITOCHONDRIAL_BIOGENESIS,Mito. Biogenesis,-0.686,0.914,1,24,FALSE,Atp5f1a;Atp5f1b;Immt;Glud1;Atp5f1d;Mapk14;Idh2;Atp5mf;Atp5me;Atp5po
+PC2,Reactome,REACTOME_MITOCHONDRIAL_FATTY_ACID_BETA_OXIDATION,Mito. FA Beta Oxidation,-1.272,0.163,0.679,15,TRUE,Acadvl;Acads;Mcee;Eci1;Hadhb;Dbi
+PC2,Reactome,REACTOME_MITOCHONDRIAL_PROTEIN_DEGRADATION,Mito. Protein Degradation,-1.497,0.0173,0.492,57,TRUE,Acat1;Atp5f1a;Cox5a;Dld;Atp5f1b;Opa1;Cox4i1;Ndufv1;Aco2;Ndufs1;Lonp1;Mdh2;Prkaca;Me2;Eci1;Glud1;Uqcrc2;Ndufa2;Htra2;Shmt2;Timm10;Idh2
+PC2,Reactome,REACTOME_MITOCHONDRIAL_PROTEIN_IMPORT,Mito. Protein Import,-0.785,0.8,0.999,27,TRUE,Atp5f1a;Atp5f1b;Timm13;Aco2
+PC2,Reactome,REACTOME_MITOCHONDRIAL_TRANSLATION,Mito. Translation,-0.787,0.791,0.999,14,FALSE,Tufm;Ptcd3;Mrpl23;Mrps18b;Mrps22;Dap3;Ndufab1
+PC2,Reactome,REACTOME_MITOPHAGY,Mitophagy,1.184,0.23,0.762,16,TRUE,Sqstm1;Tomm22;Mfn2;Csnk2b
+PC2,Reactome,REACTOME_MITOTIC_G2_G2_M_PHASES,Mitotic G2 M Phases,-0.801,0.831,1,52,FALSE,Hsp90aa1;Psmd7;Cdkn1a;Psma1;Tubg1;Ckap5;Prkaca;Psmd8;Clasp1;Ywhag;Psmd14;Pcm1;Tubgcp3;Skp1;Psma4;Psmd3;Tubgcp2;Cdk1;Ywhae;Psmd13;Cdk2;Dctn1
+PC2,Reactome,REACTOME_MITOTIC_METAPHASE_AND_ANAPHASE,Mitotic Metaphase & Anaphase,1.03,0.396,0.896,64,FALSE,Ube2i;Pafah1b1;Dynll2;Nup58;Kif2a;Mapre1;Psmd1;Ran;Banf1;Pds5b;Psmc6;Nup93;Dync1h1;Slc25a3;Tuba3a;Adrm1;Smc1a;Psmd12;Psmc4;Psmc3;Tubb2a;Xpo1
+PC2,Reactome,REACTOME_MITOTIC_PROMETAPHASE,Mitotic Prometaphase,-1.061,0.343,0.874,48,TRUE,Ncaph;Hsp90aa1;Ppp2r5b;Smc4;Zwint;Smc3;Csnk2a2;Tubg1;Ckap5;Prkaca;Smc2;Clasp1;Ywhag;Clip1;Pcm1;Tubgcp3
+PC2,Reactome,REACTOME_MITOTIC_PROPHASE,Mitotic Prophase,-0.738,0.867,1,25,FALSE,Smc4;Rab2a;Nup50;Mapk1;Smc2;Nup153
+PC2,Reactome,REACTOME_MRNA_SPLICING_MINOR_PATHWAY,mRNA Splicing Minor Pathway,1.388,0.0854,0.598,19,FALSE,Snrpd1;Srsf1;Snrpd2;Polr2k;Srsf6;Sf3b3;Snrpg
+PC2,Reactome,REACTOME_MTOR_SIGNALLING,mTOR Signalling,-0.824,0.706,0.99,17,TRUE,Akt1s1;Tsc1;Akt1
+PC2,Reactome,REACTOME_MUSCLE_CONTRACTION,Muscle Contraction,-1.058,0.342,0.874,42,FALSE,Atp1a1;Dmpk;Pak1;Tnnc1;Myh3;Atp1b1;Prkaca;Atp2b1;Pxn;Myl4;Casq2;Vim;Tpm3;Myl11;Atp2a2
+PC2,Reactome,REACTOME_NCAM_SIGNALING_FOR_NEURITE_OUT_GROWTH,Ncam Signaling For Neurite Out Growth,0.96,0.493,0.962,19,FALSE,Col4a2;Sos1;Prnp;Grb2;Col5a1;Col4a1;Src;Sptan1;Col3a1;Col5a3;Col5a2;Hras
+PC2,Reactome,REACTOME_NEDDYLATION,Neddylation,1.061,0.371,0.888,39,TRUE,Rbbp7;Cul5;Sqstm1;Cul1;Psmd1;Dcun1d1;Nub1;Psmc6;Fbxo6
+PC2,Reactome,REACTOME_NERVOUS_SYSTEM_DEVELOPMENT,Nervous System Development,-0.885,0.746,0.99,157,FALSE,Dpysl3;Hsp90aa1;Sptbn1;Nck2;Dpysl2;Pak1;Cdc42;Rock1;Sdcbp;Rpl22;Psmd7;Rps27l;Actr2;Ezr;Psma1;Ncstn;Cap2;Csnk2a2;Cxcl12;Cap1;Mapk1;Abl1;Prkaca;Rps14;Arhgef12;Gspt1;Itgav;Psmd8;Clasp1;Nrp2;Pak4;Myo9b;Agrn;Ncam1;Slit2;Dlg1;Pabpc1;Arpc3;Psmd14;Rhob;Rps3a;Rpl9;Rps10;Psma4;Psmd3;Adam10;Rps19;Kalrn
+PC2,Reactome,REACTOME_NETRIN_1_SIGNALING,Netrin 1 Signaling,-0.797,0.721,0.99,11,FALSE,Cdc42;Ezr;Slit2
+PC2,Reactome,REACTOME_NEURONAL_SYSTEM,Neuronal System,1.575,0.0341,0.558,39,TRUE,Prkab1;Rtn3;Rps6ka3;Ap2m1;Prkar2b;Comt;Ptprd;Prkca;Pdlim5;Gnai3;Slc38a2;Ap2s1;Gng12;Gnb2;Tuba3a;Aldh2;Src;Epb41l2;Tubb2a
+PC2,Reactome,REACTOME_NEUTROPHIL_DEGRANULATION,Neutrophil Degranulation,-1,0.449,0.922,114,TRUE,Timp2;Hsp90aa1;Snap23;Dnajc3;Rock1;Sdcbp;Cd47;Psmd7;Stom;Actr2;Gla;Ncstn;Cap1;Pfkl;Mapk1;Huwe1;Cat;Vamp8;Srp14;Itgav;Pkp1;Acly;Pgm1;Cct2;Pgm2;Prdx6;Slc2a3;Rab14;Lta4h;Ckap4;Lgals3;Psmd14;Apaf1;Ilf2
+PC2,Reactome,REACTOME_NON_INTEGRIN_MEMBRANE_ECM_INTERACTIONS,Non Integrin Membrane Ecm Interactions,0.799,0.798,0.999,33,FALSE,Col4a2;Col11a1;Sdc2;Prkca;Itgb5;Col5a1;Col4a1;Sgca;Lamc1;Col3a1;Col5a3;Col1a1;Col5a2;Actb;Vtn
+PC2,Reactome,REACTOME_NUCLEAR_ENVELOPE_NE_REASSEMBLY,Nuclear Envelope Ne Reassembly,1.464,0.0583,0.558,19,TRUE,Ube2i;Nup58;Ran;Banf1;Nup93;Slc25a3;Tuba3a;Tubb2a
+PC2,Reactome,REACTOME_NUCLEAR_EVENTS_KINASE_AND_TRANSCRIPTION_FACTOR_ACTIVATION,Nuclear Events Kinase & Transcription Factor Activation,0.831,0.688,0.99,11,FALSE,Rps6ka3;Mapkapk2
+PC2,Reactome,REACTOME_NUCLEOTIDE_BINDING_DOMAIN_LEUCINE_RICH_REPEAT_CONTAINING_RECEPTOR_NLR_SIGNALING_PATHWAYS,Nucleotide Binding Domain Leucine Rich Repeat Containing Receptor Nlr Signalings,1.066,0.352,0.874,16,TRUE,Nfkb1;Casp8;Ube2n;Hmox1;Ikbkb;Hsp90ab1;App;Nfkb2
+PC2,Reactome,REACTOME_NUCLEOTIDE_EXCISION_REPAIR,Nucleotide Excision Repair,-0.774,0.836,1,30,FALSE,Rfc2;Rfc3;Lig1;Cops5;Rad23a;Rad23b;Pold1;Polr2e
+PC2,Reactome,REACTOME_ONCOGENIC_MAPK_SIGNALING,Oncogenic MAPK Signaling,1.743,0.0203,0.492,15,TRUE,Mark3;Raf1;Csk;Araf
+PC2,Reactome,REACTOME_OPIOID_SIGNALLING,Opioid Signalling,0.75,0.848,1,18,FALSE,Prkar2b;Prkca;Gnai3;Gng12;Gna14;Gnb2
+PC2,Reactome,REACTOME_ORGANELLE_BIOGENESIS_AND_MAINTENANCE,Organelle Biogenesis & Maintenance,0.763,0.904,1,57,FALSE,Prkab1;Atp5f1e;Pafah1b1;Dynll2;Prkar2b;Mapre1;Kifap3;Acss2;Arl3
+PC2,Reactome,REACTOME_PCP_CE_PATHWAY,Pcp Ce Pathway,0.736,0.884,1,37,FALSE,Fzd2;Ap2m1;Psmd1;Cltc;Prkca;Psmc6;Ap2s1;Smurf1;Adrm1;Psmd12;Psmc4;Psmc3
+PC2,Reactome,REACTOME_PEPTIDE_HORMONE_METABOLISM,Peptide Hormone Metabolism,-0.49,0.988,1,11,TRUE,Exoc4;Spcs3;Cpe;Kif5b;Ctsd;Spcs1;Exoc2;Sec11a;Ctnnb1;Kif5c;Rab27a
+PC2,Reactome,REACTOME_PERK_REGULATES_GENE_EXPRESSION,Perk Regulates Gene Expression,0.807,0.714,0.99,11,FALSE,Parn;Asns
+PC2,Reactome,REACTOME_PEROXISOMAL_LIPID_METABOLISM,Peroxisomal Lipid Metabolism,-0.825,0.687,0.99,11,FALSE,Crat;Aldh3a2;Acox1;Mlycd;Acot8;Acaa1a
+PC2,Reactome,REACTOME_PHASE_II_CONJUGATION_OF_COMPOUNDS,Phase Ii Conjugation Of Compounds,-0.945,0.551,0.975,15,TRUE,Gclc;Gss;Ugdh;Tpst2;Gclm
+PC2,Reactome,REACTOME_PHOSPHOLIPID_METABOLISM,Phospholipid Metabolism,-1.353,0.0724,0.577,30,TRUE,Pten;Pitpnb;Pla2g4a;Agpat4;Csnk2a2;Synj1;Rab4a;Gde1;Pikfyve;Rab14;Hadhb;Gpat4;Synj2;Inppl1;Pcyt2
+PC2,Reactome,REACTOME_PI_METABOLISM,Pi Metabolism,-1.322,0.138,0.625,12,FALSE,Pten;Pitpnb;Synj1;Rab4a;Gde1;Pikfyve;Rab14;Synj2;Inppl1
+PC2,Reactome,REACTOME_PKR_MEDIATED_SIGNALING,Pkr Mediated Signaling,0.451,1,1,26,TRUE,Ube2i;Npm1;Tuba3a;Nck1;Eif2s3;Tubb2a;Trim25;Ikbkb;Stat3
+PC2,Reactome,REACTOME_PLASMA_LIPOPROTEIN_ASSEMBLY_REMODELING_AND_CLEARANCE,Plasma Lipoprotein Assembly Remodeling & Clearance,1.367,0.108,0.606,14,TRUE,Vldlr;Ap2m1;Cltc;Ldlr;Bmp1;Ap2s1;Sar1b;Lpl
+PC2,Reactome,REACTOME_PLATELET_ACTIVATION_SIGNALING_AND_AGGREGATION,Platelet Activation Signaling & Aggregation,1.477,0.0506,0.558,62,TRUE,Ptpn1;Ywhaz;Rhog;Cyb5r1;Raf1;Csk;Prkce;Itih3;Anxa5;Prkca;Wdr1;Sos1;Grb2;Dgka;F2;Gnai3;F2r;Gng12;Gna14;Aldoa;Bcar1;Gnb2;Src;Plg;Cd63;Tgfb3
+PC2,Reactome,REACTOME_PLATELET_AGGREGATION_PLUG_FORMATION,Platelet Aggregation Plug Formation,1.393,0.109,0.606,12,FALSE,Ptpn1;Csk;Sos1;Grb2;F2;Bcar1;Src
+PC2,Reactome,REACTOME_PLATELET_HOMEOSTASIS,Platelet Homeostasis,-0.85,0.673,0.99,13,TRUE,Ppp2r5b;Pla2g4a
+PC2,Reactome,REACTOME_POSITIVE_EPIGENETIC_REGULATION_OF_RRNA_EXPRESSION,Positive Epigenetic Reg. Rrna Expression,1.287,0.149,0.663,15,FALSE,Hdac2;Rbbp7;Hdac1;Polr2k;Mybbp1a;Mta1;H2ax;Ddx21;Polr2h
+PC2,Reactome,REACTOME_POST_TRANSLATIONAL_PROTEIN_MODIFICATION,Post Translational Protein Mod.,1.058,0.292,0.832,232,FALSE,Copb2;Hdac2;Rbbp7;Cul5;Wfs1;Arcn1;Plaur;Ube2i;Rae1;Fstl1;Sqstm1;Dynll2;Hdac1;Cul1;Nup58;Rab5a;Rpa1;Calr;Psmd1;Cd59;Dad1;Copa;Rab34;Cdc34;Eef2;Npm1;Dcun1d1;Ide;Nub1;Igfbp5;Sdc2;Pcna;Ostc;Canx;Nagk;Jmjd6;Psmc6;Gmppa;Galnt1;Fuca1;F2;Fut8;Gosr2;Fbxo6;Pgm3;Ube2n;Nup93;Rab27a
+PC2,Reactome,REACTOME_PRE_NOTCH_EXPRESSION_AND_PROCESSING,Pre Notch Expression & Processing,0.648,0.929,1,13,TRUE,Ago2;Notch2;Atp2a1;H2ax;Tnrc6b;Rbpj
+PC2,Reactome,REACTOME_PROCESSING_OF_CAPPED_INTRON_CONTAINING_PRE_MRNA,Pre-mRNA Processing,1.841,7.87e-4,0.213,71,TRUE,Snrpa;Snrpd1;Srsf1;Rae1;Eif4a3;Nup58;Hnrnpa3;Snrpd2;Fus;Hnrnpa1;Rbm5;Alyref;Dhx15;Ddx39a;Polr2k;Hnrnpa2b1;Snrpb2;Srsf3;Nup93;Mtrex;Lsm2;Srsf6;Lsm7;Hnrnpr;Sf3b3;Tra2b;Hnrnpu;Cstf3;Rnps1;Snrpg
+PC2,Reactome,REACTOME_PROGRAMMED_CELL_DEATH,Programmed Cell Death,-1.347,0.0616,0.558,70,TRUE,Arhgap10;Hsp90aa1;Rock1;Sdcbp;Opa1;Xiap;Psmd7;Akt1;Psma1;Mapk1;Tjp1;Ppp3r1;Casp3;Pkp1;Psmd8;Dnm1l;Flot2;Ywhah;Plec;Bax;Ywhag;Casp7;Bid;Psmd14;Apaf1;C1qbp;Kpnb1;Psma4;Vim;Psmd3
+PC2,Reactome,REACTOME_PROTEIN_FOLDING,Protein Folding,-1.073,0.369,0.888,25,TRUE,Cct6b;Ccne1;Cct4;Arfgef2
+PC2,Reactome,REACTOME_PROTEIN_LOCALIZATION,Protein Localization,-0.748,0.938,1,60,FALSE,Atp5f1a;Atp5f1b;Timm13;Cyb5a;Aco2;Pex5;Paox;Crat;Timm8b;Cat;Vdac1;Stx5;Lonp2
+PC2,Reactome,REACTOME_PROTEIN_UBIQUITINATION,Protein Ubiquitination,0.789,0.751,0.99,11,TRUE,Cdc34;Pcna;Ube2n
+PC2,Reactome,REACTOME_PTEN_REGULATION,Pten Regulation,0.825,0.755,0.99,40,FALSE,Hdac2;Rbbp7;Hdac1;Psmd1;Ago2;Csnk2b
+PC2,Reactome,REACTOME_PYRUVATE_METABOLISM,Pyruvate Metabolism,-0.752,0.847,1,20,FALSE,Dlat;Dld;Pdk3;Me2;Vdac1;Ldha
+PC2,Reactome,REACTOME_RAB_REGULATION_OF_TRAFFICKING,Rab Reg. Trafficking,0.766,0.819,1,21,TRUE,Rab5a;Tsc2;Dennd2b;Rab27a;Rab31;Akt2;Gabarapl2;Rabgap1;Rab3gap1;Optn
+PC2,Reactome,REACTOME_RAC1_GTPASE_CYCLE,Rac1 GTPase Cycle,-1.465,0.0365,0.558,43,TRUE,Ykt6;Arhgap10;Snap23;Pak1;Cdc42;Slc1a5;Wasf2;Arhgef6;Abi1;Abr;Tfrc;Arhgdia;Pak4;Myo9b
+PC2,Reactome,REACTOME_RAC2_GTPASE_CYCLE,Rac2 GTPase Cycle,-1.402,0.0719,0.577,24,FALSE,Pak1;Cdc42;Wasf2;Abi1;Abr;Tfrc;Arhgdia;Pak4
+PC2,Reactome,REACTOME_RECYCLING_PATHWAY_OF_L1,Recycling Pathway Of L1,1.017,0.412,0.92,19,FALSE,Rps6ka3;Ap2m1;Cltc;Msn;Ap2s1;Tuba3a;Src;Tubb2a;Kif4a
+PC2,Reactome,REACTOME_REGULATED_NECROSIS,Regulated Necrosis,-1.233,0.194,0.71,11,FALSE,Hsp90aa1;Sdcbp;Xiap;Casp3;Flot2;Bax
+PC2,Reactome,REACTOME_REGULATION_OF_CDH1_FUNCTION,Reg. Cdh1 Function,0.792,0.806,0.999,33,FALSE,Jup;Psmd1;Psmc6;Ctsl;Ctnna1;Rack1;Adrm1;Ctnnb1;Src;Psmd12;Psmc4;Psmc3
+PC2,Reactome,REACTOME_REGULATION_OF_CDH1_POSTTRANSLATIONAL_PROCESSING_AND_TRAFFICKING_TO_PLASMA_MEMBRANE,Reg. Cdh1 Posttranslational Processing & Trafficking To Plasma Membrane,1.52,0.0579,0.558,11,TRUE,Jup;Dad1;Csnk2b;Ostc;Canx
+PC2,Reactome,REACTOME_REGULATION_OF_CHOLESTEROL_BIOSYNTHESIS_BY_SREBP_SREBF,Reg. Cholesterol Biosynthesis By Srebp Srebf,1.579,0.0633,0.558,17,TRUE,Sp1;Ran;Dhcr7;Hmgcs1;Sar1b;Idi1;Fasn;Nfyc;Acaca;Mvk;Pmvk
+PC2,Reactome,REACTOME_REGULATION_OF_ENDOGENOUS_RETROELEMENTS,Reg. Endogenous Retroelements,1.725,0.0181,0.492,11,TRUE,Hdac2;Rbbp7;Ube2i;Hdac1;Mtrex;Cbx5;Mta1;H2ax
+PC2,Reactome,REACTOME_REGULATION_OF_EXPRESSION_AND_FUNCTION_OF_TYPE_II_CLASSICAL_CADHERINS,Reg. Expression & Function Of Type Ii Classical Cadherins,1.042,0.377,0.888,11,TRUE,Jup;Sp1;Ago2;Ctnna1;Ctnnb1;Adam19;Tnrc6b
+PC2,Reactome,REACTOME_REGULATION_OF_INSULIN_LIKE_GROWTH_FACTOR_IGF_TRANSPORT_AND_UPTAKE_BY_INSULIN_LIKE_GROWTH_FACTOR_BINDING_PROTEINS_IGFBPS,Reg. Insulin Like Growth Factor Igf Transport & Uptake By Insulin Like Growth Factor Binding Proteins Igfbps,-0.803,0.77,0.996,25,TRUE,Dnajc3;Hsp90b1;Pdia6;Ltbp1;Calu;Igfbp7;Tnc;Ckap4;Serpinc1;Adam10
+PC2,Reactome,REACTOME_REGULATION_OF_LIPID_METABOLISM_BY_PPARALPHA,Reg. Lipid Metabolism By Pparalpha,0.875,0.671,0.99,18,TRUE,Fhl2;Sp1;Me1;Med24;Hmgcs1;Cpt1a;Fads1;Nfyc;Acsl1
+PC2,Reactome,REACTOME_REGULATION_OF_MRNA_STABILITY_BY_PROTEINS_THAT_BIND_AU_RICH_ELEMENTS,Reg. mRNA Stability By Proteins That Bind Au Rich Elements,-0.698,0.941,1,42,FALSE,Hspb1;Exosc8;Psmd7;Akt1;Dcp1a;Psma1;Psmd8;Pabpc1;Psmd14;Mapk14;Psma4;Psmd3;Zfp36l1
+PC2,Reactome,REACTOME_REGULATION_OF_PD_L1_CD274_POST_TRANSLATIONAL_MODIFICATION,Reg. Pd L1 Cd274 Post Translational Mod.,0.909,0.619,0.984,38,FALSE,Prkab1;Cul1;Psmd1;Dad1;Csnk2b;Ostc;Psmc6
+PC2,Reactome,REACTOME_REGULATION_OF_PD_L1_CD274_TRANSCRIPTION,Reg. Pd L1 Cd274 Transcription,1.004,0.452,0.922,10,TRUE,Rbbp7;Nfkb1;Ctnnb1;H2ax;Stat3;Wwtr1;Nfkb2
+PC2,Reactome,REACTOME_REGULATION_OF_PLK1_ACTIVITY_AT_G2_M_TRANSITION,Reg. Plk1 Activity At G2 M Transition,0.861,0.683,0.99,20,FALSE,Pafah1b1;Cul1;Prkar2b;Mapre1
+PC2,Reactome,REACTOME_REGULATION_OF_RUNX1_EXPRESSION_AND_ACTIVITY,Reg. Runx1 Expression & Activity,0.516,0.992,1,11,TRUE,Ago2;Src;Cdk6;Tnrc6b;Ccnd1;Ccnd3
+PC2,Reactome,REACTOME_REGULATION_OF_TP53_ACTIVITY,Reg. Tp53 Activity,1.19,0.194,0.71,28,TRUE,Prkab1;Hdac2;Rbbp7;Hdac1;Prmt5;Rpa1;Csnk2b
+PC2,Reactome,REACTOME_REGULATION_OF_T_CELL_ACTIVATION_BY_CD28_FAMILY,Reg. T Cell Activation By Cd28 Family,0.952,0.551,0.975,65,FALSE,Prkab1;Rbbp7;Cul1;Csk;Psmd1;Nfkb1;Dad1;Ago2;Csnk2b;Ostc;Grb2;Psmc6
+PC2,Reactome,REACTOME_REPRODUCTION,Reproduction,0.654,0.935,1,17,FALSE,Ube2i;Rpa1;Sun2;Nbn;Smc1a;H2ax;Rpa2;Rad21
+PC2,Reactome,REACTOME_RETROGRADE_TRANSPORT_AT_THE_TRANS_GOLGI_NETWORK,Retrograde Transport At The Trans Golgi Network,1.411,0.0947,0.606,13,FALSE,M6pr;Arfip2;Rabepk;Napa;Cog2;Vamp3;Rhobtb3;Igf2r
+PC2,Reactome,REACTOME_RET_SIGNALING,Ret Signaling,1.599,0.0549,0.558,10,TRUE,Pdlim7;Prkca;Sos1;Grb2;Plcg1;Gab2
+PC2,Reactome,REACTOME_RHOA_GTPASE_CYCLE,RhoA GTPase Cycle,-1.357,0.0752,0.577,38,FALSE,Ykt6;Arhgap10;Snap23;Rock1;Akap13;Stom;Daam1;Abr;Tfrc;Arhgef12;Flot2;Stx5;Arhgdia;Myo9b
+PC2,Reactome,REACTOME_RHOBTB_GTPASE_CYCLE,Rhobtb GTPase Cycle,-0.823,0.714,0.99,12,TRUE,Hsp90aa1;Rock1;Cct2;Cul3;Vim
+PC2,Reactome,REACTOME_RHOD_GTPASE_CYCLE,Rhod GTPase Cycle,1.151,0.273,0.803,14,TRUE,Arhgap5;Steap3;Capzb;Slc25a3;Stbd1;Vamp3
+PC2,Reactome,REACTOME_RHOF_GTPASE_CYCLE,Rhof GTPase Cycle,0.886,0.627,0.984,15,FALSE,Arhgap5;Steap3
+PC2,Reactome,REACTOME_RHOG_GTPASE_CYCLE,Rhog GTPase Cycle,-0.929,0.576,0.984,27,FALSE,Ykt6;Cdc42;Hspe1;Tfrc;Stx5;Arhgdia;Pak4;Shmt2;Lbr;Kalrn;Ndufs3;Cdc42ep1;Esyt1
+PC2,Reactome,REACTOME_RHOH_GTPASE_CYCLE,Rhoh GTPase Cycle,-1.329,0.126,0.624,12,TRUE,Pak1;Slc1a5;Rock1;Stom;Tfrc;Arhgdia;Pak4
+PC2,Reactome,REACTOME_RHOQ_GTPASE_CYCLE,Rhoq GTPase Cycle,-1.025,0.414,0.92,20,FALSE,Snap23;Pak1;Cdc42;Slc1a5;Stom
+PC2,Reactome,REACTOME_RHOU_GTPASE_CYCLE,Rhou GTPase Cycle,-1.736,0.00834,0.421,17,TRUE,Sptbn1;Nck2;Dst;Pak1;Cdc42;Arhgef6
+PC2,Reactome,REACTOME_RHO_GTPASES_ACTIVATE_FORMINS,Rho Gtpases Activate Formins,-0.736,0.908,1,37,FALSE,Ppp2r5b;Dvl2;Cdc42;Zwint;Daam1;Ckap5;Clasp1;Clip1;Rhob
+PC2,Reactome,REACTOME_RHO_GTPASES_ACTIVATE_IQGAPS,Rho Gtpases Activate Iqgaps,-0.59,0.96,1,10,FALSE,Cdc42
+PC2,Reactome,REACTOME_RHO_GTPASES_ACTIVATE_PAKS,Rho Gtpases Activate Paks,-1.88,0.00121,0.213,11,TRUE,Pak1;Cdc42;Nf2
+PC2,Reactome,REACTOME_RHO_GTPASES_ACTIVATE_PKNS,Rho Gtpases Activate Pkns,1.171,0.253,0.771,14,FALSE,Ywhaq;Ywhaz
+PC2,Reactome,REACTOME_RHO_GTPASES_ACTIVATE_WASPS_AND_WAVES,Rho Gtpases Activate Wasps & Waves,-1.246,0.181,0.709,19,FALSE,Cdc42;Wasf2;Abi1;Actr2;Mapk1;Abl1;Arpc3;Wipf1
+PC2,Reactome,REACTOME_RHO_GTPASE_EFFECTORS,Rho GTPase Effectors,-0.962,0.536,0.975,81,FALSE,Ppp2r5b;Dvl2;Pak1;Cdc42;Wasf2;Rock1;Nf2;Zwint;Pin1;Abi1;Actr2;Daam1;Mapk1;Abl1;Ckap5;Ywhah;Clasp1;Ywhag;Arpc3;Clip1;Wipf1;Rhob;Tax1bp3;Mapk14
+PC2,Reactome,REACTOME_RIBOSOME_ASSOCIATED_QUALITY_CONTROL,Ribosome Associated Quality Control,-0.66,0.963,1,39,FALSE,Rpl22;Psmd7;Rps27l;Psma1;Rps14;Psmd8;Psmd14;Rps3a;Rpl9;Rps10;Psma4;Psmd3;Rps19
+PC2,Reactome,REACTOME_RNA_POLYMERASE_II_TRANSCRIBES_SNRNA_GENES,RNA Polymerase Ii Transcribes Snrna Genes,0.935,0.54,0.975,17,FALSE,Sp1;Cdk9;Polr2k;Supt5h
+PC2,Reactome,REACTOME_RNA_POLYMERASE_II_TRANSCRIPTION,RNA Polymerase Ii Transcription,0.891,0.752,0.99,202,FALSE,Ywhaq;Prkab1;Hdac2;Rbbp7;Ptpn1;Ywhaz;Srsf1;Ube2i;Steap3;Hdac1;Eif4a3;Sp1;Cul1;Prmt5;Rpa1;Nedd4l;Cox7b;Psmd1;Nfkb1;Ago2;Csnk2b;Npm1;Cox7c;Cdk9;Prdx1;Alyref;Pcna;Ddx39a;Rbm14;Psmc6;Notch2;Polr2k;Supt5h;Srsf3;Tsc2;Med24;Srsf6;Nelfcd;Cdkn2b;Akt2;Ctsl;Lamtor5;Cycs
+PC2,Reactome,REACTOME_RNA_POLYMERASE_II_TRANSCRIPTION_TERMINATION,RNA Polymerase Ii Transcription Termination,1.52,0.0602,0.558,19,FALSE,Srsf1;Eif4a3;Alyref;Ddx39a;Srsf3;Srsf6;Cstf3;Rnps1;Snrpg
+PC2,Reactome,REACTOME_RND1_GTPASE_CYCLE,Rnd1 GTPase Cycle,-1.061,0.357,0.875,10,FALSE,Ccdc88a;Dst;Tfrc;Flot2
+PC2,Reactome,REACTOME_RND3_GTPASE_CYCLE,Rnd3 GTPase Cycle,-1.268,0.172,0.689,11,TRUE,Ccdc88a;Dst;Rock1;Picalm;Flot2;Ckap4
+PC2,Reactome,REACTOME_ROS_AND_RNS_PRODUCTION_IN_PHAGOCYTES,ROS & Rns Production In Phagocytes,1.432,0.0863,0.598,10,FALSE,Atp6v0a1;Atp6v0c;Atp6v0d1;Tcirg1;Atp6v1g1
+PC2,Reactome,REACTOME_RRNA_PROCESSING,Rrna Processing,0.864,0.683,0.99,32,FALSE,Rps12;Hsd17b10;Rpl18
+PC2,Reactome,REACTOME_RUNX1_REGULATES_TRANSCRIPTION_OF_GENES_INVOLVED_IN_DIFFERENTIATION_OF_HSCS,Runx1 Regulates Transcription Of Genes Involved In Differentiation Of Hscs,-0.741,0.863,1,25,FALSE,Psmd7;Psma1;Abl1;Psmd8;Runx1;Psmd14;Psma4;Psmd3;Psmd13;Psma7;Psmb2;Mnat1
+PC2,Reactome,REACTOME_SELENOAMINO_ACID_METABOLISM,Selenoamino Acid Metabolism,0.965,0.524,0.975,26,FALSE,Rps12;Rpl18;Dars1;Eef1e1;Rpl14;Papss2
+PC2,Reactome,REACTOME_SEMAPHORIN_INTERACTIONS,Semaphorin Interactions,-1.905,0.00212,0.249,19,FALSE,Dpysl3;Hsp90aa1;Dpysl2;Pak1;Rock1
+PC2,Reactome,REACTOME_SENESCENCE_ASSOCIATED_SECRETORY_PHENOTYPE_SASP,Senescence Associated Secretory Phenotype Sasp,0.645,0.939,1,17,TRUE,Rps6ka3;Nfkb1;Cdkn2c;Cdkn2b
+PC2,Reactome,REACTOME_SENSORY_PERCEPTION,Sensory Perception,1.157,0.213,0.734,25,TRUE,Retsat;Lrp1;Sdc2;Prkca;Fnta;Msn;Ldlr;Capzb;Metap1;Lpl;Sptan1;Gpc1
+PC2,Reactome,REACTOME_SENSORY_PROCESSING_OF_SOUND,Sensory Processing Of Sound,-0.951,0.519,0.975,11,FALSE,Sptbn1;Ezr;Atp2b1
+PC2,Reactome,REACTOME_SIGNALING_BY_CSF1_M_CSF_IN_MYELOID_CELLS,Signaling By Csf1 M Csf In Myeloid Cells,0.885,0.614,0.984,10,FALSE,Sos1;Grb2;Gab2;Src;Stat3
+PC2,Reactome,REACTOME_SIGNALING_BY_EGFR,Signaling By Egfr,0.682,0.915,1,17,FALSE,Csk;Sos1;Grb2;Plcg1
+PC2,Reactome,REACTOME_SIGNALING_BY_ERBB2,Signaling By Erbb2,1.157,0.251,0.771,15,TRUE,Cul5;Prkce;Prkca;Sos1;Grb2;Plcg1;Akt2
+PC2,Reactome,REACTOME_SIGNALING_BY_ERBB4,Signaling By Erbb4,0.792,0.745,0.99,12,FALSE,Psen1;Sos1;Grb2;Adam17;Src
+PC2,Reactome,REACTOME_SIGNALING_BY_FGFR,Signaling By Fgfr,0.938,0.556,0.975,22,TRUE,Hnrnpa1;Sos1;Grb2;Polr2k;Plcg1
+PC2,Reactome,REACTOME_SIGNALING_BY_FGFR4,Signaling By Fgfr4,0.902,0.586,0.984,10,FALSE,Sos1;Grb2;Plcg1
+PC2,Reactome,REACTOME_SIGNALING_BY_GPCR,Signaling By Gpcr,-1.008,0.432,0.922,57,FALSE,Pak1;Cdc42;Rock1;Pla2g4a;Arhgef6;Akap13;Akt1;Cxcl12;Mapk1;Abr;Ppp3r1;Prkaca;Hebp1;Arhgef12
+PC2,Reactome,REACTOME_SIGNALING_BY_HEDGEHOG,Signaling By Hedgehog,0.821,0.757,0.99,37,FALSE,Cul1;Prkar2b;Psmd1;Psmc6;Adam17;Smurf1;Tuba3a;Adrm1;Gnas;Psmd12;Psmc4;Psmc3;Tubb2a
+PC2,Reactome,REACTOME_SIGNALING_BY_INSULIN_RECEPTOR,Signaling By Insulin Receptor,1.744,0.00637,0.392,22,TRUE,Ptpn1;Atp6v0a1;Ide;Atp6v0c;Sos1;Grb2;Atp6v0d1;Gab2;Akt2;Tcirg1;Atp6v1g1
+PC2,Reactome,REACTOME_SIGNALING_BY_MET,Signaling By Met,0.877,0.67,0.99,30,FALSE,Ptpn1;Col11a1;Sos1;Grb2;Col5a1;Ranbp9;Src;Lamc1;Col3a1;Col5a3;Stat3;Col1a1;Col5a2;Hras
+PC2,Reactome,REACTOME_SIGNALING_BY_NOTCH,Signaling By Notch,0.851,0.745,0.99,54,FALSE,Hdac2;Ywhaz;Hdac1;Cul1;Psmd1;Ago2;Psen1;Psmc6;Notch2;Dlgap5;Adam17;Atp2a1;Adrm1;Psmd12;Psmc4;Tle3;H2ax;Psmc3;Tnrc6b;Rbpj;Hdac6;Psmc2
+PC2,Reactome,REACTOME_SIGNALING_BY_NOTCH1,Signaling By Notch1,1.154,0.251,0.771,15,TRUE,Hdac2;Hdac1;Cul1;Psen1
+PC2,Reactome,REACTOME_SIGNALING_BY_NOTCH4,Signaling By Notch4,0.752,0.863,1,34,FALSE,Ywhaz;Cul1;Psmd1;Psen1;Psmc6;Notch2
+PC2,Reactome,REACTOME_SIGNALING_BY_NTRKS,Signaling By Ntrks,0.934,0.559,0.975,32,TRUE,Rps6ka3;Mapkapk2;Ap2m1;Cltc;Sos1;Grb2;Plcg1;Ap2s1
+PC2,Reactome,REACTOME_SIGNALING_BY_NUCLEAR_RECEPTORS,Signaling By Nuclear Receptors,-1.137,0.223,0.757,59,TRUE,Dlat;Hsp90aa1;Ccnt1;Hspb1;Dld;Strn;Akt1;Smc3;Pdk3;Jun;Cxcl12;Mapk1;Ncor2;Runx1;Polr2e
+PC2,Reactome,REACTOME_SIGNALING_BY_PDGF,Signaling By Pdgf,1.227,0.172,0.689,23,FALSE,Col4a2;Sos1;Grb2;Plcg1;Col5a1;Col4a1;Bcar1;Src;Plg;Nck1;Col3a1;Col5a3;Stat3;Col5a2;Hras
+PC2,Reactome,REACTOME_SIGNALING_BY_PTK6,Signaling By PTK6,-0.614,0.954,1,17,TRUE,Ccne1;Akt1;Pxn;Cbl;Cdkn1b
+PC2,Reactome,REACTOME_SIGNALING_BY_RECEPTOR_TYROSINE_KINASES,Signaling By Receptor Tyrosine Kinases,0.896,0.714,0.99,137,FALSE,Hdac2;Cul5;Ptpn1;Jup;Col4a2;Rps6ka3;Atp6v0a1;Hdac1;Col11a1;Mapkapk2;Csk;Ap2m1;Prkce;Hnrnpa1;Ide;Cltc;Prkca;Psen1;Atp6v0c;Sos1;Grb2;Atp6v0d1;Polr2k;Plcg1;Col5a1;Gab2;Ap2s1;Akt2;Ctnna1;Axl;Tcirg1;Col4a1;Bcar1;Ranbp9;Adam17;Nrp1
+PC2,Reactome,REACTOME_SIGNALING_BY_RHO_GTPASES_MIRO_GTPASES_AND_RHOBTB3,Signaling By Rho Gtpases Miro Gtpases & Rhobtb3,-1.204,0.102,0.606,180,FALSE,Ccdc88a;Ykt6;Arhgap10;Hsp90aa1;Sptbn1;Nck2;Ppp2r5b;Ccne1;Dst;Dvl2;Snap23;Pak1;Cdc42se2;Cdc42;Slc1a5;Wasf2;Rock1;Nf2;Arhgef6;Akap13;Zwint;Pin1;Stom;Abi1;Actr2;Hspe1;Daam1;Picalm;Mapk1;Abl1;Abr;Ckap5;Tfrc;Arhgef12;Flot2;Ywhah;Clasp1;Cct2;Stx5;Arhgdia;Pak4;Myo9b;Ckap4;Ywhag;Arpc3;Clip1;Wipf1;Rhob;Cul3;Tax1bp3;Mapk14;C1qbp;Shmt2;Vim;Rhot1;Aldh3a2;Rap1gds1;Lbr;Kalrn;Cdkn1b;Tpm3;Ndufs3
+PC2,Reactome,REACTOME_SIGNALING_BY_ROBO_RECEPTORS,Signaling By Robo Receptors,-1.115,0.237,0.767,72,FALSE,Nck2;Pak1;Cdc42;Rpl22;Psmd7;Rps27l;Psma1;Cap2;Cxcl12;Cap1;Abl1;Prkaca;Rps14;Gspt1;Psmd8;Clasp1;Pak4;Myo9b;Slit2;Pabpc1;Psmd14;Rps3a;Rpl9;Rps10;Psma4;Psmd3;Rps19
+PC2,Reactome,REACTOME_SIGNALING_BY_SCF_KIT,Signaling By Scf Kit,1.225,0.213,0.734,11,TRUE,Prkca;Sos1;Grb2;Gab2;Src;Stat3;Hras
+PC2,Reactome,REACTOME_SIGNALING_BY_TGFBR3,Signaling By Tgfbr3,0.983,0.458,0.923,11,TRUE,Myog;Sp1;Ago2;Psen1
+PC2,Reactome,REACTOME_SIGNALING_BY_TGFB_FAMILY_MEMBERS,Signaling By Tgfb Family Members,0.919,0.616,0.984,44,FALSE,Fstl1;Myog;Hdac1;Sp1;Nedd4l;Ago2;Cdk9;Psen1;Ltbp2;Itgb5
+PC2,Reactome,REACTOME_SIGNALING_BY_VEGF,Signaling By Vegf,-1.429,0.0481,0.558,41,TRUE,Hsp90aa1;Nck2;Hspb1;Pak1;Cdc42;Wasf2;Rock1;Ctnnd1;Akt1;Abi1;Prkaca;Itgav;Nrp2;Pxn
+PC2,Reactome,REACTOME_SIGNALING_BY_WNT,Signaling By WNT,1.004,0.453,0.922,67,FALSE,Ywhaz;Fzd2;Hdac1;Cul1;Ap2m1;Psmd1;Ago2;Csnk2b;Cltc;Prkca;Wls;Psmc6;Ap2s1;Gng12;Akt2;Gnao1;Gnb2;Smurf1;Adrm1;Ctnnb1;Psmd12;Psmc4;Tle3;H2ax;Psmc3;Xpo1;Ctbp1;Tnrc6b
+PC2,Reactome,REACTOME_SIGNALLING_TO_ERKS,Signalling To Erks,0.728,0.852,1,11,FALSE,Mapkapk2;Sos1;Grb2
+PC2,Reactome,REACTOME_SIGNAL_TRANSDUCTION_BY_L1,Signal Transduction By L1,-1.232,0.194,0.71,11,TRUE,Pak1;Csnk2a2;Mapk1;Itgav;Ncam1
+PC2,Reactome,REACTOME_SLC_MEDIATED_TRANSMEMBRANE_TRANSPORT,Slc Mediated Transmembrane Transport,0.802,0.788,0.999,28,TRUE,Slc25a5;Slc25a4;Slc39a6;Slc38a2;Slc12a4;Slc1a4;Slc7a5;Slc31a1;Slc7a1;Slc6a6;Slc25a1;Arl2bp
+PC2,Reactome,REACTOME_SMOOTH_MUSCLE_CONTRACTION,Smooth Muscle Contraction,0.753,0.845,1,19,TRUE,Sorbs3;Cav3;Tpm2;Itgb5;Sorbs1;Aldh2;Mylk
+PC2,Reactome,REACTOME_SNRNP_ASSEMBLY,Snrnp Assembly,1.525,0.0782,0.587,17,FALSE,Snrpd1;Rae1;Nup58;Prmt5;Snrpd2
+PC2,Reactome,REACTOME_SPHINGOLIPID_METABOLISM,Sphingolipid Metabolism,-0.442,0.996,1,11,TRUE,Gla;B4galt5;Aldh3a2;Cyb5b;Gm2a;Degs1;Hexa;Sphk2;Vapa;M6pr;Plpp1
+PC2,Reactome,REACTOME_SRP_DEPENDENT_COTRANSLATIONAL_PROTEIN_TARGETING_TO_MEMBRANE,Srp Dependent Cotranslational Protein Targeting To Membrane,0.829,0.753,0.99,27,FALSE,Rps12;Rpl18;Ssr3;Rpl14;Srp9;Srp19
+PC2,Reactome,REACTOME_STRIATED_MUSCLE_CONTRACTION,Striated Muscle Contraction,-1.04,0.396,0.896,14,FALSE,Tnnc1;Myh3;Myl4;Vim;Tpm3;Myh8;Dmd;Tnnc2
+PC2,Reactome,REACTOME_SUMOYLATION,Sumoylation,1.326,0.0975,0.606,36,FALSE,Hdac2;Ube2i;Rae1;Hdac1;Nup58;Rpa1;Npm1;Pcna;Nup93;Vhl;Cbx5;Mta1;Smc1a;Dnmt1;Hnrnpc;Ctbp1
+PC2,Reactome,REACTOME_SUMOYLATION_OF_CHROMATIN_ORGANIZATION_PROTEINS,Sumoylation Of Chromatin Org. Proteins,1.739,0.0171,0.492,13,TRUE,Hdac2;Ube2i;Rae1;Hdac1;Nup58
+PC2,Reactome,REACTOME_SUMOYLATION_OF_DNA_DAMAGE_RESPONSE_AND_REPAIR_PROTEINS,Sumoylation Of DNA Damage Response & Repair Proteins,1.282,0.153,0.663,16,FALSE,Ube2i;Rae1;Nup58;Rpa1
+PC2,Reactome,REACTOME_SUMOYLATION_OF_DNA_REPLICATION_PROTEINS,Sumoylation Of DNA Replication Proteins,1.478,0.0533,0.558,13,FALSE,Ube2i;Rae1;Nup58;Pcna;Nup93
+PC2,Reactome,REACTOME_SYNDECAN_INTERACTIONS,Syndecan Interactions,0.978,0.46,0.924,17,TRUE,Sdc2;Prkca;Itgb5;Col5a1;Col3a1;Col5a3;Col1a1;Col5a2;Vtn
+PC2,Reactome,REACTOME_S_PHASE,S Phase,-0.918,0.612,0.984,59,FALSE,Ccne1;Mcm3;Rfc2;Mcm2;Psmd7;Akt1;Rfc3;Lig1;Cdkn1a;Smc3;Psma1
+PC2,Reactome,REACTOME_TAK1_DEPENDENT_IKK_AND_NF_KAPPA_B_ACTIVATION,Tak1 Dependent Ikk & Nf Kappa B Activation,0.962,0.511,0.975,12,FALSE,Nfkb1;Casp8;Ube2n;Ikbkb;App;Nfkb2;Map3k7;Chuk
+PC2,Reactome,REACTOME_TCR_SIGNALING,Tcr Signaling,0.868,0.687,0.99,40,FALSE,Cul1;Csk;Psmd1;Nfkb1;Cdc34;Evl;Psmc6;Plcg1;Ube2n
+PC2,Reactome,REACTOME_TGF_BETA_RECEPTOR_SIGNALING_ACTIVATES_SMADS,TGF Beta Receptor Signaling Activates Smads,-0.552,0.982,1,18,TRUE,Usp15;Ltbp1;Itgav;Smad3;Cbl
+PC2,Reactome,REACTOME_THE_ROLE_OF_GTSE1_IN_G2_M_PROGRESSION_AFTER_G2_CHECKPOINT,The Role Of Gtse1 In G2 M Progression After G2 Checkpoint,-0.667,0.947,1,29,FALSE,Hsp90aa1;Psmd7;Cdkn1a;Psma1;Psmd8;Psmd14;Psma4;Psmd3;Cdk1
+PC2,Reactome,REACTOME_TNFR2_NON_CANONICAL_NF_KB_PATHWAY,Tnfr2 Non Canonical Nf Kb Pathway,0.529,0.988,1,26,FALSE,Cul1;Psmd1;Psmc6;Ltbr;Adrm1;Psmd12;Psmc4;Psmc3
+PC2,Reactome,REACTOME_TNF_SIGNALING,Tnf Signaling,0.746,0.809,0.999,16,TRUE,Mapkapk2;Casp8;Sppl2a;Rack1;Adam17;Optn;Ikbkb
+PC2,Reactome,REACTOME_TOLL_LIKE_RECEPTOR_CASCADES,Toll Like Receptor Cascades,1.126,0.266,0.794,36,FALSE,Irak4;Rps6ka3;Cul1;Mapkapk2;Nfkb1;Casp8;Map2k3;Tank;Ube2n;Ctsl;Lgmn;Ecsit
+PC2,Reactome,REACTOME_TP53_REGULATES_METABOLIC_GENES,Tp53 Regulates Metabolic Genes,-1.074,0.346,0.874,35,FALSE,Cox7a2;Cox5a;Pten;Prdx5;Cox4i1;Tsc1;Akt1;Gls
+PC2,Reactome,REACTOME_TP53_REGULATES_TRANSCRIPTION_OF_CELL_CYCLE_GENES,Tp53 Regulates Transcription Of Cell Cycle Genes,-1.056,0.386,0.896,11,TRUE,Ccne1;Cdkn1a;Bax;Cnot4;Cdkn1b;Cdk1;Cdk2;Cnot9;Cnot2
+PC2,Reactome,REACTOME_TP53_REGULATES_TRANSCRIPTION_OF_DNA_REPAIR_GENES,Tp53 Regulates Transcription Of DNA Repair Genes,-1.178,0.251,0.771,21,TRUE,Ccnt1;Ssrp1;Jun;Nelfe;Msh2;Eloa;Polr2e;Nelfb;Tcea1;Polr2g
+PC2,Reactome,REACTOME_TRANSCRIPTIONAL_ACTIVITY_OF_SMAD2_SMAD3_SMAD4_HETEROTRIMER,Transcriptional Activity Of Smad2 Smad3 Smad4 Heterotrimer,0.872,0.656,0.99,17,TRUE,Hdac1;Sp1;Nedd4l;Cdk9
+PC2,Reactome,REACTOME_TRANSCRIPTIONAL_AND_POST_TRANSLATIONAL_REGULATION_OF_MITF_M_EXPRESSION_AND_ACTIVITY,MITF-M Regulation,1.622,0.0258,0.53,18,TRUE,Ywhaz;Mark3;Ube2i;Dars1;Hdac1;Eef1e1
+PC2,Reactome,REACTOME_TRANSCRIPTIONAL_REGULATION_BY_MECP2,Transcriptional Regulation By Mecp2,1.217,0.214,0.734,12,TRUE,Hdac2;Ptpn1;Hdac1;Ago2
+PC2,Reactome,REACTOME_TRANSCRIPTIONAL_REGULATION_BY_RUNX1,Transcriptional Regulation By Runx1,-0.642,0.977,1,44,FALSE,Psmd7;Psma1;Csnk2a2;Abl1;Tjp1;Psmd8;Ccnd2;Runx1;Lgals3;Psmd14;Pml;Psma4;Psmd3
+PC2,Reactome,REACTOME_TRANSCRIPTIONAL_REGULATION_BY_RUNX2,Transcriptional Regulation By Runx2,-0.885,0.653,0.99,46,TRUE,Psmd7;Akt1;Cdkn1a;Psma1;Mapk1;Abl1;Psmd8;Runx1;Bax;Lgals3;Psmd14;Skp1;Psma4;Psmd3;Stat1;Cdk1
+PC2,Reactome,REACTOME_TRANSCRIPTIONAL_REGULATION_BY_RUNX3,Transcriptional Regulation By Runx3,-0.7,0.916,1,33,FALSE,Psmd7;Cdkn1a;Psma1;Psmd8;Runx1;Smad3;Psmd14;Itga4;Psma4;Psmd3;Psmd13;Psma7;Ccn2;Psmb2;Jag1
+PC2,Reactome,REACTOME_TRANSCRIPTIONAL_REGULATION_BY_TP53,Transcriptional Regulation By Tp53,-1.062,0.313,0.852,91,FALSE,Rad50;Cox7a2;Cox5a;Ccne1;Ccnt1;Pten;Prdx5;Rfc2;Cox4i1;Tsc1;Ssrp1;Akt1;Gls;Pin1;Rfc3;Cdkn1a;Csnk2a2;Jun;Nelfe;Msh2;Mre11;Ywhah;Gsr;Eloa;Polr2e;Bax;Nelfb;Ywhag;Cox7a2l;Bid;Apaf1;Mapk14;Cnot4;Pml
+PC2,Reactome,REACTOME_TRANSLATION,Translation,0.815,0.856,1,96,FALSE,Rps12;Rpl18;Ssr3;Eif5;Dars1;Eef1e1;Psmd1;Eef2;Rpl14;Srp9;Mrps31;Eif4a1;Tars1;Mrpl3;Psmc6;Srp19;Aars1;Eif4a2;Mrpl40
+PC2,Reactome,REACTOME_TRANSLOCATION_OF_SLC2A4_GLUT4_TO_THE_PLASMA_MEMBRANE,Translocation Of Slc2a4 Glut4 To The Plasma Membrane,0.985,0.479,0.948,27,TRUE,Ywhaq;Prkab1;Ywhaz
+PC2,Reactome,REACTOME_TRANSPORT_OF_MATURE_TRANSCRIPT_TO_CYTOPLASM,Transport Of Mature Transcript To Cytoplasm,1.624,0.027,0.53,24,FALSE,Srsf1;Rae1;Eif4a3;Nup58;Alyref;Ddx39a;Srsf3;Nup93;Srsf6
+PC2,Reactome,REACTOME_TRANSPORT_OF_SMALL_MOLECULES,Transport Of Small Molecules,1.143,0.189,0.71,118,FALSE,Mb;Cyb5r1;Raf1;Steap3;Atp6v0a1;Cul1;Slc25a5;Vldlr;Nedd4l;Ap2m1;Prkar2b;Psmd1;Slc25a4;Cltc;Atp6v0c;Atp6v0d1;Psmc6;Ldlr;Slc39a6;Slc38a2;Slc12a4;Bmp1;Ap2s1;Gng12;Slc1a4;Slc7a5;Clic2;Slc31a1;Tcirg1;Sar1b;Slc7a1;Gnb2;Atp6v1g1;Atp2a1;Slc6a6;Hmox2;Lpl;Adrm1;Hmox1;Slc25a1;Arl2bp;Gnas;Psmd12;Psmc4
+PC2,Reactome,REACTOME_TRANS_GOLGI_NETWORK_VESICLE_BUDDING,Trans Golgi Network Vesicle Budding,-1.352,0.104,0.606,22,TRUE,Snx2;Snap23;Yipf6;Tpd52;Picalm;Tfrc;Vamp8;Ap1g1;Ap3s1
+PC2,Reactome,REACTOME_TRNA_PROCESSING,tRNA Processing,1.162,0.247,0.771,15,FALSE,Hsd17b10;Rae1;Nup58;Ran
+PC2,Reactome,REACTOME_TURBULENT_OSCILLATORY_DISTURBED_FLOW_SHEAR_STRESS_ACTIVATES_SIGNALING_BY_PIEZO1_AND_INTEGRINS_IN_ENDOTHELIAL_CELLS,Turbulent Oscillatory Disturbed Flow Shear Stress Activates Signaling By Piezo1 & Integrins In Endothelial Cells,0.876,0.639,0.99,15,TRUE,Ptpn1;Nfkb1
+PC2,Reactome,REACTOME_UNFOLDED_PROTEIN_RESPONSE_UPR,UPR,-1.17,0.213,0.734,37,FALSE,Srprb;Ppp2r5b;Acadvl;Dnajc3;Hspa5;Hsp90b1;Exosc8;Pdia6
+PC2,Reactome,REACTOME_VEGFR2_MEDIATED_VASCULAR_PERMEABILITY,Vegfr2 Mediated Vascular Permeability,-1.315,0.133,0.624,13,FALSE,Hsp90aa1;Pak1;Ctnnd1;Akt1
+PC2,Reactome,REACTOME_VESICLE_MEDIATED_TRANSPORT,Vesicle Mediated Transport,0.964,0.564,0.975,162,FALSE,Copb2;Ywhaq;Prkab1;Ywhaz;Arcn1;Col4a2;Pafah1b1;Dynll2;Rab5a;Kif2a;Ap2m1;Calr;Cd59;Kifap3;Copa;Lrp1;Prdx1;Cltc;Kif1b;Grb2;Arpc2;Ldlr;Galnt1;Tsc2;Gosr2;Dennd2b;Rab27a;Ap2s1;Rab31;M6pr;Akt2;Trip10;Cyth2;Capzb;Dync1h1;Gbf1;Gabarapl2;Sar1b;Col4a1;Arfip2;Rabgap1;Kif3b;Tuba3a;Rabepk;Napa;Kif13b;Src;Sptan1;Actr3;Cog2;Dctn4;Gja1;Rab3gap1;Optn;Vamp3;Rhobtb3;Tubb2a;Bin1;Vps45;Igf2r;Kif4a;Klc1
+PC1,KEGG,KEGG_ADHERENS_JUNCTION,Adherens Junction,0.877,0.634,0.824,28,TRUE,Actb;Src;Actn1;Ctnnb1;Rac1
+PC1,KEGG,KEGG_ADIPOCYTOKINE_SIGNALING_PATHWAY,Adipocytokine Signaling,1.434,0.0928,0.297,19,TRUE,Acsl5;Acsl1;Stat3;Acsl3;Nfkb1;Ikbkb;Cpt1a;Prkag1;Mtor
+PC1,KEGG,KEGG_ALANINE_ASPARTATE_AND_GLUTAMATE_METABOLISM,Alanine Aspartate & Glutamate Metabolism,1.736,0.0121,0.0714,10,FALSE,Got2;Gfpt1;Cad;Glud1;Adsl
+PC1,KEGG,KEGG_AMINO_SUGAR_AND_NUCLEOTIDE_SUGAR_METABOLISM,Amino Sugar & Nucleotide Sugar Metabolism,2.174,1.58e-4,0.00264,24,TRUE,Gfpt1;Nagk;Ugdh;Cyb5r3;Gale;Gfus;Ugp2;Gpi;Hexa;Mpi;Cyb5r1;Hk2;Pmm1;Pgm1;Gne
+PC1,KEGG,KEGG_AMYOTROPHIC_LATERAL_SCLEROSIS_ALS,Amyotrophic Lateral Sclerosis Als,-1.092,0.332,0.593,16,TRUE,Ppp3r1;Cycs;Sod1;Bid;Bax;Gpx1
+PC1,KEGG,KEGG_ANTIGEN_PROCESSING_AND_PRESENTATION,Antigen Processing & Presentation,-1.562,0.0364,0.166,14,TRUE,Lgmn;Hspa4;Psme1;Hspa8;Ctsl;Hspa1l;Calr;Hspa5
+PC1,KEGG,KEGG_APOPTOSIS,Apoptosis,-1.026,0.4,0.666,27,TRUE,Ppp3r1;Aifm1;Cycs;Ikbkg;Bid;Bax;Prkar2b;Xiap;Rela;Dffa
+PC1,KEGG,KEGG_ARGININE_AND_PROLINE_METABOLISM,Arginine & Proline Metabolism,2.401,1.37e-6,1.37e-4,19,FALSE,Aldh7a1;Lap3;Pycr1;Got2;Aldh9a1;Aldh2;Oat;Glud1;Sms;Aldh18a1;P4ha1;Aldh3a2
+PC1,KEGG,KEGG_ARRHYTHMOGENIC_RIGHT_VENTRICULAR_CARDIOMYOPATHY_ARVC,ARVC,1.265,0.141,0.414,22,TRUE,Actb;Atp2a2;Actn1;Ctnnb1;Itga4;Itga7;Actn4;Sgcb
+PC1,KEGG,KEGG_AXON_GUIDANCE,Axon Guidance,0.734,0.862,0.937,31,TRUE,Rasa1;Gnai2;Gnai3;Rac1;Nck2;Dpysl2;Nck1;Ephb3;Cxcl12;Epha2;Ephb4;Rhod
+PC1,KEGG,KEGG_BETA_ALANINE_METABOLISM,Beta Alanine Metabolism,2.212,9.62e-6,3.21e-4,10,FALSE,Aldh7a1;Aldh9a1;Aldh2;Acadm;Sms;Echs1;Hibch;Aldh3a2
+PC1,KEGG,KEGG_BUTANOATE_METABOLISM,Butanoate Metabolism,1.776,0.00703,0.0541,14,TRUE,Acat2;Aldh7a1;Aldh9a1;Aldh2;Echs1;Pdhb;Aldh3a2
+PC1,KEGG,KEGG_B_CELL_RECEPTOR_SIGNALING_PATHWAY,B Cell Receptor Signaling,-0.979,0.486,0.716,18,TRUE,Ppp3r1;Cd81;Ikbkg;Gsk3b;Hras;Raf1;Rela
+PC1,KEGG,KEGG_CALCIUM_SIGNALING_PATHWAY,Calcium Signaling,1.101,0.299,0.566,24,TRUE,Atp2a2;Vdac2;Vdac3;Vdac1;Gnas;Slc25a4;Slc25a5;F2r;Pdgfrb;P2rx4;Plcg1
+PC1,KEGG,KEGG_CARDIAC_MUSCLE_CONTRACTION,Cardiac Muscle Contraction,1.053,0.368,0.623,28,TRUE,Uqcr10;Atp1b3;Atp2a2;Uqcrc2;Myh7;Uqcrq;Uqcrc1;Cyc1
+PC1,KEGG,KEGG_CELL_ADHESION_MOLECULES_CAMS,Cell Adhesion Molecules Cams,-1.811,0.00842,0.0601,18,TRUE,Cdh15;Sdc1;Icam1;Nectin2;Itgav;Sdc2;Ncam1;Pvr;Alcam;Cd276;Nectin3;Vcan;Itga6;Itgb1
+PC1,KEGG,KEGG_CELL_CYCLE,Cell Cycle,1.438,0.0571,0.228,41,FALSE,Cdk4;Rbx1;Ccnd1;Ywhah;Cdk2;Ywhae;Ywhab;Bub3;Cdk6;Ccnd3;Mcm7;Ywhag;Cdk1;Cul1;Mcm6;Mcm2;Mad2l1
+PC1,KEGG,KEGG_CHEMOKINE_SIGNALING_PATHWAY,Chemokine Signaling,-0.983,0.49,0.716,37,FALSE,Rhoa;Grk2;Ikbkg;Stat1;Gsk3b;Wasl;Pxn;Rock1;Csk
+PC1,KEGG,KEGG_CITRATE_CYCLE_TCA_CYCLE,Citrate Cycle TCA Cycle,1.974,8.77e-4,0.00974,22,FALSE,Idh3g;Dlst;Mdh2;Cs;Suclg2;Fh;Idh2;Pdhb;Idh3a;Sucla2;Sdha;Ogdh;Mdh1
+PC1,KEGG,KEGG_DILATED_CARDIOMYOPATHY,Dilated Cardiomyopathy,-0.823,0.757,0.885,27,FALSE,Tgfb2;Itga5;Tpm4;Tpm1;Itgav;Tpm3;Tnnc1;Tpm2;Dmd
+PC1,KEGG,KEGG_DNA_REPLICATION,DNA Replication,1.11,0.281,0.561,20,FALSE,Mcm7;Rfc5;Rfc3;Rpa1;Mcm6;Rfc4;Mcm2
+PC1,KEGG,KEGG_ECM_RECEPTOR_INTERACTION,Ecm Receptor Interaction,-1.939,0.001,0.01,27,FALSE,Col3a1;Col1a1;Col1a2;Col5a2;Col5a1;Itga5;Sdc1;Itgav;Sdc2;Cd47;Cd44
+PC1,KEGG,KEGG_ENDOCYTOSIS,Endocytosis,-1.124,0.253,0.529,43,TRUE,Cltb;Arfgap1;Arfgap3;Stam;Grk2;Stam2;Ldlr;Nedd4;Clta;Hspa8;Vps4b
+PC1,KEGG,KEGG_ERBB_SIGNALING_PATHWAY,Erbb Signaling,-1.083,0.323,0.591,27,TRUE,Eif4ebp1;Pak4;Cdkn1b;Gsk3b;Abl1;Ptk2;Cbl;Pak3;Hras;Raf1;Araf
+PC1,KEGG,KEGG_FATTY_ACID_METABOLISM,FA Metabolism,1.822,0.00287,0.0239,28,FALSE,Acat2;Aldh7a1;Aldh9a1;Eci2;Aldh2;Acsl5;Acsl1;Acadm;Acsl3;Echs1;Acaa2;Aldh3a2;Cpt2;Cpt1a;Acads;Hadhb
+PC1,KEGG,KEGG_FC_EPSILON_RI_SIGNALING_PATHWAY,Fc Epsilon Ri Signaling,-0.543,0.983,0.983,17,FALSE,Gab2;Prkce;Hras;Raf1;Prkcd
+PC1,KEGG,KEGG_FC_GAMMA_R_MEDIATED_PHAGOCYTOSIS,Fc Gamma R Mediated Phagocytosis,0.783,0.802,0.901,27,TRUE,Arf6;Plpp1;Rac1;Dnm1l;Arpc2
+PC1,KEGG,KEGG_FOCAL_ADHESION,Focal Adhesion,-1.471,0.0303,0.144,73,FALSE,Flna;Col3a1;Col1a1;Flnc;Mylk;Rhoa;Col1a2;Col5a2;Col5a1;Itga5;Zyx;Pak4;Ccnd2;Flnb;Itgav;Gsk3b;Vasp;Cav2;Pxn;Rock1
+PC1,KEGG,KEGG_FRUCTOSE_AND_MANNOSE_METABOLISM,Fructose & Mannose Metabolism,1.065,0.367,0.623,13,TRUE,Aldoa;Gfus;Mpi;Hk2;Pmm1;Tpi1;Gmppa
+PC1,KEGG,KEGG_GALACTOSE_METABOLISM,Galactose Metabolism,1.111,0.3,0.566,13,TRUE,Gale;Ugp2;Hk2;Pgm1
+PC1,KEGG,KEGG_GAP_JUNCTION,Gap Junction,1.49,0.0703,0.243,21,FALSE,Tuba4a;Src;Gnas;Gnai2;Gnai3;Tuba3a;Cdk1;Tubb5
+PC1,KEGG,KEGG_GLUTATHIONE_METABOLISM,Glutathione Metabolism,1.26,0.169,0.417,18,TRUE,Lap3;Gstm5;Sms;Gpx4;Idh2;Gsto1
+PC1,KEGG,KEGG_GLYCEROLIPID_METABOLISM,Glycerolipid Metabolism,1.732,0.00905,0.0603,14,TRUE,Aldh7a1;Akr1a1;Aldh9a1;Aldh2;Plpp1;Aldh3a2
+PC1,KEGG,KEGG_GLYCEROPHOSPHOLIPID_METABOLISM,Glycerophospholipid Metabolism,1.305,0.17,0.417,12,FALSE,Plpp1;Gpd1l;Lpcat3;Dgka;Lclat1;Gpd2;Agpat3;Agpat4;Pla2g4a
+PC1,KEGG,KEGG_GLYCOLYSIS_GLUCONEOGENESIS,Glycolysis Gluconeogenesis,2.188,3.99e-5,7.98e-4,32,TRUE,Ldhb;Eno1;Aldh7a1;Aldoa;Akr1a1;Aldh9a1;Aldh2;Ldha;Gpi;Pgk1;Pdhb;Gapdh;Aldh3a2;Hk2;Eno3;Pgm1;Aldh3a1;Pgam1
+PC1,KEGG,KEGG_GNRH_SIGNALING_PATHWAY,Gnrh Signaling,1.164,0.245,0.529,17,TRUE,Src;Gnas;Mapk14;Mmp14
+PC1,KEGG,KEGG_INSULIN_SIGNALING_PATHWAY,Insulin Signaling,1.035,0.413,0.666,36,TRUE,Ppp1ca;Fasn;Pygb;Acaca;Hk2;Ikbkb;Cblb;Pygm
+PC1,KEGG,KEGG_JAK_STAT_SIGNALING_PATHWAY,JAK Stat Signaling,-0.836,0.718,0.866,20,TRUE,Stam;Stam2;Stat1;Ccnd2;Spry4;Ctf1
+PC1,KEGG,KEGG_LEUKOCYTE_TRANSENDOTHELIAL_MIGRATION,Leukocyte Transendothelial Migration,0.816,0.765,0.885,34,TRUE,Actb;Actn1;Ctnnb1;Gnai2;Gnai3;Rac1;Mapk14;Itga4;Thy1;Cxcl12;Actn4
+PC1,KEGG,KEGG_LONG_TERM_DEPRESSION,Long Term Depression,1.508,0.0647,0.235,13,TRUE,Ppp2cb;Gnas;Gnai2;Gnai3
+PC1,KEGG,KEGG_LONG_TERM_POTENTIATION,Long Term Potentiation,-0.929,0.542,0.726,10,FALSE,Ppp3r1;Hras;Raf1;Araf
+PC1,KEGG,KEGG_LYSINE_DEGRADATION,Lysine Degradation,1.904,0.00204,0.0185,15,TRUE,Acat2;Aldh7a1;Aldh9a1;Dlst;Aldh2;Echs1;Plod3;Aldh3a2
+PC1,KEGG,KEGG_LYSOSOME,Lysosome,-0.985,0.463,0.716,30,TRUE,Cltb;Lgmn;Gm2a;Ap3s1;Clta;Ctsl;M6pr;Gaa
+PC1,KEGG,KEGG_MAPK_SIGNALING_PATHWAY,MAPK Signaling,-0.991,0.466,0.716,49,FALSE,Flna;Flnc;Tgfb2;Ppp3r1;Ikbkg;Stmn1;Hspa8;Flnb;Ppm1b;Hspa1l;Hspb1
+PC1,KEGG,KEGG_MELANOGENESIS,Melanogenesis,1.247,0.184,0.437,16,TRUE,Ctnnb1;Gnas;Gnai2;Gnai3
+PC1,KEGG,KEGG_MISMATCH_REPAIR,Mismatch Repair,0.967,0.494,0.716,12,FALSE,Rfc5;Rfc3;Rpa1;Rfc4;Rfc1;Rpa2
+PC1,KEGG,KEGG_MTOR_SIGNALING_PATHWAY,mTOR Signaling,0.629,0.916,0.963,11,FALSE,Cab39
+PC1,KEGG,KEGG_NATURAL_KILLER_CELL_MEDIATED_CYTOTOXICITY,Natural Killer Cell Mediated Cytotoxicity,-0.763,0.795,0.901,19,TRUE,Ppp3r1;Icam1;Bid;Hras;Raf1;Araf;Ptpn11;Shc1
+PC1,KEGG,KEGG_NEUROTROPHIN_SIGNALING_PATHWAY,Neurotrophin Signaling,0.991,0.476,0.716,38,FALSE,Ywhah;Ywhae;Ywhab;Nfkb1;Rac1;Ywhag;Mapk14;Ikbkb
+PC1,KEGG,KEGG_NOD_LIKE_RECEPTOR_SIGNALING_PATHWAY,Nod Like Receptor Signaling,0.93,0.544,0.726,14,FALSE,Nfkb1;Mapk14;Ikbkb;Hsp90ab1;Hsp90b1
+PC1,KEGG,KEGG_NOTCH_SIGNALING_PATHWAY,Notch Signaling,0.586,0.951,0.963,12,FALSE,Ctbp1;Adam17;Hdac1;Hdac2;Ncstn;Numb;Psen1;Rbpj;Dvl2;Jag1;Notch2;Ncor2
+PC1,KEGG,KEGG_NUCLEOTIDE_EXCISION_REPAIR,Nucleotide Excision Repair,1.528,0.0594,0.228,17,FALSE,Rbx1;Ddb1;Cul4a;Rfc5;Rfc3;Rpa1;Rfc4
+PC1,KEGG,KEGG_OOCYTE_MEIOSIS,Oocyte Meiosis,1.584,0.0275,0.138,23,TRUE,Ppp1ca;Rbx1;Ppp2cb;Ywhah;Cdk2;Ywhae;Ywhab;Ywhag;Cdk1;Cul1
+PC1,KEGG,KEGG_OXIDATIVE_PHOSPHORYLATION,OXPHOS,1.373,0.0561,0.228,69,FALSE,Uqcr10;Ndufa6;Atp5mg;Uqcrc2;Atp5pb;Ppa1;Ndufs2;Atp5po;Atp6v1c1;Ndufb5;Ndufs3;Uqcrq;Atp5mf;Uqcrc1;Atp5f1e;Atp5me;Atp6v0c;Atp5f1b;Cyc1;Ndufv3;Tcirg1;Atp5f1c;Ndufa5;Ndufs1;Sdha;Ndufa9;Uqcr11;Ndufa8;Cox7b
+PC1,KEGG,KEGG_P53_SIGNALING_PATHWAY,p53 Signaling,1.085,0.338,0.594,23,TRUE,Cdk4;Ccnd1;Cdk2;Cdk6;Casp3;Ccnd3;Cdk1
+PC1,KEGG,KEGG_PENTOSE_PHOSPHATE_PATHWAY,Pentose Phosphate Pathway,1.135,0.266,0.544,14,TRUE,Prps1;Aldoa;Taldo1;Gpi
+PC1,KEGG,KEGG_PEROXISOME,Peroxisome,1.373,0.0885,0.295,32,FALSE,Abcd3;Eci2;Acsl5;Acsl1;Pex13;Acsl3;Prdx1;Nudt19;Idh2
+PC1,KEGG,KEGG_PORPHYRIN_AND_CHLOROPHYLL_METABOLISM,Porphyrin & Chlorophyll Metabolism,1.308,0.158,0.417,14,FALSE,Blvra;Blvrb;Alad;Cpox;Urod
+PC1,KEGG,KEGG_PPAR_SIGNALING_PATHWAY,Ppar Signaling,-0.963,0.512,0.726,19,TRUE,Dbi;Scp2;Fabp3;Acaa1a;Fabp5;Acadl
+PC1,KEGG,KEGG_PROGESTERONE_MEDIATED_OOCYTE_MATURATION,Progesterone Mediated Oocyte Maturation,1.617,0.0172,0.0956,16,TRUE,Cdk2;Gnai2;Gnai3;Mapk14;Cdk1;Hsp90ab1;Mad2l1
+PC1,KEGG,KEGG_PROPANOATE_METABOLISM,Propanoate Metabolism,2.341,5.36e-6,2.68e-4,20,TRUE,Ldhb;Acat2;Aldh7a1;Aldh9a1;Aldh2;Ldha;Acadm;Suclg2;Acaca;Echs1;Aldh6a1;Hibch;Aldh3a2
+PC1,KEGG,KEGG_PROTEASOME,Proteasome,2.217,3.13e-5,7.82e-4,22,FALSE,Psmb5;Psma3;Psmc4;Psmd13;Psmb2;Psmb3;Psma6;Psma4;Psma2;Psma7;Psmd12;Psmd8;Psma1;Psmc6;Psme2;Psmd14
+PC1,KEGG,KEGG_PROTEIN_EXPORT,Protein Export,1.277,0.171,0.417,11,FALSE,Sec61a1;Oxa1l;Sec11a;Spcs3
+PC1,KEGG,KEGG_PURINE_METABOLISM,Purine Metabolism,1.415,0.0659,0.235,38,FALSE,Prps1;Aprt;Gmps;Pnp;Adsl;Hprt1;Nt5c3a;Gart;Impdh2;Polr2g;Nme1;Polr1c;Itpa
+PC1,KEGG,KEGG_PYRIMIDINE_METABOLISM,Pyrimidine Metabolism,1.269,0.161,0.417,29,FALSE,Uck2;Pnp;Cad;Umps;Nt5c3a;Uck1;Polr2g;Nme1;Polr1c;Itpa;Txnrd1
+PC1,KEGG,KEGG_PYRUVATE_METABOLISM,Pyruvate Metabolism,2.033,3.58e-4,0.00477,21,FALSE,Ldhb;Acat2;Aldh7a1;Aldh9a1;Mdh2;Aldh2;Ldha;Acaca;Pdhb;Me2;Aldh3a2
+PC1,KEGG,KEGG_REGULATION_OF_ACTIN_CYTOSKELETON,Reg. Actin Cytoskel.,-0.807,0.85,0.934,57,FALSE,Mylk;Rhoa;Ezr;Itga5;Pak4;Itgav;Wasl;Pxn;Msn;Rock1;Csk;Arhgef12;Ptk2;Pak3;Hras;Raf1;Cfl1;Araf;Wasf2;Myl11
+PC1,KEGG,KEGG_RIBOSOME,Ribosome,1.18,0.24,0.529,14,FALSE,Rplp0;Rps27l;Rps2;Rpl22;Rps5;Rps10;Rps3
+PC1,KEGG,KEGG_RIG_I_LIKE_RECEPTOR_SIGNALING_PATHWAY,Rig I Like Receptor Signaling,0.595,0.953,0.963,14,FALSE,Nfkb1;Mapk14;Ikbkb;Tkfc
+PC1,KEGG,KEGG_RNA_DEGRADATION,RNA Degradation,0.794,0.77,0.885,22,FALSE,Eno1;Skic3;Dcps
+PC1,KEGG,KEGG_SNARE_INTERACTIONS_IN_VESICULAR_TRANSPORT,Snare Interactions In Vesicular Transport,-1.391,0.109,0.329,16,FALSE,Vamp3;Stx12;Stx7;Stx4;Snap23;Vamp8;Vamp4;Vamp5;Bet1
+PC1,KEGG,KEGG_SPLICEOSOME,Spliceosome,0.719,0.884,0.951,39,FALSE,Snrpd3;Hspa2;U2af1;Ncbp2;Pcbp1
+PC1,KEGG,KEGG_STARCH_AND_SUCROSE_METABOLISM,Starch & Sucrose Metabolism,1.667,0.0118,0.0714,16,TRUE,Ugdh;Pygb;Ugp2;Gpi;Hk2;Pygm;Pgm1;Agl
+PC1,KEGG,KEGG_TGF_BETA_SIGNALING_PATHWAY,TGF Beta Signaling,-0.961,0.533,0.726,18,TRUE,Tgfb2;Rhoa;Skp1;Cdkn2b;Rock1;Fst
+PC1,KEGG,KEGG_TIGHT_JUNCTION,Tight Junction,1.147,0.249,0.529,44,TRUE,Rras;Cdk4;Actb;Src;Actn1;Ppp2cb;Myh7;Ctnnb1;Gnai2;Gnai3
+PC1,KEGG,KEGG_TOLL_LIKE_RECEPTOR_SIGNALING_PATHWAY,Toll Like Receptor Signaling,0.837,0.684,0.853,18,TRUE,Nfkb1;Rac1;Mapk14;Ikbkb
+PC1,KEGG,KEGG_TRYPTOPHAN_METABOLISM,Tryptophan Metabolism,1.608,0.0507,0.22,14,FALSE,Acat2;Aldh7a1;Aldh9a1;Aldh2;Echs1;Aldh3a2
+PC1,KEGG,KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY,T Cell Receptor Signaling,-0.868,0.691,0.853,30,FALSE,Ppp3r1;Rhoa;Ikbkg;Pak4;Gsk3b;Map3k7;Cbl;Pak3;Hras;Raf1;Rela
+PC1,KEGG,KEGG_UBIQUITIN_MEDIATED_PROTEOLYSIS,Ubiquitin Mediated Proteolysis,1.549,0.0242,0.127,27,TRUE,Smurf1;Rbx1;Ube2d3;Ddb1;Cul4a;Ube2n;Cblb;Cul1;Pml;Fbxo4;Mid1;Cul3
+PC1,KEGG,KEGG_VALINE_LEUCINE_AND_ISOLEUCINE_DEGRADATION,Valine Leucine & Isoleucine Degradation,2.038,3.81e-4,0.00477,29,FALSE,Acat2;Aldh7a1;Bcat1;Aldh9a1;Aldh2;Acadm;Echs1;Aldh6a1;Dbt;Hibch;Acaa2;Mccc2;Auh;Aldh3a2
+PC1,KEGG,KEGG_VASCULAR_SMOOTH_MUSCLE_CONTRACTION,Vascular Smooth Muscle Contraction,-1.376,0.095,0.297,19,FALSE,Mylk;Rhoa;Cald1;Rock1;Avpr1a;Arhgef12;Prkce;Raf1;Araf;Prkcd
+PC1,KEGG,KEGG_VEGF_SIGNALING_PATHWAY,Vegf Signaling,-0.646,0.931,0.963,19,FALSE,Ppp3r1;Pxn;Hspb1;Ptk2;Hras;Raf1
+PC1,KEGG,KEGG_WNT_SIGNALING_PATHWAY,WNT Signaling,1.149,0.254,0.529,31,FALSE,Rbx1;Ppp2cb;Ccnd1;Cacybp;Ctnnb1;Rac1;Ccnd3;Ctbp1;Cul1
+PC2,KEGG,KEGG_ADHERENS_JUNCTION,Adherens Junction,-1.144,0.265,0.896,28,TRUE,Cdc42;Wasf2;Ctnnd1;Actn4;Csnk2a2;Mapk1;Tjp1
+PC2,KEGG,KEGG_ADIPOCYTOKINE_SIGNALING_PATHWAY,Adipocytokine Signaling,1.148,0.244,0.896,19,TRUE,Prkab1;Nfkb1;Adipor1;Akt2;Acsl3;Cpt1a;Acsl1;Ikbkb;Prkag1;Stat3
+PC2,KEGG,KEGG_ALANINE_ASPARTATE_AND_GLUTAMATE_METABOLISM,Alanine Aspartate & Glutamate Metabolism,0.505,0.986,0.996,10,TRUE,Asns;Cad;Gfpt1
+PC2,KEGG,KEGG_AMINO_SUGAR_AND_NUCLEOTIDE_SUGAR_METABOLISM,Amino Sugar & Nucleotide Sugar Metabolism,1.3,0.141,0.896,24,TRUE,Cyb5r1;Galk1;Galk2;Cyb5r3;Nagk;Gmppa;Ugp2;Pgm3
+PC2,KEGG,KEGG_AMYOTROPHIC_LATERAL_SCLEROSIS_ALS,Amyotrophic Lateral Sclerosis Als,-1.074,0.345,0.896,16,TRUE,Ppp3r1;Casp3;Cat;Bax;Bid;Apaf1;Mapk14
+PC2,KEGG,KEGG_ANTIGEN_PROCESSING_AND_PRESENTATION,Antigen Processing & Presentation,-0.789,0.735,0.954,14,TRUE,Hsp90aa1;Hspa5;Hspa4
+PC2,KEGG,KEGG_APOPTOSIS,Apoptosis,-0.754,0.837,0.996,27,TRUE,Xiap;Akt1;Ppp3r1;Casp3;Prkaca;Bax;Casp7;Bid;Apaf1
+PC2,KEGG,KEGG_ARGININE_AND_PROLINE_METABOLISM,Arginine & Proline Metabolism,-0.645,0.928,0.996,19,TRUE,Gls;Oat;P4ha1;Glud1;Sms;Aldh3a2
+PC2,KEGG,KEGG_ARRHYTHMOGENIC_RIGHT_VENTRICULAR_CARDIOMYOPATHY_ARVC,ARVC,-0.861,0.669,0.954,22,FALSE,Sgcb;Actn4;Itga7;Itga3;Itgav;Sgcd;Itga4
+PC2,KEGG,KEGG_AXON_GUIDANCE,Axon Guidance,-1.769,0.0044,0.22,31,TRUE,Nck2;Dpysl2;Pak1;Cdc42;Rock1;Cxcl12;Mapk1;Abl1;Ppp3r1;Arhgef12;Plxnb2;Pak4;Slit2;Sema3c
+PC2,KEGG,KEGG_BETA_ALANINE_METABOLISM,Beta Alanine Metabolism,-1.015,0.451,0.896,10,TRUE,Hibch;Sms;Aldh3a2;Mlycd;Aldh7a1
+PC2,KEGG,KEGG_BUTANOATE_METABOLISM,Butanoate Metabolism,-1.325,0.147,0.896,14,FALSE,Acat1;Acads;Bdh2;Aldh3a2;Acat2;Pdhb;Hadh;Aldh7a1;Hmgcl
+PC2,KEGG,KEGG_B_CELL_RECEPTOR_SIGNALING_PATHWAY,B Cell Receptor Signaling,1.023,0.408,0.896,18,TRUE,Raf1;Nfkb1;Cd81;Sos1;Grb2;Akt2
+PC2,KEGG,KEGG_CALCIUM_SIGNALING_PATHWAY,Calcium Signaling,0.826,0.721,0.954,24,TRUE,Slc25a5;Slc25a4;Prkca;Plcg1;F2r;Gna14;Atp2a1;Gnas;Mylk;Atp2b4
+PC2,KEGG,KEGG_CARDIAC_MUSCLE_CONTRACTION,Cardiac Muscle Contraction,-0.971,0.514,0.896,28,FALSE,Atp1a1;Cox7a2;Cox5a;Cox4i1;Tnnc1;Atp1b1;Uqcrb;Cox7a2l;Uqcrc2;Uqcrh;Tpm3;Atp2a2
+PC2,KEGG,KEGG_CELL_ADHESION_MOLECULES_CAMS,Cell Adhesion Molecules Cams,-1.025,0.432,0.896,18,TRUE,Pvr;Jam3;Icoslg;Itgav;Icam1;Ncam1;Itga4
+PC2,KEGG,KEGG_CELL_CYCLE,Cell Cycle,1.062,0.37,0.896,41,TRUE,Ywhaq;Hdac2;Ywhaz;Hdac1;Cul1;Mcm5;Mcm4;Pcna;Cdkn2c
+PC2,KEGG,KEGG_CHEMOKINE_SIGNALING_PATHWAY,Chemokine Signaling,-0.689,0.936,0.996,37,FALSE,Pak1;Cdc42;Rock1;Akt1;Cxcl12;Mapk1;Prkaca;Pxn
+PC2,KEGG,KEGG_CITRATE_CYCLE_TCA_CYCLE,Citrate Cycle TCA Cycle,-1.047,0.413,0.896,22,FALSE,Dlat;Dld;Suclg1;Mdh1;Aco2
+PC2,KEGG,KEGG_DILATED_CARDIOMYOPATHY,Dilated Cardiomyopathy,-1.006,0.454,0.896,27,TRUE,Sgcb;Tnnc1;Itga7;Itga3;Prkaca;Itgav;Sgcd;Itga4;Tpm3;Atp2a2
+PC2,KEGG,KEGG_DNA_REPLICATION,DNA Replication,-0.885,0.648,0.954,20,FALSE,Mcm3;Rfc2;Mcm2;Rfc3;Lig1;Mcm6;Pold1
+PC2,KEGG,KEGG_ECM_RECEPTOR_INTERACTION,Ecm Receptor Interaction,0.649,0.949,0.996,27,FALSE,Col4a2;Col11a1;Sdc2;Itgb5;Col5a1;Col4a1;Lamc1;Cd44;Col3a1;Col5a3;Col1a1;Col5a2
+PC2,KEGG,KEGG_ENDOCYTOSIS,Endocytosis,-0.946,0.541,0.896,43,TRUE,Mvb12a;Rabep1;Cdc42;Usp8;Tsg101;Tfrc;Dnm1l;Rab4a;Pikfyve;Nedd4;Hspa1l;Arf6;Cbl
+PC2,KEGG,KEGG_ERBB_SIGNALING_PATHWAY,Erbb Signaling,-0.948,0.536,0.896,27,FALSE,Nck2;Pak1;Akt1;Cdkn1a;Jun;Mapk1;Abl1
+PC2,KEGG,KEGG_FATTY_ACID_METABOLISM,FA Metabolism,-0.974,0.508,0.896,28,FALSE,Acat1;Acadvl;Acads;Acsl4;Eci1;Cpt2;Hadhb;Aldh3a2;Acat2;Acox1;Hadh;Acaa1a;Aldh7a1;Acadsb
+PC2,KEGG,KEGG_FC_EPSILON_RI_SIGNALING_PATHWAY,Fc Epsilon Ri Signaling,1.391,0.105,0.896,17,FALSE,Raf1;Prkce;Prkca;Sos1;Grb2;Map2k3;Plcg1;Gab2;Akt2
+PC2,KEGG,KEGG_FC_GAMMA_R_MEDIATED_PHAGOCYTOSIS,Fc Gamma R Mediated Phagocytosis,0.834,0.702,0.954,27,FALSE,Arpc5l;Raf1;Prkce;Prkca;Arpc2;Plcg1;Plpp1;Gab2;Akt2
+PC2,KEGG,KEGG_FOCAL_ADHESION,Focal Adhesion,-0.962,0.517,0.896,73,FALSE,Pten;Pak1;Flnb;Cdc42;Rock1;Xiap;Akt1;Actn4;Jun;Mapk1;Itga7;Itga3;Parva;Itgav;Ccnd2;Pxn;Tnc;Pak4
+PC2,KEGG,KEGG_FRUCTOSE_AND_MANNOSE_METABOLISM,Fructose & Mannose Metabolism,-0.412,0.998,0.998,13,TRUE,Pfkl;Sord;Hk2;Hk1;Pfkp;Pmm1;Gfus;Pmm2;Mpi;Tpi1;Pfkm;Aldoa;Gmppa
+PC2,KEGG,KEGG_GALACTOSE_METABOLISM,Galactose Metabolism,0.676,0.87,0.996,13,TRUE,Galk1;Galk2
+PC2,KEGG,KEGG_GAP_JUNCTION,Gap Junction,1.176,0.233,0.896,21,TRUE,Raf1;Prkca;Sos1;Grb2;Gnai3;Tubb5;Tuba3a;Src;Gnas;Gja1;Tubb2a
+PC2,KEGG,KEGG_GLUTATHIONE_METABOLISM,Glutathione Metabolism,-1.093,0.346,0.896,18,TRUE,Gstt2;Gclc;Gss;Gclm;Gsr;Sms;Idh2
+PC2,KEGG,KEGG_GLYCEROLIPID_METABOLISM,Glycerolipid Metabolism,-0.663,0.89,0.996,14,TRUE,Gla;Agpat4;Tkfc;Aldh3a2;Gpat4;Akr1a1;Aldh7a1
+PC2,KEGG,KEGG_GLYCEROPHOSPHOLIPID_METABOLISM,Glycerophospholipid Metabolism,-0.63,0.916,0.996,12,FALSE,Pla2g4a;Agpat4
+PC2,KEGG,KEGG_GLYCOLYSIS_GLUCONEOGENESIS,Glycolysis Gluconeogenesis,-1.168,0.22,0.896,32,TRUE,Dlat;Dld;Gapdh;Pfkl;Aldh3a1;Pgk1;Galm;Pgm1;Pgm2;Hk2;Ldha;Eno1;Aldh3a2;Pdhb;Hk1;Akr1a1;Aldh7a1
+PC2,KEGG,KEGG_GNRH_SIGNALING_PATHWAY,Gnrh Signaling,-0.926,0.553,0.896,17,TRUE,Cdc42;Pla2g4a;Mmp14;Jun;Mapk1;Prkaca
+PC2,KEGG,KEGG_INSULIN_SIGNALING_PATHWAY,Insulin Signaling,1.393,0.0723,0.896,36,TRUE,Prkab1;Ptpn1;Pygm;Raf1;Prkar2b;Araf;Gys1;Sos1;Grb2;Tsc2;Akt2;Trip10
+PC2,KEGG,KEGG_JAK_STAT_SIGNALING_PATHWAY,JAK Stat Signaling,-0.573,0.972,0.996,20,TRUE,Akt1;Ccnd2;Jak1;Cbl;Stat2;Stat1
+PC2,KEGG,KEGG_LEUKOCYTE_TRANSENDOTHELIAL_MIGRATION,Leukocyte Transendothelial Migration,-1.058,0.337,0.896,34,TRUE,Cdc42;Rock1;Ctnnd1;Actn4;Ezr;Cxcl12;Jam3;Icam1;Thy1;Pxn;Itga4;Mapk14
+PC2,KEGG,KEGG_LONG_TERM_DEPRESSION,Long Term Depression,1.041,0.407,0.896,13,FALSE,Raf1;Araf;Prkca;Gnai3;Gnao1;Gnas
+PC2,KEGG,KEGG_LONG_TERM_POTENTIATION,Long Term Potentiation,1.261,0.187,0.896,10,FALSE,Raf1;Rps6ka3;Araf;Prkca
+PC2,KEGG,KEGG_LYSINE_DEGRADATION,Lysine Degradation,1.119,0.291,0.896,15,TRUE,Plod1;Gcdh;Plod3;Ogdh
+PC2,KEGG,KEGG_LYSOSOME,Lysosome,0.941,0.55,0.896,30,TRUE,Atp6v0a1;Cltc;Atp6v0c;Atp6v0d1;Fuca1;M6pr;Ctsl;Tcirg1;Lgmn
+PC2,KEGG,KEGG_MAPK_SIGNALING_PATHWAY,MAPK Signaling,-1.021,0.414,0.896,49,FALSE,Hspb1;Pak1;Flnb;Cdc42;Pla2g4a;Akt1;Jun;Mapk1;Ppp3r1;Casp3;Prkaca;Ppm1b
+PC2,KEGG,KEGG_MELANOGENESIS,Melanogenesis,0.985,0.427,0.896,16,TRUE,Raf1;Fzd2;Prkca;Gnai3;Gnao1;Ctnnb1;Gnas
+PC2,KEGG,KEGG_MISMATCH_REPAIR,Mismatch Repair,-1.051,0.398,0.896,12,FALSE,Rfc2;Rfc3;Lig1;Msh2;Pold1
+PC2,KEGG,KEGG_MTOR_SIGNALING_PATHWAY,mTOR Signaling,-0.845,0.678,0.954,11,FALSE,Tsc1;Akt1;Mapk1
+PC2,KEGG,KEGG_NATURAL_KILLER_CELL_MEDIATED_CYTOTOXICITY,Natural Killer Cell Mediated Cytotoxicity,0.963,0.498,0.896,19,TRUE,Raf1;Araf;Prkca;Sos1;Grb2;Plcg1
+PC2,KEGG,KEGG_NEUROTROPHIN_SIGNALING_PATHWAY,Neurotrophin Signaling,1.426,0.0569,0.896,38,FALSE,Ywhaq;Ywhaz;Raf1;Irak4;Rps6ka3;Mapkapk2;Csk;Nfkb1;Psen1;Sos1;Grb2;Plcg1
+PC2,KEGG,KEGG_NOD_LIKE_RECEPTOR_SIGNALING_PATHWAY,Nod Like Receptor Signaling,-1.093,0.333,0.896,14,FALSE,Hsp90aa1;Xiap;Hsp90b1;Mapk1
+PC2,KEGG,KEGG_NOTCH_SIGNALING_PATHWAY,Notch Signaling,0.943,0.526,0.896,12,FALSE,Hdac2;Hdac1;Psen1;Notch2
+PC2,KEGG,KEGG_NUCLEOTIDE_EXCISION_REPAIR,Nucleotide Excision Repair,-1.14,0.293,0.896,17,FALSE,Rfc2;Rfc3;Lig1;Rad23a;Rad23b;Pold1
+PC2,KEGG,KEGG_OOCYTE_MEIOSIS,Oocyte Meiosis,1.063,0.362,0.896,23,TRUE,Ywhaq;Ywhaz;Rps6ka3;Cul1
+PC2,KEGG,KEGG_OXIDATIVE_PHOSPHORYLATION,OXPHOS,0.817,0.807,0.984,69,FALSE,Cyc1;Ndufa3;Atp5f1e;Atp6v0a1;Sdhb;Ndufa5;Cox7b;Uqcrfs1;Cox7c;Atp6v0c;Atp6v0d1;Uqcrc1
+PC2,KEGG,KEGG_P53_SIGNALING_PATHWAY,p53 Signaling,-1.005,0.44,0.896,23,TRUE,Ccne1;Pten;Cd82;Cdkn1a;Casp3;Ccnd2;Bax;Bid;Apaf1
+PC2,KEGG,KEGG_PENTOSE_PHOSPHATE_PATHWAY,Pentose Phosphate Pathway,-0.765,0.78,0.973,14,TRUE,Prps2;Pfkl;Pgm1;Pgm2
+PC2,KEGG,KEGG_PEROXISOME,Peroxisome,-0.791,0.823,0.991,32,FALSE,Prdx5;Pex5;Paox;Crat;Cat;Acsl4;Idh2;Acox1;Mlycd;Acot8;Sod1;Acaa1a;Pex13;Hmgcl
+PC2,KEGG,KEGG_PORPHYRIN_AND_CHLOROPHYLL_METABOLISM,Porphyrin & Chlorophyll Metabolism,-0.757,0.788,0.973,14,TRUE,Ppox;Hccs;Cpox;Gusb;Blvra;Fech;Alad;Cox15;Cp;Hmbs;Hmox1;Blvrb;Hmox2;Urod
+PC2,KEGG,KEGG_PPAR_SIGNALING_PATHWAY,Ppar Signaling,0.641,0.936,0.996,19,TRUE,Me1;Acadl;Sorbs1;Acsl3;Lpl;Cpt1a;Scp2;Acsl1;Fabp5;Slc27a1;Acsl5;Fads2
+PC2,KEGG,KEGG_PROGESTERONE_MEDIATED_OOCYTE_MATURATION,Progesterone Mediated Oocyte Maturation,0.834,0.7,0.954,16,TRUE,Raf1;Rps6ka3;Araf;Gnai3;Akt2
+PC2,KEGG,KEGG_PROPANOATE_METABOLISM,Propanoate Metabolism,-1.249,0.178,0.896,20,FALSE,Acat1;Suclg1;Hibch;Mcee;Ldha;Aldh3a2;Acat2;Suclg2;Mlycd;Aldh6a1;Aldh7a1
+PC2,KEGG,KEGG_PROTEASOME,Proteasome,-0.585,0.967,0.996,22,FALSE,Psmd7;Psma1;Psmd8;Psmd14;Psma4;Psmd3;Psmd13;Psma7;Psmb2
+PC2,KEGG,KEGG_PROTEIN_EXPORT,Protein Export,-1.025,0.444,0.896,11,TRUE,Srprb;Hspa5;Srp14;Srpra;Spcs3
+PC2,KEGG,KEGG_PURINE_METABOLISM,Purine Metabolism,1.064,0.363,0.896,38,TRUE,Gmpr2;Nme1;Pola2;Prim2;Rrm1;Papss2;Enpp1;Polr2k
+PC2,KEGG,KEGG_PYRIMIDINE_METABOLISM,Pyrimidine Metabolism,0.825,0.734,0.954,29,FALSE,Nme1;Pola2;Prim2;Rrm1;Polr2k;Ctps1
+PC2,KEGG,KEGG_PYRUVATE_METABOLISM,Pyruvate Metabolism,-1.09,0.337,0.896,21,FALSE,Dlat;Acat1;Dld;Mdh1;Mdh2;Me2;Ldha;Aldh3a2;Acat2
+PC2,KEGG,KEGG_REGULATION_OF_ACTIN_CYTOSKELETON,Reg. Actin Cytoskel.,-1.021,0.404,0.896,57,FALSE,Pak1;Cdc42;Wasf2;Rock1;Arhgef6;Actn4;Ezr;Mapk1;Itga7;Itga3;Arhgef12;Itgav;Pxn;Pak4;Pikfyve;Arpc3;Itga4
+PC2,KEGG,KEGG_RIBOSOME,Ribosome,0.936,0.525,0.896,14,FALSE,Rps12;Rpl18;Rpl14
+PC2,KEGG,KEGG_RIG_I_LIKE_RECEPTOR_SIGNALING_PATHWAY,Rig I Like Receptor Signaling,-0.532,0.978,0.996,14,FALSE,Tbk1;Pin1;Tkfc
+PC2,KEGG,KEGG_RNA_DEGRADATION,RNA Degradation,-0.568,0.969,0.996,22,TRUE,Edc4;Exosc8;Dcp1a;Pnpt1;Cnot4;Eno1
+PC2,KEGG,KEGG_SNARE_INTERACTIONS_IN_VESICULAR_TRANSPORT,Snare Interactions In Vesicular Transport,-1.704,0.0132,0.439,16,TRUE,Ykt6;Snap23;Bet1;Stx12;Vamp8;Sec22b;Stx5
+PC2,KEGG,KEGG_SPLICEOSOME,Spliceosome,1.726,0.00337,0.22,39,FALSE,Snrpa;Snrpd1;Srsf1;Eif4a3;Hnrnpa3;Snrpd2;Hnrnpa1;Alyref;Dhx15;Snrpb2;Srsf3;Lsm2;Srsf6;Lsm7;Sf3b3;Tra2b;Hnrnpu
+PC2,KEGG,KEGG_STARCH_AND_SUCROSE_METABOLISM,Starch & Sucrose Metabolism,0.82,0.723,0.954,16,TRUE,Pygm;Gys1;Enpp1;Ugp2
+PC2,KEGG,KEGG_TGF_BETA_SIGNALING_PATHWAY,TGF Beta Signaling,0.67,0.91,0.996,18,TRUE,Sp1;Cul1
+PC2,KEGG,KEGG_TIGHT_JUNCTION,Tight Junction,-1.142,0.228,0.896,44,TRUE,Pten;Cdc42;Akt1;Actn4;Exoc4;Myh3;Csnk2a2;Jam3;Myh4;Pals1;Tjp1
+PC2,KEGG,KEGG_TOLL_LIKE_RECEPTOR_SIGNALING_PATHWAY,Toll Like Receptor Signaling,0.716,0.86,0.996,18,TRUE,Irak4;Nfkb1;Casp8;Map2k3;Akt2
+PC2,KEGG,KEGG_TRYPTOPHAN_METABOLISM,Tryptophan Metabolism,-0.778,0.755,0.957,14,FALSE,Acat1;Cat;Wars1;Aldh3a2;Acat2;Hadh;Aldh7a1
+PC2,KEGG,KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY,T Cell Receptor Signaling,-1.04,0.376,0.896,30,FALSE,Nck2;Pak1;Cdc42;Akt1;Jun;Mapk1;Ppp3r1;Pak4;Dlg1;Mapk14;Cbl
+PC2,KEGG,KEGG_UBIQUITIN_MEDIATED_PROTEOLYSIS,Ubiquitin Mediated Proteolysis,1.128,0.28,0.896,27,TRUE,Cul5;Ube2i;Cul1;Nedd4l;Cdc34;Ube2n;Ube2j1;Vhl
+PC2,KEGG,KEGG_VALINE_LEUCINE_AND_ISOLEUCINE_DEGRADATION,Valine Leucine & Isoleucine Degradation,-0.864,0.67,0.954,29,FALSE,Acat1;Dld;Acads;Mccc1;Hibch;Mcee;Hadhb;Aldh3a2;Acat2;Hadh;Acaa1a;Aldh6a1;Aldh7a1;Hmgcl;Acadsb
+PC2,KEGG,KEGG_VASCULAR_SMOOTH_MUSCLE_CONTRACTION,Vascular Smooth Muscle Contraction,0.83,0.707,0.954,19,FALSE,Raf1;Prkce;Araf;Prkca
+PC2,KEGG,KEGG_VEGF_SIGNALING_PATHWAY,Vegf Signaling,-1.134,0.28,0.896,19,FALSE,Hspb1;Cdc42;Pla2g4a;Akt1;Ptgs2;Mapk1;Ppp3r1;Pxn
+PC2,KEGG,KEGG_WNT_SIGNALING_PATHWAY,WNT Signaling,-1.131,0.258,0.896,31,FALSE,Ppp2r5b;Dvl2;Rock1;Daam1;Csnk2a2;Jun;Ppp3r1;Prkaca;Ccnd2;Smad3;Skp1
+PC1,MitoCarta,MITOCARTA_METABOLISM__AMINO_ACID_METABOLISM__BRANCHED_CHAIN_AMINO_ACID_METABOLISM,Branched Chain AA Metabolism,2.025,3.76e-4,0.0031,23,FALSE,Ivd;Etfa;Bcat2;Echs1;Aldh6a1;Etfb;Dbt;Hibch;Mccc2;Auh
+PC1,MitoCarta,MITOCARTA_METABOLISM__AMINO_ACID_METABOLISM__LYSINE_METABOLISM,Lysine Metabolism,1.662,0.0227,0.0636,12,TRUE,Etfa;Aldh7a1;Dlst;Echs1;Etfb;Acaa2
+PC1,MitoCarta,MITOCARTA_METABOLISM__CARBOHYDRATE_METABOLISM__PYRUVATE_METABOLISM,Pyruvate Metabolism,1.704,0.0231,0.0636,10,TRUE,Pdhx;Pdhb;Pdpr;Mpc2;Dld;Mpc1;Dlat
+PC1,MitoCarta,MITOCARTA_METABOLISM__CARBOHYDRATE_METABOLISM__TCA_ASSOCIATED,TCA Associated,1.279,0.18,0.313,12,TRUE,Slc25a11;Slc25a1;Me2;Abhd11;Mpc2;Mpc1;Pc;Fahd1
+PC1,MitoCarta,MITOCARTA_METABOLISM__CARBOHYDRATE_METABOLISM__TCA_CYCLE,TCA Cycle,1.916,0.00165,0.0109,16,FALSE,Idh3g;Dlst;Mdh2;Cs;Suclg2;Fh;Idh2;Idh3a;Sucla2;Sdha;Ogdh
+PC1,MitoCarta,MITOCARTA_METABOLISM__DETOXIFICATION__ROS_AND_GLUTATHIONE_METABOLISM,ROS and Glutathione Metabolism,1.543,0.0353,0.0896,23,TRUE,Prdx3;Prdx2;Aldh7a1;Nit1;Aldh9a1;Gpx4;Prdx4;Prxl2a;Aldh3a2
+PC1,MitoCarta,MITOCARTA_METABOLISM__DETOXIFICATION__XENOBIOTIC_METABOLISM,Xenobiotic Metabolism,1.542,0.0466,0.11,11,TRUE,Cyb5r3;Aldh2;Mtarc2;Akr7a2;Abhd10;Bphl;Gstz1;Cbr3;Maoa
+PC1,MitoCarta,MITOCARTA_METABOLISM__LIPID_METABOLISM,Lipid Metabolism,1.204,0.235,0.388,14,TRUE,Lyplal1;Cyb5r3;Fasn;Slc25a1;Lypla1;Ech1
+PC1,MitoCarta,MITOCARTA_METABOLISM__LIPID_METABOLISM__FATTY_ACID_OXIDATION,FA Oxidation,1.724,0.00898,0.0371,32,TRUE,Etfa;Eci2;Aldh2;Acsl1;Acadm;Echs1;Etfb;Acsf2;Acaa2;Slc25a20;Cpt2;Decr1;Cpt1a;Acads;Pcca;Pccb;Hadhb;Hsd17b10
+PC1,MitoCarta,MITOCARTA_METABOLISM__LIPID_METABOLISM__PHOSPHOLIPID_METABOLISM,Phospholipid Metabolism,-0.934,0.565,0.735,12,TRUE,Prdx6;Acp6;Pnpla8
+PC1,MitoCarta,MITOCARTA_METABOLISM__METALS_AND_COFACTORS__FE_S_CLUSTER_BIOSYNTHESIS,Fe s Cluster Biosynthesis,-1.081,0.338,0.506,15,FALSE,Hspa9;Isca2;Ndufab1;Glrx5;Iscu;Cisd1;Bola1;Grpel1
+PC1,MitoCarta,MITOCARTA_METABOLISM__METALS_AND_COFACTORS__FE_S_CONTAINING_PROTEINS,Fe s Containing Proteins,-1.116,0.303,0.476,22,TRUE,Isca2;Glrx5;Aco2;Iscu;Ndufv2;Ndufs8;Cisd1;Bola1;Ndufs7
+PC1,MitoCarta,MITOCARTA_METABOLISM__NUCLEOTIDE_METABOLISM__NUCLEOTIDE_SYNTHESIS_AND_PROCESSING,Nucleotide Synthesis and Processing,0.876,0.598,0.735,13,TRUE,Suclg2;Nudt2;Sucla2;Nt5dc2
+PC1,MitoCarta,MITOCARTA_MITOCHONDRIAL_CENTRAL_DOGMA__MTRNA_METABOLISM__MTRNA_STABILITY_AND_DECAY,Mtrna Stability and Decay,0.715,0.85,0.88,10,TRUE,Lrpprc;Lactb2;Tbrg4
+PC1,MitoCarta,MITOCARTA_MITOCHONDRIAL_CENTRAL_DOGMA__MTRNA_METABOLISM__MT_TRNA_MODIFICATIONS,Mt Trna Modifications,-0.675,0.88,0.88,10,FALSE,Trnt1;Trmt1
+PC1,MitoCarta,MITOCARTA_MITOCHONDRIAL_CENTRAL_DOGMA__TRANSLATION__MITOCHONDRIAL_RIBOSOME,Mito. Ribosome,1.531,0.0202,0.0636,55,TRUE,Mrps7;Mrps23;Mrpl38;Mrps21;Mrpl30;Mrps18a;Mrpl19;Mrps9;Mrpl49;Mrps18b;Ptcd3;Mrpl37;Mrpl10;Mrpl18;Dap3;Mrps25;Mrpl22;Mrpl1;Mrps30;Mrps28;Mrpl39
+PC1,MitoCarta,MITOCARTA_MITOCHONDRIAL_DYNAMICS_AND_SURVEILLANCE__APOPTOSIS,Apoptosis,-0.912,0.602,0.735,14,FALSE,Aifm1;Cycs;Bid;Bax
+PC1,MitoCarta,MITOCARTA_MITOCHONDRIAL_DYNAMICS_AND_SURVEILLANCE__AUTOPHAGY,Autophagy,-0.738,0.793,0.88,10,TRUE,Park7;Snap29;Rab24;Pgam5
+PC1,MitoCarta,MITOCARTA_MITOCHONDRIAL_DYNAMICS_AND_SURVEILLANCE__ORGANELLE_CONTACT_SITES,Organelle Contact Sites,1.025,0.431,0.618,10,TRUE,Ahcyl1;Vdac1
+PC1,MitoCarta,MITOCARTA_OXPHOS__COMPLEX_IV__CIV_SUBUNITS,Complex IV,-0.753,0.802,0.88,11,FALSE,Cox5b;Cox7a2l;Cox4i1;Cox5a
+PC1,MitoCarta,MITOCARTA_OXPHOS__COMPLEX_I__CI_ASSEMBLY_FACTORS,Ci Assembly Factors,0.687,0.868,0.88,11,FALSE,Acad9;Ndufaf3;Ecsit
+PC1,MitoCarta,MITOCARTA_OXPHOS__COMPLEX_I__CI_SUBUNITS,Complex I,1.316,0.12,0.22,30,FALSE,Mt-nd3;Mt-nd5;Ndufa6;Ndufs2;Ndufa13;Ndufb5;Ndufs3;Ndufv3;Ndufb10;Ndufa5;Ndufs1;Ndufa9;Ndufa8;Mt-nd4
+PC1,MitoCarta,MITOCARTA_OXPHOS__COMPLEX_V__CV_SUBUNITS,Complex V,1.534,0.0641,0.134,15,FALSE,Atp5mg;Atp5mk;Atp5pb;Atp5po;Atp5mf;Atp5f1e;Atp5me;Atp5f1b;Atp5f1c
+PC1,MitoCarta,MITOCARTA_OXPHOS__OXPHOS_ASSEMBLY_FACTORS,OXPHOS Assembly Factors,-0.839,0.709,0.836,24,FALSE,Aifm1;Cox17;Tmem126a;Cox7a2l;Coa7;Sdhaf2;Cmc1;Coa3;Ndufaf2
+PC1,MitoCarta,MITOCARTA_OXPHOS__OXPHOS_SUBUNITS,OXPHOS Subunits,1.557,0.0102,0.0374,69,FALSE,Uqcr10;Mt-nd3;Mt-nd5;Ndufa6;Atp5mg;Atp5mk;Uqcrc2;Atp5pb;Ndufs2;Atp5po;Ndufa13;Ndufb5;Ndufs3;Uqcrq;Atp5mf;Uqcrc1;Atp5f1e;Atp5me;Atp5f1b;Mt-co2;Cyc1;Ndufv3;Atp5f1c;Ndufb10;Ndufa5;Ndufs1;Sdha;Ndufa9;Ndufa8;Cox7b;Mt-nd4
+PC1,MitoCarta,MITOCARTA_PROTEIN_IMPORT_SORTING_AND_HOMEOSTASIS__PROTEIN_HOMEOSTASIS__CHAPERONES,Chaperones,-0.941,0.565,0.735,14,TRUE,Fkbp10;Timm13;Hspe1;Timm9;Maip1;Timm10b
+PC1,MitoCarta,MITOCARTA_PROTEIN_IMPORT_SORTING_AND_HOMEOSTASIS__PROTEIN_HOMEOSTASIS__PROTEASES,Proteases,1.913,0.00205,0.0113,18,TRUE,Lap3;Pmpcb;Pmpca;Atad1;Lonp1;Casp3;Yme1l1;Nln
+PC1,MitoCarta,MITOCARTA_SMALL_MOLECULE_TRANSPORT,Transport,1.537,0.0647,0.134,10,TRUE,Vdac2;Vdac3;Vdac1;Romo1;Mpc2
+PC1,MitoCarta,MITOCARTA_SMALL_MOLECULE_TRANSPORT__SLC25A_FAMILY,Slc25a Family,2.127,1.61e-4,0.00177,14,TRUE,Slc25a12;Slc25a3;Slc25a11;Slc25a1;Slc25a20;Slc25a4;Slc25a10;Mtch2;Slc25a5;Slc25a22;Slc25a24;Mtch1
+PC2,MitoCarta,MITOCARTA_METABOLISM__AMINO_ACID_METABOLISM__BRANCHED_CHAIN_AMINO_ACID_METABOLISM,Branched Chain AA Metabolism,-1.341,0.103,0.519,23,TRUE,Acat1;Dld;Bckdk;Etfb;Mccc1;Acad8;Hibch
+PC2,MitoCarta,MITOCARTA_METABOLISM__AMINO_ACID_METABOLISM__LYSINE_METABOLISM,Lysine Metabolism,-1.222,0.213,0.638,12,TRUE,Acat1;Dld;Etfb
+PC2,MitoCarta,MITOCARTA_METABOLISM__CARBOHYDRATE_METABOLISM__PYRUVATE_METABOLISM,Pyruvate Metabolism,-1.117,0.334,0.787,10,TRUE,Dlat;Dld;Pdk3;Pdpr
+PC2,MitoCarta,MITOCARTA_METABOLISM__CARBOHYDRATE_METABOLISM__TCA_ASSOCIATED,TCA Associated,-0.857,0.653,0.897,12,TRUE,Me2;Acly;Slc25a11;Abhd11;Pck2;Fahd1
+PC2,MitoCarta,MITOCARTA_METABOLISM__CARBOHYDRATE_METABOLISM__TCA_CYCLE,TCA Cycle,-0.839,0.697,0.92,16,FALSE,Dld;Suclg1;Aco2;Mdh2
+PC2,MitoCarta,MITOCARTA_METABOLISM__DETOXIFICATION__ROS_AND_GLUTATHIONE_METABOLISM,ROS and Glutathione Metabolism,-1.018,0.439,0.853,23,TRUE,Prdx5;Cat;Sod2;Gsr;Prdx6;Txn2;Aldh3a2;Prxl2a;Gpx4;Sod1;Aldh7a1
+PC2,MitoCarta,MITOCARTA_METABOLISM__DETOXIFICATION__XENOBIOTIC_METABOLISM,Xenobiotic Metabolism,1.483,0.0554,0.519,11,TRUE,Cbr3;Mpst;Bphl;Cyb5r3
+PC2,MitoCarta,MITOCARTA_METABOLISM__LIPID_METABOLISM,Lipid Metabolism,-0.668,0.893,0.969,14,TRUE,Echdc1
+PC2,MitoCarta,MITOCARTA_METABOLISM__LIPID_METABOLISM__FATTY_ACID_OXIDATION,FA Oxidation,-0.887,0.643,0.897,32,FALSE,Acat1;Acadvl;Etfb;Acads;Crat;Mcee;Eci1;Cpt2;Hadhb;Mmut
+PC2,MitoCarta,MITOCARTA_METABOLISM__LIPID_METABOLISM__PHOSPHOLIPID_METABOLISM,Phospholipid Metabolism,-0.742,0.825,0.963,12,TRUE,Lactb;Agpat4;Prdx6
+PC2,MitoCarta,MITOCARTA_METABOLISM__METALS_AND_COFACTORS__FE_S_CLUSTER_BIOSYNTHESIS,Fe s Cluster Biosynthesis,-1.194,0.212,0.638,15,TRUE,Cisd1;Nfs1;Nfu1;Isca2;Cisd3;Bola1;Iscu;Ndufab1;Fdx1
+PC2,MitoCarta,MITOCARTA_METABOLISM__METALS_AND_COFACTORS__FE_S_CONTAINING_PROTEINS,Fe s Containing Proteins,-1.077,0.36,0.793,22,FALSE,Cisd1;Nfs1;Ndufv1;Aco2;Ndufs1;Nfu1
+PC2,MitoCarta,MITOCARTA_METABOLISM__NUCLEOTIDE_METABOLISM__NUCLEOTIDE_SYNTHESIS_AND_PROCESSING,Nucleotide Synthesis and Processing,-1.345,0.109,0.519,13,TRUE,Guk1;Nudt2;Suclg1;Ak3;Dhodh
+PC2,MitoCarta,MITOCARTA_MITOCHONDRIAL_CENTRAL_DOGMA__MTRNA_METABOLISM__MTRNA_STABILITY_AND_DECAY,Mtrna Stability and Decay,0.582,0.961,0.969,10,TRUE,Lactb2;Slirp;Tbrg4
+PC2,MitoCarta,MITOCARTA_MITOCHONDRIAL_CENTRAL_DOGMA__MTRNA_METABOLISM__MT_TRNA_MODIFICATIONS,Mt Trna Modifications,-1.26,0.2,0.638,10,TRUE,Trmt5;Thg1l;Qtrt1;Dus2;Nsun2;Yrdc;Trmt10c
+PC2,MitoCarta,MITOCARTA_MITOCHONDRIAL_CENTRAL_DOGMA__TRANSLATION__MITOCHONDRIAL_RIBOSOME,Mito. Ribosome,-1.294,0.11,0.519,55,TRUE,Mrpl46;Mrpl16;Mrps26;Mrps6;Mrps16;Mrpl49;Ptcd3;Mrps23;Mrps14;Mrpl1;Mrps25;Mrpl18;Mrpl23;Mrpl12;Mrps18b;Mrpl58;Mrps22;Mrpl21;Mrps9;Mrps2;Mrpl30;Mrpl10;Dap3;Mrpl38
+PC2,MitoCarta,MITOCARTA_MITOCHONDRIAL_DYNAMICS_AND_SURVEILLANCE__APOPTOSIS,Apoptosis,-0.608,0.949,0.969,14,FALSE,Casp3;Bax;Bid;Htra2;Endog;Ghitm
+PC2,MitoCarta,MITOCARTA_MITOCHONDRIAL_DYNAMICS_AND_SURVEILLANCE__AUTOPHAGY,Autophagy,0.857,0.63,0.897,10,TRUE,Nipsnap1;Rab24;Marchf5;Snap29
+PC2,MitoCarta,MITOCARTA_MITOCHONDRIAL_DYNAMICS_AND_SURVEILLANCE__ORGANELLE_CONTACT_SITES,Organelle Contact Sites,-1.432,0.081,0.519,10,TRUE,Fkbp8;Atad3a;Synj2bp;Stx17;Mfn1;Vdac1
+PC2,MitoCarta,MITOCARTA_OXPHOS__COMPLEX_IV__CIV_SUBUNITS,Complex IV,-1.155,0.288,0.787,11,TRUE,Cox7a2;Cox5a;Cox4i1
+PC2,MitoCarta,MITOCARTA_OXPHOS__COMPLEX_I__CI_ASSEMBLY_FACTORS,Ci Assembly Factors,-0.896,0.582,0.897,11,FALSE,Ndufaf1;Foxred1;Dmac1;Ndufaf2;Ndufaf7;Ndufaf3
+PC2,MitoCarta,MITOCARTA_OXPHOS__COMPLEX_I__CI_SUBUNITS,Complex I,-0.915,0.596,0.897,30,TRUE,Ndufs4;Mt-nd4;Ndufv1;Ndufs1;Ndufa12;Ndufa9
+PC2,MitoCarta,MITOCARTA_OXPHOS__COMPLEX_V__CV_SUBUNITS,Complex V,-0.964,0.521,0.897,15,TRUE,Atp5f1a;Atp5f1b
+PC2,MitoCarta,MITOCARTA_OXPHOS__OXPHOS_ASSEMBLY_FACTORS,OXPHOS Assembly Factors,-0.742,0.838,0.963,24,FALSE,Uqcc2;Ndufaf1;Foxred1;Dmac1;Cox7a2l;Ndufaf2;Taco1;Ndufaf7
+PC2,MitoCarta,MITOCARTA_OXPHOS__OXPHOS_SUBUNITS,OXPHOS Subunits,-0.863,0.734,0.932,69,FALSE,Atp5f1a;Cox7a2;Cox5a;Ndufs4;Atp5f1b;Mt-nd4;Cox4i1;Ndufv1;Ndufs1;Ndufa12;Ndufa9
+PC2,MitoCarta,MITOCARTA_PROTEIN_IMPORT_SORTING_AND_HOMEOSTASIS__PROTEIN_HOMEOSTASIS__CHAPERONES,Chaperones,-1.483,0.0533,0.519,14,TRUE,Trap1;Timm13;Phb2;Hspe1;Timm8b
+PC2,MitoCarta,MITOCARTA_PROTEIN_IMPORT_SORTING_AND_HOMEOSTASIS__PROTEIN_HOMEOSTASIS__PROTEASES,Proteases,-1.096,0.314,0.787,18,TRUE,Lactb;Pitrm1;Lonp1;Nln;Casp3;Clpp;Mipep;Htra2;Pmpcb
+PC2,MitoCarta,MITOCARTA_SMALL_MOLECULE_TRANSPORT,Transport,0.701,0.846,0.963,10,TRUE,Mpc2;Romo1
+PC2,MitoCarta,MITOCARTA_SMALL_MOLECULE_TRANSPORT__SLC25A_FAMILY,Slc25a Family,1.293,0.171,0.638,14,TRUE,Mtch2;Slc25a5;Slc25a4;Slc25a20;Slc25a3;Slc25a1;Slc25a13
+PC1,GO Slim,GOSLIM_AMINO_ACID_METABOLIC_PROCESS,AA Metabolism,2.024,3.03e-6,7.87e-5,121,TRUE,Ivd;Etfa;Blmh;Pycr2;Aldh7a1;Slc25a12;Bcat2;Pycr1;Bcat1;Enoph1;Got2;Psph;Rars1;Dlst;Gpt2;Oat;Cad;Glud1;Crtap;Fh;Echs1;Aldh6a1;Aldh18a1;Etfb;Prdx4;Gars1;Dbt;Hibch;Iars1;P4ha1;Shmt2;Mccc2;Auh;Farsa;Scly;Kyat1;Spr;Mri1;Sars1;Aarsd1;Farsb;Yars1;Ero1a;Hars1;Aars1;Pcca;Pccb;Bphl;Hsd17b10;Gstz1;Psat1;Sephs1;Txnrd1;Got1;Hmgcl;Mtap;Gclm;Pcmt1;Fah;Ahcy;Mars1
+PC1,GO Slim,GOSLIM_CHROMOSOME_SEGREGATION,Chromosome Segregation,1.005,0.422,0.548,147,FALSE,Dync1h1;Mapk15;Zw10;Ciao1;Cltc;Arl8b;Nudc;Kpnb1;Ppp2r1a;Washc5;Ddb1;Ppp2r2a;Actr3;Bag6;Arl8a;Bub3;Ppp1r7;Klhl22;Sirt2;Lcmt1;Tlk1;Ncapg;Tubg1;Cdk1;Chmp1b;Chmp3;Anapc5;Anapc4;Chmp6;Cul3;Slc25a5;Tubb5;Ran;Ntmt1;Mad2l1;Mapre1
+PC1,GO Slim,GOSLIM_CILIUM_ORGANIZATION,Cilium Org.,-1.13,0.221,0.419,87,TRUE,Flna;Map4;Nherf1;Hdac6;Yap1;Asap1;Grk2;Atg3;Dtnbp1;Rabep2;Yif1b;Nectin2;Atp6v1d;Gsk3b;Wdr44;Luzp1;Nudcd3;Kif3a;Snap29;Kctd17;Htt;Ccdc32;Rilpl1;B3glct;Arhgap35;Lama5;Gorab;Dctn1;Fnbp1l;Tulp3;Micall1;Dnal1;Ube2b;Ehd3;Ndufaf2;Kif3b;Ssna1;Pcm1
+PC1,GO Slim,GOSLIM_CYTOKINESIS,Cytokinesis,1.046,0.369,0.533,86,TRUE,Unc119;Arf6;Rhoc;Dctn3l1;Anxa11;Washc5;Snx9;Actr3;Rab35;Atxn10;Spast;Ist1;Rasa1;Septin9;Rhob;Snx33;Chmp1b;Chmp3;Rtkn;Cul7;Septin10;Chmp6;Cul3;Stambp;Fsd1;Git1
+PC1,GO Slim,GOSLIM_CYTOPLASMIC_TRANSLATION,Cytoplasmic Translation,-1.113,0.212,0.419,143,TRUE,Eif3j;Eif4ebp1;Rpl13;Rpl6;Ybx3;Rpl26;Rpl27;Rpl31;Denr;Rplp2;Cnbp;Rpl24;LOC134480579;Rpl27a;Rpl5;Rps6;Rpl19;Rpl34;Rpl36a;Trnt1;Hnrnpd;Dhx36;Rplp1;Eif3g;Rpl35a;Eif3b;Rpl17;Ckap5;Rps24;Eif3h;Rps28
+PC1,GO Slim,GOSLIM_DETOXIFICATION,Detoxification,1.744,0.00168,0.0146,61,TRUE,Prdx3;Prdx2;Akr1a1;Aldh2;Gstp1;Gstm5;Dhfr;Mtarc2;Pgp;Nqo1;Prdx1;Gpx4;Clic1;Akr7a2;Prdx4;Prxl2a;Gsto1;Gstm1;Fbln5;Nxn;Adk;Gstm2;Sucla2;Nnt;Rdh11
+PC1,GO Slim,GOSLIM_DIGESTION,Digestion,-1.039,0.401,0.548,22,TRUE,Pawr;Ezr;Ldlr;Wnk1;Rplp1;Hspb1;Vamp8
+PC1,GO Slim,GOSLIM_DNA_RECOMBINATION,DNA Recombination,-0.918,0.651,0.705,91,TRUE,Hdgfl2;Hmgb2;Nucks1;Hmgb1;C1qbp;Xrcc1;Sfr1;Sfpq;Nabp2;Ppp4r2;Htatsf1;Nbn;Tp53bp1;Trip13;H2ax;Abl1;H4f3;Swap70;Yy1;Lig3;Msh2;Fus;Parp3;Swi5;Ube2b;Tfrc;Tcf3;Apex1;Rpa3l1
+PC1,GO Slim,GOSLIM_DNA_REPLICATION,DNA Replication,1.036,0.359,0.533,99,TRUE,Mapk15;Dhfr;Ube2v1l1;Cdk2;Ruvbl1;Cacybp;Uchl5;Ube2n;Wdhd1;Rac1;Ssrp1;Asf1a;Mcm7;Grwd1;Rfc5;Vcp;Cdk1;Rfc3;Rpa1;Mcm6;Actl6a;Ruvbl2;Rfc4;Mcm2;Ube2v2
+PC1,GO Slim,GOSLIM_ESTABLISHMENT_OR_MAINTENANCE_OF_CELL_POLARITY,Maintenance of Polarity,-0.943,0.589,0.666,97,TRUE,Map4;Map1b;Rhoa;Nherf1;Pdlim1;Inppl1;Macf1;Ezr;Ehbp1l1;Nsfl1c;Arhgef2;Phldb2;Gsk3b;Ckap5;Msn;Ptk7;Kif3a;Gpsm1;Erbin;Htt;Pard3;Prkci;Crkl;Abl1;Arhgap35;Dctn1;Ank3;Myo18a;Cfl1;Dst;Cyrib;Ndc80;Stk11;Ndel1;Bccip;Tsc2;Arfgef1
+PC1,GO Slim,GOSLIM_EXTRACELLULAR_MATRIX_ORGANIZATION,ECM Org.,-1.154,0.167,0.419,103,FALSE,Col3a1;Col1a1;Fkbp10;Tgfb2;Mia3;Col1a2;Col5a2;Colgalt1;Lemd3;Col5a1;Dag1;Dnajb6;Pbxip1;Lamb2;Fbln1;Phldb2;Cav2;Col12a1;Lamb1;Nid1;Lrp1;Ccdc80;Col11a1;Sh3pxd2b;Adamts1;Ddr2;Large1;Ccn1;Abl1;Phldb1;Ptk2
+PC1,GO Slim,GOSLIM_GLYCOPROTEIN_METABOLIC_PROCESS,Glycoprotein Metabolism,1.127,0.226,0.419,115,TRUE,Slc35b2;Rpn2;Ugdh;Pofut2;Pofut1;Tm9sf2;Hexa;Ctnnb1;Gorasp1;Erp44;Mogs;Plod3;Man1b1;Dpm3;Glb1;Alg2;Rpn1;Pmm1;Ganab;Dad1;B4galt5;Man2a1;Srd5a3;B4galt7;B4gat1;Sulf1;Hexb;Poglut3;Stt3b;Edem3;Man2b1;Bpnt2;Ext2;Uggt1;Naglu;Gmppa
+PC1,GO Slim,GOSLIM_KETONE_METABOLIC_PROCESS,Ketone Metabolism,1.261,0.113,0.366,70,TRUE,Dhrs9;Aldoa;Akr1a1;Akr1b1;Anxa1;Nqo1;Eif6;Akr7a2;Pgk1;Cbr1;Erlin1;Tpk1;Sirt2;Pdpr;Nme2;Kyat1;Erlin2;Vkorc1;Cpt1a;Nme1;Tpi1;Prmt3;Ndufa9;Hsd17b10;Cbr3;Coq8b;Pptc7;Mtor;Gk
+PC1,GO Slim,GOSLIM_MITOCHONDRION_ORGANIZATION,Mito. Org.,1.045,0.331,0.533,200,TRUE,Prdx3;Vps35;Phb1;Samm50;Acad9;Mcu;Ndufa6;Gba1;Vdac2;Fis1;Aldh2;Ppp2cb;Bak1;Tomm70;Oxa1l;Ndufs2;Ndufa13;Lonp1;Rhot1;Ndufs3;Yme1l1;Acaa2;Pid1;Dnm1l;Armcx3;Thg1l;Rala;Tomm40;Hk2;Phb2;Slc25a4;Mcl1;Fam162a;Lipa;Romo1;Vps13a;Timm50;Afg3l1;Man2a1;Timm10;Mtch2;Dap3;Micos13;Ndufaf3;Psmd10;Slc25a5;Ndufs1;Ecsit;Agk;Plscr3;Trabd;Stoml2;Hsd17b10;Marchf5;Ptpmt1;Cdk5;Mtch1;Hmgcl;Sh3glb1;Htra2;Gclm;Vps13c;Ghitm;Mtx1;Tmem11;Stat2
+PC1,GO Slim,GOSLIM_MITOTIC_NUCLEAR_DIVISION,Mitotic Nuclear Division,-1.179,0.14,0.404,105,TRUE,Flna;Chmp4b;Rhoa;Tom1l2;Pebp1;Dctn2;Rpl24;Nsfl1c;Abraxas2;Cdkn1b;Vps4b;Brox;Cav2;Chmp5;Smc1a;Nup62;Chmp1a;Vps4a;Golga2;Smc3;Banf1;Reep3;Trip13;Hspa1a;Katnb1;Knstrn;Zwint;Bod1;Pam;Hnrnpu;Kif15;Rgcc;Chmp2b;Lsm14a;Nfib;Chmp7;Ctdp1;Ndc80;Ndel1;Kif3b;Bccip
+PC1,GO Slim,GOSLIM_NUCLEOCYTOPLASMIC_TRANSPORT,Nucleocytoplasmic Transport,1.136,0.191,0.419,170,TRUE,Xpo1;Ipo5;Sec13;Smurf1;Nup155;Rab18;Kpnb1;Ahcyl1;Stat3;Ipo8;Ncbp2;Rab23;Ywhae;Ywhab;Ppp3ca;Pabpn1;Eif6;Kpna6;Tnpo3;Nup205;Rangap1;Hikeshi;Xpo7;Kpna1;Camk1;Magoh;Mapk14;Xpo5;Phb2;Nup133;Ipo7;Cdk1;Tnpo1;Trim28;Ddx39b;Kpna3;Cse1l;Thoc6;Pml;Dyrk1a;Hsp90ab1;Ncbp1;Tnpo2;Ran;Kpna4;Nsun2;Fmr1;Rbm10;Xpot;Stk4;Dhx9;Cdk5;Nup93;Prkag1
+PC1,GO Slim,GOSLIM_PEROXISOME_ORGANIZATION,Peroxisome Org.,1.077,0.351,0.533,18,TRUE,Abcd3;Fis1;Pex13;Usp9x;Dnm1l
+PC1,GO Slim,GOSLIM_PROTEIN_FOLDING,Protein Folding,-1.847,3.07e-5,4e-4,135,TRUE,Pex19;Khsrp;Pdia4;Txndc5;Tbca;Hypk;P4hb;Bag3;Erp29;Fkbp10;Ptges3;Pdcd5;Pdia3;Dnaja2;Sgta;Aifm1;Nudcd2;St13;Hspa4;Pfdn5;Pfdn2;Pfdn1;Pfdn6;Zpr1;Anp32e;Dnajb6;Hspb6;Selenof;Hspa9;Mesd;Dnajb2;Bag1;Cdc37;Chordc1;Dnajb11;Fkbp4;Hspa8;Dnajc2;Hspe1
+PC1,GO Slim,GOSLIM_PROTEIN_LOCALIZATION_TO_PLASMA_MEMBRANE,Protein Localiz. to Plasma Mem.,-1.328,0.0375,0.163,158,TRUE,Flna;Rdx;Epb41l3;Vamp3;Pgrmc1;Slmap;Cnpy4;Kif5b;Golga4;Nherf1;Rock2;Ank2;Macf1;Scp2;Picalm;Ezr;Vti1b;Cd81;Palm;Arl6ip5;Mesd;Sec16a;Stx7;Wnk1;Ppfia1;Pacs1;Scarb2;Stxbp1;Bsg;Lrp1;Stx4;Rock1;Csk;Vamp2;Vps4a;Sqstm1;Gga1;Erbin;Vamp8;Stx8;Prkci;Camk2d;Rab31;Vamp4;Large1;Rilpl1;Dab2;Dennd4c;Nherf2;Gripap1;Vamp5;Nsf;S100a10;Lama5;Pdpk1;Ank3;Kif13a;Akap5;Tpbg;Rer1
+PC1,GO Slim,GOSLIM_RENAL_SYSTEM_PROCESS,Renal System Process,-0.919,0.589,0.666,28,TRUE,Mcam;Lgmn;Nherf1;Maged2;Cd2ap;Avpr1a;Psap
+PC1,GO Slim,GOSLIM_RESPIRATORY_SYSTEM_PROCESS,Resp. System Process,-0.573,0.97,0.97,15,TRUE,Ndufs4;Gaa;Tnnc1;Rab3a
+PC1,GO Slim,GOSLIM_RIBOSOME_BIOGENESIS,Ribosome Biogenesis,0.822,0.852,0.886,125,FALSE,Xpo1;Rpsa;Rplp0;Ythdf2;Cul4a;Rps9;Rps13;Rpl35;Eif6;Rps15a;Lyar;Sbds;Grwd1;Myg1;Rps27l;Bysl;Rps2;Eif1ax;Dhx30;Ak6;Rps5;Rps17;Rpl11;Dis3;Ran;Las1l;Rps10;Rbm10;Eri3;Pa2g4;Pwp1;Rpl7;Rps8;Pten;Nol9;Cul4b;Ddx56;Heatr3;Riok3;Dkc1;Nsun4;Npm3;Exosc1;Gtpbp4;Nhp2;Pes1
+PC1,GO Slim,GOSLIM_TELOMERE_ORGANIZATION,Telomere Org.,1.504,0.027,0.14,64,TRUE,Ppp1ca;Mapk15;Nek7;Src;Cct7;Cct2;Ten1;Cct3;Cdk2;Ruvbl1;Cct5;Uchl5;Ctnnb1;Tcp1;Cct8;Rpa1;Pml;Fbxo4;Hsp90ab1;Actl6a;Ruvbl2
+PC1,GO Slim,GOSLIM_TRNA_METABOLIC_PROCESS,tRNA Metabolism,0.942,0.565,0.666,79,TRUE,Rars1;Qng1;Rtraf;Gars1;Iars1;Farsa;Thg1l;Ctu2;Sars1;Elp2;Aarsd1;Elp1;Pus7;Farsb;Yars1;Hars1;Rnh1;Aars1;Urm1;Nsun2;Trmt61a;Ftsj1;Mettl2;Hsd17b10
+PC1,GO Slim,GOSLIM_VITAMIN_METABOLIC_PROCESS,Vitamin Metabolism,1.424,0.0967,0.359,10,TRUE,Akr1a1;Cbr1;Gsto1;Nfkb1;Tpk1;Prmt3;Cbr3;Thtpa
+PC1,GO Slim,GOSLIM_WOUND_HEALING,Wound Healing,-1.431,0.0112,0.0729,136,TRUE,Flna;Chmp4b;Pdia4;Col3a1;Mcam;Fkbp10;Pdia3;Tgfb2;Mia3;Mylk;Rhoa;Coro1b;Yap1;Cnn2;Hmgb1;Macf1;Plec;Col5a1;Itga5;Dag1;Slc12a2;Dtnbp1;Arhgef2;Tpm1;Fbln1;Srsf6;Phldb2;Stxbp1;Chmp5;Cd44;Ptk7;Chmp1a;Fgf1;Gpx1;Pard3;Ddr2;Rab3a;Serpinc1;Cadm4;Ptk2;Prkce;Papss2;Tspan9
+PC2,GO Slim,GOSLIM_AMINO_ACID_METABOLIC_PROCESS,AA Metabolism,-0.976,0.502,0.87,121,FALSE,Acat1;Adss2;Mtap;Dld;Gclc;Dglucy;Psat1;Bckdk;Aldh4a1;Etfb;Farsa;Gls;Kars1;Sardh;Sars1;Mccc1;Acad8;Hibch;Shmt1;Iars2;Oat;Gclm;Ddah1;Scly;P4ha1;Glud1;Wars1;Gars1;Dohh;Ero1a;Farsb;Pycr3;Mmut;Shmt2;Carnmt1;Hars1;Mtr
+PC2,GO Slim,GOSLIM_CHROMOSOME_SEGREGATION,Chromosome Segregation,-1.028,0.387,0.775,147,FALSE,Clasp2;Ncaph;Ccne1;Pten;Smc4;Katnb1;Cdc42;Srpk1;Tpr;Ncapg;Drg1;Riok2;Ttl;Chmp7;Bod1;Ube2b;Dctn2;Zwint;Mad1l1;Champ1;Actr2;Haus5;Smc3;Csnk2a2;Abraxas2;Tubg1;Kif15;Anapc2;Haus1;Smc2;Chmp3;Poldip2;Ndel1;Clasp1
+PC2,GO Slim,GOSLIM_CILIUM_ORGANIZATION,Cilium Org.,0.814,0.819,0.968,87,TRUE,Dnaaf5;Gdi2;Dynll1;Mapre1;Kifap3;Rab34;Usp9x;Nme7;Armc9;Micall1;Arl3;Htt;Rilpl1;Rab11b;Yap1;Exoc5;Tulp3;Dnm2;Snap29;Asap1;Ehd3;Ccdc32;Kif3b;Actr3;Lama5;Dynlt2b;Txndc15
+PC2,GO Slim,GOSLIM_CYTOKINESIS,Cytokinesis,-1.477,0.0239,0.249,86,TRUE,Sptbn1;Septin5;Cdc42;Septin2;Rock1;Usp8;Birc6;Chmp7;Septin11;Rtkn;Pin1;Actr2;Snx18;Exoc7;Fsd1;Mtmr3;Chmp3;Pik3c3;Poldip2;Luzp1;Atxn10;Spast;Ank3;Plec;Septin9;Dctn3l1;Rhob;Arf6;Cul3;Pik3r4
+PC2,GO Slim,GOSLIM_CYTOPLASMIC_TRANSLATION,Cytoplasmic Translation,1.643,7.12e-4,0.0185,143,TRUE,Rpl15;Csde1;Rpl4;Rpl28l4;Rpl13a;Rpl8;Rpl18;Eif2b3;Eif5;Smyd5;Sh3bgrl;Rpl7;Rpl24;Rpl37a;Eif2b2;Rpl27a;Rwdd1;Rpl10;Rps23;Skic2;Rpl35a;Eif3i;Eef2;Npm1;Rpl14;Ascc3;Eif2ak4;Rpl36a;Eif4a1;Ptrh1;Trip4;Aars1;Cnbp;Rnf14;Eif2d;Eif4a2;Rpl23;Rps24;Ddrgk1;Rpl7a;Gtpbp1;Ufsp2;Akt2;Rnf25;Rpl5;Rps9;Igf2bp1;Abce1;Rpl3;Rpl35;Rack1;Rpl23a;Rpl18a;Hnrnpu;Rpl26;Denr;Rps26;Ythdf2;Nemf
+PC2,GO Slim,GOSLIM_DETOXIFICATION,Detoxification,-0.719,0.946,0.968,61,FALSE,Gstt2;Prdx5;Suclg1;Ccs;Slc30a1;Ptgs2;Selenos;Nnt
+PC2,GO Slim,GOSLIM_DIGESTION,Digestion,-0.856,0.672,0.968,22,TRUE,Tjp2;Hspb1;Hip1r;Ezr
+PC2,GO Slim,GOSLIM_DNA_RECOMBINATION,DNA Recombination,-0.809,0.883,0.968,91,TRUE,Rad50;Ncaph;Mcm3;Morf4l1;Smc4;Swi5;Apex1;Mcm2;Ube2b;Morf4l2;Lig1;Actr2;Msh2;Abl1;Ruvbl1;Tfrc;Smc2;Mre11;Supv3l1
+PC2,GO Slim,GOSLIM_DNA_REPLICATION,DNA Replication,-0.991,0.445,0.826,99,TRUE,Rad50;Ccne1;Mcm3;Chrac1;Nfic;Cdc42;Rfc2;Faf1;Vcp;Mcm2;Ube2b;Ssrp1;Asf1a;Rfc3;Lig1;Smc3;Shmt1;Jun;Msh2;Ruvbl1;Mre11;Mcm6;Poldip2
+PC2,GO Slim,GOSLIM_ESTABLISHMENT_OR_MAINTENANCE_OF_CELL_POLARITY,Maintenance of Polarity,-1.158,0.179,0.688,97,TRUE,Crkl;Clasp2;Dst;Frmd4a;Scrib;Ift20;Pak1;Cdc42;Ehbp1l1;Myo18a;Actr2;Exoc4;Arfgef1;Ezr;Jam3;Macf1;Ptk7;Pals1;Erbin;Abl1;Ckap5;Parva;Flot2;Ndel1;Clasp1;Coro7;Ank3;Myo9b;Dlg1
+PC2,GO Slim,GOSLIM_EXTRACELLULAR_MATRIX_ORGANIZATION,ECM Org.,0.773,0.914,0.968,103,FALSE,Plod1;Fscn1;Efemp2;Col4a2;Exoc8;Fbln1;Col11a1;Plod3;Lrp1;P3h4;Fbln5
+PC2,GO Slim,GOSLIM_GLYCOPROTEIN_METABOLIC_PROCESS,Glycoprotein Metabolism,1.206,0.137,0.688,115,TRUE,Alg9;Gxylt1;Galns;Dpm1;B4galt7;Aga;Col11a1;Tm9sf2;Plod3;Dad1;Ago2;C1galt1;Alg5;Man1a2;Dpm3;Galnt2;Rab1b;Oga;Ostc;Psen1;Itm2b;Pofut4;Gmppa;Galnt1;Erp44;Gorasp1;Uggt1;Fut8;Fbxo6;Pgm3;Prkcsh;Golga2;Ctsl;Glce;Ube2j1
+PC2,GO Slim,GOSLIM_KETONE_METABOLIC_PROCESS,Ketone Metabolism,1.062,0.325,0.772,70,TRUE,Hsd17b10;Cbr3;Pdp1;Elovl5;Nme2;Ggcx;Coq9;Nme1;Erlin1;Vkorc1l1;Vkorc1;H6pd;Oxct1
+PC2,GO Slim,GOSLIM_MITOCHONDRION_ORGANIZATION,Mito. Org.,-1.056,0.316,0.772,200,TRUE,Vat1;Borcs5;Stoml2;Apoo;Ndufs4;Uqcc2;Msto1;Atad3a;Gclc;Inf2;Armcx3;Opa1;Timm13;Pex5;Hip1r;Ndufs1;Akt1;Thg1l;Rala;Slc30a9;Ndufaf1;Phb2;Lonp1;Cluh;Dhodh;Jun;Foxred1;Gclm;Huwe1;Tfrc;Letm1;Mfn1;Ddhd2;Dmac1;Supv3l1;Dnm1l;Poldip2;Mtch1;Cdk5;Sod2;Pgam5;Immt;Gsk3a;Plec;Bax;Cox7a2l;Hk2;Pnpt1;Bid;Smad3;Gba1;Ndufaf2;Nipsnap2;Atp5f1d;Micu1;Htra2;Timm10;Tmem11;Parp1;Golph3;Rhot1;Vps13a;Rap1gds1;Ndufs3;Stat2;Lipa;Taco1;Ptpmt1;Fam3a;Rab3a
+PC2,GO Slim,GOSLIM_MITOTIC_NUCLEAR_DIVISION,Mitotic Nuclear Division,-1.052,0.327,0.772,105,TRUE,Clasp2;Ncaph;Smc4;Katnb1;Cdc42;Tpr;Ncapg;Drg1;Chmp7;Bod1;Dctn2;Zwint;Mad1l1;Champ1;Eps8;Smc3;Sh2b1;Abraxas2;Tubg1;Kif15;Smc2;Chmp3;Poldip2;Ndel1;Clasp1;Spast;Dync1li1
+PC2,GO Slim,GOSLIM_NUCLEOCYTOPLASMIC_TRANSPORT,Nucleocytoplasmic Transport,0.799,0.926,0.968,170,TRUE,Ei24;Rps15;Jup;Ube2i;Rae1;Sqstm1;Chchd4;Eif4a3;Ltv1;Nup58;Pola2;Akap5;Calr;Ndc1;Ran;Npm1;Hnrnpa1;Prkd1;Alyref;Ddx39b;Pabpn1;Ddx39a;Phax;Kpna4;Hnrnpa2b1;Ahcyl1;Srsf3;Tsc2;Nutf2;Dyrk1a;Hikeshi;Nup93;Tnpo3
+PC2,GO Slim,GOSLIM_PEROXISOME_ORGANIZATION,Peroxisome Org.,-0.716,0.857,0.968,18,TRUE,Opa1;Pex5;Dnm1l;Lonp2;Acox1;Acot8;Pex13
+PC2,GO Slim,GOSLIM_PROTEIN_FOLDING,Protein Folding,-1.388,0.0288,0.249,135,TRUE,Dnajc1;Cct6b;Hsp90aa1;Bag5;Cct4;Hspb1;Fkbp8;Trap1;Hspa13;Dnajc3;Cdc37l1;Hspa5;Qsox2;Tbcb;Hsp90b1;Dnajc7;Dnajb1;Tsc1;Ccdc47;Pdia6;Nudcd3;Cwc27;Pfdn4;Naa10;Pfdn6;Hspe1;Cdc37;Dnajc5;Hspa4;Anp32e;Dnajb4
+PC2,GO Slim,GOSLIM_PROTEIN_LOCALIZATION_TO_PLASMA_MEMBRANE,Protein Localiz. to Plasma Mem.,-0.877,0.788,0.968,158,TRUE,Ccdc88a;Golga7;Sptbn1;Appl1;Scrib;Ift20;Ppfia1;Gripap1;Rock1;Mmp14;Scarb2;Hsp90b1;Bsg;Akt1;Cask;Pacs2;Ezr;Hectd1;Picalm;Atp1b1;Macf1;Pals1;Erbin;Itga3;Ppp2r5a;Tmed2;Vamp8;Pkp1;Flot2;Plekhf1;Prkaa1;Cdk5
+PC2,GO Slim,GOSLIM_RENAL_SYSTEM_PROCESS,Renal System Process,0.634,0.968,0.968,28,TRUE,Wfs1;Comt;Clcn5;Xpnpep3
+PC2,GO Slim,GOSLIM_RESPIRATORY_SYSTEM_PROCESS,Resp. System Process,-1.053,0.378,0.775,15,TRUE,Ndufs4;Gls;Tnnc1;Hmga1;Rab3a;Gaa;Selenon;Cc2d1a;Fto
+PC2,GO Slim,GOSLIM_RIBOSOME_BIOGENESIS,Ribosome Biogenesis,0.888,0.702,0.968,125,TRUE,Rps12;Riox2;Myg1;Rps15;Alg9;Eif5;Nop16;Rpl7;Rpl24;Eif4a3;Wdr12;Ltv1;Rps23;Ran;Rpl35a;Npm1;Rpl14;Rps11
+PC2,GO Slim,GOSLIM_TELOMERE_ORGANIZATION,Telomere Org.,0.73,0.931,0.968,64,TRUE,Pnkp;Xrcc4;Parn;Rpa1;Yy1;Cct6a;Hnrnpa1;Pcna;Hspa1a;Hnrnpa2b1;Ylpm1;Tcp1;Tep1;Nbn;Hnrnpu;Cct7;Ctnnb1;Src;Nhp2;Hnrnpc;Mapk15;Dhx36;Rpa2;Nvl;Ppp1r10;Hsp90ab1;Xrcc1;Actl6a;Xrcc6;Fbxo4
+PC2,GO Slim,GOSLIM_TRNA_METABOLIC_PROCESS,tRNA Metabolism,-1.192,0.165,0.688,79,FALSE,Trmt5;Ftsj1;Tprkb;Osgep;Trmt61a;Tsen34;Trmt2a;Farsa;Exosc8;Akt1;Thg1l;Elp2;Pop1;Kars1;Sars1;Qtrt1;Dtd1;Iars2;Dus2;Mocs3
+PC2,GO Slim,GOSLIM_VITAMIN_METABOLIC_PROCESS,Vitamin Metabolism,1.28,0.191,0.688,10,TRUE,Cbr3;Thtpa;Nfkb1
+PC2,GO Slim,GOSLIM_WOUND_HEALING,Wound Healing,-1.128,0.212,0.688,136,TRUE,Clasp2;Gnaq;Dst;Pten;Mrtfa;Arhgap24;Scrib;Pak1;Pip5k1c;Pla2g4a;Ccn4;Bloc1s3;Anxa8;Vps33b;Chmp7;Pdia6;Eng;Cask;Arfgef1;Cdkn1a;Fgf1;Gla;Macf1;Slc12a2;Ptk7

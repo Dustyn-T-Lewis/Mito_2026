@@ -169,6 +169,11 @@ before adopting a rebuild.
   `04_Figures/shared/`
 - packages install into the system library via `Rscript setup.R`; each script loads
   what it needs with `pacman::p_load()`
+- `setup.R` writes `package_versions.txt`, the R version, platform, and exact
+  version of every declared package (plus the commit SHA for the two installed from
+  GitHub) that produced the tracked outputs; re-run it to refresh the record
+- every stage's `b_reports/` and `c_data/` are tracked, so the repository carries the
+  rendered reports and result tables alongside the code that made them
 
 ## enrichVolcano
 

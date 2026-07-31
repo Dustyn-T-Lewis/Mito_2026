@@ -38,3 +38,30 @@ for (pkg in names(github)) {
     remotes::install_github(github[[pkg]])
   }
 }
+
+# version record for anyone reproducing the pipeline
+declared <- sort(c(cran, bioc, names(github)))
+present <- rownames(installed.packages())
+versions <- vapply(
+  declared,
+  function(pkg) {
+    if (!pkg %in% present) {
+      return("not installed")
+    }
+    version <- as.character(utils::packageVersion(pkg))
+    sha <- utils::packageDescription(pkg)$RemoteSha
+    if (is.null(sha)) version else paste0(version, " (", substr(sha, 1, 7), ")")
+  },
+  character(1)
+)
+
+writeLines(
+  c(
+    R.version.string,
+    paste("Platform:", R.version$platform),
+    paste("Recorded:", format(Sys.Date())),
+    "",
+    sprintf("%-16s %s", declared, versions)
+  ),
+  here::here("package_versions.txt")
+)

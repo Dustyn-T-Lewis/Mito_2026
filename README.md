@@ -173,10 +173,12 @@ before adopting a rebuild.
   version of every declared package (plus the commit SHA for the two installed from
   GitHub) that produced the tracked outputs; re-run it to refresh the record
 - every stage's `b_reports/` and `c_data/` are tracked, so the repository carries the
-  figures and result tables alongside the code that made them. PDF and xlsx are the
-  exception: both restamp an internal clock on every run, so git would store a fresh
-  copy even when no number changed. Each plot is tracked as PNG and each table as CSV;
-  re-run a stage and git records nothing unless a result actually moved
+  figures and result tables alongside the code that made them. PDF and xlsx are held
+  back: both stamp the current time inside the file, so git would store a fresh copy
+  on every run even when no number changed. Each plot is tracked as PNG and each table
+  as CSV, so re-running a stage records nothing unless a result actually moved. The two
+  exceptions are `02_Normalization/b_reports/*.pdf`, which proteoDA will only write as
+  PDF; they are 2.6 MB and that stage is re-run about once a project
 
 ## enrichVolcano
 

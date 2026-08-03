@@ -121,7 +121,7 @@ write.xlsx(
   overwrite = TRUE
 )
 
-ggsave(file.path(report_dir, "contaminants.pdf"),
+ggsave(file.path(report_dir, "contaminants.png"),
   count(removed_contam, reason) |> ggplot(aes(reorder(reason, n), n, fill = reason)) +
     geom_col(show.legend = FALSE) +
     geom_text(aes(label = n), hjust = -0.2, size = 4) +

@@ -122,12 +122,12 @@ Every stage and figure uses the same `a_/b_/c_` triad:
 Shared code and shared data are kept apart:
 
 - `04_Figures/functions/`: every reusable helper the figure scripts source, named
-  for its scope. `shared_*` spans figures — `shared_theme_palettes.R` (palettes,
+  for its scope. `shared_*` spans figures: `shared_theme_palettes.R` (palettes,
   theme, thresholds), `shared_data_loaders.R` (input paths and loaders),
   `shared_enrichment_ora.R` (fgsea/ORA and pathway dedup), `shared_gene_set_helpers.R`
   (fgsea cache and GO-Slim set builders), `shared_nes_bars.R` (the NES bar panel),
   `shared_workbook.R`, and `shared_composite_layout.R`. A `f0N_` prefix marks a
-  single-figure helper — `f01_pca_stats.R`, `f01_mitocarta_lens.R`.
+  single-figure helper, as in `f01_pca_stats.R` and `f01_mitocarta_lens.R`.
 - `04_Figures/shared/`: the shared gene-set data and fgsea cache, built once by
   `shared/a_script/01`–`03` and read by the enrichment figures. Only the build
   scripts live here; the helpers they call sit in `functions/`.

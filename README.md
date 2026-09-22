@@ -116,7 +116,8 @@ Every stage and figure uses the same `a_/b_/c_` triad:
   sources the panels, runs the shared fit or load, and writes the figure plus its
   supplementary workbook. Tests and supplements sit in named subfolders.
 - `b_reports/`: generated renders (PDF/PNG) and QC reports.
-- `c_data/`: the tables downstream steps read.
+- `c_data/`: the tables downstream steps read, plus the stage or figure's
+  supplementary workbook.
 
 Shared code and shared data are kept apart:
 
@@ -172,13 +173,11 @@ before adopting a rebuild.
 - `setup.R` writes `package_versions.txt`, the R version, platform, and exact
   version of every declared package (plus the commit SHA for the two installed from
   GitHub) that produced the tracked outputs; re-run it to refresh the record
-- every stage's `b_reports/` and `c_data/` are tracked, so the repository carries the
-  figures and result tables alongside the code that made them. PDF and xlsx are held
-  back: both stamp the current time inside the file, so git would store a fresh copy
-  on every run even when no number changed. Each plot is tracked as PNG and each table
-  as CSV, so re-running a stage records nothing unless a result actually moved. The two
-  exceptions are `02_Normalization/b_reports/*.pdf`, which proteoDA will only write as
-  PDF; they are 2.6 MB and that stage is re-run about once a project
+- every stage's `b_reports/` and `c_data/` is tracked, so a clone carries the figures,
+  QC reports, result tables, and supplementary workbooks beside the code that made
+  them. Two duplicates are left out: the `03_DEP` contrast plots, which each stage
+  writes as PDF and PNG side by side, and each `results.xlsx`, whose sheets are the
+  tracked `combined_results_pi.csv` at 14 MB a copy
 
 ## enrichVolcano
 

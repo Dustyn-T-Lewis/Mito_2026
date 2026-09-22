@@ -36,21 +36,13 @@ Rplots.pdf
 **/AUDIT*.md
 **/NOTES*.md
 
-# but the stage outputs are tracked, minus PDF and xlsx: both restamp an internal
-# clock every run, so git stores a fresh copy even when no number changed. The plots
-# survive as PNG and the tables as CSV.
+# Stage outputs are tracked. Two exclusions, each a duplicate of something already
+# here: the 03_DEP contrast plots, written as PDF and PNG side by side, and
+# results.xlsx, whose sheets are the tracked combined_results_pi.csv at 14 MB a copy.
 !**/b_reports/**
 !**/c_data/**
-**/b_reports/**/*.pdf
-**/c_data/**/*.pdf
-**/b_reports/**/*.xlsx
-**/c_data/**/*.xlsx
-
-# proteoDA writes these two as PDF and refuses any other extension. They are 2.6 MB
-# and stage 02 is re-run about once a project, so the churn the rule guards against
-# does not apply.
-!02_Normalization/b_reports/norm_comparison.pdf
-!02_Normalization/b_reports/qc_normalized.pdf
+03_DEP/**/static_plots/*.pdf
+03_DEP/**/results.xlsx
 
 # rendered quarto docs (source .qmd is tracked, .html is regenerated)
 Mito_pipeline.html

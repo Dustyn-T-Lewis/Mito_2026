@@ -1,0 +1,20 @@
+{
+  "title": "Mito_2026: a DIA-MS proteomics pipeline for mitochondrial transplantation in phenylephrine-stressed H9c2 cardiomyoblasts",
+  "description": "<p>Mito_2026: a DIA-MS proteomics pipeline for mitochondrial transplantation in phenylephrine-stressed H9c2 cardiomyoblasts</p><h2>Supplementary material</h2><p>The manuscript's proteomic figures and supplementary files are in <code>Supplementary_Material/</code>, named as the manuscript cites them:</p><table><tr><th>Folder</th><th>Files</th><th>Contents</th></tr><tr><td><code>Main_Figures/</code></td><td><code>Figure_4.png – Figure_6.png</code></td><td>Manuscript Figures 4–6 (pipeline F01–F03). Figures 1–3 come from the non-proteomic experiments and are not produced here.</td></tr><tr><td><code>Supplementary_Figures/</code></td><td><code>S1_Figure.pdf – S4_Figure.pdf</code></td><td>One multipage PDF per S Figure, one labelled panel per page (S1 Figure A, B, ...).</td></tr><tr><td><code>Supplementary_Tables/</code></td><td><code>S1_Table.xlsx – S3_Table.xlsx</code></td><td>Supplementary workbooks; each opens on an Overview sheet listing its sheets.</td></tr></table><p><b>View online:</b> open <a href=\"https://github.com/Dustyn-T-Lewis/Mito_2026/tree/v1.2.0/Supplementary_Material\">Supplementary_Material on GitHub</a>; figures and PDFs display in the browser, and each file has a download button.</p><p><b>Download from this record:</b> under <i>Files</i>, download the <code>.zip</code>, unzip it, and open the <code>Supplementary_Material/</code> folder inside.</p><h2>Pipeline</h2><table><tr><th>Stage</th><th>Directory</th><th>Canonical logic</th></tr><tr><td><code>00</code></td><td><code>00_input/</code></td><td>Raw DIA-NN intensity matrix, sample sheet, contaminant FASTA, HPA secreted-to-blood list</td></tr><tr><td><code>01</code></td><td><code>01_Filtering/</code></td><td>Contaminant and HPA secreted-to-blood removal, missingness filter -&gt; <code>DAList_filtered.rds</code></td></tr><tr><td><code>02</code></td><td><code>02_Normalization/</code></td><td>cycloess normalization of the filtered matrix; <code>imputation/</code> holds three arms (imp4p, MsCoreUtils hybrid, missForest), each writing a method-tagged <code>DAList_imputed_&lt;method&gt;.rds</code>. missForest is the arm the figures and WGCNA read</td></tr><tr><td><code>03</code></td><td><code>03_DEP/</code></td><td><code>a_non_imputed/</code>: primary limma + duplicateCorrelation, six factorial contrasts, Pi-score. <code>b_imputed/</code>: robustness DEP on the imputed matrices</td></tr><tr><td><code>04</code></td><td><code>04_Figures/</code></td><td>F01 proteome overview; F02 enrichment ring-volcanoes (reads the shared fgsea cache); F03 WGCNA modules</td></tr></table><p>Stages 00–03 are the canonical pipeline (filter → normalize → DE) and hold only that. Everything past canonical characterisation (WGCNA, single-sample scoring, reversal/return) lives with its figure in <code>04_Figures/</code>, never in a pipeline stage.</p><p>Code, run order and reproducibility notes: <a href=\"https://github.com/Dustyn-T-Lewis/Mito_2026\">https://github.com/Dustyn-T-Lewis/Mito_2026</a> (README).</p>",
+  "upload_type": "software",
+  "license": "cc-by-4.0",
+  "creators": [
+    {
+      "name": "Lewis, Dustyn"
+    }
+  ],
+  "keywords": [
+    "proteomics",
+    "DIA-MS",
+    "mitochondrial transplantation",
+    "H9c2",
+    "phenylephrine",
+    "WGCNA",
+    "limma"
+  ]
+}

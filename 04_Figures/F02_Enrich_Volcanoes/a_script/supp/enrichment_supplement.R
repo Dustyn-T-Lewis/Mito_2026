@@ -13,6 +13,7 @@ source(file.path(fns, "shared_data_loaders.R"))
 source(file.path(fns, "shared_enrichment_ora.R"))
 source(file.path(fns, "shared_nes_bars.R"))
 source(file.path(fns, "shared_workbook.R"))
+source(file.path(fns, "shared_supp_figure.R"))
 
 BASE <- here::here("04_Figures", "F02_Enrich_Volcanoes")
 PNG <- file.path(BASE, "b_reports", "supp")
@@ -109,9 +110,7 @@ fig_contrast <- wrap_plots(contrast_panels, nrow = 1, guides = "collect") +
     theme = FIG_SUB
   ) &
   bottom_key
-ggsave(file.path(PNG, "SUPP_F02_enrichment_by_contrast.png"), fig_contrast,
-  width = 250, height = 120, units = "mm", dpi = 300, bg = "white"
-)
+save_supp_panel(fig_contrast, PNG, "SUPP_F02_enrichment_by_contrast", 250, 120, bg = "white")
 
 ## Figure 2 — disease specificity (interaction) ------------------------------
 READS <- tibble::tribble(
@@ -163,9 +162,7 @@ fig_specificity <- wrap_plots(pmap(READS, read_row), ncol = 1, guides = "collect
     theme = FIG_SUB
   ) &
   bottom_key
-ggsave(file.path(PNG, "SUPP_F02_disease_specificity.png"), fig_specificity,
-  width = 210, height = 210, units = "mm", dpi = 300, bg = "white"
-)
+save_supp_panel(fig_specificity, PNG, "SUPP_F02_disease_specificity", 210, 210, bg = "white")
 
 ## Figure 3 — reversal -------------------------------------------------------
 REV_CONTRASTS <- c(Disease = "CTLvPHE", Rescue = "PHEvPHE_MITO", Transplant = "CTLvMITO")
@@ -216,9 +213,7 @@ fig_reversal <- wrap_plots(rev_panels, nrow = 1) +
     theme = FIG_SUB
   ) &
   bottom_key
-ggsave(file.path(PNG, "SUPP_F02_reversal.png"), fig_reversal,
-  width = 250, height = 110, units = "mm", dpi = 300, bg = "white"
-)
+save_supp_panel(fig_reversal, PNG, "SUPP_F02_reversal", 250, 110, bg = "white")
 
 ## Supplementary workbook ----------------------------------------------------
 sheet_long <- function(figure, panels) {

@@ -369,16 +369,18 @@ ora_aligned <- function(ora_top5, modules) {
 # faceted on the same module order so the row aligns. Returns a bare patchwork; callers add
 # the title (main vs supplement).
 panel_module_card <- function(group_eig, mod_size, ora_top5, settests, module_nes, fry_contrasts,
-                              mod_stats = NULL, emphasize = NULL) {
+                              mod_stats = NULL, emphasize = NULL, tags = NULL) {
   modules <- arrange(filter(mod_size, module %in% unique(group_eig$module)), desc(n))$module
   if (is.null(emphasize)) emphasize <- modules
-  wrap_plots(
-    list(
-      panel_module_count(mod_size, modules, emphasize),
-      panel_module_fry(settests, module_nes, modules, fry_contrasts),
-      panel_module_trajectory(group_eig, modules, mod_stats, emphasize),
-      ora_aligned(ora_top5, modules)
-    ),
-    nrow = 1, widths = c(0.5, 1.0, 1.12, 2.2)
+  panels <- list(
+    panel_module_count(mod_size, modules, emphasize),
+    panel_module_fry(settests, module_nes, modules, fry_contrasts),
+    panel_module_trajectory(group_eig, modules, mod_stats, emphasize),
+    ora_aligned(ora_top5, modules)
   )
+  # Panel letters go in front of each column title so the legend can cite A-D.
+  if (!is.null(tags)) {
+    panels <- Map(\(p, tag) p + labs(title = paste(tag, p$labels$title)), panels, tags)
+  }
+  wrap_plots(panels, nrow = 1, widths = c(0.5, 1.0, 1.12, 2.2))
 }

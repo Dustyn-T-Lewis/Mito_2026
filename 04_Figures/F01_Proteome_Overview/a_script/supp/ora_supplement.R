@@ -10,6 +10,7 @@ fns <- here::here("04_Figures", "functions")
 source(file.path(fns, "shared_data_loaders.R"))
 source(file.path(fns, "shared_enrichment_ora.R"))
 source(file.path(fns, "shared_workbook.R"))
+source(file.path(fns, "shared_supp_figure.R"))
 
 BASE <- here::here("04_Figures", "F01_Proteome_Overview")
 PNG <- file.path(BASE, "b_reports", "supp")
@@ -117,7 +118,7 @@ fig <- ggplot(shown, aes(lp, rid, fill = database)) +
     axis.text.y = element_blank(), axis.ticks.y = element_blank(),
     panel.grid.major.y = element_blank(), legend.position = "bottom"
   )
-ggsave(file.path(PNG, "SUPP_F01_ora.png"), fig, width = PANEL_MD, height = 130, units = "mm", dpi = 300)
+save_supp_panel(fig, PNG, "SUPP_F01_ora", PANEL_MD, 130)
 
 # overlap behind every shown pathway -> supplementary workbook
 overlap <- bind_rows(lapply(unname(CONTRASTS), function(cn) {

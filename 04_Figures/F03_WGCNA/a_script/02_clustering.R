@@ -147,18 +147,18 @@ module_nes_full <- run_fgsea_cache(
   mutate(contrast = names(NES_CONTRASTS)[match(contrast, NES_CONTRASTS)])
 module_nes <- select(module_nes_full, module, contrast, NES, padj)
 
-module_card <- function(mods, emphasize = mods) {
+module_card <- function(mods, emphasize = mods, tags = NULL) {
   panel_module_card(
     filter(group_eig, module %in% mods), filter(mod_size, module %in% mods),
     ora_top5, ms$settests, module_nes, HEATMAP_CONTRASTS,
-    mod_stats = mod_stats, emphasize = emphasize
+    mod_stats = mod_stats, emphasize = emphasize, tags = tags
   )
 }
 
 # Main figure: one aligned row per nominally responsive module — its protein-count bar,
 # member-response heatmap, eigengene trajectory (with the post-hoc brackets), and top ORA
 # pathways.
-fig <- module_card(featured_modules) +
+fig <- module_card(featured_modules, tags = LETTERS[1:4]) +
   plot_annotation(
     title = "WGCNA co-expression modules and their eigengene response across the design",
     subtitle = sprintf(

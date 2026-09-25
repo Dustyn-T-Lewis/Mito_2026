@@ -103,13 +103,27 @@ Rscript 04_Figures/F03_WGCNA/a_script/00_build_wgcna.R
 Rscript 04_Figures/F03_WGCNA/a_script/01_module_stats.R
 Rscript 04_Figures/F03_WGCNA/a_script/02_clustering.R
 
-# supplementary panels, then the S Figure PDFs and S Tables in MANUSCRIPT_FILES/
+# supplementary panels; each figure writes its S<n>_Figure.pdf into its b_reports/
 Rscript 04_Figures/F01_Proteome_Overview/a_script/supp/pca_axes.R
 Rscript 04_Figures/F01_Proteome_Overview/a_script/supp/ora_supplement.R
 Rscript 04_Figures/F02_Enrich_Volcanoes/a_script/supp/enrichment_supplement.R
 Rscript 04_Figures/F03_WGCNA/a_script/supp/orthogonal_axes.R
-Rscript MANUSCRIPT_FILES/build_manuscript_files.R
+
+# last: package the manuscript's figures and tables into Supplementary_Material/
+Rscript 04_Figures/shared/a_script/04_build_supplementary_material.R
 ```
+
+### Supplementary material
+
+`Supplementary_Material/` holds the files under the names the manuscript cites, and
+nothing else:
+
+- `Main_Figures/`: `Figure_4`–`Figure_6` (pipeline F01–F03). Manuscript Figures 1–3 come
+  from the non-proteomic experiments and are not produced here.
+- `Supplementary_Figures/`: `S1_Figure`–`S4_Figure`, multipage PDFs with one labelled
+  panel per page. `S_FIGURE_PAGES` in `04_Figures/functions/shared_supp_figure.R` sets
+  which panels each holds and in what order.
+- `Supplementary_Tables/`: `S1_Table`–`S3_Table`, the F01–F03 supplementary workbooks.
 
 Each figure's composite sources its panels, runs the shared fit or load, and writes
 the figure plus its workbook. F01, F02, and F03 end with an optional local Box

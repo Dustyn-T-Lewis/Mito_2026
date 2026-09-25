@@ -44,8 +44,11 @@ Rplots.pdf
 03_DEP/**/static_plots/*.pdf
 03_DEP/**/results.xlsx
 
-# The S Figure PDFs the manuscript cites.
-!MANUSCRIPT_FILES/*.pdf
+# Single-page S Figure PDFs are intermediates; the combined S<n>_Figure.pdf is tracked.
+04_Figures/*/b_reports/supp/*.pdf
+
+# The packaged supplementary material the manuscript cites.
+!Supplementary_Material/**
 
 # rendered quarto docs (source .qmd is tracked, .html is regenerated)
 Mito_pipeline.html

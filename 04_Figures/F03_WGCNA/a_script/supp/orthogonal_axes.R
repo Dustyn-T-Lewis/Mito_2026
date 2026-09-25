@@ -19,6 +19,7 @@
 pacman::p_load(here, dplyr, tibble, purrr, readr, ggplot2, patchwork, limma, fgsea)
 source(here::here("04_Figures", "functions", "shared_data_loaders.R"))
 source(here::here("04_Figures", "functions", "shared_enrichment_ora.R"))
+source(here::here("04_Figures", "functions", "shared_supp_figure.R"))
 
 png_dir <- here::here("04_Figures", "F03_WGCNA", "b_reports", "supp")
 tab_dir <- here::here("04_Figures", "F03_WGCNA", "c_data", "supp")
@@ -225,9 +226,7 @@ panel <- patchwork::wrap_plots(c(rows, list(barcode_row)),
     )
   )
 
-ggsave(file.path(png_dir, "SUPP_F03_orthogonal_axes.png"), panel,
-  width = 220, height = 300, units = "mm", dpi = 300, bg = "white"
-)
+save_supp_panel(panel, png_dir, "SUPP_F03_orthogonal_axes", 220, 300, bg = "white")
 write_csv(select(stats_tbl, -perm_p_low, -perm_p_high), file.path(tab_dir, "SUPP_F03_orthogonal_axes.csv"))
 
 # Optional local Box mirror (author's machine only; no-ops elsewhere).

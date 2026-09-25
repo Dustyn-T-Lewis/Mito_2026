@@ -14,6 +14,7 @@ source(file.path(fns, "shared_theme_palettes.R"))
 source(file.path(fns, "shared_data_loaders.R"))
 source(file.path(fns, "shared_enrichment_ora.R"))
 source(file.path(fns, "shared_workbook.R"))
+source(file.path(fns, "shared_supp_figure.R"))
 panels <- here::here("04_Figures", "F03_WGCNA", "a_script", "panels")
 for (f in list.files(panels, full.names = TRUE)) source(f)
 
@@ -193,14 +194,10 @@ s_construction <- (panel_scale_free(w$sft_df, w$chosen_power) / panel_dendro(w$n
     title = "WGCNA network construction",
     theme = theme(plot.title = element_text(face = "bold", size = FIG_TITLE_SIZE, hjust = 0))
   )
-ggsave(file.path(SUPP_PNG, "SUPP_F03_construction.png"), s_construction,
-  width = PANEL_MD, height = 150, units = "mm", dpi = 300, bg = "white"
-)
-ggsave(file.path(SUPP_PNG, "SUPP_F03_preservation.png"), panel_preservation(w$preservation),
-  width = PANEL_MD, height = 75, units = "mm", dpi = 300, bg = "white"
-)
-ggsave(file.path(SUPP_PNG, "SUPP_F03_hub_map.png"), panel_hubs(w, arrange(mod_size, desc(n))$module),
-  width = PANEL_MD, height = 120, units = "mm", dpi = 300, bg = "white"
+save_supp_panel(s_construction, SUPP_PNG, "SUPP_F03_construction", PANEL_MD, 150, bg = "white")
+save_supp_panel(panel_preservation(w$preservation), SUPP_PNG, "SUPP_F03_preservation", PANEL_MD, 75, bg = "white")
+save_supp_panel(panel_hubs(w, arrange(mod_size, desc(n))$module), SUPP_PNG, "SUPP_F03_hub_map", PANEL_MD, 120,
+  bg = "white"
 )
 
 # Supplementary workbook: one sheet per figure component. The full module x contrast fry

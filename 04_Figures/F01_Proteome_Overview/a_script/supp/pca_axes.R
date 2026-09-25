@@ -18,6 +18,7 @@ source(file.path(fns, "shared_enrichment_ora.R"))
 source(here("04_Figures", "functions", "shared_gene_set_helpers.R"))
 source(here("04_Figures", "functions", "f01_pca_stats.R"))
 source(file.path(fns, "shared_nes_bars.R"))
+source(file.path(fns, "shared_supp_figure.R"))
 set.seed(42)
 
 FIG_DIR <- here("04_Figures", "F01_Proteome_Overview", "b_reports", "supp")
@@ -347,9 +348,7 @@ pc_bars <- function(pc, n_each) {
 # would force four arguments onto one slide.
 saved_panels <- character()
 save_panel <- function(p, name, w, h) {
-  ggsave(file.path(FIG_DIR, sprintf("SUPP_F01_%s.png", name)), p,
-    width = w, height = h, units = "mm", dpi = 300, bg = "white", limitsize = FALSE
-  )
+  save_supp_panel(p, FIG_DIR, sprintf("SUPP_F01_%s", name), w, h, bg = "white", limitsize = FALSE)
   saved_panels <<- c(saved_panels, name)
 }
 save_panel(p_group, "pca_group", 180, 150)

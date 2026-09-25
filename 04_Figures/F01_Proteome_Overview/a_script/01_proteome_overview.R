@@ -117,8 +117,16 @@ composite <- save_composite(fig, BASE, "MAIN_F01_proteome_overview", width_mm = 
 
 # Supplementary workbook — the data behind each panel, one sheet group per panel.
 CORE <- H9C2_CONTRAST_ORDER
-dep_tabs <- lapply(CORE, function(ctr) {
-  dep_dat$results[[ctr]] |>
+# DE sheets cover all six fitted contrasts; the two secondary ones are not drawn
+# but the manuscript reports them in S1 Table.
+DE_SHEETS <- c(
+  CTLvPHE = "Disease", CTLvMITO = "Transplant", PHEvPHE_MITO = "Rescue",
+  Interaction = "Interaction", CTLvPHE_MITO = "Recovery", MITOvPHE_MITO = "DiseaseAfter"
+)
+dep_long <- load_dep_long()
+dep_tabs <- lapply(names(DE_SHEETS), function(ctr) {
+  dep_long |>
+    filter(contrast == ctr) |>
     transmute(uniprot_id, gene, logFC, P.Value, adj.P.Val, pi_score) |>
     arrange(pi_score)
 })
@@ -157,13 +165,13 @@ sheet_specs <- c(
       contents = "Counts and % of proteome at each threshold (p<0.05, FDR, Π<0.05) per contrast"
     )
   ),
-  Map(function(ctr, tab) {
+  Map(function(label, tab) {
     list(
-      name = paste0(contrast_brief(ctr), "_DE"), df = tab,
-      role = sprintf("Per-protein DE table for the %s contrast", contrast_brief(ctr)),
+      name = paste0(label, "_DE"), df = tab,
+      role = sprintf("Per-protein DE table for the %s contrast", label),
       contents = "uniprot_id, gene, logFC, P.Value, adj.P.Val, pi_score (sorted by Π)"
     )
-  }, CORE, dep_tabs),
+  }, DE_SHEETS, dep_tabs),
   list(
     list(
       name = "venn_membership", df = venn$membership,

@@ -196,6 +196,12 @@ s_construction <- (panel_scale_free(w$sft_df, w$chosen_power) / panel_dendro(w$n
 ggsave(file.path(SUPP_PNG, "SUPP_F03_construction.png"), s_construction,
   width = PANEL_MD, height = 150, units = "mm", dpi = 300, bg = "white"
 )
+ggsave(file.path(SUPP_PNG, "SUPP_F03_preservation.png"), panel_preservation(w$preservation),
+  width = PANEL_MD, height = 75, units = "mm", dpi = 300, bg = "white"
+)
+ggsave(file.path(SUPP_PNG, "SUPP_F03_hub_map.png"), panel_hubs(w, arrange(mod_size, desc(n))$module),
+  width = PANEL_MD, height = 120, units = "mm", dpi = 300, bg = "white"
+)
 
 # Supplementary workbook: one sheet per figure component. The full module x contrast fry
 # grid (S3) surfaces the member-level gate, including the Recovery and Disease-after-

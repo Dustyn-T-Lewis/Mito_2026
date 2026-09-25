@@ -102,6 +102,13 @@ Rscript 04_Figures/F02_Enrich_Volcanoes/a_script/01_enrich_volcanoes.R
 Rscript 04_Figures/F03_WGCNA/a_script/00_build_wgcna.R
 Rscript 04_Figures/F03_WGCNA/a_script/01_module_stats.R
 Rscript 04_Figures/F03_WGCNA/a_script/02_clustering.R
+
+# supplementary panels, then the S Figure PDFs and S Tables in MANUSCRIPT_FILES/
+Rscript 04_Figures/F01_Proteome_Overview/a_script/supp/pca_axes.R
+Rscript 04_Figures/F01_Proteome_Overview/a_script/supp/ora_supplement.R
+Rscript 04_Figures/F02_Enrich_Volcanoes/a_script/supp/enrichment_supplement.R
+Rscript 04_Figures/F03_WGCNA/a_script/supp/orthogonal_axes.R
+Rscript MANUSCRIPT_FILES/build_manuscript_files.R
 ```
 
 Each figure's composite sources its panels, runs the shared fit or load, and writes

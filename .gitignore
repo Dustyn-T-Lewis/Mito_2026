@@ -44,6 +44,9 @@ Rplots.pdf
 03_DEP/**/static_plots/*.pdf
 03_DEP/**/results.xlsx
 
+# The S Figure PDFs the manuscript cites.
+!MANUSCRIPT_FILES/*.pdf
+
 # rendered quarto docs (source .qmd is tracked, .html is regenerated)
 Mito_pipeline.html
 tutorials/*.html

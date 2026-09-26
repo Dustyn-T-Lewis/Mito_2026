@@ -8,7 +8,7 @@ cran <- c(
   "ggplot2", "ggrepel", "patchwork", "ggtext", "ggnewscale", "ggfittext",
   "scales", "shadowtext", "ggplotify", "eulerr", "vegan",
   "missForest", "imp4p", "imputeLCMD", "msigdbr", "WGCNA",
-  "ragg", "testthat"
+  "qpdf", "ragg", "testthat"
 )
 
 bioc <- c(

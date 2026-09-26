@@ -1,6 +1,6 @@
 # Supplementary panels and the S Figures the manuscript cites. Each panel is saved as a
-# PNG for browsing and as one labelled vector PDF page; once every page of an S Figure
-# exists, the pages are combined into b_reports/S<n>_Figure.pdf of the figure that owns it.
+# PNG and, if it belongs to an S Figure, as one labelled vector PDF page. Once every page
+# of that S Figure exists, the pages are combined into the figure's b_reports/.
 
 # Page order within each S Figure, keyed by panel file stem.
 S_FIGURE_PAGES <- list(
@@ -10,27 +10,18 @@ S_FIGURE_PAGES <- list(
   S4 = "SUPP_F03_orthogonal_axes"
 )
 
-s_page_label <- function(stem) {
-  id <- names(S_FIGURE_PAGES)[vapply(S_FIGURE_PAGES, \(p) stem %in% p, logical(1))]
-  if (length(id) != 1) {
-    return(NA_character_)
-  }
-  pages <- S_FIGURE_PAGES[[id]]
-  if (length(pages) == 1) {
-    return(sprintf("%s Figure", id))
-  }
-  sprintf("%s Figure %s", id, LETTERS[match(stem, pages)])
-}
-
 # `...` goes to ggsave unchanged, so each panel keeps its own PNG settings.
 save_supp_panel <- function(plot, dir, stem, width, height, ...) {
   ggplot2::ggsave(file.path(dir, paste0(stem, ".png")), plot,
     width = width, height = height, units = "mm", dpi = 300, ...
   )
-  label <- s_page_label(stem)
-  if (is.na(label)) {
+  id <- names(Filter(\(pages) stem %in% pages, S_FIGURE_PAGES))
+  if (length(id) != 1) {
     return(invisible())
   }
+  pages <- S_FIGURE_PAGES[[id]]
+  label <- if (length(pages) == 1) paste(id, "Figure") else paste(id, "Figure", LETTERS[match(stem, pages)])
+
   band <- 8
   grDevices::cairo_pdf(file.path(dir, paste0(stem, ".pdf")),
     width = width / 25.4, height = (height + band) / 25.4
@@ -45,22 +36,12 @@ save_supp_panel <- function(plot, dir, stem, width, height, ...) {
   )
   print(plot, vp = grid::viewport(layout.pos.row = 2))
   grDevices::dev.off()
-  build_s_figure(sub(" .*", "", label))
-}
 
-# Combines an S Figure's pages once all of them exist; the output lands beside the
-# supp/ folder of the figure that owns the S Figure's first page.
-build_s_figure <- function(id) {
-  pages <- S_FIGURE_PAGES[[id]]
-  owner <- list.dirs(here::here("04_Figures"), recursive = FALSE)
-  owner <- owner[startsWith(basename(owner), sub("^SUPP_(F\\d+)_.*", "\\1", pages[1]))]
-  supp <- file.path(owner, "b_reports", "supp")
-  pdfs <- file.path(supp, paste0(pages, ".pdf"))
-  if (!all(file.exists(pdfs))) {
-    return(invisible())
+  pdfs <- file.path(dir, paste0(pages, ".pdf"))
+  if (all(file.exists(pdfs))) {
+    out <- file.path(dirname(dir), paste0(id, "_Figure.pdf"))
+    qpdf::pdf_combine(pdfs, out)
+    message("Wrote ", out, " (", length(pdfs), " pages)")
   }
-  out <- file.path(owner, "b_reports", sprintf("%s_Figure.pdf", id))
-  qpdf::pdf_combine(pdfs, out)
-  message("Wrote ", out, " (", length(pdfs), " pages)")
-  invisible(out)
+  invisible()
 }

@@ -69,7 +69,7 @@ Install every package the pipeline uses, once after cloning:
 Rscript setup.R
 ```
 
-## Run Order
+## Run order
 
 Run the stage scripts from the project root, in order. Each is self-contained: it
 loads its own packages, creates its output dirs, and reads the previous stage's
@@ -125,17 +125,13 @@ nothing else:
   which panels each holds and in what order.
 - `Supplementary_Tables/`: `S1_Table`–`S3_Table`, the F01–F03 supplementary workbooks.
 
-Each figure's composite sources its panels, runs the shared fit or load, and writes
-the figure plus its workbook. F01, F02, and F03 end with an optional local Box
-mirror block (see Conventions).
-
 ## Conventions
 
 Every stage and figure uses the same `a_/b_/c_` triad:
 
 - `a_script/`: the scripts. One panel builder per file; a `00_`/`01_` composite
   sources the panels, runs the shared fit or load, and writes the figure plus its
-  supplementary workbook. Tests and supplements sit in named subfolders.
+  supplementary workbook. Supplementary panel scripts sit in `supp/`.
 - `b_reports/`: generated renders (PDF/PNG) and QC reports.
 - `c_data/`: the tables downstream steps read, plus the stage or figure's
   supplementary workbook.
@@ -159,7 +155,7 @@ F01, F02, and F03 end with a `mirror_to_box` block that copies their outputs to 
 author's Box folder and no-ops when that folder is not mounted. Skip it by not
 running the trailing block.
 
-## Gene Sets
+## Gene sets
 
 The enrichment figures (F01, F02) and the WGCNA module ORA (F03) share one rat
 gene-set collection and one fgsea cache, built once under `04_Figures/shared/`:
@@ -203,6 +199,7 @@ before adopting a rebuild.
 ## enrichVolcano
 
 The figures depend on `enrichVolcano` (`Dustyn-T-Lewis/enrichVolcano`), installed by
-`setup.R`. F02 passes `x_scale`/`y_scale`, so it needs `d6a229e` or later; to adopt
-a newer dev build, `remotes::install_github("Dustyn-T-Lewis/enrichVolcano@<sha>")`
-and re-run F02.
+`setup.R`. The tracked outputs were built with `d6a229e`: F02 passes
+`x_scale`/`y_scale`, which that commit added, and the figure helpers call
+`ev_clean_label()`, which version 2.1.0 no longer exports. To adopt a newer build,
+`remotes::install_github("Dustyn-T-Lewis/enrichVolcano@<sha>")` and re-run F01–F03.
